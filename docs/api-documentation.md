@@ -3,6 +3,13 @@
 The Universal Resolver is a name resolver that works with any decentralized
 naming system.
 
+## Terminology
+
+Commonly-used terms in this document.
+
+* DID: decentralized identifier
+* DDO: DID descriptor object
+
 ## Architecture
 
 [!System Architecture](/docs/figures/overview.png)
@@ -37,7 +44,7 @@ The interface to both lightweight client and full node containers is identical.
 [!Protocol](/docs/figures/protocol.png)
 
 The universal resolver relies on its naming service clients to resolve
-fully-qualified names into DDOs.  It does this simply by forwarding requests it
+fully-qualified names or DIDs into DDOs.  It does this simply by forwarding requests it
 receives to the requisite client, and caching the response.  **The HTTP headers in
 the request will be used to determine whether or not to check the cache, and for
 how long to cache the DDO response.**
@@ -48,26 +55,39 @@ service client.**.  It will choose which one based on the suffix of the name
 
 # API
 
-## Interface
+## Resolver Interface
 
-A single endpoint for the universal resolver is defined:  `GET /:versionString/names/:fullyQualifiedName`
+A single endpoint for the universal resolver is defined:  `GET /:versionString/identifiers/:fullyQualifiedNameOrDID`
 
 * `:versionString` is the resolver API version.  For now, this is `1.0`.
-* `:fullyQualifiedName` is the fully-qualified name to query.  This includes any/all indications of things like which system the name lives in, which blockchain the name is registered on, which namespace it lives in, and so on.
+* `:fullyQualifiedNameOrDID` is the fully-qualified name or DID to query.  This includes any/all indications of things like which system the name lives in, which blockchain the name is registered on, which namespace it lives in, and so on.
 
 Examples:
 
-* `GET /1.0/names/judecn.id.bsk` resolves `judecn.id` in Blockstack’s virtualchain.
-* `GET /1.0/names/nickjohnson.eth.ens` resolves `nickjohnson.eth` using ENS.
+* `GET /1.0/names/judecn.id.bsk` resolves `judecn.id` in Blockstack’s virtualchain to a DDO.
+* `GET /1.0/names/nickjohnson.eth.ens` resolves `nickjohnson.eth` using ENS to a DDO.
+* `GET /1.0/names/did:sov:33ad7beb1abc4a26b89246` resolves the DDO for `did:sov:33ad7beb1abc4a26b89246` using Sovrin (`sov`).
 
-The API is the same for the naming system client--the universal resolver simply
-forwards the HTTP request.
+### DIDs
+
+A DID is a string that starts with `did:`.  If `:fullyQualifiedNameOrDID` starts
+with `did:`, it will be treated as a DID _even if it is also a well-formed
+name_.  The reason for this is to discourage the use of names that have an
+ambiguous interpretation.
+
+See [this
+document](https://docs.google.com/document/d/1rEPRjmRCwhLEfW7Cdwf-aGYXACqK-IFhD9o8bXaT6H0/edit#heading=h.yphg7n6k1rpo) for more details on resolving DIDs to DDOs.
 
 ### Fully-Qualified Names
 
-Each name should end in a '.' and a suffix that identifies the service that can resolve
+Each name _must_ end in a '.' followed by a URL-safe suffix.  This suffix identifies the service that can resolve
 the name.  This is similar in function to the method ID in a DID.  Anyone can
 claim an identifier, provided that it is unique.
+
+**Names _may not_ start with `did:`.**  This prefix is reserved for DIDs.
+
+A name _must_ resolve to at most one DDO.  The service client _may_ do so by
+first resolving the name to a DID, and then resolving the DID to a DDO.
 
 Identifiers in use today:
 
@@ -75,15 +95,34 @@ Identifiers in use today:
 * `.ens`: for ENS-hosted names
 * ... (insert yours here)
 
+## Service Client Interface
+
+The service client interface has two endpoints, one for fully-qualified names
+and one for DIDs.  The reason for two endpoints is that the service client _must
+not_ be responsible for disambiguating an identifier string.  This
+responsibility belongs only to the resolver.
+
+The service client makes these endpoints available via HTTP.  The two endpoints are:
+
+* A `names` endpoint: `GET /:versionString/names/:fullyQualifiedName`
+* A `dids` endpoint: `GET /:versionString/dids/:DID`
+
+A client _must_ implement at least one endpoint.  However, if it does not
+implement an endpoint, it _must_ handle requests to it by returning `HTTP 501`.
+
+Both endpoints return at most one DDO.  Implementations are encouraged, but not
+required, to resolve the `:fullyQualifiedName` to a DID and then resolve the DID
+to the DDO.
+
 ## Return Values
 
-We are still waiting on a well-defined schema for a DDO, but the jist of the return value is that it is a compound object:
+We are still waiting on a well-defined schema for a DDO, but the jist of the resolver's return value is that it is a compound object containing:
 
 * the version string (matches `:versionString` in the request)
 * the DDO identified by the fully-qualified name
-* a catch-all `supplementary` object that provides driver- and service-specific hints to the client.
+* a catch-all `supplementary` object that provides service-specific hints to the client.
 
-The `supplementary` field is for forward compatibility with future systems.  This is a field a driver can use to return something service-specific to clients (for example, Blockstack and ENS might want to give back the relevant transaction ID that created the DID).  If it is discovered that each driver returns the same types of data in their `supplementary` fields, then we will standardize the response in a future version of this specification.
+The `supplementary` field is for forward compatibility with future systems.  This is a field a service client can use to return something service-specific to clients (for example, Blockstack and ENS might want to give back the relevant transaction ID that created the DID).  If it is discovered that each client returns the same types of data in their `supplementary` fields, then we will standardize the response in a future version of this specification.
 
 Schema (NOTE: missing precise DDO fields)
 
