@@ -12,7 +12,7 @@ Commonly-used terms in this document.
 
 ## Architecture
 
-[!System Architecture](/docs/figures/overview.png)
+![System Architecture](/docs/figures/overview.png)
 
 The universal resolver's main task is to provide an API wrapper around one or
 more specific naming systems.  It does so by running a client for each system in
@@ -41,7 +41,7 @@ The interface to both lightweight client and full node containers is identical.
 
 ## Protocol
 
-[!Protocol](/docs/figures/protocol.png)
+![Protocol](/docs/figures/protocol.png)
 
 The universal resolver relies on its naming service clients to resolve
 fully-qualified names or DIDs into DDOs.  It does this simply by forwarding requests it
