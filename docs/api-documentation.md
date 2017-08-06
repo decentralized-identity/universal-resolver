@@ -165,6 +165,7 @@ Examples (DDO fields gleaned from https://github.com/WebOfTrustInfo/rebooting-th
            'equiv-id': [
               'did:sov:33ad7beb1abc4a26b89246',
               'did:uport:2opT3phRXKtkaqjv6LAyR9pqkVwADVECZwx',
+              'did:bstk:479395-27'
            ],
            'verkey': 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCABMC',
            'control': [
