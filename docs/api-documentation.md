@@ -3,6 +3,9 @@
 The Universal Resolver is a name resolver that works with any decentralized
 naming system.
 
+Also see the [DIF IND Community Resolver](https://docs.google.com/document/d/1rEPRjmRCwhLEfW7Cdwf-aGYXACqK-IFhD9o8bXaT6H0/)
+Google Doc for design goals and architectural thoughts. 
+
 ## Terminology
 
 Commonly-used terms in this document.
