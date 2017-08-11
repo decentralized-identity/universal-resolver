@@ -67,9 +67,9 @@ A single endpoint for the universal resolver is defined:  `GET /:versionString/i
 
 Examples:
 
-* `GET /1.0/names/judecn.id.bsk` resolves `judecn.id` in Blockstack’s virtualchain to a DDO.
-* `GET /1.0/names/nickjohnson.eth.ens` resolves `nickjohnson.eth` using ENS to a DDO.
-* `GET /1.0/names/did:sov:33ad7beb1abc4a26b89246` resolves the DDO for `did:sov:33ad7beb1abc4a26b89246` using Sovrin (`sov`).
+* `GET /1.0/identifiers/judecn.id.bsk` resolves `judecn.id` in Blockstack’s virtualchain to a DDO.
+* `GET /1.0/identifiers/nickjohnson.eth.ens` resolves `nickjohnson.eth` using ENS to a DDO.
+* `GET /1.0/identifiers/did:sov:33ad7beb1abc4a26b89246` resolves the DDO for `did:sov:33ad7beb1abc4a26b89246` using Sovrin (`sov`).
 
 ### DIDs
 
@@ -167,14 +167,13 @@ Examples (DDO fields gleaned from https://github.com/WebOfTrustInfo/rebooting-th
            'id': 'did:sov:21tDAKCERh95uGgKbJNHYp',
            'equiv-id': [
               'did:sov:33ad7beb1abc4a26b89246',
-              'did:sov:33ad7beb1abc4a26b89246',
-              'did:bstk:judecn.id',
-              'did:ens:judecn.eth',
+              'did:uport:2opT3phRXKtkaqjv6LAyR9pqkVwADVECZwx',
+              'did:bstk:479395-27'
            ],
            'verkey': 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCABMC',
            'control': [
               'self',
-              'did:bstk:judecn.id',
+              'did:sov:21tDAKCERh95uGgKbJNHYp',
            ],
            'service': {
               'dif': 'https://dif.microsoft.com',
@@ -183,13 +182,13 @@ Examples (DDO fields gleaned from https://github.com/WebOfTrustInfo/rebooting-th
               'openid': 'https://vicci.org/id',
            },
            'type': 'https://schema.org/Person',
-           'creator': 'did:bstk:judecn.id',
+           'creator': 'did:sov:21tDAKCERh95uGgKbJNHYp',
            'created': '2016-10-10T17:00:00Z',
            'updated': '2017-03-14T18:00:30Z',
            'signature': {
               'type': 'LinkedDataSignature2015',
               'created': '2016-02-08T16:02:20Z',
-              'creator': 'did:76d0cdb7-9c75-4be5-8e5a-e2d7a35ce907/keys/1',
+              'creator': 'did:sov:21tDAKCERh95uGgKbJNHYp/keys/1',
               'signatureValue': 'QNB13Y7Q9oLlDLL6AHyL31OE5fLji9DwJSA8qnv81oRaKonij8m+Jv4XdiEYvJ97iRlzKU/92/0LafSL5JftEgl960DLcbqMFxOtbAmFOIMa7eDcrgTL5ytXeYCYKLjHQG3s8a3UKDKRuEK54qK1G5hGKGoLgAVa6xgcDLjW7M19PEJV/c3HpGA7Eez6VFMoTt4yESjZvOXC97xN3KpshOx2HT/btgUbo0XjA1Oi0QHdgrLcUsQGt6w23RjeSToalrsA1G69OFeN2OiQrz9Jb4561hvKLSyWObwRmS6n5Vgr5xkvUm6MONRq0Vg33kXevoVM64KTBkISul61tzjn4w==',
            },
         },
