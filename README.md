@@ -1,35 +1,35 @@
-![RWoT Logo](https://github.com/decentralized-identity/uni-resolver-java/blob/master/logo.svg?raw=true)
+![DIF Logo](https://github.com/decentralized-identity/uni-resolver-java/blob/master/logo.svg?raw=true)
 
 ### Information
 
-This is a work-in-progress Java implementation of a Universal Resolver (aka Community Resolver) to be used for a decentralized naming system. It includes core resolution logic, a web interface, a client library, and drivers for the **did:sov** and **did:btcr** methods.
+This is a work-in-progress Java implementation of a Universal Resolver (aka Community Resolver) to be used for a decentralized naming system. It includes core resolution logic, a web API, a client library, and drivers for the **did:sov** and **did:btcr** methods.
 
-See the [specifications](https://github.com/decentralized-identity/universal-resolver/blob/master/docs/api-documentation.md) for details.
+See the [specifications](https://github.com/decentralized-identity/universal-resolver/blob/master/docs/api-documentation.md) for more information.
 
-Use at your own risk! Pull requests welcome.
+Incomplete implementation! Not ready for production use! Use at your own risk! Pull requests welcome.
 
-### Quick Start
+### Quick Start
 
 Try the following:
 
-	curl -X GET  http://localhost:8080/1.0/identifiers/did:sov:AdLi7vX2z1bLyVZaoy18K1
-	curl -X GET  http://localhost:8080/1.0/identifiers/did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl
+	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:sov:AdLi7vX2z1bLyVZaoy18K1
+	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl
 
-See the examples:
-
-[Examples](https://github.com/decentralized-identity/uni-resolver-java/blob/master/examples/)
+See the [Examples](https://github.com/decentralized-identity/uni-resolver-java/blob/master/examples/).
 
 ### Build
 
-Build:
+In order to build the **did:sov** driver, you first need to build [libindy-sdk](https://github.com/hyperledger/indy-sdk/) and its [Java wrapper](https://github.com/hyperledger/indy-sdk/tree/master/wrappers/java).
+
+In order to build the **did:btcr** driver, you first need to build [txref-conversion-java](https://github.com/WebOfTrustInfo/txref-conversion-java/).
+
+Build all:
 
 	mvn clean install
 
-In order to use the **did:sov** driver, you also need to build [libindy-sdk](https://github.com/hyperledger/indy-sdk/).
+### Local Resolver
 
-### Local Resolver
-
-You can use a local resolver in your Java project that invokes drivers locally.
+You can use a [Local Resolver](https://github.com/decentralized-identity/universal-resolver/java/blob/master/uni-resolver-local) in your Java project that invokes drivers locally.
 
 Dependency:
 
@@ -39,23 +39,23 @@ Dependency:
 		<version>0.1-SNAPSHOT</version>
 	</dependency>
 
-Example Code:
+[Example Use](https://github.com/decentralized-identity/universal-resolver/ava/blob/master/examples/src/main/java/uniresolver/examples/TestLocalResolVer.java):
 
 	LocalUniResolver uniResolver = LocalUniResolver.getDefault();
 	uniResolver.getDriver(DidSovDriver.class).setLibIndyPath("./sovrin/lib/");
 	uniResolver.getDriver(DidSovDriver.class).setPoolConfigName("sandbox");
 	uniResolver.getDriver(DidSovDriver.class).setPoolGenesisTxn("sandbox.txn");
 	uniResolver.getDriver(DidBtcrDriver.class).setExtendedBitcoinConnection(BlockcypherAPIExtendedBitcoinConnection.get());
-
+	
 	DDO ddo1 = uniResolver.resolve("did:sov:AdLi7vX2z1bLyVZaoy18K1");
 	System.out.println(ddo1.serialize());
-
+	
 	DDO ddo2 = uniResolver.resolve("did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl");
 	System.out.println(ddo2.serialize());
 
-### Client Resolver
+### Client Resolver
 
-You can use a client resolver in your Java project that calls a remote Web Resolver.
+You can use a [Client Resolver](https://github.com/decentralized-identity/universal-resolver/java/blob/master/uni-resolver-client) in your Java project that calls a remote Web Resolver.
 
 Dependency:
 
@@ -65,20 +65,38 @@ Dependency:
 		<version>0.1-SNAPSHOT</version>
 	</dependency>
 
-Example Code:
+[Example Use](https://github.com/decentralized-identity/universal-resolver/ava/blob/master/examples/src/main/java/uniresolver/examples/TestClientResolver.java):
 
-	LocalUniResolver uniResolver = LocalUniResolver.getDefault();
-	uniResolver.getDriver(DidSovDriver.class).setLibIndyPath("./sovrin/lib/");
-	uniResolver.getDriver(DidSovDriver.class).setPoolConfigName("sandbox");
-	uniResolver.getDriver(DidSovDriver.class).setPoolGenesisTxn("sandbox.txn");
-	uniResolver.getDriver(DidBtcrDriver.class).setExtendedBitcoinConnection(BlockcypherAPIExtendedBitcoinConnection.get());
-
+	ClientUniResolver uniResolver = new ClientUniResolver();
+	uniResolver.setResolverUri("https://uniresolver.danubetech.com/1.0/identifiers/");
+	
 	DDO ddo1 = uniResolver.resolve("did:sov:AdLi7vX2z1bLyVZaoy18K1");
 	System.out.println(ddo1.serialize());
-
+	
 	DDO ddo2 = uniResolver.resolve("did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl");
 	System.out.println(ddo2.serialize());
 
+### Web Resolver
+
+You can deploy a [Web Resolver](https://github.com/decentralized-identity/universal-resolver/java/blob/master/uni-resolver-web) that can be called by clients and invokes drivers locally.
+
+See the [Example Configuration](https://github.com/decentralized-identity/universal-resolver/java/blob/master/uni-resolver-web/src/main/webapp/WEB-INF/applicationContext.xml).
+
+How to run:
+
+	mvn jetty:run
+
+### Drivers
+
+**TODO** more details
+
+Drivers can be invoked either locally as a Maven dependency, or they can be invoked via a REST GET call to a Docker container.
+
+### Docker
+
+**TODO** more details
+
+Both the Web Resolver and the individual drivers for **did:sov** and **did:btcr** can be built and deployed as Docker containers.
 
 ### About
 
