@@ -1,0 +1,32 @@
+{
+  "@context": ["https://w3id.org/identity/v1", {
+    "ctrl": "https://w3id.org/control#",
+    "ddo": "https://w3id.org/ddo#",
+    "control": {
+        "@id": "ddo:control",
+        "@type": "@id"
+    },
+    "curve": "sec:curve",
+    "guardian": "ddo:guardian",
+    "minimumSignatures": {
+        "@id": "ctrl:minimumSignatures",
+        "@type": "xsd:integer"
+    },
+    "openid": "ddo:openid",
+    "publicKeyBase64": "sec:publicKeyBase64",
+    "publicKeyHex": "sec:publicKeyHex",
+    "service": "ddo:service",
+    "signer": "sec:signer",
+    "updated": {
+        "@id": "ddo:updated",
+        "@type": "xsd:dateTime"
+    },
+    "xdi": "ddo:xdi",
+    "agent": "ddo:agent",
+    "EdDsaPublicKey": "sec:EdDsaPublicKey",
+    "RsaPublicKey": "sec:RsaPublicKey",
+    "OrControl": "ctrl:OrControl",
+    "AndControl": "ctrl:AndControl",
+    "MofNControl": "ctrl:MofNControl"
+  }]
+}

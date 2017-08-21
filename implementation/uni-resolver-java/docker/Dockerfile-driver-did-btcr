@@ -1,0 +1,38 @@
+# Dockerfile
+
+FROM debian:stretch
+MAINTAINER Markus Sabadello <markus@danubetech.com>
+
+USER root
+
+RUN apt-get -y update
+
+RUN apt-get install -y --no-install-recommends openjdk-8-jdk maven
+
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
+ENV PATH $JAVA_HOME/bin:$PATH
+
+# build dependencies
+
+RUN apt-get install -y --no-install-recommends git
+
+RUN cd /opt/ && git clone https://github.com/WebOfTrustInfo/txref-conversion-java.git
+RUN cd /opt/txref-conversion-java/ && mvn clean install -DskipTests
+
+# build driver-did-btcr
+
+ADD . /opt/uni-resolver-java
+
+RUN cd /opt/uni-resolver-java && mvn clean
+RUN cd /opt/uni-resolver-java && mvn install -N -DskipTests
+RUN cd /opt/uni-resolver-java/uni-resolver-core && mvn install -N -DskipTests
+RUN cd /opt/uni-resolver-java/driver && mvn install -N -DskipTests
+RUN cd /opt/uni-resolver-java/driver-did-btcr && mvn install package -N -DskipTests
+
+# done
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+EXPOSE 8080
+
+CMD ["/opt/uni-resolver-java/docker/run-driver-did-btcr.sh"]
