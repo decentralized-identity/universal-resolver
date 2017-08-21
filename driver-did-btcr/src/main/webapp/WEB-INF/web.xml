@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+
+	<display-name>uni-resolver-driver-did-btcr</display-name>
+
+	<!-- SERVLET -->
+
+	<servlet>
+		<display-name>DriverServlet</display-name>
+		<servlet-name>DriverServlet</servlet-name>
+		<servlet-class>uniresolver.driver.DriverServlet</servlet-class>
+		<init-param>
+			<param-name>Driver</param-name>
+			<param-value>uniresolver.driver.did.btcr.DidBtcrDriver</param-value>
+		</init-param>
+		<init-on-load>1</init-on-load>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DriverServlet</servlet-name>
+		<url-pattern></url-pattern>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+</web-app>
