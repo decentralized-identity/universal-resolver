@@ -29,7 +29,7 @@ Build all:
 
 ### Local Resolver
 
-You can use a [Local Resolver](https://github.com/decentralized-identity/universal-resolver/tree/master/implementation/uni-resolver-java/uni-resolver-local) in your Java project that invokes drivers locally.
+You can use a [Local Resolver](https://github.com/decentralized-identity/universal-resolver/tree/master/implementation/uni-resolver-java/uni-resolver-local) in your Java project that invokes drivers locally (either directly via their JAVA API or via a Docker REST API).
 
 Dependency:
 
@@ -53,6 +53,16 @@ Dependency:
 	DDO ddo2 = uniResolver.resolve("did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl");
 	System.out.println(ddo2.serialize());
 
+### Web Resolver
+
+You can deploy a [Web Resolver](https://github.com/decentralized-identity/universal-resolver/tree/master/implementation/uni-resolver-java/uni-resolver-web) that can be called by clients and invokes drivers locally (either directly via their JAVA API or via a Docker REST API).
+
+See the [Example Configuration](https://github.com/decentralized-identity/universal-resolver/tree/master/implementation/uni-resolver-java/uni-resolver-web/src/main/webapp/WEB-INF/applicationContext.xml).
+
+How to run:
+
+	mvn jetty:run
+
 ### Client Resolver
 
 You can use a [Client Resolver](https://github.com/decentralized-identity/universal-resolver/tree/master/implementation/uni-resolver-java/uni-resolver-client) in your Java project that calls a remote Web Resolver.
@@ -75,16 +85,6 @@ Dependency:
 	
 	DDO ddo2 = uniResolver.resolve("did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl");
 	System.out.println(ddo2.serialize());
-
-### Web Resolver
-
-You can deploy a [Web Resolver](https://github.com/decentralized-identity/universal-resolver/tree/master/implementation/uni-resolver-java/uni-resolver-web) that can be called by clients and invokes drivers locally (either directly via their JAVA API or via a Docker REST API).
-
-See the [Example Configuration](https://github.com/decentralized-identity/universal-resolver/tree/master/implementation/uni-resolver-java/uni-resolver-web/src/main/webapp/WEB-INF/applicationContext.xml).
-
-How to run:
-
-	mvn jetty:run
 
 ### Drivers
 
