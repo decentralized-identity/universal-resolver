@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.HttpRequestHandler;
 
+import com.github.jsonldjava.core.JsonLdError;
+
 import uniresolver.ResolutionException;
 import uniresolver.ddo.DDO;
 
@@ -112,8 +114,17 @@ public class DriverServlet extends HttpServlet implements Servlet, HttpRequestHa
 		// write result
 
 		response.setStatus(HttpServletResponse.SC_OK);
+		response.setContentType(DDO.MIME_TYPE);
 		PrintWriter writer = response.getWriter();
-		writer.write(ddo.toString());
+
+		try {
+
+			writer.write(ddo.serialize());
+		} catch (JsonLdError ex) {
+
+			throw new IOException("JSON-LD error: " + ex.getMessage(), ex);
+		}
+
 		writer.flush();
 		writer.close();
 	}

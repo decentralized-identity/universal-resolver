@@ -47,6 +47,7 @@ public class ClientUniResolver implements UniResolver {
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
+			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
 			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DDO for " + identifier + " from " + uriString + ": " + httpResponse.getStatusLine());
 
 			HttpEntity httpEntity = httpResponse.getEntity();

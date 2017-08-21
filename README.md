@@ -78,7 +78,7 @@ Dependency:
 
 ### Web Resolver
 
-You can deploy a [Web Resolver](https://github.com/decentralized-identity/uni-resolver-java/tree/master/uni-resolver-web) that can be called by clients and invokes drivers locally.
+You can deploy a [Web Resolver](https://github.com/decentralized-identity/uni-resolver-java/tree/master/uni-resolver-web) that can be called by clients and invokes drivers locally (either directly via their JAVA API or via a Docker REST API).
 
 See the [Example Configuration](https://github.com/decentralized-identity/uni-resolver-java/tree/master/uni-resolver-web/src/main/webapp/WEB-INF/applicationContext.xml).
 
@@ -94,9 +94,17 @@ Drivers can be invoked either locally as a Maven dependency, or they can be invo
 
 ### Docker
 
-**TODO** more details
-
 Both the Web Resolver and the individual drivers for **did:sov** and **did:btcr** can be built and deployed as Docker containers.
+
+How to build:
+
+	docker build -f ./docker/Dockerfile-driver-did-btcr . -t uni-resolver-driver-did-btcr
+	docker build -f ./docker/Dockerfile-driver-did-sov . -t uni-resolver-driver-did-sov
+
+How to run:
+
+	docker run -p 8081:8080 uni-resolver-driver-did-btcr
+	docker run -p 8082:8080 uni-resolver-driver-did-sov
 
 ### About
 

@@ -18,7 +18,7 @@
 		</property>
 	</bean>
 
-	<!-- DRIVERS -->
+	<!-- DRIVERS (VIA JAVA API) -->
 
 	<bean id="DidBtcrDriver" class="uniresolver.driver.did.btcr.DidBtcrDriver">
 		<property name="extendedBitcoinConnection">
@@ -32,5 +32,15 @@
 		<property name="poolGenesisTxn" value="./sovrin/sandbox.txn" />
 		<property name="walletName" value="default" />
 	</bean>
+
+	<!-- DRIVERS (VIA DOCKER REST API) -->
+
+<!-- 	<bean id="DidBtcrDriver" class="uniresolver.driver.docker.DockerDriver">
+		<property name="driverUri" value="http://localhost:8081/1.0/dids/" />
+	</bean>
+
+	<bean id="DidSovDriver" class="uniresolver.driver.docker.DockerDriver">
+		<property name="driverUri" value="http://localhost:8082/1.0/dids/" />
+	</bean> -->
 
 </beans>
