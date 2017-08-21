@@ -15,7 +15,7 @@ Try the following:
 	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:sov:AdLi7vX2z1bLyVZaoy18K1
 	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl
 
-See the [Examples](https://github.com/decentralized-identity/uni-resolver-java/blob/master/examples/).
+See the [Examples](https://github.com/decentralized-identity/uni-resolver-java/tree/master/examples/src/main/java/uniresolver/examples/).
 
 ### Build
 
