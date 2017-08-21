@@ -1,7 +1,6 @@
 package uniresolver.examples;
 import uniresolver.client.ClientUniResolver;
 import uniresolver.ddo.DDO;
-import uniresolver.driver.did.sov.DidSovDriver;
 
 public class TestClientUniResolver {
 
