@@ -108,4 +108,4 @@ How to run:
 
 ### About
 
-Decentralized Identity Foundation - http://http://identity.foundation/
+Decentralized Identity Foundation - http://identity.foundation/
