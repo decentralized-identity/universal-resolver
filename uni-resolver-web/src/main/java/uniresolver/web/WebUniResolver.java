@@ -3,6 +3,8 @@ package uniresolver.web;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,7 +18,9 @@ import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.ddo.DDO;
 
-public class WebUniResolver implements HttpRequestHandler, UniResolver {
+public class WebUniResolver extends HttpServlet implements HttpRequestHandler, UniResolver {
+
+	private static final long serialVersionUID = -8314214552475026363L;
 
 	private static Logger log = LoggerFactory.getLogger(WebUniResolver.class);
 
@@ -28,7 +32,7 @@ public class WebUniResolver implements HttpRequestHandler, UniResolver {
 	}
 
 	@Override
-	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// read request
 
@@ -91,10 +95,20 @@ public class WebUniResolver implements HttpRequestHandler, UniResolver {
 	}
 
 	@Override
+	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		if ("GET".equals(request.getMethod())) this.doGet(request, response);
+	}
+
+	@Override
 	public DDO resolve(String identifier) throws ResolutionException {
 
 		return this.getUniResolver() == null ? null : this.getUniResolver().resolve(identifier);
 	}
+
+	/*
+	 * Getters and setters
+	 */
 
 	public UniResolver getUniResolver() {
 

@@ -12,11 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.HttpRequestHandler;
 
 import uniresolver.ResolutionException;
 import uniresolver.ddo.DDO;
 
-public class DriverServlet extends HttpServlet implements Servlet {
+public class DriverServlet extends HttpServlet implements Servlet, HttpRequestHandler {
 
 	private static final long serialVersionUID = -531456245094927384L;
 
@@ -41,19 +42,24 @@ public class DriverServlet extends HttpServlet implements Servlet {
 
 		super.init(config);
 
-		String driverClassName = config.getInitParameter("Driver");
-		Class<? extends Driver> driverClass;
+		if (this.driver == null) {
 
-		try {
+			String driverClassName = config.getInitParameter("Driver");
+			Class<? extends Driver> driverClass;
 
-			driverClass = driverClassName == null ? null : (Class<? extends Driver>) Class.forName(driverClassName);
-			this.driver = driverClass == null ? null : driverClass.newInstance();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+			try {
 
-			throw new ServletException(ex.getMessage(), ex);
+				driverClass = driverClassName == null ? null : (Class<? extends Driver>) Class.forName(driverClassName);
+				this.driver = driverClass == null ? null : driverClass.newInstance();
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+
+				throw new ServletException(ex.getMessage(), ex);
+			}
+
+			if (this.driver == null) throw new ServletException("Unable to load driver: " + driverClassName);
+
+			if (log.isInfoEnabled()) log.info("Loaded driver: " + driverClass);
 		}
-
-		if (log.isInfoEnabled()) log.info("Loaded driver: " + driverClass);
 	}
 
 	@Override
@@ -112,12 +118,22 @@ public class DriverServlet extends HttpServlet implements Servlet {
 		writer.close();
 	}
 
+	@Override
+	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		if ("GET".equals(request.getMethod())) this.doGet(request, response);
+	}
+
+	/*
+	 * Getters and setters
+	 */
+
 	public Driver getDriver() {
 
 		return this.driver;
 	}
 
-	public void setUniResolver(Driver driver) {
+	public void setDriver(Driver driver) {
 
 		this.driver = driver;
 	}
