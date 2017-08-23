@@ -18,5 +18,8 @@ public interface ExtendedBitcoinConnection extends BitcoinConnection {
 		public BtcrData(String inputScriptPubKey, URI moreDdoUri) { this.inputScriptPubKey = inputScriptPubKey; this.moreDdoUri = moreDdoUri; }
 		public String getInputScriptPubKey() { return this.inputScriptPubKey; }
 		public URI getMoreDdoUri() { return this.moreDdoUri; }
+
+		@Override
+		public String toString() { return "BtcrData [inputScriptPubKey=" + inputScriptPubKey + ", moreDdoUri=" + moreDdoUri + "]"; }
 	}
 }

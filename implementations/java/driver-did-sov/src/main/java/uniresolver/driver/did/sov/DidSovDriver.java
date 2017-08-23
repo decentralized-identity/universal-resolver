@@ -1,5 +1,6 @@
 package uniresolver.driver.did.sov;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -159,7 +160,11 @@ public class DidSovDriver implements Driver {
 
 		// initialize libindy
 
-		if ((! LibIndy.isInitialized()) && this.getLibIndyPath() != null) LibIndy.init(this.getLibIndyPath());
+		if ((! LibIndy.isInitialized()) && this.getLibIndyPath() != null) {
+
+			if (log.isInfoEnabled()) log.info("Initializing libindy: " + this.getLibIndyPath() + " (" + new File(this.getLibIndyPath()).getAbsolutePath() + ")");
+			LibIndy.init(this.getLibIndyPath());
+		}
 
 		// create pool config
 
