@@ -18,7 +18,7 @@ public class TestLocalUniResolver {
 		DDO ddo1 = uniResolver.resolve("did:sov:AdLi7vX2z1bLyVZaoy18K1");
 		System.out.println(ddo1.serialize());
 
-		DDO ddo2 = uniResolver.resolve("did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl");
+		DDO ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
 		System.out.println(ddo2.serialize());
 	}
 }

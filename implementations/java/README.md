@@ -13,7 +13,7 @@ Incomplete implementation! Not ready for production use! Use at your own risk! P
 Try the following:
 
 	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:sov:AdLi7vX2z1bLyVZaoy18K1
-	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl
+	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:btcr:xkrn-xzcr-qqlv-j6sl
 
 See the [Examples](https://github.com/decentralized-identity/universal-resolver/tree/master/implementations/java/examples/src/main/java/uniresolver/examples/).
 
@@ -50,7 +50,7 @@ Dependency:
 	DDO ddo1 = uniResolver.resolve("did:sov:AdLi7vX2z1bLyVZaoy18K1");
 	System.out.println(ddo1.serialize());
 	
-	DDO ddo2 = uniResolver.resolve("did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl");
+	DDO ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
 	System.out.println(ddo2.serialize());
 
 ### Web Resolver
@@ -83,7 +83,7 @@ Dependency:
 	DDO ddo1 = uniResolver.resolve("did:sov:AdLi7vX2z1bLyVZaoy18K1");
 	System.out.println(ddo1.serialize());
 	
-	DDO ddo2 = uniResolver.resolve("did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl");
+	DDO ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
 	System.out.println(ddo2.serialize());
 
 ### Drivers

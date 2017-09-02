@@ -10,7 +10,7 @@ public class TestDriverDidBtcr {
 		DidBtcrDriver driver = new DidBtcrDriver();
 		driver.setExtendedBitcoinConnection(BlockcypherAPIExtendedBitcoinConnection.get());
 
-		DDO ddo = driver.resolve("did:btcr:txtest1-xkrn-xzcr-qqlv-j6sl");
+		DDO ddo = driver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
 		System.out.println(ddo.serialize());
 	}
 }

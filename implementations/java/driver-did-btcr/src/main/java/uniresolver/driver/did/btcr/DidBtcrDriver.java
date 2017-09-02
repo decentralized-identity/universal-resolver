@@ -16,6 +16,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.weboftrust.txrefconversion.Bech32;
 import info.weboftrust.txrefconversion.TxrefConverter;
 import info.weboftrust.txrefconversion.TxrefConverter.Chain;
 import info.weboftrust.txrefconversion.TxrefConverter.ChainAndTxid;
@@ -56,6 +57,13 @@ public class DidBtcrDriver implements Driver {
 
 		String targetDid = matcher.group(1);
 
+		// determine txref
+
+		String txref = null;
+		if (targetDid.charAt(0) == TxrefConverter.MAGIC_BTC_MAINNET_BECH32_CHAR) txref = TxrefConverter.TXREF_BECH32_HRP_MAINNET + Bech32.SEPARATOR + "-" + targetDid;
+		if (targetDid.charAt(0) == TxrefConverter.MAGIC_BTC_TESTNET_BECH32_CHAR) txref = TxrefConverter.TXREF_BECH32_HRP_TESTNET + Bech32.SEPARATOR + "-" + targetDid;
+		if (txref == null) throw new ResolutionException("Invalid magic byte in " + targetDid);
+
 		// retrieve btcr data
 
 		Chain chain;
@@ -66,17 +74,17 @@ public class DidBtcrDriver implements Driver {
 
 			TxrefConverter txrefConverter = new TxrefConverter(this.getExtendedBitcoinConnection());
 
-			ChainAndTxid chainAndTxid = txrefConverter.txrefToTxid(targetDid);
+			ChainAndTxid chainAndTxid = txrefConverter.txrefToTxid(txref);
 			chain = chainAndTxid.getChain();
 			txid = chainAndTxid.getTxid();
 
 			btcrData = this.getExtendedBitcoinConnection().getBtcrData(chain, txid);
 		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve BTCR data for " + targetDid + ": " + ex.getMessage());
+			throw new ResolutionException("Cannot retrieve BTCR data for " + txref + ": " + ex.getMessage());
 		}
 
-		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + targetDid + " ("+ txid + " on chain " + chain + "): " + btcrData);
+		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ txid + " on chain " + chain + "): " + btcrData);
 
 		// retrieve more DDO
 
@@ -85,7 +93,7 @@ public class DidBtcrDriver implements Driver {
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve more DDO for " + targetDid + " from " + btcrData.getMoreDdoUri() + ": " + httpResponse.getStatusLine());
+			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve more DDO for " + txref + " from " + btcrData.getMoreDdoUri() + ": " + httpResponse.getStatusLine());
 
 			HttpEntity httpEntity = httpResponse.getEntity();
 
@@ -93,10 +101,10 @@ public class DidBtcrDriver implements Driver {
 			EntityUtils.consume(httpEntity);
 		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve more DDO for " + targetDid + " from " + btcrData.getMoreDdoUri() + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot retrieve more DDO for " + txref + " from " + btcrData.getMoreDdoUri() + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isInfoEnabled()) log.info("Retrieved more DDO for " + targetDid + " (" + btcrData.getMoreDdoUri() + "): " + moreDdo);
+		if (log.isInfoEnabled()) log.info("Retrieved more DDO for " + txref + " (" + btcrData.getMoreDdoUri() + "): " + moreDdo);
 
 		// DDO id
 
