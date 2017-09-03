@@ -222,7 +222,7 @@ public class DDO {
 	/*
 	 * Object methods
 	 */
-	
+
 	@Override
 	public String toString() {
 
@@ -238,7 +238,7 @@ public class DDO {
 	/*
 	 * Helper classes
 	 */
-	
+
 	public static class Owner {
 
 		private final LinkedHashMap<String, Object> ownerJsonLdObject;
@@ -314,6 +314,50 @@ public class DDO {
 			String id = (String) entry;
 
 			return id;
+		}
+
+		public String getType() {
+
+			Object entry = this.ownerJsonLdObject.get(JSONLD_TERM_TYPE);
+			if (entry == null) return null;
+			if (! (entry instanceof String)) return null;
+
+			String type = (String) entry;
+
+			return type;
+		}
+
+		public String getCurve() {
+
+			Object entry = this.ownerJsonLdObject.get(JSONLD_TERM_CURVE);
+			if (entry == null) return null;
+			if (! (entry instanceof String)) return null;
+
+			String curve = (String) entry;
+
+			return curve;
+		}
+
+		public String getPublicKeyBase64() {
+
+			Object entry = this.ownerJsonLdObject.get(JSONLD_TERM_PUBLICKEYBASE64);
+			if (entry == null) return null;
+			if (! (entry instanceof String)) return null;
+
+			String publicKeyBase64 = (String) entry;
+
+			return publicKeyBase64;
+		}
+
+		public String getPublicKeyHex() {
+
+			Object entry = this.ownerJsonLdObject.get(JSONLD_TERM_PUBLICKEYHEX);
+			if (entry == null) return null;
+			if (! (entry instanceof String)) return null;
+
+			String publicKeyHex = (String) entry;
+
+			return publicKeyHex;
 		}
 	}
 
