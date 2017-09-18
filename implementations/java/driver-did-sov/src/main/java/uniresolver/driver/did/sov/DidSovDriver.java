@@ -139,12 +139,15 @@ public class DidSovDriver implements Driver {
 
 		Map<String, String> services = new HashMap<String, String> ();
 
-		for (Map.Entry<String, JsonElement> jsonService : jsonGetAttrEndpoint.entrySet()) {
+		if (jsonGetAttrEndpoint != null) {
 
-			JsonPrimitive jsonGetAttrEndpointValue = jsonGetAttrEndpoint == null ? null : jsonGetAttrEndpoint.getAsJsonPrimitive(jsonService.getKey());
-			String value = jsonGetAttrEndpointValue == null ? null : jsonGetAttrEndpointValue.getAsString();
+			for (Map.Entry<String, JsonElement> jsonService : jsonGetAttrEndpoint.entrySet()) {
 
-			services.put(jsonService.getKey(), value);
+				JsonPrimitive jsonGetAttrEndpointValue = jsonGetAttrEndpoint == null ? null : jsonGetAttrEndpoint.getAsJsonPrimitive(jsonService.getKey());
+				String value = jsonGetAttrEndpointValue == null ? null : jsonGetAttrEndpointValue.getAsString();
+
+				services.put(jsonService.getKey(), value);
+			}
 		}
 
 		// create DDO
