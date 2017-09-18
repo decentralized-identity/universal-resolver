@@ -8,10 +8,10 @@ public class TestDriverDidSov {
 
 		DidSovDriver driver = new DidSovDriver();
 		driver.setLibIndyPath("./sovrin/lib/");
-		driver.setPoolConfigName("sandbox");
-		driver.setPoolGenesisTxn("sandbox.txn");
+		driver.setPoolConfigName("live");
+		driver.setPoolGenesisTxn("live.txn");
 
-		DDO ddo = driver.resolve("did:sov:AdLi7vX2z1bLyVZaoy18K1");
+		DDO ddo = driver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
 		System.out.println(ddo.serialize());
 	}
 }

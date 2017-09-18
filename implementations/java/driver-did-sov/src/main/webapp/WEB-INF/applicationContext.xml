@@ -9,8 +9,8 @@
 		<property name="driver">
 			<bean id="DidSovDriver" class="uniresolver.driver.did.sov.DidSovDriver">
 				<property name="libIndyPath" value="./sovrin/lib/" />
-				<property name="poolConfigName" value="sandbox" />
-				<property name="poolGenesisTxn" value="./sovrin/sandbox.txn" />
+				<property name="poolConfigName" value="live" />
+				<property name="poolGenesisTxn" value="./sovrin/live.txn" />
 				<property name="walletName" value="default" />
 			</bean>
 		</property>

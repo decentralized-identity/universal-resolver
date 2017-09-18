@@ -11,11 +11,11 @@ public class TestLocalUniResolver {
 
 		LocalUniResolver uniResolver = LocalUniResolver.getDefault();
 		uniResolver.getDriver(DidSovDriver.class).setLibIndyPath("./sovrin/lib/");
-		uniResolver.getDriver(DidSovDriver.class).setPoolConfigName("sandbox");
-		uniResolver.getDriver(DidSovDriver.class).setPoolGenesisTxn("sandbox.txn");
+		uniResolver.getDriver(DidSovDriver.class).setPoolConfigName("live");
+		uniResolver.getDriver(DidSovDriver.class).setPoolGenesisTxn("live.txn");
 		uniResolver.getDriver(DidBtcrDriver.class).setExtendedBitcoinConnection(BlockcypherAPIExtendedBitcoinConnection.get());
 
-		DDO ddo1 = uniResolver.resolve("did:sov:AdLi7vX2z1bLyVZaoy18K1");
+		DDO ddo1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
 		System.out.println(ddo1.serialize());
 
 		DDO ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
