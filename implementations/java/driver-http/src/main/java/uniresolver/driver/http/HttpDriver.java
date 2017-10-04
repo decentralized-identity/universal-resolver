@@ -1,4 +1,4 @@
-package uniresolver.driver.docker;
+package uniresolver.driver.http;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,9 +16,9 @@ import uniresolver.ResolutionException;
 import uniresolver.ddo.DDO;
 import uniresolver.driver.Driver;
 
-public class DockerDriver implements Driver {
+public class HttpDriver implements Driver {
 
-	private static Logger log = LoggerFactory.getLogger(DockerDriver.class);
+	private static Logger log = LoggerFactory.getLogger(HttpDriver.class);
 
 	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
 	public static final URI DEFAULT_DRIVER_URI = URI.create("http://localhost:8080/1.0/dids/");
@@ -26,7 +26,7 @@ public class DockerDriver implements Driver {
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
 	private URI driverUri = DEFAULT_DRIVER_URI;
 
-	public DockerDriver() {
+	public HttpDriver() {
 
 	}
 
@@ -40,6 +40,7 @@ public class DockerDriver implements Driver {
 		uriString += identifier;
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		httpGet.addHeader("Accept", "application/ld+json");
 
 		// retrieve DDO
 

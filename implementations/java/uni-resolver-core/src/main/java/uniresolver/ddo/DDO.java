@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
 
 import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
@@ -32,6 +35,7 @@ public class DDO {
 	public static final Object JSONLD_CONTEXT_THIN;
 
 	private final LinkedHashMap<String, Object> ddoJsonLdObject;
+	private final String jsonString;
 
 	static {
 
@@ -44,9 +48,10 @@ public class DDO {
 		}
 	}
 
-	private DDO(LinkedHashMap<String, Object> ddoJsonLdObject) {
+	private DDO(LinkedHashMap<String, Object> ddoJsonLdObject, String jsonString) {
 
 		this.ddoJsonLdObject = ddoJsonLdObject;
+		this.jsonString = jsonString;
 	}
 
 	public LinkedHashMap<String, Object> getJsonLdObject() {
@@ -54,9 +59,9 @@ public class DDO {
 		return this.ddoJsonLdObject;
 	}
 
-	public static DDO build(LinkedHashMap<String, Object> ddoJsonLdObject) {
+	public static DDO build(LinkedHashMap<String, Object> ddoJsonLdObject, String jsonString) {
 
-		return new DDO(ddoJsonLdObject);
+		return new DDO(ddoJsonLdObject, jsonString);
 	}
 
 	public static DDO build(String id, List<Owner> owners, List<Control> controls, Map<String, String> services) {
@@ -114,25 +119,29 @@ public class DDO {
 
 		// done
 
-		return new DDO(ddoJsonLdObject);
-	}
-
-	public static DDO fromInputStream(InputStream input, String enc) throws IOException {
-
-		return build((LinkedHashMap<String, Object>) JsonUtils.fromInputStream(input, enc));
-	}
-
-	public static DDO fromReader(Reader reader) throws IOException {
-
-		return build((LinkedHashMap<String, Object>) JsonUtils.fromReader(reader));
+		return new DDO(ddoJsonLdObject, null);
 	}
 
 	public static DDO fromString(String jsonString) throws IOException {
 
-		return build((LinkedHashMap<String, Object>) JsonUtils.fromString(jsonString));
+		Object jsonObject = JsonUtils.fromString(jsonString);
+
+		return build((LinkedHashMap<String, Object>) jsonObject, JsonUtils.toPrettyString(jsonObject));
+	}
+
+	public static DDO fromInputStream(InputStream input, String enc) throws IOException {
+
+		return fromString(IOUtils.toString(input, StandardCharsets.UTF_8));
+	}
+
+	public static DDO fromReader(Reader reader) throws IOException {
+
+		return fromString(IOUtils.toString(reader));
 	}
 
 	public String serialize() throws IOException, JsonLdError {
+
+		if (this.jsonString != null) return this.jsonString;
 
 		Object ddo = JsonUtils.fromInputStream(DDO.class.getResourceAsStream("ddo-skeleton.jsonld"));
 		((LinkedHashMap<String, Object>) ddo).putAll(this.ddoJsonLdObject);

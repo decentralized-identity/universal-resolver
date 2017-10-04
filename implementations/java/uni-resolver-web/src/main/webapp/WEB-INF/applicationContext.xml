@@ -12,6 +12,7 @@
 					<util:list>
 						<ref bean="DidBtcrDriver" />
 						<ref bean="DidSovDriver" />
+						<ref bean="DidV1Driver" />
 					</util:list>
 				</property>
 			</bean>
@@ -31,6 +32,10 @@
 		<property name="poolConfigName" value="live" />
 		<property name="poolGenesisTxn" value="./sovrin/live.txn" />
 		<property name="walletName" value="default" />
+	</bean>
+
+	<bean id="DidV1Driver" class="uniresolver.driver.http.HttpDriver">
+		<property name="driverUri" value="https://testnet.veres.one/dids/" />
 	</bean>
 
 	<!-- DRIVERS (VIA DOCKER REST API) -->
