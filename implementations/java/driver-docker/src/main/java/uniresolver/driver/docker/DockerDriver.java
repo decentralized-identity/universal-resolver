@@ -21,10 +21,10 @@ public class DockerDriver implements Driver {
 	private static Logger log = LoggerFactory.getLogger(DockerDriver.class);
 
 	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
-	public static final URI DEFAULT_RESOLVER_URI = URI.create("http://localhost:8080/1.0/dids/");
+	public static final URI DEFAULT_DRIVER_URI = URI.create("http://localhost:8080/1.0/dids/");
 
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
-	private URI driverUri = DEFAULT_RESOLVER_URI;
+	private URI driverUri = DEFAULT_DRIVER_URI;
 
 	public DockerDriver() {
 
@@ -70,6 +70,16 @@ public class DockerDriver implements Driver {
 	 * Getters and setters
 	 */
 
+	public HttpClient getHttpClient() {
+
+		return this.httpClient;
+	}
+
+	public void setHttpClient(HttpClient httpClient) {
+
+		this.httpClient = httpClient;
+	}
+
 	public URI getDriverUri() {
 
 		return this.driverUri;
@@ -80,18 +90,8 @@ public class DockerDriver implements Driver {
 		this.driverUri = driverUri;
 	}
 
-	public void setResolverUri(String driverUri) {
+	public void setDriverUri(String driverUri) {
 
 		this.driverUri = URI.create(driverUri);
-	}
-
-	public HttpClient getHttpClient() {
-
-		return this.httpClient;
-	}
-
-	public void setHttpClient(HttpClient httpClient) {
-
-		this.httpClient = httpClient;
 	}
 }

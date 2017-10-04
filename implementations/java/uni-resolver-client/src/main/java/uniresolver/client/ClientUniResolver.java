@@ -70,6 +70,16 @@ public class ClientUniResolver implements UniResolver {
 	 * Getters and setters
 	 */
 
+	public HttpClient getHttpClient() {
+
+		return this.httpClient;
+	}
+
+	public void setHttpClient(HttpClient httpClient) {
+
+		this.httpClient = httpClient;
+	}
+
 	public URI getResolverUri() {
 
 		return this.resolverUri;
@@ -83,15 +93,5 @@ public class ClientUniResolver implements UniResolver {
 	public void setResolverUri(String resolverUri) {
 
 		this.resolverUri = URI.create(resolverUri);
-	}
-
-	public HttpClient getHttpClient() {
-
-		return this.httpClient;
-	}
-
-	public void setHttpClient(HttpClient httpClient) {
-
-		this.httpClient = httpClient;
 	}
 }
