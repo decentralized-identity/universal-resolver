@@ -19,7 +19,7 @@ RUN apt-get install -y --no-install-recommends build-essential pkg-config cmake 
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
-RUN cd /opt/ && git clone https://github.com/hyperledger/indy-sdk.git
+RUN cd /opt/ && git clone https://github.com/hyperledger/indy-sdk.git && cd indy-sdk && git checkout v1.0.0
 RUN cd /opt/indy-sdk/libindy/ && ~/.cargo/bin/cargo clean && ~/.cargo/bin/cargo build
 RUN cd /opt/indy-sdk/wrappers/java/ && mvn clean install -DskipTests
 
@@ -32,6 +32,9 @@ RUN cd /opt/uni-resolver-java && mvn install -N -DskipTests
 RUN cd /opt/uni-resolver-java/uni-resolver-core && mvn install -N -DskipTests
 RUN cd /opt/uni-resolver-java/driver && mvn install -N -DskipTests
 RUN cd /opt/uni-resolver-java/driver-did-sov && mvn install package -N -DskipTests
+
+RUN mkdir /opt/uni-resolver-java/driver-did-sov/lib/
+RUN cp /opt/indy-sdk/libindy/target/debug/libindy.so /opt/uni-resolver-java/driver-did-sov/sovrin/lib/
 
 # done
 
