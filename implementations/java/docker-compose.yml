@@ -5,13 +5,13 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile-driver-did-btcr
     ports:
-      - "8081:8080"
+      - "8081:8081"
   driver-did-sov:
     build:
       context: .
       dockerfile: ./docker/Dockerfile-driver-did-sov
     ports:
-      - "8082:8080"
+      - "8082:8082"
   uni-resolver-web:
     build:
       context: .
