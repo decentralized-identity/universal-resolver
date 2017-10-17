@@ -1,0 +1,20 @@
+version: "3"
+services:
+  driver-did-btcr:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-driver-did-btcr
+    ports:
+      - "8081:8080"
+  driver-did-sov:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-driver-did-sov
+    ports:
+      - "8082:8080"
+  uni-resolver-web:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-uni-resolver-web
+    ports:
+      - "8080:8080"
