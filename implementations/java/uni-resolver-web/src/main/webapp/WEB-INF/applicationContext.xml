@@ -42,11 +42,11 @@
 
 	<!-- DRIVERS (VIA DOCKER REST API) -->
 
-	<bean id="DidBtcrDriver" class="uniresolver.driver.docker.DockerDriver">
+	<bean id="DidBtcrDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="driverUri" value="http://localhost:8081/1.0/dids/" />
 	</bean>
 
-	<bean id="DidSovDriver" class="uniresolver.driver.docker.DockerDriver">
+	<bean id="DidSovDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="driverUri" value="http://localhost:8082/1.0/dids/" />
 	</bean>
 
