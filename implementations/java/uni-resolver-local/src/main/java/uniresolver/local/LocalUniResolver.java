@@ -7,8 +7,6 @@ import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.ddo.DDO;
 import uniresolver.driver.Driver;
-import uniresolver.driver.did.btcr.DidBtcrDriver;
-import uniresolver.driver.did.sov.DidSovDriver;
 
 public class LocalUniResolver implements UniResolver {
 
@@ -20,8 +18,6 @@ public class LocalUniResolver implements UniResolver {
 	static {
 
 		DEFAULT_DRIVERS = new ArrayList<Driver> ();
-		DEFAULT_DRIVERS.add(new DidBtcrDriver());
-		DEFAULT_DRIVERS.add(new DidSovDriver());
 
 		DEFAULT_RESOLVER = new LocalUniResolver();
 	}

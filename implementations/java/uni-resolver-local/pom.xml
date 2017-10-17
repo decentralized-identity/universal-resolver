@@ -27,22 +27,30 @@
 		</dependency>
 		<dependency>
 			<groupId>decentralized-identity</groupId>
-			<artifactId>uni-resolver-driver-did-btcr</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>decentralized-identity</groupId>
-			<artifactId>uni-resolver-driver-did-sov</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>decentralized-identity</groupId>
 			<artifactId>uni-resolver-driver-http</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>with-drivers</id>
+			<dependencies>
+				<dependency>
+					<groupId>decentralized-identity</groupId>
+					<artifactId>uni-resolver-driver-did-btcr</artifactId>
+					<version>0.1-SNAPSHOT</version>
+					<scope>compile</scope>
+				</dependency>
+				<dependency>
+					<groupId>decentralized-identity</groupId>
+					<artifactId>uni-resolver-driver-did-sov</artifactId>
+					<version>0.1-SNAPSHOT</version>
+					<scope>compile</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 </project>
