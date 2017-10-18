@@ -3,12 +3,17 @@ package uniresolver.local;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.ddo.DDO;
 import uniresolver.driver.Driver;
 
 public class LocalUniResolver implements UniResolver {
+
+	private static Logger log = LoggerFactory.getLogger(LocalUniResolver.class);
 
 	private static final List<Driver> DEFAULT_DRIVERS;
 	private static final LocalUniResolver DEFAULT_RESOLVER;
@@ -41,6 +46,7 @@ public class LocalUniResolver implements UniResolver {
 		for (Driver driver : this.getDrivers()) {
 
 			DDO result = driver.resolve(identifier);
+			if (log.isDebugEnabled()) log.debug("Attemping to resolve " + identifier + " with driver " + driver.getClass() + ": " + (result != null));
 			if (result != null) return result;
 		}
 
@@ -52,7 +58,7 @@ public class LocalUniResolver implements UniResolver {
 	/*
 	 * Getters and setters
 	 */
-	
+
 	public List<Driver> getDrivers() {
 
 		return this.drivers;
