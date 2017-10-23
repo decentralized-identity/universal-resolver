@@ -45,8 +45,8 @@ public class LocalUniResolver implements UniResolver {
 
 		for (Driver driver : this.getDrivers()) {
 
+			if (log.isDebugEnabled()) log.debug("Attemping to resolve " + identifier + " with driver " + driver.getClass());
 			DDO result = driver.resolve(identifier);
-			if (log.isDebugEnabled()) log.debug("Attemping to resolve " + identifier + " with driver " + driver.getClass() + ": " + (result != null));
 			if (result != null) return result;
 		}
 
