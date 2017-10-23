@@ -12,7 +12,9 @@
 					<util:list>
 						<ref bean="DidBtcrDriver" />
 						<ref bean="DidSovDriver" />
+						<ref bean="DidUportDriver" />
 						<ref bean="DidV1Driver" />
+						<ref bean="DidIpidDriver" />
 					</util:list>
 				</property>
 			</bean>
@@ -44,14 +46,28 @@
 
 	<bean id="DidBtcrDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="driverUri" value="http://driver-did-btcr:8081/1.0/dids/" />
+		<property name="pattern" value="^did:btcr:.+$" />
 	</bean>
 
 	<bean id="DidSovDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="driverUri" value="http://driver-did-sov:8082/1.0/dids/" />
+		<property name="pattern" value="^did:sov:.+$" />
+	</bean>
+
+	<bean id="DidUportDriver" class="uniresolver.driver.http.HttpDriver">
+		<property name="driverUri" value="http://driver-did-uport:8081/1.0/dids/" />
+		<property name="pattern" value="^did:uport:.+$" />
 	</bean>
 
 	<bean id="DidV1Driver" class="uniresolver.driver.http.HttpDriver">
 		<property name="driverUri" value="https://testnet.veres.one/dids/" />
+		<property name="pattern" value="^did:v1:.+$" />
+	</bean>
+
+	<bean id="DidIpidDriver" class="uniresolver.driver.http.HttpDriver">
+		<property name="driverUri" value="https://ipfs.io/ipns/" />
+		<property name="pattern" value="^did:ipid:.+$" />
+		<property name="rawDidIdentifier" value="true" />
 	</bean>
 
 </beans>

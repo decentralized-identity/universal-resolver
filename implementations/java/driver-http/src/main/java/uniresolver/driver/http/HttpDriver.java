@@ -2,6 +2,8 @@ package uniresolver.driver.http;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -22,9 +24,13 @@ public class HttpDriver implements Driver {
 
 	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
 	public static final URI DEFAULT_DRIVER_URI = URI.create("http://localhost:8080/1.0/dids/");
+	public static final Pattern DEFAULT_PATTERN = null;
+	public static final boolean DEFAULT_RAW_DID_IDENTIFIER = false;
 
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
 	private URI driverUri = DEFAULT_DRIVER_URI;
+	private Pattern pattern = DEFAULT_PATTERN;
+	private boolean rawDidIdentifier = DEFAULT_RAW_DID_IDENTIFIER;
 
 	public HttpDriver() {
 
@@ -33,7 +39,26 @@ public class HttpDriver implements Driver {
 	@Override
 	public DDO resolve(String identifier) throws ResolutionException {
 
+		// check pattern
+
+		if (this.getPattern() != null) {
+
+			Matcher matcher = this.getPattern().matcher(identifier);
+
+			if (! matcher.matches()) {
+
+				if (log.isDebugEnabled()) log.debug("Skipping identifier " + identifier + " - does not match pattern " + this.getPattern());
+				return null;
+			}
+		}
+
 		// prepare HTTP request
+
+		if (this.isRawDidIdentifier()) {
+
+			identifier = identifier.substring(identifier.indexOf(":") + 1);
+			identifier = identifier.substring(identifier.indexOf(":") + 1);
+		}
 
 		String uriString = this.getDriverUri().toString();
 		if (! uriString.endsWith("/")) uriString += "/";
@@ -94,5 +119,30 @@ public class HttpDriver implements Driver {
 	public void setDriverUri(String driverUri) {
 
 		this.driverUri = URI.create(driverUri);
+	}
+
+	public Pattern getPattern() {
+
+		return this.pattern;
+	}
+
+	public void setPattern(Pattern pattern) {
+
+		this.pattern = pattern;
+	}
+
+	public void setPattern(String pattern) {
+
+		this.pattern = Pattern.compile(pattern);
+	}
+
+	public boolean isRawDidIdentifier() {
+
+		return this.rawDidIdentifier;
+	}
+
+	public void setRawDidIdentifier(boolean rawDidIdentifier) {
+
+		this.rawDidIdentifier = rawDidIdentifier;
 	}
 }
