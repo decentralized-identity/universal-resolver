@@ -2,7 +2,7 @@
 
 ### Information
 
-This is a work-in-progress Java implementation of a Universal Resolver (aka Community Resolver) to be used for a decentralized naming system. It includes core resolution logic, a web API, a client library, and drivers for the **did:sov** and **did:btcr** methods.
+This is a work-in-progress Java implementation of a Universal Resolver (aka Community Resolver) to be used for a decentralized naming system. It includes core resolution logic, a web API, a client library, and drivers for the **did:sov**, **did:btcr**, and **did:bsk** methods.
 
 See the [specifications](https://github.com/decentralized-identity/universal-resolver/blob/master/docs/api-documentation.md) for more information.
 
@@ -55,6 +55,9 @@ Dependency:
 	DDO ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
 	System.out.println(ddo2.serialize());
 
+	DDO ddo3 = uniResolver.resolve("did:bsk:v0:judecn.id");
+	System.out.println(ddo3.serialize());
+
 ### Web Resolver
 
 You can deploy a [Web Resolver](https://github.com/decentralized-identity/universal-resolver/tree/master/implementations/java/uni-resolver-web) that can be called by clients and invokes drivers locally (either directly via their JAVA API or via a Docker REST API).
@@ -88,6 +91,9 @@ Dependency:
 	DDO ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
 	System.out.println(ddo2.serialize());
 
+	DDO ddo3 = uniResolver.resolve("did:bsk:v0:judecn.id");
+	System.out.println(ddo3.serialize());
+
 ### Drivers
 
 **TODO** more details
@@ -96,7 +102,7 @@ Drivers can be invoked either locally as a Maven dependency, or they can be invo
 
 ### Docker
 
-Both the Web Resolver and the individual drivers for **did:sov** and **did:btcr** can be built and deployed as Docker containers.
+Both the Web Resolver and the individual drivers for **did:sov**, **did:btcr**, and **did:bsk** can be built and deployed as Docker containers.
 
 How to build:
 
