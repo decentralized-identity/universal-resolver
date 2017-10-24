@@ -150,7 +150,7 @@ public class DidStackDriver implements Driver {
         }
 
         // DDO id
-        String id = name;
+        String id = identifier;
 
         // DDO owners
         Owner owner = Owner.build(identifier, DDO_OWNER_TYPES, DDO_CURVE, null, publicKeyHex);
