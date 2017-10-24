@@ -16,7 +16,7 @@ Try the following:
 	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:btcr:xkrn-xzcr-qqlv-j6sl
 	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:v1:testnet:5431fafa-a38f-4e37-96b6-cdeb8e5d1d40
 	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:ipid:QmbFuwbp7yFDTMX6t8HGcEiy3iHhfvng89A19naCYGKEBj
-	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:uport:2ok9oMAM54TeFMfLb3ZX4i9Qu6x5pcPA7nV
+	curl -X GET  https://uniresolver.danubetech.com/1.0/identifiers/did:bsk:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0
 
 See the [Examples](https://github.com/decentralized-identity/universal-resolver/tree/master/implementations/java/examples/src/main/java/uniresolver/examples/).
 
@@ -56,7 +56,7 @@ Dependency:
 	DDO ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
 	System.out.println(ddo2.serialize());
 
-	DDO ddo3 = uniResolver.resolve("did:bsk:v0:judecn.id");
+	DDO ddo3 = uniResolver.resolve("did:bsk:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0");
 	System.out.println(ddo3.serialize());
 
 ### Web Resolver
@@ -92,7 +92,7 @@ Dependency:
 	DDO ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
 	System.out.println(ddo2.serialize());
 
-	DDO ddo3 = uniResolver.resolve("did:bsk:v0:judecn.id");
+	DDO ddo3 = uniResolver.resolve("did:bsk:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0");
 	System.out.println(ddo3.serialize());
 
 ### Drivers
@@ -108,11 +108,13 @@ Both the Web Resolver and the individual drivers for **did:sov**, **did:btcr**, 
 How to build:
 
 	docker build -f ./docker/Dockerfile-driver-did-btcr . -t uni-resolver-driver-did-btcr
+	docker build -f ./docker/Dockerfile-driver-did-bsk . -t uni-resolver-driver-did-bsk
 	docker build -f ./docker/Dockerfile-driver-did-sov . -t uni-resolver-driver-did-sov
 
 How to run:
 
 	docker run -p 8081:8080 uni-resolver-driver-did-btcr
+	docker run -p 8081:8080 uni-resolver-driver-did-bsk
 	docker run -p 8082:8080 uni-resolver-driver-did-sov
 
 ### About
