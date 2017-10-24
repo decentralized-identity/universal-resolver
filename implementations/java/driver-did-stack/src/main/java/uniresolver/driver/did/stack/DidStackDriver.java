@@ -124,15 +124,23 @@ public class DidStackDriver implements Driver {
 
            // it had better be JSON 
            JSONObject jo = new JSONObject(entityString);
-            
-           if(jo.isNull("public_key")) {
+           
+           // it had better start with the name
+           if(jo.isNull(name)) {
+              // malformed
+              throw new ResolutionException("Invalid profile returned: name `" + name + "` not mapped to profile info");
+           }
+
+           JSONObject nameInfo = jo.getJSONObject(name);
+
+           if(nameInfo.isNull("public_key")) {
               // no public key defined in the profile
               // (usually means the user has a legacy profile)
               throw new ResolutionException("Cannot retrieve public key for `" + name + "`: profile is in legacy format");
            }
            else {
                // extract public_key
-               publicKeyHex = jo.getString("public_key");
+               publicKeyHex = nameInfo.getString("public_key");
            }
             
         } catch (IOException ex) {
