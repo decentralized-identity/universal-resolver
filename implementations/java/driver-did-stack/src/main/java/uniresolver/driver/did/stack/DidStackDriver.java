@@ -1,4 +1,4 @@
-package uniresolver.driver.did.bsk;
+package uniresolver.driver.did.stack;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -31,11 +31,11 @@ import uniresolver.ddo.DDO;
 import uniresolver.ddo.DDO.Owner;
 import uniresolver.driver.Driver;
 
-public class DidBskDriver implements Driver {
+public class DidStackDriver implements Driver {
 
-    private static Logger log = LoggerFactory.getLogger(DidBskDriver.class);
+    private static Logger log = LoggerFactory.getLogger(DidStackDriver.class);
 
-    public static final Pattern DID_BSK_PATTERN = Pattern.compile("^did:bsk:v0:([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{33,34})-([0-9]+)$");
+    public static final Pattern DID_STACK_PATTERN = Pattern.compile("^did:stack:v0:([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{33,34})-([0-9]+)$");
 
     public static final String[] DDO_OWNER_TYPES = new String[] { "CryptographicKey", "EdDsaPublicKey" };
     public static final String DDO_CURVE = "secp256k1";
@@ -46,7 +46,7 @@ public class DidBskDriver implements Driver {
     private String blockstackCoreUrl = DEFAULT_BLOCKSTACK_CORE_URL;
     private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
 
-    public DidBskDriver() {
+    public DidStackDriver() {
 
     }
 
@@ -93,7 +93,7 @@ public class DidBskDriver implements Driver {
     public DDO resolve(String identifier) throws ResolutionException {
 
         // match 
-        Matcher matcher = DID_BSK_PATTERN.matcher(identifier);
+        Matcher matcher = DID_STACK_PATTERN.matcher(identifier);
         if(!matcher.matches()) {
            return null;
         }
@@ -182,7 +182,7 @@ public class DidBskDriver implements Driver {
        return this.blockstackCoreUrl;
     }
 
-    public void setBlockstackCoreUrl(String bskUrl) {
-        this.blockstackCoreUrl = bskUrl;
+    public void setBlockstackCoreUrl(String stackUrl) {
+        this.blockstackCoreUrl = stackUrl;
     }
 }

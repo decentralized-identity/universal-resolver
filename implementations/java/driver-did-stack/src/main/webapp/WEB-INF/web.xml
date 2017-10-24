@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 
-	<display-name>uni-resolver-driver-did-bsk</display-name>
+	<display-name>uni-resolver-driver-did-stack</display-name>
 
 	<!-- SERVLET -->
 
@@ -14,7 +14,7 @@
 		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 		<init-param>
 			<param-name>Driver</param-name>
-			<param-value>uniresolver.driver.did.bsk.DidBskDriver</param-value>
+			<param-value>uniresolver.driver.did.stack.DidStackDriver</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

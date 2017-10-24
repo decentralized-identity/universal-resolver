@@ -12,10 +12,10 @@ services:
       dockerfile: ./docker/Dockerfile-driver-did-sov
     ports:
       - "8082:8082"
-  driver-did-bsk:
+  driver-did-stack:
     build:
       context: .
-      dockerfile: ./docker/Dockerfile-driver-did-bsk
+      dockerfile: ./docker/Dockerfile-driver-did-stack
     ports:
       - "8084:8084"
   driver-did-uport:
