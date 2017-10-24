@@ -12,6 +12,12 @@ services:
       dockerfile: ./docker/Dockerfile-driver-did-sov
     ports:
       - "8082:8082"
+  driver-did-bsk:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-driver-did-bsk
+    ports:
+      - "8084:8084"
   driver-did-uport:
     image: chrislun/uni-resolver-driver-did-uport
     ports:
@@ -22,3 +28,4 @@ services:
       dockerfile: ./docker/Dockerfile-uni-resolver-web
     ports:
       - "8080:8080"
+
