@@ -25,6 +25,7 @@
 		<module>uni-resolver-client</module>
 		<module>uni-resolver-web</module>
 		<module>driver</module>
+		<module>driver-did-stack</module>
 		<module>driver-did-btcr</module>
 		<module>driver-did-sov</module>
 		<module>driver-http</module>
@@ -128,7 +129,16 @@
 				<configuration>
 					<includeScope>runtime</includeScope>
 				</configuration>
-			</plugin>
+             </plugin>
+
+             <!-- You may need to uncomment this if your distro does not ship with jetty
+             <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.4.7.v20170914</version>
+             </plugin>
+             -->
+
 		</plugins>
 
 		<pluginManagement>

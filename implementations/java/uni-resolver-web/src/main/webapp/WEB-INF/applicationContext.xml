@@ -14,7 +14,8 @@
 						<ref bean="DidSovDriver" />
 						<ref bean="DidUportDriver" />
 						<ref bean="DidV1Driver" />
-						<ref bean="DidIpidDriver" />
+                        <ref bean="DidIpidDriver" />
+                        <ref bean="DidStackDriver" />
 					</util:list>
 				</property>
 			</bean>
@@ -68,6 +69,11 @@
 		<property name="driverUri" value="https://ipfs.io/ipns/" />
 		<property name="pattern" value="^did:ipid:.+$" />
 		<property name="rawDidIdentifier" value="true" />
-	</bean>
+     </bean>
+
+     <bean id="DidStackDriver" class="uniresolver.driver.http.HttpDriver">
+        <property name="driverUri" value="http://driver-did-stack:8084/1.0/dids/" />
+        <property name="pattern" value="^did:stack:.+$" />
+     </bean>
 
 </beans>
