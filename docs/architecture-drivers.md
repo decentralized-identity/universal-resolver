@@ -11,8 +11,6 @@ The Universal Resolver's architecture consists of the following:
 
 ![System Architecture](/docs/figures/architecture.png)
 
-![System Architecture](/docs/figures/overview.png)
-
 The Universal Resolver's main task is to provide an API wrapper around one or
 more "drivers".  It does so by running a client for each system in
 a colocated container or VM (bold boxes).  The "Service Orchestrator" is

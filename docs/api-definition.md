@@ -139,6 +139,8 @@ The service orchestrator will forward the request to **at most one driver**.  It
 
 ## Resolver Interface
 
+![System Architecture](/docs/figures/overview.png)
+
 A single endpoint for the Universal Resolver is defined:  `GET /:versionString/identifiers/:fullyQualifiedNameOrDID`
 
 * `:versionString` is the resolver API version.  For now, this is `1.0`.
