@@ -18,4 +18,3 @@ The following implementations are available for use:
  * [Design Goals](/docs/design-goals.md)
  * [Architecture and Drivers](/docs/architecture-drivers.md)
  * [API Definition](/docs/api-definition.md)
- * [Open Questions](/docs/open-questions.md)
