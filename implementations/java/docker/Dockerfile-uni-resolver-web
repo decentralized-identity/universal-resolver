@@ -30,4 +30,4 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 8080
 
-CMD ["/opt/uni-resolver-java/docker/run-uni-resolver-web.sh"]
+ENTRYPOINT ["/bin/bash", "/opt/uni-resolver-java/docker/run-uni-resolver-web.sh"]
