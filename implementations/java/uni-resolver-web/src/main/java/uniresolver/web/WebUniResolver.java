@@ -50,7 +50,7 @@ public class WebUniResolver extends HttpServlet implements HttpRequestHandler, U
 
 		if (identifier == null) {
 
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No identifier found in resolution request.");
+			sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "No identifier found in resolution request.");
 			return;
 		}
 
@@ -64,7 +64,7 @@ public class WebUniResolver extends HttpServlet implements HttpRequestHandler, U
 		} catch (ResolutionException ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolution problem for " + identifier + ": " + ex.getMessage(), ex);
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Resolution problem for " + identifier + ": " + ex.getMessage());
+			sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolution problem for " + identifier + ": " + ex.getMessage());
 			return;
 		}
 
@@ -72,7 +72,7 @@ public class WebUniResolver extends HttpServlet implements HttpRequestHandler, U
 
 		if (ddo == null) {
 
-			response.sendError(HttpServletResponse.SC_NOT_FOUND, "No result for " + identifier);
+			sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No result for " + identifier);
 			return;
 		}
 
@@ -104,6 +104,25 @@ public class WebUniResolver extends HttpServlet implements HttpRequestHandler, U
 	public DDO resolve(String identifier) throws ResolutionException {
 
 		return this.getUniResolver() == null ? null : this.getUniResolver().resolve(identifier);
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	private static void sendResponse(HttpServletResponse response, int status, String contentType, String body) throws IOException {
+
+		response.setStatus(status);
+
+		if (contentType != null) response.setContentType(contentType);
+
+		if (body != null) {
+
+			PrintWriter writer = response.getWriter();
+			writer.write(body);
+			writer.flush();
+			writer.close();
+		}
 	}
 
 	/*

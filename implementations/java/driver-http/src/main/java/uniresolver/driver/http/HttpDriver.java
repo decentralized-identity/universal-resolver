@@ -73,13 +73,25 @@ public class HttpDriver implements Driver {
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
-			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DDO for " + identifier + " from " + uriString + ": " + httpResponse.getStatusLine());
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+
+			if (statusCode == 404) return null;
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-
-			ddo = DDO.fromString(EntityUtils.toString(httpEntity));
+			String httpBody = EntityUtils.toString(httpEntity);
 			EntityUtils.consume(httpEntity);
+
+			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
+
+			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+
+				throw new ResolutionException("Cannot retrieve DDO for " + identifier + " from " + uriString + ": " + httpBody);
+			}
+
+			ddo = DDO.fromString(httpBody);
 		} catch (IOException ex) {
 
 			throw new ResolutionException("Cannot retrieve DDO for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);

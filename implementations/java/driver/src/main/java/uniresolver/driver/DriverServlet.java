@@ -83,56 +83,64 @@ public class DriverServlet extends HttpServlet implements Servlet, HttpRequestHa
 
 		if (identifier == null) {
 
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No identifier found in resolution request.");
+			sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "No identifier found in resolution request.");
 			return;
 		}
 
 		// resolve the identifier
 
 		DDO ddo;
+		String ddoString;
 
 		try {
 
 			ddo = this.getDriver().resolve(identifier);
-		} catch (ResolutionException ex) {
+			ddoString = ddo == null ? null : ddo.serialize();
+		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolution problem for " + identifier + ": " + ex.getMessage(), ex);
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Resolution problem for " + identifier + ": " + ex.getMessage());
+			sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolution problem for " + identifier + ": " + ex.getMessage());
 			return;
 		}
 
 		if (log.isInfoEnabled()) log.info("DDO for identifier " + identifier + ": " + ddo);
 
-		// no result?
+		// no DDO?
 
 		if (ddo == null) {
 
-			response.sendError(HttpServletResponse.SC_NOT_FOUND, "No result for " + identifier);
+			sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No result for " + identifier);
 			return;
 		}
 
 		// write result
 
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.setContentType(DDO.MIME_TYPE);
-		PrintWriter writer = response.getWriter();
-
-		try {
-
-			writer.write(ddo.serialize());
-		} catch (JsonLdError ex) {
-
-			throw new IOException("JSON-LD error: " + ex.getMessage(), ex);
-		}
-
-		writer.flush();
-		writer.close();
+		sendResponse(response, HttpServletResponse.SC_OK, DDO.MIME_TYPE, ddoString);
 	}
 
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		if ("GET".equals(request.getMethod())) this.doGet(request, response);
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	private static void sendResponse(HttpServletResponse response, int status, String contentType, String body) throws IOException {
+
+		response.setStatus(status);
+
+		if (contentType != null) response.setContentType(contentType);
+
+		if (body != null) {
+
+			PrintWriter writer = response.getWriter();
+			writer.write(body);
+			writer.flush();
+			writer.close();
+		}
 	}
 
 	/*
