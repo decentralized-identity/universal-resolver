@@ -9,17 +9,18 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.hyperledger.indy.sdk.ErrorCode;
 import org.hyperledger.indy.sdk.IndyException;
 import org.hyperledger.indy.sdk.LibIndy;
 import org.hyperledger.indy.sdk.ledger.Ledger;
 import org.hyperledger.indy.sdk.pool.Pool;
 import org.hyperledger.indy.sdk.pool.PoolJSONParameters.CreatePoolLedgerConfigJSONParameter;
 import org.hyperledger.indy.sdk.pool.PoolJSONParameters.OpenPoolLedgerJSONParameter;
+import org.hyperledger.indy.sdk.pool.PoolLedgerConfigExistsException;
 import org.hyperledger.indy.sdk.signus.Signus;
 import org.hyperledger.indy.sdk.signus.SignusJSONParameters.CreateAndStoreMyDidJSONParameter;
 import org.hyperledger.indy.sdk.signus.SignusResults.CreateAndStoreMyDidResult;
 import org.hyperledger.indy.sdk.wallet.Wallet;
+import org.hyperledger.indy.sdk.wallet.WalletExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,6 +93,15 @@ public class DidSovDriver implements Driver {
 
 		if (log.isInfoEnabled()) log.info("GET_NYM for " + targetDid + ": " + getNymResponse);
 
+		// GET_NYM response data
+
+		JsonObject jsonGetNymResponse = gson.fromJson(getNymResponse, JsonObject.class);
+		JsonObject jsonGetNymResult = jsonGetNymResponse == null ? null : jsonGetNymResponse.getAsJsonObject("result");
+		JsonElement jsonGetNymData = jsonGetNymResult == null ? null : jsonGetNymResult.get("data");
+		JsonObject jsonGetNymDataContent = (jsonGetNymData == null || jsonGetNymData instanceof JsonNull) ? null : gson.fromJson(jsonGetNymData.getAsString(), JsonObject.class);
+
+		if (jsonGetNymDataContent == null) return null;
+
 		// send GET_ATTR request
 
 		String getAttrResponse;
@@ -107,16 +117,19 @@ public class DidSovDriver implements Driver {
 
 		if (log.isInfoEnabled()) log.info("GET_ATTR for " + targetDid + ": " + getAttrResponse);
 
+		// GET_ATTR response data
+
+		JsonObject jsonGetAttrResponse = gson.fromJson(getAttrResponse, JsonObject.class);
+		JsonObject jsonGetAttrResult = jsonGetAttrResponse == null ? null : jsonGetAttrResponse.getAsJsonObject("result");
+		JsonElement jsonGetAttrData = jsonGetAttrResult == null ? null : jsonGetAttrResult.get("data");
+		JsonObject jsonGetAttrDataContent = (jsonGetAttrData == null || jsonGetAttrData instanceof JsonNull) ? null : gson.fromJson(jsonGetAttrData.getAsString(), JsonObject.class);
+
 		// DDO id
 
 		String id = identifier;
 
 		// DDO owners
 
-		JsonObject jsonGetNymResponse = gson.fromJson(getNymResponse, JsonObject.class);
-		JsonObject jsonGetNymResult = jsonGetNymResponse == null ? null : jsonGetNymResponse.getAsJsonObject("result");
-		JsonElement jsonGetNymData = jsonGetNymResult == null ? null : jsonGetNymResult.get("data");
-		JsonObject jsonGetNymDataContent = (jsonGetNymData == null || jsonGetNymData instanceof JsonNull) ? null : gson.fromJson(jsonGetNymData.getAsString(), JsonObject.class);
 		JsonPrimitive jsonGetNymVerkey = jsonGetNymDataContent == null ? null : jsonGetNymDataContent.getAsJsonPrimitive("verkey");
 
 		String verkey = jsonGetNymVerkey == null ? null : jsonGetNymVerkey.getAsString();
@@ -131,10 +144,6 @@ public class DidSovDriver implements Driver {
 
 		// DDO services
 
-		JsonObject jsonGetAttrResponse = gson.fromJson(getAttrResponse, JsonObject.class);
-		JsonObject jsonGetAttrResult = jsonGetAttrResponse == null ? null : jsonGetAttrResponse.getAsJsonObject("result");
-		JsonElement jsonGetAttrData = jsonGetAttrResult == null ? null : jsonGetAttrResult.get("data");
-		JsonObject jsonGetAttrDataContent = (jsonGetAttrData == null || jsonGetAttrData instanceof JsonNull) ? null : gson.fromJson(jsonGetAttrData.getAsString(), JsonObject.class);
 		JsonObject jsonGetAttrEndpoint = jsonGetAttrDataContent == null ? null : jsonGetAttrDataContent.getAsJsonObject("endpoint");
 
 		Map<String, String> services = new HashMap<String, String> ();
@@ -181,7 +190,7 @@ public class DidSovDriver implements Driver {
 			IndyException iex = null;
 			if (ex instanceof IndyException) iex = (IndyException) ex;
 			if (ex instanceof ExecutionException && ex.getCause() instanceof IndyException) iex = (IndyException) ex.getCause();
-			if (iex != null && ErrorCode.PoolLedgerConfigAlreadyExistsError.equals(iex.getErrorCode())) {
+			if (iex instanceof PoolLedgerConfigExistsException) {
 
 				if (log.isInfoEnabled()) log.info("Pool config " + this.getPoolConfigName() + " has already been created.");
 			} else {
@@ -201,7 +210,7 @@ public class DidSovDriver implements Driver {
 			IndyException iex = null;
 			if (ex instanceof IndyException) iex = (IndyException) ex;
 			if (ex instanceof ExecutionException && ex.getCause() instanceof IndyException) iex = (IndyException) ex.getCause();
-			if (iex != null && ErrorCode.WalletAlreadyExistsError.equals(((IndyException) iex).getErrorCode())) {
+			if (iex instanceof WalletExistsException) {
 
 				if (log.isInfoEnabled()) log.info("Wallet " + this.getWalletName() + " has already been created.");
 			} else {
@@ -240,7 +249,7 @@ public class DidSovDriver implements Driver {
 			this.submitterDid = createAndStoreMyDidResultTrustee.getDid();
 		} catch (IndyException | InterruptedException | ExecutionException ex) {
 
-			throw new ResolutionException("Cannot open wallet " + this.getWalletName() + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot create submitter DID: " + ex.getMessage(), ex);
 		}
 	}
 
