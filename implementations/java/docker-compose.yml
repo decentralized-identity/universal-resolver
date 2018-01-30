@@ -4,12 +4,21 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile-driver-did-btcr
+      args: 
+        bitcoinConnection: blockcypherapi
+        rpcUrlMainnet: http://user:pass@localhost:8332/
+        rpcUrlTestnet: http://user:pass@localhost:18332/
     ports:
       - "8081:8081"
   driver-did-sov:
     build:
       context: .
       dockerfile: ./docker/Dockerfile-driver-did-sov
+      args: 
+        libIndyPath: ./sovrin/lib/
+        poolConfigName: 11347-04
+        poolGenesisTxn: ./sovrin/11347-04.txn
+        walletName: default
     ports:
       - "8082:8082"
   driver-did-stack:

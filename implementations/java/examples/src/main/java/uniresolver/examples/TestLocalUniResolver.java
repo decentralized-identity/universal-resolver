@@ -1,7 +1,7 @@
 package uniresolver.examples;
 import uniresolver.ddo.DDO;
 import uniresolver.driver.did.btcr.DidBtcrDriver;
-import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIExtendedBitcoinConnection;
+import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection;
 import uniresolver.driver.did.sov.DidSovDriver;
 import uniresolver.local.LocalUniResolver;
 
@@ -13,7 +13,7 @@ public class TestLocalUniResolver {
 		uniResolver.getDriver(DidSovDriver.class).setLibIndyPath("./sovrin/lib/");
 		uniResolver.getDriver(DidSovDriver.class).setPoolConfigName("live");
 		uniResolver.getDriver(DidSovDriver.class).setPoolGenesisTxn("live.txn");
-		uniResolver.getDriver(DidBtcrDriver.class).setExtendedBitcoinConnection(BlockcypherAPIExtendedBitcoinConnection.get());
+		uniResolver.getDriver(DidBtcrDriver.class).setBitcoinConnection(BlockcypherAPIBitcoinConnection.get());
 
 		DDO ddo1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
 		System.out.println(ddo1.serialize());

@@ -16,17 +16,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import info.weboftrust.txrefconversion.TxrefConverter.Chain;
-import info.weboftrust.txrefconversion.bitcoinconnection.BlockcypherAPIBitcoinConnection;
 
-public class BlockcypherAPIExtendedBitcoinConnection extends BlockcypherAPIBitcoinConnection implements ExtendedBitcoinConnection {
+public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BlockcypherAPIBitcoinConnection implements BitcoinConnection {
 
-	private static final BlockcypherAPIExtendedBitcoinConnection instance = new BlockcypherAPIExtendedBitcoinConnection();
+	private static final BlockcypherAPIBitcoinConnection instance = new BlockcypherAPIBitcoinConnection();
 
-	protected BlockcypherAPIExtendedBitcoinConnection() {
+	public BlockcypherAPIBitcoinConnection() {
 
 	}
 
-	public static BlockcypherAPIExtendedBitcoinConnection get() {
+	public static BlockcypherAPIBitcoinConnection get() {
 
 		return instance;
 	}

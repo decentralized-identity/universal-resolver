@@ -12,14 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.HttpRequestHandler;
 
-import com.github.jsonldjava.core.JsonLdError;
-
-import uniresolver.ResolutionException;
 import uniresolver.ddo.DDO;
 
-public class DriverServlet extends HttpServlet implements Servlet, HttpRequestHandler {
+public class DriverServlet extends HttpServlet implements Servlet {
 
 	private static final long serialVersionUID = -531456245094927384L;
 
@@ -116,12 +112,6 @@ public class DriverServlet extends HttpServlet implements Servlet, HttpRequestHa
 		// write result
 
 		sendResponse(response, HttpServletResponse.SC_OK, DDO.MIME_TYPE, ddoString);
-	}
-
-	@Override
-	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		if ("GET".equals(request.getMethod())) this.doGet(request, response);
 	}
 
 	/*

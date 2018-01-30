@@ -1,6 +1,7 @@
 package uniresolver.driver.did.sov;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -44,17 +45,12 @@ public class DidSovDriver implements Driver {
 	public static final String[] DDO_OWNER_TYPES = new String[] { "CryptographicKey", "EdDsaSAPublicKey" };
 	public static final String DDO_CURVE = "ed25519";
 
-	public static final String DEFAULT_LIBINDY_PATH = null;
-	public static final String DEFAULT_POOL_CONFIG_NAME = "live";
-	public static final String DEFAULT_POOL_GENESIS_TXN = "live.txn";
-	public static final String DEFAULT_WALLET_NAME = "default";
-
 	private static final Gson gson = new Gson();
 
-	private String libIndyPath = DEFAULT_LIBINDY_PATH;
-	private String poolConfigName = DEFAULT_POOL_CONFIG_NAME;
-	private String poolGenesisTxn = DEFAULT_POOL_GENESIS_TXN;
-	private String walletName = DEFAULT_WALLET_NAME;
+	private String libIndyPath;
+	private String poolConfigName;
+	private String poolGenesisTxn;
+	private String walletName;
 
 	private Pool pool = null;
 	private Wallet wallet = null;
@@ -62,6 +58,28 @@ public class DidSovDriver implements Driver {
 
 	public DidSovDriver() {
 
+		try {
+
+			this.configureFromEnvironment();
+		} catch (Exception ex) {
+
+			throw new RuntimeException(ex.getMessage(), ex);
+		}
+	}
+
+	private void configureFromEnvironment() throws MalformedURLException {
+
+		if (log.isDebugEnabled()) log.debug("Configuring from environment: " + System.getenv());
+
+		String env_libIndyPath = System.getenv("uniresolver_driver_did_sov_libIndyPath");
+		String env_poolConfigName = System.getenv("uniresolver_driver_did_sov_poolConfigName");
+		String env_poolGenesisTxn = System.getenv("uniresolver_driver_did_sov_poolGenesisTxn");
+		String env_walletName = System.getenv("uniresolver_driver_did_sov_walletName");
+
+		if (env_libIndyPath != null) this.setLibIndyPath(env_libIndyPath);
+		if (env_poolConfigName != null) this.setPoolConfigName(env_poolConfigName);
+		if (env_poolGenesisTxn != null) this.setPoolGenesisTxn(env_poolGenesisTxn);
+		if (env_walletName != null) this.setWalletName(env_walletName);
 	}
 
 	@Override

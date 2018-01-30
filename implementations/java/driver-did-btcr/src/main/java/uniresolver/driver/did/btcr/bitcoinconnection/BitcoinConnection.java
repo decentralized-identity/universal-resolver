@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.net.URI;
 
 import info.weboftrust.txrefconversion.TxrefConverter.Chain;
-import info.weboftrust.txrefconversion.bitcoinconnection.BitcoinConnection;
 
-public interface ExtendedBitcoinConnection extends BitcoinConnection {
+public interface BitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BitcoinConnection {
 
 	public BtcrData getBtcrData(Chain chain, String txid) throws IOException;
 

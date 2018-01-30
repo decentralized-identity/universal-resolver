@@ -27,8 +27,8 @@
 <!--
 
 	<bean id="DidBtcrDriver" class="uniresolver.driver.did.btcr.DidBtcrDriver">
-		<property name="extendedBitcoinConnection">
-			<bean class="uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIExtendedBitcoinConnection" />
+		<property name="bitcoinConnection">
+			<bean class="uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection" />
 		</property>
 	</bean>
 

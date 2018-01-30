@@ -5,32 +5,26 @@ import java.net.URL;
 import java.util.List;
 
 import info.weboftrust.txrefconversion.TxrefConverter.Chain;
-import info.weboftrust.txrefconversion.bitcoinconnection.BitcoindRPCBitcoinConnection;
-import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.RawTransaction;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.RawTransaction.In;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.RawTransaction.Out;
 
-public class BitcoindRPCExtendedBitcoinConnection extends BitcoindRPCBitcoinConnection implements ExtendedBitcoinConnection {
+public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BitcoindRPCBitcoinConnection implements BitcoinConnection {
 
-	private static final BitcoindRPCExtendedBitcoinConnection instance = new BitcoindRPCExtendedBitcoinConnection();
+	private static final BitcoindRPCBitcoinConnection instance = new BitcoindRPCBitcoinConnection();
 
-	private final BitcoinJSONRPCClient bitcoindRpcClientMainnet;
-	private final BitcoinJSONRPCClient bitcoindRpcClientTestnet;
+	public BitcoindRPCBitcoinConnection(URL rpcUrlMainnet, URL rpcUrlTestnet) {
 
-	public BitcoindRPCExtendedBitcoinConnection(URL rpcUrlMainnet, URL rpcUrlTestnet) {
-
-		this.bitcoindRpcClientMainnet = new BitcoinJSONRPCClient(rpcUrlMainnet);
-		this.bitcoindRpcClientTestnet = new BitcoinJSONRPCClient(rpcUrlTestnet);
+		super(rpcUrlMainnet, rpcUrlTestnet);
 	}
 
-	private BitcoindRPCExtendedBitcoinConnection() {
+	public BitcoindRPCBitcoinConnection() {
 
-		this(BitcoinJSONRPCClient.DEFAULT_JSONRPC_URL, BitcoinJSONRPCClient.DEFAULT_JSONRPC_TESTNET_URL);
+		super();
 	}
 
-	public static BitcoindRPCExtendedBitcoinConnection get() {
+	public static BitcoindRPCBitcoinConnection get() {
 
 		return instance;
 	}
@@ -40,7 +34,7 @@ public class BitcoindRPCExtendedBitcoinConnection extends BitcoindRPCBitcoinConn
 
 		// retrieve transaction data
 
-		BitcoindRpcClient bitcoindRpcClient = chain == Chain.MAINNET ? bitcoindRpcClientMainnet : bitcoindRpcClientTestnet;
+		BitcoindRpcClient bitcoindRpcClient = chain == Chain.MAINNET ? this.bitcoindRpcClientMainnet : this.bitcoindRpcClientTestnet;
 
 		RawTransaction rawTransaction = bitcoindRpcClient.getRawTransaction(txid);
 		if (rawTransaction == null) return null;

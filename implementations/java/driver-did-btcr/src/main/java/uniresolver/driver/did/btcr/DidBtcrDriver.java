@@ -1,6 +1,7 @@
 package uniresolver.driver.did.btcr;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +25,11 @@ import uniresolver.ResolutionException;
 import uniresolver.ddo.DDO;
 import uniresolver.ddo.DDO.Owner;
 import uniresolver.driver.Driver;
-import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIExtendedBitcoinConnection;
-import uniresolver.driver.did.btcr.bitcoinconnection.ExtendedBitcoinConnection;
-import uniresolver.driver.did.btcr.bitcoinconnection.ExtendedBitcoinConnection.BtcrData;
+import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection;
+import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection.BtcrData;
+import uniresolver.driver.did.btcr.bitcoinconnection.BitcoindRPCBitcoinConnection;
+import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinjSPVBitcoinConnection;
+import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection;
 
 public class DidBtcrDriver implements Driver {
 
@@ -37,14 +40,43 @@ public class DidBtcrDriver implements Driver {
 	public static final String[] DDO_OWNER_TYPES = new String[] { "CryptographicKey", "EdDsaSAPublicKey" };
 	public static final String DDO_CURVE = "secp256k1";
 
-	public static final ExtendedBitcoinConnection DEFAULT_EXTENDED_BITCOIN_CONNECTION = BlockcypherAPIExtendedBitcoinConnection.get();
-	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
+	private BitcoinConnection bitcoinConnection;
 
-	private ExtendedBitcoinConnection extendedBitcoinConnection = DEFAULT_EXTENDED_BITCOIN_CONNECTION;
-	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
+	private HttpClient httpClient = HttpClients.createDefault();
 
 	public DidBtcrDriver() {
 
+		try {
+
+			this.configureFromEnvironment();
+		} catch (Exception ex) {
+
+			throw new RuntimeException(ex.getMessage(), ex);
+		}
+	}
+
+	private void configureFromEnvironment() throws MalformedURLException {
+
+		if (log.isDebugEnabled()) log.debug("Configuring from environment: " + System.getenv());
+
+		String env_bitcoinConnection = System.getenv("uniresolver_driver_did_btcr_bitcoinConnection");
+
+		if ("bitcoind".equals(env_bitcoinConnection)) {
+
+			this.setBitcoinConnection(new BitcoindRPCBitcoinConnection());
+
+			String env_rpcUrlMainnet = System.getenv("uniresolver_driver_did_btcr_rpcUrlMainnet");
+			String env_rpcUrlTestnet = System.getenv("uniresolver_driver_did_btcr_rpcUrlTestnet");
+
+			if (env_rpcUrlMainnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlMainnet(env_rpcUrlMainnet);
+			if (env_rpcUrlTestnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlTestnet(env_rpcUrlTestnet);
+		} else if ("bitcoinj".equals(env_bitcoinConnection)) {
+
+			this.setBitcoinConnection(new BitcoinjSPVBitcoinConnection());
+		} else  if ("blockcypherapi".equals(env_bitcoinConnection)) {
+
+			this.setBitcoinConnection(new BlockcypherAPIBitcoinConnection());
+		}
 	}
 
 	@Override
@@ -72,13 +104,13 @@ public class DidBtcrDriver implements Driver {
 
 		try {
 
-			TxrefConverter txrefConverter = new TxrefConverter(this.getExtendedBitcoinConnection());
+			TxrefConverter txrefConverter = new TxrefConverter(this.getBitcoinConnection());
 
 			ChainAndTxid chainAndTxid = txrefConverter.txrefToTxid(txref);
 			chain = chainAndTxid.getChain();
 			txid = chainAndTxid.getTxid();
 
-			btcrData = this.getExtendedBitcoinConnection().getBtcrData(chain, txid);
+			btcrData = this.getBitcoinConnection().getBtcrData(chain, txid);
 		} catch (IOException ex) {
 
 			throw new ResolutionException("Cannot retrieve BTCR data for " + txref + ": " + ex.getMessage());
@@ -137,14 +169,14 @@ public class DidBtcrDriver implements Driver {
 	 * Getters and setters
 	 */
 
-	public ExtendedBitcoinConnection getExtendedBitcoinConnection() {
+	public BitcoinConnection getBitcoinConnection() {
 
-		return this.extendedBitcoinConnection;
+		return this.bitcoinConnection;
 	}
 
-	public void setExtendedBitcoinConnection(ExtendedBitcoinConnection extendedBitcoinConnection) {
+	public void setBitcoinConnection(BitcoinConnection bitcoinConnection) {
 
-		this.extendedBitcoinConnection = extendedBitcoinConnection;
+		this.bitcoinConnection = bitcoinConnection;
 	}
 
 	public HttpClient getHttpClient() {
