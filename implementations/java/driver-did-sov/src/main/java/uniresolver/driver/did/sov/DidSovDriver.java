@@ -2,8 +2,8 @@ package uniresolver.driver.did.sov;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -32,8 +32,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import uniresolver.ResolutionException;
-import uniresolver.ddo.DDO;
-import uniresolver.ddo.DDO.Owner;
+import uniresolver.did.DIDDocument;
+import uniresolver.did.PublicKey;
+import uniresolver.did.Service;
 import uniresolver.driver.Driver;
 
 public class DidSovDriver implements Driver {
@@ -42,8 +43,7 @@ public class DidSovDriver implements Driver {
 
 	public static final Pattern DID_SOV_PATTERN = Pattern.compile("^did:sov:(\\S*)$");
 
-	public static final String[] DDO_OWNER_TYPES = new String[] { "CryptographicKey", "EdDsaSAPublicKey" };
-	public static final String DDO_CURVE = "ed25519";
+	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Ed25519SigningKey" };
 
 	private static final Gson gson = new Gson();
 
@@ -83,7 +83,7 @@ public class DidSovDriver implements Driver {
 	}
 
 	@Override
-	public DDO resolve(String identifier) throws ResolutionException {
+	public DIDDocument resolve(String identifier) throws ResolutionException {
 
 		// open pool
 
@@ -142,29 +142,23 @@ public class DidSovDriver implements Driver {
 		JsonElement jsonGetAttrData = jsonGetAttrResult == null ? null : jsonGetAttrResult.get("data");
 		JsonObject jsonGetAttrDataContent = (jsonGetAttrData == null || jsonGetAttrData instanceof JsonNull) ? null : gson.fromJson(jsonGetAttrData.getAsString(), JsonObject.class);
 
-		// DDO id
+		// DID DOCUMENT id
 
 		String id = identifier;
 
-		// DDO owners
+		// DID DOCUMENT publicKeys
 
 		JsonPrimitive jsonGetNymVerkey = jsonGetNymDataContent == null ? null : jsonGetNymDataContent.getAsJsonPrimitive("verkey");
 
 		String verkey = jsonGetNymVerkey == null ? null : jsonGetNymVerkey.getAsString();
 
-		Owner owner = Owner.build(identifier, DDO_OWNER_TYPES, DDO_CURVE, verkey, null);
+		List<PublicKey> publicKeys = Collections.singletonList(PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, verkey, null));
 
-		List<DDO.Owner> owners = Collections.singletonList(owner);
-
-		// DDO controls
-
-		List<DDO.Control> controls = Collections.emptyList();
-
-		// DDO services
+		// DID DOCUMENT services
 
 		JsonObject jsonGetAttrEndpoint = jsonGetAttrDataContent == null ? null : jsonGetAttrDataContent.getAsJsonObject("endpoint");
 
-		Map<String, String> services = new HashMap<String, String> ();
+		List<Service> services = new ArrayList<Service> ();
 
 		if (jsonGetAttrEndpoint != null) {
 
@@ -173,17 +167,19 @@ public class DidSovDriver implements Driver {
 				JsonPrimitive jsonGetAttrEndpointValue = jsonGetAttrEndpoint == null ? null : jsonGetAttrEndpoint.getAsJsonPrimitive(jsonService.getKey());
 				String value = jsonGetAttrEndpointValue == null ? null : jsonGetAttrEndpointValue.getAsString();
 
-				services.put(jsonService.getKey(), value);
+				Service service = Service.build(jsonService.getKey(), value);
+
+				services.add(service);
 			}
 		}
 
-		// create DDO
+		// create DID DOCUMENT
 
-		DDO ddo = DDO.build(id, owners, controls, services);
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, services);
 
 		// done
 
-		return ddo;
+		return didDocument;
 	}
 
 	private void openIndy() throws ResolutionException {

@@ -16,7 +16,7 @@ import com.github.jsonldjava.core.JsonLdError;
 
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
-import uniresolver.ddo.DDO;
+import uniresolver.did.DIDDocument;
 
 public class WebUniResolver extends HttpServlet implements HttpRequestHandler, UniResolver {
 
@@ -56,7 +56,7 @@ public class WebUniResolver extends HttpServlet implements HttpRequestHandler, U
 
 		// resolve the identifier
 
-		DDO ddo;
+		DIDDocument ddo;
 
 		try {
 
@@ -79,7 +79,7 @@ public class WebUniResolver extends HttpServlet implements HttpRequestHandler, U
 		// write result
 
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.setContentType(DDO.MIME_TYPE);
+		response.setContentType(DIDDocument.MIME_TYPE);
 		PrintWriter writer = response.getWriter();
 
 		try {
@@ -101,7 +101,7 @@ public class WebUniResolver extends HttpServlet implements HttpRequestHandler, U
 	}
 
 	@Override
-	public DDO resolve(String identifier) throws ResolutionException {
+	public DIDDocument resolve(String identifier) throws ResolutionException {
 
 		return this.getUniResolver() == null ? null : this.getUniResolver().resolve(identifier);
 	}

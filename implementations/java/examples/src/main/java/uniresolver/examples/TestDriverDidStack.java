@@ -1,5 +1,5 @@
 package uniresolver.examples;
-import uniresolver.ddo.DDO;
+import uniresolver.did.DIDDocument;
 import uniresolver.driver.did.stack.DidStackDriver;
 
 public class TestDriverDidStack {
@@ -8,7 +8,7 @@ public class TestDriverDidStack {
 
 		DidStackDriver driver = new DidStackDriver();
 
-		DDO ddo = driver.resolve("did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0");
+		DIDDocument ddo = driver.resolve("did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0");
 		System.out.println(ddo.serialize());
 	}
 }

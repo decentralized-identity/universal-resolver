@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uniresolver.ddo.DDO;
+import uniresolver.did.DIDDocument;
 
 public class DriverServlet extends HttpServlet implements Servlet {
 
@@ -85,13 +85,13 @@ public class DriverServlet extends HttpServlet implements Servlet {
 
 		// resolve the identifier
 
-		DDO ddo;
-		String ddoString;
+		DIDDocument didDocument;
+		String didDocumentString;
 
 		try {
 
-			ddo = this.getDriver().resolve(identifier);
-			ddoString = ddo == null ? null : ddo.serialize();
+			didDocument = this.getDriver().resolve(identifier);
+			didDocumentString = didDocument == null ? null : didDocument.serialize();
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolution problem for " + identifier + ": " + ex.getMessage(), ex);
@@ -99,11 +99,11 @@ public class DriverServlet extends HttpServlet implements Servlet {
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("DDO for identifier " + identifier + ": " + ddo);
+		if (log.isInfoEnabled()) log.info("DID document for identifier " + identifier + ": " + didDocument);
 
 		// no DDO?
 
-		if (ddo == null) {
+		if (didDocument == null) {
 
 			sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No result for " + identifier);
 			return;
@@ -111,7 +111,7 @@ public class DriverServlet extends HttpServlet implements Servlet {
 
 		// write result
 
-		sendResponse(response, HttpServletResponse.SC_OK, DDO.MIME_TYPE, ddoString);
+		sendResponse(response, HttpServletResponse.SC_OK, DIDDocument.MIME_TYPE, didDocumentString);
 	}
 
 	/*

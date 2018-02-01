@@ -1,8 +1,8 @@
 package uniresolver;
 
-import uniresolver.ddo.DDO;
+import uniresolver.did.DIDDocument;
 
 public interface UniResolver {
 
-	public DDO resolve(String identifier) throws ResolutionException;
+	public DIDDocument resolve(String identifier) throws ResolutionException;
 }

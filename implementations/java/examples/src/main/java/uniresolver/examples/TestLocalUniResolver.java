@@ -1,5 +1,5 @@
 package uniresolver.examples;
-import uniresolver.ddo.DDO;
+import uniresolver.did.DIDDocument;
 import uniresolver.driver.did.btcr.DidBtcrDriver;
 import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection;
 import uniresolver.driver.did.sov.DidSovDriver;
@@ -15,13 +15,13 @@ public class TestLocalUniResolver {
 		uniResolver.getDriver(DidSovDriver.class).setPoolGenesisTxn("live.txn");
 		uniResolver.getDriver(DidBtcrDriver.class).setBitcoinConnection(BlockcypherAPIBitcoinConnection.get());
 
-		DDO ddo1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
+		DIDDocument ddo1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
 		System.out.println(ddo1.serialize());
 
-		DDO ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
+		DIDDocument ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
 		System.out.println(ddo2.serialize());
 
-		DDO ddo3 = uniResolver.resolve("did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0");
+		DIDDocument ddo3 = uniResolver.resolve("did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0");
 		System.out.println(ddo3.serialize());
 	}
 }

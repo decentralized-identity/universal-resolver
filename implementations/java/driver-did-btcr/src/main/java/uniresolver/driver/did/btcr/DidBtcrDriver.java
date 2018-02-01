@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,8 +21,9 @@ import info.weboftrust.txrefconversion.TxrefConverter;
 import info.weboftrust.txrefconversion.TxrefConverter.Chain;
 import info.weboftrust.txrefconversion.TxrefConverter.ChainAndTxid;
 import uniresolver.ResolutionException;
-import uniresolver.ddo.DDO;
-import uniresolver.ddo.DDO.Owner;
+import uniresolver.did.DIDDocument;
+import uniresolver.did.PublicKey;
+import uniresolver.did.Service;
 import uniresolver.driver.Driver;
 import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection;
 import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection.BtcrData;
@@ -37,8 +37,7 @@ public class DidBtcrDriver implements Driver {
 
 	public static final Pattern DID_BTCR_PATTERN = Pattern.compile("^did:btcr:(\\S*)$");
 
-	public static final String[] DDO_OWNER_TYPES = new String[] { "CryptographicKey", "EdDsaSAPublicKey" };
-	public static final String DDO_CURVE = "secp256k1";
+	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "EdDsaSAPublicKeySecp256k1" };
 
 	private BitcoinConnection bitcoinConnection;
 
@@ -80,7 +79,7 @@ public class DidBtcrDriver implements Driver {
 	}
 
 	@Override
-	public DDO resolve(String identifier) throws ResolutionException {
+	public DIDDocument resolve(String identifier) throws ResolutionException {
 
 		// parse identifier
 
@@ -118,51 +117,47 @@ public class DidBtcrDriver implements Driver {
 
 		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ txid + " on chain " + chain + "): " + btcrData);
 
-		// retrieve more DDO
+		// retrieve DID DOCUMENT FRAGEMENT
 
 		HttpGet httpGet = new HttpGet(btcrData.getMoreDdoUri());
-		DDO moreDdo = null;
+		DIDDocument didDocumentFragment = null;
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve more DDO for " + txref + " from " + btcrData.getMoreDdoUri() + ": " + httpResponse.getStatusLine());
+			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getMoreDdoUri() + ": " + httpResponse.getStatusLine());
 
 			HttpEntity httpEntity = httpResponse.getEntity();
 
-			moreDdo = DDO.fromString(EntityUtils.toString(httpEntity));
+			didDocumentFragment = DIDDocument.fromString(EntityUtils.toString(httpEntity));
 			EntityUtils.consume(httpEntity);
 		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve more DDO for " + txref + " from " + btcrData.getMoreDdoUri() + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getMoreDdoUri() + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isInfoEnabled()) log.info("Retrieved more DDO for " + txref + " (" + btcrData.getMoreDdoUri() + "): " + moreDdo);
+		if (log.isInfoEnabled()) log.info("Retrieved more DID DOCUMENT FRAGMENT for " + txref + " (" + btcrData.getMoreDdoUri() + "): " + didDocumentFragment);
 
-		// DDO id
+		// DID DOCUMENT id
 
 		String id = identifier;
 
-		// DDO owners
+		// DID DOCUMENT publicKeys
 
-		Owner owner = Owner.build(identifier, DDO_OWNER_TYPES, DDO_CURVE, null, btcrData.getInputScriptPubKey());
+		PublicKey owner = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, btcrData.getInputScriptPubKey());
 
-		List<DDO.Owner> owners = Collections.singletonList(owner);
+		List<PublicKey> publicKeys = Collections.singletonList(owner);
 
-		// DDO controls
+		// DID DOCUMENT services
 
-		List<DDO.Control> controls = Collections.emptyList();
+		List<Service> services = didDocumentFragment.getServices();
 
-		// DDO services
+		// create DID DOCUMENT
 
-		Map<String, String> services = moreDdo.getServices();
-
-		// create DDO
-
-		DDO ddo = DDO.build(id, owners, controls, services);
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, services);
 
 		// done
 
-		return ddo;
+		return didDocument;
 	}
 
 	/*

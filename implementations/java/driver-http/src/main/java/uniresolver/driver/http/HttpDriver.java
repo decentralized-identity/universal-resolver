@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uniresolver.ResolutionException;
-import uniresolver.ddo.DDO;
+import uniresolver.did.DIDDocument;
 import uniresolver.driver.Driver;
 
 public class HttpDriver implements Driver {
@@ -37,7 +37,7 @@ public class HttpDriver implements Driver {
 	}
 
 	@Override
-	public DDO resolve(String identifier) throws ResolutionException {
+	public DIDDocument resolve(String identifier) throws ResolutionException {
 
 		// check pattern
 
@@ -69,7 +69,7 @@ public class HttpDriver implements Driver {
 
 		// retrieve DDO
 
-		DDO ddo;
+		DIDDocument ddo;
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
@@ -91,7 +91,7 @@ public class HttpDriver implements Driver {
 				throw new ResolutionException("Cannot retrieve DDO for " + identifier + " from " + uriString + ": " + httpBody);
 			}
 
-			ddo = DDO.fromString(httpBody);
+			ddo = DIDDocument.fromString(httpBody);
 		} catch (IOException ex) {
 
 			throw new ResolutionException("Cannot retrieve DDO for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);

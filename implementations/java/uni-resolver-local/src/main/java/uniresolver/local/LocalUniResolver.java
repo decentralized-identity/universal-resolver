@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
-import uniresolver.ddo.DDO;
+import uniresolver.did.DIDDocument;
 import uniresolver.driver.Driver;
 
 public class LocalUniResolver implements UniResolver {
@@ -37,7 +37,7 @@ public class LocalUniResolver implements UniResolver {
 	}
 
 	@Override
-	public DDO resolve(String identifier) throws ResolutionException {
+	public DIDDocument resolve(String identifier) throws ResolutionException {
 
 		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
 
@@ -46,7 +46,7 @@ public class LocalUniResolver implements UniResolver {
 		for (Driver driver : this.getDrivers()) {
 
 			if (log.isDebugEnabled()) log.debug("Attemping to resolve " + identifier + " with driver " + driver.getClass());
-			DDO result = driver.resolve(identifier);
+			DIDDocument result = driver.resolve(identifier);
 			if (result != null) return result;
 		}
 

@@ -1,9 +1,9 @@
 package uniresolver.driver;
 
 import uniresolver.ResolutionException;
-import uniresolver.ddo.DDO;
+import uniresolver.did.DIDDocument;
 
 public interface Driver {
 
-	public DDO resolve(String identifier) throws ResolutionException;
+	public DIDDocument resolve(String identifier) throws ResolutionException;
 }

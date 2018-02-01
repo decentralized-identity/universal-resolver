@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
-import uniresolver.ddo.DDO;
+import uniresolver.did.DIDDocument;
 
 public class ClientUniResolver implements UniResolver {
 
@@ -31,7 +31,7 @@ public class ClientUniResolver implements UniResolver {
 	}
 
 	@Override
-	public DDO resolve(String identifier) throws ResolutionException {
+	public DIDDocument resolve(String identifier) throws ResolutionException {
 
 		// prepare HTTP request
 
@@ -41,9 +41,9 @@ public class ClientUniResolver implements UniResolver {
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
 
-		// retrieve DDO
+		// execute HTTP request
 
-		DDO ddo;
+		DIDDocument ddo;
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
@@ -52,7 +52,7 @@ public class ClientUniResolver implements UniResolver {
 
 			HttpEntity httpEntity = httpResponse.getEntity();
 
-			ddo = DDO.fromString(EntityUtils.toString(httpEntity));
+			ddo = DIDDocument.fromString(EntityUtils.toString(httpEntity));
 			EntityUtils.consume(httpEntity);
 		} catch (IOException ex) {
 

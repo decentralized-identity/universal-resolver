@@ -1,5 +1,5 @@
 package uniresolver.examples;
-import uniresolver.ddo.DDO;
+import uniresolver.did.DIDDocument;
 import uniresolver.driver.did.btcr.DidBtcrDriver;
 import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection;
 
@@ -10,7 +10,7 @@ public class TestDriverDidBtcr {
 		DidBtcrDriver driver = new DidBtcrDriver();
 		driver.setBitcoinConnection(BlockcypherAPIBitcoinConnection.get());
 
-		DDO ddo = driver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
+		DIDDocument ddo = driver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
 		System.out.println(ddo.serialize());
 	}
 }
