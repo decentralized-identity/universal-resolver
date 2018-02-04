@@ -75,9 +75,9 @@ public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconver
 
 		if (inputScriptPubKey == null) return null;
 
-		// find more DDO URI
+		// find DID DOCUMENT FRAGMENT URI
 
-		URI moreDdoUri = null;
+		URI fragmentUri = null;
 
 		for (Iterator<JsonElement> i = ((JsonArray) txData.get("outputs")).iterator(); i.hasNext(); ) {
 
@@ -104,15 +104,15 @@ public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconver
 
 				if (data == null || data.length < 1) throw new IOException("Cannot find data in script " + script.getAsString());
 
-				moreDdoUri = URI.create(new String(data, StandardCharsets.UTF_8));
+				fragmentUri = URI.create(new String(data, StandardCharsets.UTF_8));
 				break;
 			}
 		}
 
-		if (moreDdoUri == null) return null;
+		if (fragmentUri == null) return null;
 
 		// done
 
-		return new BtcrData(inputScriptPubKey, moreDdoUri);
+		return new BtcrData(inputScriptPubKey, fragmentUri);
 	}
 }

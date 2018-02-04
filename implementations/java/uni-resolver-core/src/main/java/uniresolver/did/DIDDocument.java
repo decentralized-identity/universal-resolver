@@ -9,17 +9,17 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
 
 public class DIDDocument {
-
-	public static final String MIME_TYPE = "application/ld+json";
 
 	public static final String JSONLD_TERM_ID = "id";
 	public static final String JSONLD_TERM_TYPE = "type";
@@ -29,44 +29,41 @@ public class DIDDocument {
 	public static final String JSONLD_TERM_PUBLICKEYBASE64 = "publicKeyBase64";
 	public static final String JSONLD_TERM_PUBLICKEYHEX = "publicKeyHex";
 
-	public static final Object JSONLD_CONTEXT_THIN;
+	public static final Object JSONLD_CONTEXT;
 
-	private final LinkedHashMap<String, Object> didDocumentJsonLdObject;
-	private final String jsonString;
+	private final Map<String, Object> jsonLdObject;
 
 	static {
 
 		try {
 
-			JSONLD_CONTEXT_THIN = JsonUtils.fromInputStream(DIDDocument.class.getResourceAsStream("ddo-context-thin.jsonld"));
+			JSONLD_CONTEXT = JsonUtils.fromInputStream(DIDDocument.class.getResourceAsStream("diddocument-context.jsonld"));
 		} catch (IOException ex) {
 
 			throw new ExceptionInInitializerError(ex);
 		}
 	}
 
-	private DIDDocument(LinkedHashMap<String, Object> didDocumentJsonLdObject, String jsonString) {
+	private DIDDocument(Map<String, Object> jsonLdObject) {
 
-		this.didDocumentJsonLdObject = didDocumentJsonLdObject;
-		this.jsonString = jsonString;
+		this.jsonLdObject = jsonLdObject;
 	}
 
-	public LinkedHashMap<String, Object> getJsonLdObject() {
+	/*
+	 * Factory methods
+	 */
 
-		return this.didDocumentJsonLdObject;
-	}
+	public static DIDDocument build(Map<String, Object> jsonLdObject) {
 
-	public static DIDDocument build(LinkedHashMap<String, Object> ddoJsonLdObject, String jsonString) {
-
-		return new DIDDocument(ddoJsonLdObject, jsonString);
+		return new DIDDocument(jsonLdObject);
 	}
 
 	public static DIDDocument build(String id, List<PublicKey> publicKeys, List<Service> services) {
 
 		// add 'id'
 
-		LinkedHashMap<String, Object> didDocumentJsonLdObject = new LinkedHashMap<String, Object> ();
-		didDocumentJsonLdObject.put(JSONLD_TERM_ID, id);
+		Map<String, Object> jsonLdObject = new LinkedHashMap<String, Object> ();
+		jsonLdObject.put(JSONLD_TERM_ID, id);
 
 		// add 'publicKey'
 
@@ -76,12 +73,12 @@ public class DIDDocument {
 
 			for (PublicKey publicKey : publicKeys) {
 
-				LinkedHashMap<String, Object> publicKeyJsonLdObject = publicKey.getJsonLdObject();
+				Map<String, Object> publicKeyJsonLdObject = publicKey.getJsonLdObject();
 
 				publicKeysJsonLdArray.add(publicKeyJsonLdObject);
 			}
 
-			didDocumentJsonLdObject.put(JSONLD_TERM_PUBLICKEY, publicKeysJsonLdArray);
+			jsonLdObject.put(JSONLD_TERM_PUBLICKEY, publicKeysJsonLdArray);
 		}
 
 		// add 'service'
@@ -92,55 +89,72 @@ public class DIDDocument {
 
 			for (Service service : services) {
 
-				LinkedHashMap<String, Object> serviceJsonLdObject = service.getJsonLdObject();
+				Map<String, Object> serviceJsonLdObject = service.getJsonLdObject();
 
 				servicesJsonLdArray.add(serviceJsonLdObject);
 			}
 
-			didDocumentJsonLdObject.put(JSONLD_TERM_SERVICE, servicesJsonLdArray);
+			jsonLdObject.put(JSONLD_TERM_SERVICE, servicesJsonLdArray);
 		}
 
 		// done
 
-		return new DIDDocument(didDocumentJsonLdObject, null);
+		return new DIDDocument(jsonLdObject);
+	}
+
+	/*
+	 * Serialization
+	 */
+
+	@SuppressWarnings("unchecked")
+	public static DIDDocument fromJson(String jsonString) throws IOException {
+
+		Map<String, Object> jsonLdObject = (LinkedHashMap<String, Object>) JsonUtils.fromString(jsonString);
+
+		return build(jsonLdObject);
+	}
+
+	public static DIDDocument fromJson(InputStream input, String enc) throws IOException {
+
+		return fromJson(IOUtils.toString(input, StandardCharsets.UTF_8));
+	}
+
+	public static DIDDocument fromJson(Reader reader) throws IOException {
+
+		return fromJson(IOUtils.toString(reader));
 	}
 
 	@SuppressWarnings("unchecked")
-	public static DIDDocument fromString(String jsonString) throws IOException {
+	@JsonRawValue
+	public String toJson() throws IOException, JsonLdError {
 
-		LinkedHashMap<String, Object> jsonLdObject = (LinkedHashMap<String, Object>) JsonUtils.fromString(jsonString);
-
-		return build(jsonLdObject, JsonUtils.toPrettyString(jsonLdObject));
-	}
-
-	public static DIDDocument fromInputStream(InputStream input, String enc) throws IOException {
-
-		return fromString(IOUtils.toString(input, StandardCharsets.UTF_8));
-	}
-
-	public static DIDDocument fromReader(Reader reader) throws IOException {
-
-		return fromString(IOUtils.toString(reader));
-	}
-
-	@SuppressWarnings("unchecked")
-	public String serialize() throws IOException, JsonLdError {
-
-		if (this.jsonString != null) return this.jsonString;
-
-		LinkedHashMap<String, Object> didDocumentJsonObject = (LinkedHashMap<String, Object>) JsonUtils.fromInputStream(DIDDocument.class.getResourceAsStream("diddocument-skeleton.jsonld"));
-		didDocumentJsonObject.putAll(this.didDocumentJsonLdObject);
+		Map<String, Object> jsonLdObject = (LinkedHashMap<String, Object>) JsonUtils.fromInputStream(DIDDocument.class.getResourceAsStream("diddocument-skeleton.jsonld"));
+		jsonLdObject.putAll(this.jsonLdObject);
 
 		JsonLdOptions options = new JsonLdOptions();
-		Object rdf = JsonLdProcessor.compact(didDocumentJsonObject, JSONLD_CONTEXT_THIN, options);
+		Object rdf = JsonLdProcessor.compact(jsonLdObject, JSONLD_CONTEXT, options);
 		String result = JsonUtils.toPrettyString(rdf);
 
 		return result;
 	}
 
+	/*
+	 * Getters and setters
+	 */
+
+	public Map<String, Object> getJsonLdObject() {
+
+		return this.jsonLdObject;
+	}
+
+	public void setJsonLdObjectKeyValue(String key, Object value) {
+
+		this.jsonLdObject.put(key, value);
+	}
+
 	public String getId() {
 
-		Object entry = this.didDocumentJsonLdObject.get(JSONLD_TERM_ID);
+		Object entry = this.jsonLdObject.get(JSONLD_TERM_ID);
 		if (entry == null) return null;
 		if (! (entry instanceof URI)) return null;
 
@@ -152,7 +166,7 @@ public class DIDDocument {
 	@SuppressWarnings("unchecked")
 	public List<PublicKey> getPublicKeys() {
 
-		Object entry = this.didDocumentJsonLdObject.get(JSONLD_TERM_PUBLICKEY);
+		Object entry = this.jsonLdObject.get(JSONLD_TERM_PUBLICKEY);
 		if (entry == null) return null;
 		if (! (entry instanceof LinkedList<?>)) return null;
 
@@ -175,7 +189,7 @@ public class DIDDocument {
 	@SuppressWarnings("unchecked")
 	public List<Service> getServices() {
 
-		Object entry = this.didDocumentJsonLdObject.get(JSONLD_TERM_SERVICE);
+		Object entry = this.jsonLdObject.get(JSONLD_TERM_SERVICE);
 		if (entry == null) return null;
 		if (! (entry instanceof LinkedList<?>)) return null;
 
@@ -187,7 +201,7 @@ public class DIDDocument {
 
 			if (! (entry2 instanceof LinkedHashMap<?, ?>)) continue;
 
-			LinkedHashMap<String, Object> serviceJsonLdObject = (LinkedHashMap<String, Object>) entry2;
+			Map<String, Object> serviceJsonLdObject = (Map<String, Object>) entry2;
 
 			controls.add(Service.build(serviceJsonLdObject));
 		}
@@ -204,7 +218,7 @@ public class DIDDocument {
 
 		try {
 
-			return this.serialize();
+			return this.toJson();
 		} catch (IOException | JsonLdError ex) {
 
 			throw new RuntimeException(ex.getMessage(), ex);

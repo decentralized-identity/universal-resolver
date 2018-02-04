@@ -1,22 +1,22 @@
 package uniresolver.did;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class PublicKey extends JsonLdObject {
 
-	private PublicKey(LinkedHashMap<String, Object> jsonLdObject) {
+	private PublicKey(Map<String, Object> jsonLdObject) {
 
 		super(jsonLdObject);
 	}
 
-	public static PublicKey build(LinkedHashMap<String, Object> jsonLdObject) {
+	public static PublicKey build(Map<String, Object> jsonLdObject) {
 
 		return new PublicKey(jsonLdObject);
 	}
 
 	public static PublicKey build(String id, String[] types, String publicKeyBase64, String publicKeyHex) {
 
-		LinkedHashMap<String, Object> jsonLdObject = JsonLdObject.init(id, types);
+		Map<String, Object> jsonLdObject = JsonLdObject.init(id, types);
 
 		// add 'publicKeyBase64'
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -36,6 +37,7 @@ import uniresolver.did.DIDDocument;
 import uniresolver.did.PublicKey;
 import uniresolver.did.Service;
 import uniresolver.driver.Driver;
+import uniresolver.result.ResolutionResult;
 
 public class DidSovDriver implements Driver {
 
@@ -83,7 +85,7 @@ public class DidSovDriver implements Driver {
 	}
 
 	@Override
-	public DIDDocument resolve(String identifier) throws ResolutionException {
+	public ResolutionResult resolve(String identifier) throws ResolutionException {
 
 		// open pool
 
@@ -177,9 +179,19 @@ public class DidSovDriver implements Driver {
 
 		DIDDocument didDocument = DIDDocument.build(id, publicKeys, services);
 
+		// create DRIVER METADATA
+
+		Map<String, Object> driverMetadata = new LinkedHashMap<String, Object> ();
+		driverMetadata.put("nymResponse", gson.fromJson(jsonGetNymResponse, Map.class));
+		driverMetadata.put("attrResponse", gson.fromJson(jsonGetAttrResponse, Map.class));
+
+		// create RESOLUTION RESULT
+
+		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, driverMetadata);
+
 		// done
 
-		return didDocument;
+		return resolutionResult;
 	}
 
 	private void openIndy() throws ResolutionException {

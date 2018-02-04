@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
 import uniresolver.did.DIDDocument;
 import uniresolver.driver.Driver;
+import uniresolver.result.ResolutionResult;
 
 public class HttpDriver implements Driver {
 
@@ -26,18 +27,20 @@ public class HttpDriver implements Driver {
 	public static final URI DEFAULT_DRIVER_URI = URI.create("http://localhost:8080/1.0/dids/");
 	public static final Pattern DEFAULT_PATTERN = null;
 	public static final boolean DEFAULT_RAW_DID_IDENTIFIER = false;
+	public static final boolean DEFAULT_RAW_DID_DOCUMENT = false;
 
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
 	private URI driverUri = DEFAULT_DRIVER_URI;
 	private Pattern pattern = DEFAULT_PATTERN;
 	private boolean rawDidIdentifier = DEFAULT_RAW_DID_IDENTIFIER;
+	private boolean rawDidDocument = DEFAULT_RAW_DID_DOCUMENT;
 
 	public HttpDriver() {
 
 	}
 
 	@Override
-	public DIDDocument resolve(String identifier) throws ResolutionException {
+	public ResolutionResult resolve(String identifier) throws ResolutionException {
 
 		// check pattern
 
@@ -67,9 +70,9 @@ public class HttpDriver implements Driver {
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
 		httpGet.addHeader("Accept", "application/ld+json");
 
-		// retrieve DDO
+		// execute HTTP request
 
-		DIDDocument ddo;
+		ResolutionResult resolutionResult;
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
@@ -88,20 +91,27 @@ public class HttpDriver implements Driver {
 
 			if (httpResponse.getStatusLine().getStatusCode() > 200) {
 
-				throw new ResolutionException("Cannot retrieve DDO for " + identifier + " from " + uriString + ": " + httpBody);
+				if (log.isWarnEnabled()) log.warn("Cannot retrieve RESOLUTION RESULT for " + identifier + " from " + uriString + ": " + httpBody);
+				throw new ResolutionException(httpBody);
 			}
 
-			ddo = DIDDocument.fromString(httpBody);
+			if (this.isRawDidDocument()) {
+
+				resolutionResult = ResolutionResult.build(DIDDocument.fromJson(httpBody));
+			} else {
+
+				resolutionResult = ResolutionResult.fromJson(httpBody);
+			}
 		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve DDO for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot retrieve RESOLUTION RESULT for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved DDO for " + identifier + " (" + uriString + "): " + ddo);
+		if (log.isDebugEnabled()) log.debug("Retrieved RESOLUTION RESULT for " + identifier + " (" + uriString + "): " + resolutionResult);
 
 		// done
 
-		return ddo;
+		return resolutionResult;
 	}
 
 	/*
@@ -156,5 +166,15 @@ public class HttpDriver implements Driver {
 	public void setRawDidIdentifier(boolean rawDidIdentifier) {
 
 		this.rawDidIdentifier = rawDidIdentifier;
+	}
+
+	public boolean isRawDidDocument() {
+
+		return this.rawDidDocument;
+	}
+
+	public void setRawDidDocument(boolean rawDidDocument) {
+
+		this.rawDidDocument = rawDidDocument;
 	}
 }

@@ -13,13 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uniresolver.did.DIDDocument;
+import uniresolver.result.ResolutionResult;
 
 public class DriverServlet extends HttpServlet implements Servlet {
 
 	private static final long serialVersionUID = -531456245094927384L;
 
 	private static Logger log = LoggerFactory.getLogger(DriverServlet.class);
+
+	public static final String MIME_TYPE = "application/json";
 
 	private Driver driver;
 
@@ -85,33 +87,33 @@ public class DriverServlet extends HttpServlet implements Servlet {
 
 		// resolve the identifier
 
-		DIDDocument didDocument;
-		String didDocumentString;
+		ResolutionResult resolutionResult;
+		String resolutionResultString;
 
 		try {
 
-			didDocument = this.getDriver().resolve(identifier);
-			didDocumentString = didDocument == null ? null : didDocument.serialize();
+			resolutionResult = this.getDriver().resolve(identifier);
+			resolutionResultString = resolutionResult == null ? null : resolutionResult.toJson();
 		} catch (Exception ex) {
 
-			if (log.isWarnEnabled()) log.warn("Resolution problem for " + identifier + ": " + ex.getMessage(), ex);
-			sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolution problem for " + identifier + ": " + ex.getMessage());
+			if (log.isWarnEnabled()) log.warn("Driver reported for " + identifier + ": " + ex.getMessage(), ex);
+			sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Driver reported for " + identifier + ": " + ex.getMessage());
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("DID document for identifier " + identifier + ": " + didDocument);
+		if (log.isInfoEnabled()) log.info("DID document for identifier " + identifier + ": " + resolutionResult);
 
-		// no DDO?
+		// no resolution result?
 
-		if (didDocument == null) {
+		if (resolutionResult == null) {
 
 			sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No result for " + identifier);
 			return;
 		}
 
-		// write result
+		// write resolution result
 
-		sendResponse(response, HttpServletResponse.SC_OK, DIDDocument.MIME_TYPE, didDocumentString);
+		sendResponse(response, HttpServletResponse.SC_OK, MIME_TYPE, resolutionResultString);
 	}
 
 	/*
@@ -123,6 +125,8 @@ public class DriverServlet extends HttpServlet implements Servlet {
 		response.setStatus(status);
 
 		if (contentType != null) response.setContentType(contentType);
+
+		response.setHeader("Access-Control-Allow-Origin", "*");
 
 		if (body != null) {
 

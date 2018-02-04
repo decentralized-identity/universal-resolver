@@ -1,22 +1,22 @@
 package uniresolver.did;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Service extends JsonLdObject {
 
-	private Service(LinkedHashMap<String, Object> jsonLdObject) {
+	private Service(Map<String, Object> jsonLdObject) {
 
 		super(jsonLdObject);
 	}
 
-	public static Service build(LinkedHashMap<String, Object> jsonLdObject) {
+	public static Service build(Map<String, Object> jsonLdObject) {
 
 		return new Service(jsonLdObject);
 	}
 
 	public static Service build(String[] types, String serviceEndpoint) {
 
-		LinkedHashMap<String, Object> jsonLdObject = JsonLdObject.init(null, types);
+		Map<String, Object> jsonLdObject = JsonLdObject.init(null, types);
 
 		// add 'serviceEndpoint'
 

@@ -4,24 +4,25 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class JsonLdObject {
 
-	protected final LinkedHashMap<String, Object> jsonLdObject;
+	protected final Map<String, Object> jsonLdObject;
 
-	protected JsonLdObject(LinkedHashMap<String, Object> jsonLdObject) {
+	protected JsonLdObject(Map<String, Object> jsonLdObject) {
 
 		this.jsonLdObject = jsonLdObject;
 	}
 
-	public final LinkedHashMap<String, Object> getJsonLdObject() {
+	public final Map<String, Object> getJsonLdObject() {
 
 		return this.jsonLdObject;
 	}
 
-	protected static LinkedHashMap<String, Object> init(String id, String[] types) {
+	protected static Map<String, Object> init(String id, String[] types) {
 
-		LinkedHashMap<String, Object> jsonLdObject = new LinkedHashMap<String, Object> ();
+		Map<String, Object> jsonLdObject = new LinkedHashMap<String, Object> ();
 
 		// add 'id'
 
@@ -51,7 +52,7 @@ public abstract class JsonLdObject {
 		return jsonLdObject;
 	}
 
-	protected static LinkedHashMap<String, Object> init(String id, String type) {
+	protected static Map<String, Object> init(String id, String type) {
 
 		return init(id, new String[] { type });
 	}

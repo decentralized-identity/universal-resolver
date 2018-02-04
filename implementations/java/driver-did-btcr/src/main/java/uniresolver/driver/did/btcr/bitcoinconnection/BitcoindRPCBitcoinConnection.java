@@ -57,9 +57,9 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 
 		if (inputScriptPubKey == null) return null;
 
-		// find more DDO URI
+		// find DID DOCUMENT FRAGMENT URI
 
-		URI moreDdoUri = null;
+		URI fragmentUri = null;
 
 		List<Out> vOut = rawTransaction.vOut();
 		if (vOut == null || vOut.size() < 1) return null;
@@ -68,15 +68,15 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 
 			if (out.scriptPubKey() != null) {
 
-				moreDdoUri = URI.create("http://localhost/?" + out.value());
+				fragmentUri = URI.create("http://localhost/?" + out.value());
 				break;
 			}
 		}
 
-		if (moreDdoUri == null) return null;
+		if (fragmentUri == null) return null;
 
 		// done
 
-		return new BtcrData(inputScriptPubKey, moreDdoUri);
+		return new BtcrData(inputScriptPubKey, fragmentUri);
 	}
 }

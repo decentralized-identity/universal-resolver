@@ -1,9 +1,9 @@
 package uniresolver.driver;
 
 import uniresolver.ResolutionException;
-import uniresolver.did.DIDDocument;
+import uniresolver.result.ResolutionResult;
 
 public interface Driver {
 
-	public DIDDocument resolve(String identifier) throws ResolutionException;
+	public ResolutionResult resolve(String identifier) throws ResolutionException;
 }

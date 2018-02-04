@@ -17,18 +17,15 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uniresolver.ResolutionException;
 import uniresolver.did.DIDDocument;
 import uniresolver.did.PublicKey;
 import uniresolver.did.Service;
 import uniresolver.driver.Driver;
+import uniresolver.result.ResolutionResult;
 
 public class DidStackDriver implements Driver {
-
-    private static Logger log = LoggerFactory.getLogger(DidStackDriver.class);
 
     public static final Pattern DID_STACK_PATTERN = Pattern.compile("^did:stack:v0:([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{33,34})-([0-9]+)$");
 
@@ -84,7 +81,7 @@ public class DidStackDriver implements Driver {
     }
 
     @Override
-    public DIDDocument resolve(String identifier) throws ResolutionException {
+    public ResolutionResult resolve(String identifier) throws ResolutionException {
 
         // match 
         Matcher matcher = DID_STACK_PATTERN.matcher(identifier);
@@ -156,10 +153,10 @@ public class DidStackDriver implements Driver {
         services.add(Service.build("blockstack", DEFAULT_BLOCKSTACK_CORE_URL));
 
         // create DDO
-        DIDDocument ddo = DIDDocument.build(id, publicKeys, services);
+        DIDDocument didDocument = DIDDocument.build(id, publicKeys, services);
 
         // done
-        return ddo;
+        return ResolutionResult.build(didDocument);
     }
 
     /*

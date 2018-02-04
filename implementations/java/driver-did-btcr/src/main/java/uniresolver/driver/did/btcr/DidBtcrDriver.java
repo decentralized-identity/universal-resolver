@@ -3,7 +3,9 @@ package uniresolver.driver.did.btcr;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,6 +32,7 @@ import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection.BtcrData;
 import uniresolver.driver.did.btcr.bitcoinconnection.BitcoindRPCBitcoinConnection;
 import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinjSPVBitcoinConnection;
 import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection;
+import uniresolver.result.ResolutionResult;
 
 public class DidBtcrDriver implements Driver {
 
@@ -79,7 +82,7 @@ public class DidBtcrDriver implements Driver {
 	}
 
 	@Override
-	public DIDDocument resolve(String identifier) throws ResolutionException {
+	public ResolutionResult resolve(String identifier) throws ResolutionException {
 
 		// parse identifier
 
@@ -119,23 +122,23 @@ public class DidBtcrDriver implements Driver {
 
 		// retrieve DID DOCUMENT FRAGEMENT
 
-		HttpGet httpGet = new HttpGet(btcrData.getMoreDdoUri());
+		HttpGet httpGet = new HttpGet(btcrData.getFragmentUri());
 		DIDDocument didDocumentFragment = null;
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getMoreDdoUri() + ": " + httpResponse.getStatusLine());
+			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getFragmentUri() + ": " + httpResponse.getStatusLine());
 
 			HttpEntity httpEntity = httpResponse.getEntity();
 
-			didDocumentFragment = DIDDocument.fromString(EntityUtils.toString(httpEntity));
+			didDocumentFragment = DIDDocument.fromJson(EntityUtils.toString(httpEntity));
 			EntityUtils.consume(httpEntity);
 		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getMoreDdoUri() + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getFragmentUri() + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isInfoEnabled()) log.info("Retrieved more DID DOCUMENT FRAGMENT for " + txref + " (" + btcrData.getMoreDdoUri() + "): " + didDocumentFragment);
+		if (log.isInfoEnabled()) log.info("Retrieved DID DOCUMENT FRAGMENT for " + txref + " (" + btcrData.getFragmentUri() + "): " + didDocumentFragment);
 
 		// DID DOCUMENT id
 
@@ -155,9 +158,19 @@ public class DidBtcrDriver implements Driver {
 
 		DIDDocument didDocument = DIDDocument.build(id, publicKeys, services);
 
+		// create DRIVER METADATA
+
+		Map<String, Object> driverMetadata = new LinkedHashMap<String, Object> ();
+		driverMetadata.put("fragmentUri", btcrData.getFragmentUri());
+		driverMetadata.put("fragment", didDocumentFragment);
+
+		// create RESOLUTION RESULT
+
+		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, driverMetadata);
+
 		// done
 
-		return didDocument;
+		return resolutionResult;
 	}
 
 	/*

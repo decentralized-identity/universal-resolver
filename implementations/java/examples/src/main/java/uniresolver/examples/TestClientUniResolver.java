@@ -1,6 +1,6 @@
 package uniresolver.examples;
 import uniresolver.client.ClientUniResolver;
-import uniresolver.did.DIDDocument;
+import uniresolver.result.ResolutionResult;
 
 public class TestClientUniResolver {
 
@@ -9,10 +9,10 @@ public class TestClientUniResolver {
 		ClientUniResolver uniResolver = new ClientUniResolver();
 		uniResolver.setResolverUri("https://uniresolver.danubetech.com/1.0/identifiers/");
 
-		DIDDocument ddo1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
-		System.out.println(ddo1.serialize());
+		ResolutionResult resolutionResult1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
+		System.out.println(resolutionResult1.toJson());
 
-		DIDDocument ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
-		System.out.println(ddo2.serialize());
+		ResolutionResult resolutionResult2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
+		System.out.println(resolutionResult2.toJson());
 	}
 }

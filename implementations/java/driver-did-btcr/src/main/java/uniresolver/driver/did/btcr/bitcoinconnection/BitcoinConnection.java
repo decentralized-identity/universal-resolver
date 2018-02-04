@@ -12,13 +12,13 @@ public interface BitcoinConnection extends info.weboftrust.txrefconversion.bitco
 	public static class BtcrData {
 		
 		private String inputScriptPubKey;
-		private URI moreDdoUri;
+		private URI fragmentUri;
 
-		public BtcrData(String inputScriptPubKey, URI moreDdoUri) { this.inputScriptPubKey = inputScriptPubKey; this.moreDdoUri = moreDdoUri; }
+		public BtcrData(String inputScriptPubKey, URI fragmentUri) { this.inputScriptPubKey = inputScriptPubKey; this.fragmentUri = fragmentUri; }
 		public String getInputScriptPubKey() { return this.inputScriptPubKey; }
-		public URI getMoreDdoUri() { return this.moreDdoUri; }
+		public URI getFragmentUri() { return this.fragmentUri; }
 
 		@Override
-		public String toString() { return "BtcrData [inputScriptPubKey=" + inputScriptPubKey + ", moreDdoUri=" + moreDdoUri + "]"; }
+		public String toString() { return "BtcrData [inputScriptPubKey=" + inputScriptPubKey + ", fragmentUri=" + fragmentUri + "]"; }
 	}
 }

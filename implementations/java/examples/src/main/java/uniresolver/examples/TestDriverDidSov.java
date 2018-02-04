@@ -1,6 +1,6 @@
 package uniresolver.examples;
-import uniresolver.did.DIDDocument;
 import uniresolver.driver.did.sov.DidSovDriver;
+import uniresolver.result.ResolutionResult;
 
 public class TestDriverDidSov {
 
@@ -11,7 +11,7 @@ public class TestDriverDidSov {
 		driver.setPoolConfigName("live");
 		driver.setPoolGenesisTxn("live.txn");
 
-		DIDDocument ddo = driver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
-		System.out.println(ddo.serialize());
+		ResolutionResult resolutionResult = driver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
+		System.out.println(resolutionResult.toJson());
 	}
 }
