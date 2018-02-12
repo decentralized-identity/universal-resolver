@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import uniresolver.did.DID;
 import uniresolver.did.DIDDocument;
 
 @JsonPropertyOrder({ "result", "metadata" })
@@ -21,12 +22,13 @@ public class ResolutionResult {
 
 	public static final String MIME_TYPE = "application/json";
 
-	public static final String JSON_PROPERTY_RESULT = "result";
-	public static final String JSON_PROPERTY_RESOLVERMETADATA = "resolvermetadata";
-	public static final String JSON_PROPERTY_DRIVERMETADATA = "drivermetadata";
+	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@JsonProperty
-	private DIDDocument result;
+	private DID didReference;
+
+	@JsonProperty
+	private DIDDocument didDocument;
 
 	@JsonProperty
 	private Map<String, Object> resolverMetadata;
@@ -34,9 +36,14 @@ public class ResolutionResult {
 	@JsonProperty
 	private Map<String, Object> driverMetadata;
 
-	private ResolutionResult(DIDDocument result, Map<String, Object> resolverMetadata, Map<String, Object> driverMetadata) {
+	private ResolutionResult() {
+		
+	}
 
-		this.result = result;
+	private ResolutionResult(DID didReference, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> driverMetadata) {
+
+		this.didReference = didReference;
+		this.didDocument = didDocument;
 		this.resolverMetadata = resolverMetadata;
 		this.driverMetadata = driverMetadata;
 	}
@@ -45,19 +52,24 @@ public class ResolutionResult {
 	 * Factory methods
 	 */
 
-	public static ResolutionResult build(DIDDocument result, Map<String, Object> resolverMetadata, Map<String, Object> driverMetadata) {
+	public static ResolutionResult build(DID didReference, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> driverMetadata) {
 
-		return new ResolutionResult(result, resolverMetadata, driverMetadata);
+		return new ResolutionResult(didReference, didDocument, resolverMetadata, driverMetadata);
 	}
 
-	public static ResolutionResult build(DIDDocument result) {
+	public static ResolutionResult build(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> driverMetadata) {
 
-		return new ResolutionResult(result, new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolutionResult(null, didDocument, resolverMetadata, driverMetadata);
+	}
+
+	public static ResolutionResult build(DIDDocument didDocument) {
+
+		return new ResolutionResult(null, didDocument, new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
 	public static ResolutionResult build() {
 
-		return new ResolutionResult(DIDDocument.build(new HashMap<String, Object> ()), new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolutionResult(null, DIDDocument.build(new HashMap<String, Object> ()), new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
 	/*
@@ -66,33 +78,45 @@ public class ResolutionResult {
 
 	public static ResolutionResult fromJson(String json) throws JsonParseException, JsonMappingException, IOException {
 
-		return new ObjectMapper().readValue(json, ResolutionResult.class);
+		return objectMapper.readValue(json, ResolutionResult.class);
 	}
 
 	public String toJson() throws JsonProcessingException {
 
-		return new ObjectMapper().writeValueAsString(this);
+		return objectMapper.writeValueAsString(this);
 	}
 
 	/*
 	 * Getters and setters
 	 */
 
-	@JsonRawValue
-	public final DIDDocument getResult() {
+	@JsonGetter
+	public final DID getDidReference() {
 
-		return this.result;
-	}
-
-	public final void setResult(DIDDocument result) {
-
-		this.result = result;
+		return this.didReference;
 	}
 
 	@JsonSetter
-	public final void setResult(Map<String, Object> jsonLdObject) {
+	public final void setDidReference(DID didReference) {
 
-		this.result = DIDDocument.build(jsonLdObject);
+		this.didReference = didReference;
+	}
+
+	@JsonRawValue
+	public final DIDDocument getDidDocument() {
+
+		return this.didDocument;
+	}
+
+	public final void setDidDocument(DIDDocument didDocument) {
+
+		this.didDocument = didDocument;
+	}
+
+	@JsonSetter
+	public final void setDidDocument(Map<String, Object> jsonLdObject) {
+
+		this.didDocument = DIDDocument.build(jsonLdObject);
 	}
 
 	@JsonGetter

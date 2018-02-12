@@ -1,6 +1,8 @@
 package uniresolver.web.servlet;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +39,14 @@ public class ResolveServlet extends WebUniResolver {
 
 		String identifier = requestPath.substring(contextPath.length() + servletPath.length());
 		if (identifier.startsWith("/")) identifier = identifier.substring(1);
+
+		try {
+
+			identifier = URLDecoder.decode(identifier, "UTF-8");
+		} catch (UnsupportedEncodingException ex) {
+
+			throw new IOException(ex.getMessage(), ex);
+		}
 
 		if (log.isInfoEnabled()) log.info("Incoming request for identifier: " + identifier);
 

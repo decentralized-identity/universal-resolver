@@ -1,9 +1,10 @@
 package uniresolver.client;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.Collection;
-import java.util.List;
+import java.net.URLEncoder;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -25,12 +26,14 @@ public class ClientUniResolver implements UniResolver {
 	private static Logger log = LoggerFactory.getLogger(ClientUniResolver.class);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
-	
+
 	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
-	public static final URI DEFAULT_RESOLVER_URI = URI.create("http://localhost:8080/1.0/identifiers/");
+	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers/");
+	public static final URI DEFAULT_PROPERTIES_URI = URI.create("http://localhost:8080/1.0/properties");
 
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
-	private URI resolverUri = DEFAULT_RESOLVER_URI;
+	private URI resolveUri = DEFAULT_RESOLVE_URI;
+	private URI propertiesUri = DEFAULT_PROPERTIES_URI;
 
 	public ClientUniResolver() {
 
@@ -39,28 +42,56 @@ public class ClientUniResolver implements UniResolver {
 	@Override
 	public ResolutionResult resolve(String identifier) throws ResolutionException {
 
+		// encode identifier
+
+		String encodedIdentifier;
+
+		try {
+
+			encodedIdentifier = URLEncoder.encode(identifier, "UTF-8");
+		} catch (UnsupportedEncodingException ex) {
+
+			throw new ResolutionException(ex.getMessage(), ex);
+		}
+
 		// prepare HTTP request
 
-		String uriString = this.getResolverUri().toString();
+		String uriString = this.getResolveUri().toString();
+
 		if (! uriString.endsWith("/")) uriString += "/";
-		uriString += "identifiers/";
-		uriString += identifier;
+		uriString += encodedIdentifier;
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		httpGet.addHeader("Accept", ResolutionResult.MIME_TYPE);
 
 		// execute HTTP request
 
 		ResolutionResult resolutionResult;
 
+		if (log.isDebugEnabled()) log.debug("Request for identifier " + identifier + " to: " + uriString);
+
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
-			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve RESULTION RESULT for " + identifier + " from " + uriString + ": " + httpResponse.getStatusLine());
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+
+			if (statusCode == 404) return null;
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-
-			resolutionResult = ResolutionResult.fromJson(EntityUtils.toString(httpEntity));
+			String httpBody = EntityUtils.toString(httpEntity);
 			EntityUtils.consume(httpEntity);
+
+			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
+
+			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+
+				if (log.isWarnEnabled()) log.warn("Cannot retrieve RESOLUTION RESULT for " + identifier + " from " + uriString + ": " + httpBody);
+				throw new ResolutionException(httpBody);
+			}
+
+			resolutionResult = ResolutionResult.fromJson(httpBody);
 		} catch (IOException ex) {
 
 			throw new ResolutionException("Cannot retrieve RESULTION RESULT for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);
@@ -74,39 +105,53 @@ public class ClientUniResolver implements UniResolver {
 	}
 
 	@Override
-	public Collection<String> getDriverIds() throws ResolutionException {
+	public Map<String, Map<String, Object>> properties() throws ResolutionException {
 
 		// prepare HTTP request
 
-		String uriString = this.getResolverUri().toString();
-		if (! uriString.endsWith("/")) uriString += "/";
-		uriString += "drivers/";
+		String uriString = this.getPropertiesUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		httpGet.addHeader("Accept", ResolutionResult.MIME_TYPE);
 
 		// execute HTTP request
 
-		List<String> driverIds;
+		Map<String, Map<String, Object>> properties;
+
+		if (log.isDebugEnabled()) log.debug("Request to: " + uriString);
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+
 			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
-			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DRIVER IDS from " + uriString + ": " + httpResponse.getStatusLine());
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-
-			driverIds = ((List<String>) objectMapper.readValue(httpEntity.getContent(), List.class));
+			String httpBody = EntityUtils.toString(httpEntity);
 			EntityUtils.consume(httpEntity);
+
+			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
+
+			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+
+				if (log.isWarnEnabled()) log.warn("Cannot retrieve DRIVER PROPERTIES from " + uriString + ": " + httpBody);
+				throw new ResolutionException(httpBody);
+			}
+
+			properties = (Map<String, Map<String, Object>>) objectMapper.readValue(httpBody, Map.class);
 		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve DRIVER IDS from " + uriString + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot retrieve DRIVER PROPERTIES from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved DRIVER IDS (" + uriString + "): " + driverIds);
+		if (log.isDebugEnabled()) log.debug("Retrieved DRIVER PROPERTIES (" + uriString + "): " + properties);
 
 		// done
 
-		return driverIds;
+		return properties;
 	}
 
 	/*
@@ -123,18 +168,33 @@ public class ClientUniResolver implements UniResolver {
 		this.httpClient = httpClient;
 	}
 
-	public URI getResolverUri() {
+	public URI getResolveUri() {
 
-		return this.resolverUri;
+		return this.resolveUri;
 	}
 
-	public void setResolverUri(URI resolverUri) {
+	public void setResolveUri(URI resolveUri) {
 
-		this.resolverUri = resolverUri;
+		this.resolveUri = resolveUri;
 	}
 
-	public void setResolverUri(String resolverUri) {
+	public void setResolveUri(String resolveUri) {
 
-		this.resolverUri = URI.create(resolverUri);
+		this.resolveUri = URI.create(resolveUri);
+	}
+
+	public URI getPropertiesUri() {
+
+		return this.propertiesUri;
+	}
+
+	public void setPropertiesUri(URI propertiesUri) {
+
+		this.propertiesUri = propertiesUri;
+	}
+
+	public void setPropertiesUri(String propertiesUri) {
+
+		this.propertiesUri = URI.create(propertiesUri);
 	}
 }

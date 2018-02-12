@@ -1,8 +1,8 @@
 package uniresolver.driver.did.btcr;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,42 +42,72 @@ public class DidBtcrDriver implements Driver {
 
 	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "EdDsaSAPublicKeySecp256k1" };
 
+	private Map<String, Object> properties;
+
 	private BitcoinConnection bitcoinConnection;
 
 	private HttpClient httpClient = HttpClients.createDefault();
 
+	public DidBtcrDriver(Map<String, Object> properties) {
+
+		this.setProperties(properties);
+	}
+
 	public DidBtcrDriver() {
+
+		this.setProperties(getPropertiesFromEnvironment());
+	}
+
+	private static Map<String, Object> getPropertiesFromEnvironment() {
+
+		if (log.isDebugEnabled()) log.debug("Loading from environment: " + System.getenv());
+
+		Map<String, Object> properties = new HashMap<String, Object> ();
 
 		try {
 
-			this.configureFromEnvironment();
-		} catch (Exception ex) {
-
-			throw new RuntimeException(ex.getMessage(), ex);
-		}
-	}
-
-	private void configureFromEnvironment() throws MalformedURLException {
-
-		if (log.isDebugEnabled()) log.debug("Configuring from environment: " + System.getenv());
-
-		String env_bitcoinConnection = System.getenv("uniresolver_driver_did_btcr_bitcoinConnection");
-
-		if ("bitcoind".equals(env_bitcoinConnection)) {
-
-			this.setBitcoinConnection(new BitcoindRPCBitcoinConnection());
-
+			String env_bitcoinConnection = System.getenv("uniresolver_driver_did_btcr_bitcoinConnection");
 			String env_rpcUrlMainnet = System.getenv("uniresolver_driver_did_btcr_rpcUrlMainnet");
 			String env_rpcUrlTestnet = System.getenv("uniresolver_driver_did_btcr_rpcUrlTestnet");
 
-			if (env_rpcUrlMainnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlMainnet(env_rpcUrlMainnet);
-			if (env_rpcUrlTestnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlTestnet(env_rpcUrlTestnet);
-		} else if ("bitcoinj".equals(env_bitcoinConnection)) {
+			if (env_bitcoinConnection != null) properties.put("bitcoinConnection", env_bitcoinConnection);
+			if (env_rpcUrlMainnet != null) properties.put("rpcUrlMainnet", env_rpcUrlMainnet);
+			if (env_rpcUrlTestnet != null) properties.put("rpcUrlTestnet", env_rpcUrlTestnet);
+		} catch (Exception ex) {
 
-			this.setBitcoinConnection(new BitcoinjSPVBitcoinConnection());
-		} else  if ("blockcypherapi".equals(env_bitcoinConnection)) {
+			throw new IllegalArgumentException(ex.getMessage(), ex);
+		}
 
-			this.setBitcoinConnection(new BlockcypherAPIBitcoinConnection());
+		return properties;
+	}
+
+	private void configureFromProperties() {
+
+		if (log.isDebugEnabled()) log.debug("Configuring from properties: " + this.getProperties());
+
+		try {
+
+			String prop_bitcoinConnection = (String) this.getProperties().get("bitcoinConnection");
+
+			if ("bitcoind".equals(prop_bitcoinConnection)) {
+
+				this.setBitcoinConnection(new BitcoindRPCBitcoinConnection());
+
+				String prop_rpcUrlMainnet = System.getenv("rpcUrlMainnet");
+				String prop_rpcUrlTestnet = System.getenv("rpcUrlTestnet");
+
+				if (prop_rpcUrlMainnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlMainnet(prop_rpcUrlMainnet);
+				if (prop_rpcUrlTestnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlTestnet(prop_rpcUrlTestnet);
+			} else if ("bitcoinj".equals(prop_bitcoinConnection)) {
+
+				this.setBitcoinConnection(new BitcoinjSPVBitcoinConnection());
+			} else  if ("blockcypherapi".equals(prop_bitcoinConnection)) {
+
+				this.setBitcoinConnection(new BlockcypherAPIBitcoinConnection());
+			}
+		} catch (Exception ex) {
+
+			throw new IllegalArgumentException(ex.getMessage(), ex);
 		}
 	}
 
@@ -146,9 +176,9 @@ public class DidBtcrDriver implements Driver {
 
 		// DID DOCUMENT publicKeys
 
-		PublicKey owner = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, btcrData.getInputScriptPubKey());
+		PublicKey publicKey = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, btcrData.getInputScriptPubKey());
 
-		List<PublicKey> publicKeys = Collections.singletonList(owner);
+		List<PublicKey> publicKeys = Collections.singletonList(publicKey);
 
 		// DID DOCUMENT services
 
@@ -173,9 +203,26 @@ public class DidBtcrDriver implements Driver {
 		return resolutionResult;
 	}
 
+	@Override
+	public Map<String, Object> properties() {
+
+		return this.getProperties();
+	}
+
 	/*
 	 * Getters and setters
 	 */
+
+	public Map<String, Object> getProperties() {
+
+		return this.properties;
+	}
+
+	public void setProperties(Map<String, Object> properties) {
+
+		this.properties = properties;
+		this.configureFromProperties();
+	}
 
 	public BitcoinConnection getBitcoinConnection() {
 

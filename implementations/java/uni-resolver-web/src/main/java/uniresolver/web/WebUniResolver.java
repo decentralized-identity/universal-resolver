@@ -2,7 +2,7 @@ package uniresolver.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
+import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
@@ -31,9 +31,9 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	}
 
 	@Override
-	public Collection<String> getDriverIds() throws ResolutionException {
+	public Map<String, Map<String, Object>> properties() throws ResolutionException {
 
-		return this.getUniResolver() == null ? null : this.getUniResolver().getDriverIds();
+		return this.getUniResolver() == null ? null : this.getUniResolver().properties();
 	}
 
 	/*

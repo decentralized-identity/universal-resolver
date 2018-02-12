@@ -1,7 +1,8 @@
-package uniresolver.driver;
+package uniresolver.driver.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -13,24 +14,28 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uniresolver.result.ResolutionResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DriverServlet extends HttpServlet implements Servlet {
+import uniresolver.driver.Driver;
 
-	private static final long serialVersionUID = -531456245094927384L;
+public class PropertiesServlet extends HttpServlet implements Servlet {
 
-	private static Logger log = LoggerFactory.getLogger(DriverServlet.class);
+	private static final long serialVersionUID = -2093931014950367385L;
+
+	private static Logger log = LoggerFactory.getLogger(PropertiesServlet.class);
+
+	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	public static final String MIME_TYPE = "application/json";
 
 	private Driver driver;
 
-	public DriverServlet() {
+	public PropertiesServlet() {
 
 		super();
 	}
 
-	public DriverServlet(Driver driver) {
+	public PropertiesServlet(Driver driver) {
 
 		super();
 		this.driver = driver;
@@ -70,50 +75,37 @@ public class DriverServlet extends HttpServlet implements Servlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
-		String contextPath = request.getContextPath();
-		String servletPath = request.getServletPath();
-		String requestPath = request.getRequestURI();
+		if (log.isInfoEnabled()) log.info("Incoming request.");
 
-		String identifier = requestPath.substring(contextPath.length() + servletPath.length());
-		if (identifier.startsWith("/")) identifier = identifier.substring(1);
+		// get properties
 
-		if (log.isInfoEnabled()) log.info("Incoming request for identifier: " + identifier);
-
-		if (identifier == null) {
-
-			sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "No identifier found in resolution request.");
-			return;
-		}
-
-		// resolve the identifier
-
-		ResolutionResult resolutionResult;
-		String resolutionResultString;
+		Map<String, Object> properties;
+		String propertiesString;
 
 		try {
 
-			resolutionResult = this.getDriver().resolve(identifier);
-			resolutionResultString = resolutionResult == null ? null : resolutionResult.toJson();
+			properties = this.getDriver().properties();
+			propertiesString = properties == null ? null : objectMapper.writeValueAsString(properties);
 		} catch (Exception ex) {
 
-			if (log.isWarnEnabled()) log.warn("Driver reported for " + identifier + ": " + ex.getMessage(), ex);
-			sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Driver reported for " + identifier + ": " + ex.getMessage());
+			if (log.isWarnEnabled()) log.warn("Driver reported: " + ex.getMessage(), ex);
+			sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Driver reported: " + ex.getMessage());
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("DID document for identifier " + identifier + ": " + resolutionResult);
+		if (log.isInfoEnabled()) log.info("Properties: " + properties);
 
-		// no resolution result?
+		// no properties?
 
-		if (resolutionResult == null) {
+		if (properties == null) {
 
-			sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No result for " + identifier);
+			sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No properties.");
 			return;
 		}
 
-		// write resolution result
+		// write properties
 
-		sendResponse(response, HttpServletResponse.SC_OK, MIME_TYPE, resolutionResultString);
+		sendResponse(response, HttpServletResponse.SC_OK, MIME_TYPE, propertiesString);
 	}
 
 	/*

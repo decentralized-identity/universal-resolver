@@ -1,6 +1,7 @@
 package uniresolver.local;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
+import uniresolver.did.DID;
+import uniresolver.did.parser.ParserException;
 import uniresolver.driver.Driver;
 import uniresolver.result.ResolutionResult;
 
@@ -35,6 +38,21 @@ public class LocalUniResolver implements UniResolver {
 	public ResolutionResult resolve(String identifier) throws ResolutionException {
 
 		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
+
+		// parse DID
+
+		DID didReference = null;
+
+		try {
+
+			didReference = DID.fromString(identifier);
+			log.debug("identifier " + identifier + " is a valid DID reference: " + didReference.getDid());
+
+			identifier = didReference.getDid();
+		} catch (IllegalArgumentException | ParserException ex) {
+
+			log.debug("Identifier " + identifier + " is not a valid DID reference: " + ex.getMessage());
+		}
 
 		// start time
 
@@ -67,7 +85,11 @@ public class LocalUniResolver implements UniResolver {
 
 		if (resolutionResult == null) return null;
 
-		// create RESOLVER METADATA
+		// add DID REFERENCE
+
+		resolutionResult.setDidReference(didReference);
+
+		// add RESOLVER METADATA
 
 		Map<String, Object> resolverMetadata = new LinkedHashMap<String, Object> ();
 		resolverMetadata.put("driverId", usedDriverId);
@@ -82,11 +104,25 @@ public class LocalUniResolver implements UniResolver {
 	}
 
 	@Override
-	public Collection<String> getDriverIds() throws ResolutionException {
+	public Map<String, Map<String, Object>> properties() throws ResolutionException {
 
 		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
 
-		return this.getDrivers().keySet();
+		Map<String, Map<String, Object>> properties = new HashMap<String, Map<String, Object>> ();
+
+		for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
+
+			if (log.isDebugEnabled()) log.debug("Loading properties for driver " + driver.getKey() + " (" + driver.getValue().getClass().getSimpleName() + ")");
+
+			Map<String, Object> driverProperties = driver.getValue().properties();
+			if (driverProperties == null) driverProperties = Collections.emptyMap();
+
+			properties.put(driver.getKey(), driverProperties);
+		}
+
+		if (log.isDebugEnabled()) log.debug("Loading properties: " + properties);
+
+		return properties;
 	}
 
 	/*

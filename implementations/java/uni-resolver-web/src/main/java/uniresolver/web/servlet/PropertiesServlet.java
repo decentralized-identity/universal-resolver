@@ -2,7 +2,7 @@ package uniresolver.web.servlet;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Collection;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import uniresolver.ResolutionException;
 import uniresolver.web.WebUniResolver;
 
-public class GetDriverIdsServlet extends WebUniResolver {
+public class PropertiesServlet extends WebUniResolver {
 
 	private static final long serialVersionUID = 3865183054854163102L;
 
@@ -32,13 +32,15 @@ public class GetDriverIdsServlet extends WebUniResolver {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
+		if (log.isInfoEnabled()) log.info("Incoming request.");
+
 		// execute the request
 
-		Collection<String> driverIds;
+		Map<String, Map<String, Object>> properties;
 
 		try {
 
-			driverIds = this.getDriverIds();
+			properties = this.properties();
 		} catch (ResolutionException ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolution problem: " + ex.getMessage(), ex);
@@ -48,7 +50,7 @@ public class GetDriverIdsServlet extends WebUniResolver {
 
 		// no result?
 
-		if (driverIds == null) {
+		if (properties == null) {
 
 			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No result.");
 			return;
@@ -57,7 +59,7 @@ public class GetDriverIdsServlet extends WebUniResolver {
 		// write result
 
 		StringWriter stringWriter = new StringWriter();
-		objectMapper.writeValue(stringWriter, driverIds);
+		objectMapper.writeValue(stringWriter, properties);
 		WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, null, stringWriter.getBuffer().toString());
 	}
 

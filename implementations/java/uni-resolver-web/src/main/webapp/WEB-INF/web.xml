@@ -20,20 +20,19 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ResolveServlet</servlet-name>
-		<url-pattern>/1.0/identifiers</url-pattern>
 		<url-pattern>/1.0/identifiers/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
 		<description></description>
-		<display-name>GetDriverIdsServlet</display-name>
-		<servlet-name>GetDriverIdsServlet</servlet-name>
+		<display-name>PropertiesServlet</display-name>
+		<servlet-name>PropertiesServlet</servlet-name>
 		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>GetDriverIdsServlet</servlet-name>
-		<url-pattern>/1.0/drivers</url-pattern>
-		<url-pattern>/1.0/drivers/*</url-pattern>
+		<servlet-name>PropertiesServlet</servlet-name>
+		<url-pattern>/1.0/properties</url-pattern>
+		<url-pattern>/1.0/properties/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- LISTENERS -->

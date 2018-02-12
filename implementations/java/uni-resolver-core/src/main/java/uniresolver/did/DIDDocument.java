@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
@@ -23,7 +25,7 @@ public class DIDDocument {
 
 	public static final String JSONLD_TERM_ID = "id";
 	public static final String JSONLD_TERM_TYPE = "type";
-	public static final String JSONLD_TERM_SERVICE = "service";
+	public static final String JSONLD_TERM_SERVICES = "services";
 	public static final String JSONLD_TERM_SERVICEENDPOINT = "serviceEndpoint";
 	public static final String JSONLD_TERM_PUBLICKEY = "publicKey";
 	public static final String JSONLD_TERM_PUBLICKEYBASE64 = "publicKeyBase64";
@@ -47,6 +49,11 @@ public class DIDDocument {
 	private DIDDocument(Map<String, Object> jsonLdObject) {
 
 		this.jsonLdObject = jsonLdObject;
+	}
+
+	private DIDDocument() {
+
+		this(new HashMap<String, Object> ());
 	}
 
 	/*
@@ -94,7 +101,7 @@ public class DIDDocument {
 				servicesJsonLdArray.add(serviceJsonLdObject);
 			}
 
-			jsonLdObject.put(JSONLD_TERM_SERVICE, servicesJsonLdArray);
+			jsonLdObject.put(JSONLD_TERM_SERVICES, servicesJsonLdArray);
 		}
 
 		// done
@@ -125,7 +132,6 @@ public class DIDDocument {
 	}
 
 	@SuppressWarnings("unchecked")
-	@JsonRawValue
 	public String toJson() throws IOException, JsonLdError {
 
 		Map<String, Object> jsonLdObject = (LinkedHashMap<String, Object>) JsonUtils.fromInputStream(DIDDocument.class.getResourceAsStream("diddocument-skeleton.jsonld"));
@@ -142,11 +148,13 @@ public class DIDDocument {
 	 * Getters and setters
 	 */
 
+	@JsonValue
 	public Map<String, Object> getJsonLdObject() {
 
 		return this.jsonLdObject;
 	}
 
+	@JsonAnySetter
 	public void setJsonLdObjectKeyValue(String key, Object value) {
 
 		this.jsonLdObject.put(key, value);
@@ -168,9 +176,9 @@ public class DIDDocument {
 
 		Object entry = this.jsonLdObject.get(JSONLD_TERM_PUBLICKEY);
 		if (entry == null) return null;
-		if (! (entry instanceof LinkedList<?>)) return null;
+		if (! (entry instanceof List<?>)) return null;
 
-		LinkedList<Object> publicKeysJsonLdArray = (LinkedList<Object>) entry;
+		List<Object> publicKeysJsonLdArray = (List<Object>) entry;
 
 		List<PublicKey> publicKeys = new ArrayList<PublicKey> ();
 
@@ -189,13 +197,13 @@ public class DIDDocument {
 	@SuppressWarnings("unchecked")
 	public List<Service> getServices() {
 
-		Object entry = this.jsonLdObject.get(JSONLD_TERM_SERVICE);
+		Object entry = this.jsonLdObject.get(JSONLD_TERM_SERVICES);
 		if (entry == null) return null;
-		if (! (entry instanceof LinkedList<?>)) return null;
+		if (! (entry instanceof List<?>)) return null;
 
-		LinkedList<Object> servicesJsonLdArray = (LinkedList<Object>) entry;
+		List<Object> servicesJsonLdArray = (List<Object>) entry;
 
-		List<Service> controls = new ArrayList<Service> ();
+		List<Service> services = new ArrayList<Service> ();
 
 		for (Object entry2 : servicesJsonLdArray) {
 
@@ -203,10 +211,10 @@ public class DIDDocument {
 
 			Map<String, Object> serviceJsonLdObject = (Map<String, Object>) entry2;
 
-			controls.add(Service.build(serviceJsonLdObject));
+			services.add(Service.build(serviceJsonLdObject));
 		}
 
-		return controls;
+		return services;
 	}
 
 	/*

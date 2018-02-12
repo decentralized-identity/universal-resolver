@@ -1,9 +1,9 @@
 package uniresolver.driver.did.sov;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +47,8 @@ public class DidSovDriver implements Driver {
 
 	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Ed25519SigningKey" };
 
+	private Map<String, Object> properties;
+
 	private static final Gson gson = new Gson();
 
 	private String libIndyPath;
@@ -58,30 +60,60 @@ public class DidSovDriver implements Driver {
 	private Wallet wallet = null;
 	private String submitterDid = null;
 
+	public DidSovDriver(Map<String, Object> properties) {
+
+		this.setProperties(properties);
+	}
+
 	public DidSovDriver() {
+
+		this.setProperties(getPropertiesFromEnvironment());
+	}
+
+	private static Map<String, Object> getPropertiesFromEnvironment() {
+
+		if (log.isDebugEnabled()) log.debug("Loading from environment: " + System.getenv());
+
+		Map<String, Object> properties = new HashMap<String, Object> ();
 
 		try {
 
-			this.configureFromEnvironment();
+			String env_libIndyPath = System.getenv("uniresolver_driver_did_sov_libIndyPath");
+			String env_poolConfigName = System.getenv("uniresolver_driver_did_sov_poolConfigName");
+			String env_poolGenesisTxn = System.getenv("uniresolver_driver_did_sov_poolGenesisTxn");
+			String env_walletName = System.getenv("uniresolver_driver_did_sov_walletName");
+
+			if (env_libIndyPath != null) properties.put("libIndyPath", env_libIndyPath);
+			if (env_poolConfigName != null) properties.put("poolConfigName", env_poolConfigName);
+			if (env_poolGenesisTxn != null) properties.put("poolGenesisTxn", env_poolGenesisTxn);
+			if (env_walletName != null) properties.put("walletName", env_walletName);
 		} catch (Exception ex) {
 
-			throw new RuntimeException(ex.getMessage(), ex);
+			throw new IllegalArgumentException(ex.getMessage(), ex);
 		}
+
+		return properties;
 	}
 
-	private void configureFromEnvironment() throws MalformedURLException {
+	private void configureFromProperties() {
 
-		if (log.isDebugEnabled()) log.debug("Configuring from environment: " + System.getenv());
+		if (log.isDebugEnabled()) log.debug("Configuring from properties: " + this.getProperties());
 
-		String env_libIndyPath = System.getenv("uniresolver_driver_did_sov_libIndyPath");
-		String env_poolConfigName = System.getenv("uniresolver_driver_did_sov_poolConfigName");
-		String env_poolGenesisTxn = System.getenv("uniresolver_driver_did_sov_poolGenesisTxn");
-		String env_walletName = System.getenv("uniresolver_driver_did_sov_walletName");
+		try {
 
-		if (env_libIndyPath != null) this.setLibIndyPath(env_libIndyPath);
-		if (env_poolConfigName != null) this.setPoolConfigName(env_poolConfigName);
-		if (env_poolGenesisTxn != null) this.setPoolGenesisTxn(env_poolGenesisTxn);
-		if (env_walletName != null) this.setWalletName(env_walletName);
+			String prop_libIndyPath = (String) this.getProperties().get("libIndyPath");
+			String prop_poolConfigName = (String) this.getProperties().get("poolConfigName");
+			String prop_poolGenesisTxn = (String) this.getProperties().get("poolGenesisTxn");
+			String prop_walletName = (String) this.getProperties().get("walletName");
+
+			if (prop_libIndyPath != null) this.setLibIndyPath(prop_libIndyPath);
+			if (prop_poolConfigName != null) this.setPoolConfigName(prop_poolConfigName);
+			if (prop_poolGenesisTxn != null) this.setPoolGenesisTxn(prop_poolGenesisTxn);
+			if (prop_walletName != null) this.setWalletName(prop_walletName);
+		} catch (Exception ex) {
+
+			throw new IllegalArgumentException(ex.getMessage(), ex);
+		}
 	}
 
 	@Override
@@ -194,6 +226,12 @@ public class DidSovDriver implements Driver {
 		return resolutionResult;
 	}
 
+	@Override
+	public Map<String, Object> properties() {
+
+		return this.getProperties();
+	}
+
 	private void openIndy() throws ResolutionException {
 
 		// initialize libindy
@@ -282,6 +320,17 @@ public class DidSovDriver implements Driver {
 	/*
 	 * Getters and setters
 	 */
+
+	public Map<String, Object> getProperties() {
+
+		return this.properties;
+	}
+
+	public void setProperties(Map<String, Object> properties) {
+
+		this.properties = properties;
+		this.configureFromProperties();
+	}
 
 	public String getLibIndyPath() {
 

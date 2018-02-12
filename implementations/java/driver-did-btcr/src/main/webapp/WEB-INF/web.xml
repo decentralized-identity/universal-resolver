@@ -9,9 +9,19 @@
 	<!-- SERVLET -->
 
 	<servlet>
-		<display-name>DriverServlet</display-name>
-		<servlet-name>DriverServlet</servlet-name>
-		<servlet-class>uniresolver.driver.DriverServlet</servlet-class>
+		<display-name>ResolveServlet</display-name>
+		<servlet-name>ResolveServlet</servlet-name>
+		<servlet-class>uniresolver.driver.servlet.ResolveServlet</servlet-class>
+		<init-param>
+			<param-name>Driver</param-name>
+			<param-value>uniresolver.driver.did.btcr.DidBtcrDriver</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<display-name>PropertiesServlet</display-name>
+		<servlet-name>PropertiesServlet</servlet-name>
+		<servlet-class>uniresolver.driver.servlet.PropertiesServlet</servlet-class>
 		<init-param>
 			<param-name>Driver</param-name>
 			<param-value>uniresolver.driver.did.btcr.DidBtcrDriver</param-value>
@@ -19,9 +29,13 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>DriverServlet</servlet-name>
-		<url-pattern></url-pattern>
-		<url-pattern>/1.0/dids/*</url-pattern>
+		<servlet-name>ResolveServlet</servlet-name>
+		<url-pattern>/1.0/identifiers/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PropertiesServlet</servlet-name>
+		<url-pattern>/1.0/properties</url-pattern>
+		<url-pattern>/1.0/properties/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>

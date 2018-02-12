@@ -3,7 +3,9 @@ package uniresolver.driver.did.stack;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -159,6 +161,14 @@ public class DidStackDriver implements Driver {
         return ResolutionResult.build(didDocument);
     }
 
+    public Map<String, Object> properties() {
+
+    	Map<String, Object> properties = new HashMap<String, Object> ();
+    	properties.put("blockstackCoreUrl", this.getBlockstackCoreUrl());
+    	
+    	return properties;
+    }
+    
     /*
      * Getters and setters
      */

@@ -7,7 +7,7 @@ public class TestClientUniResolver {
 	public static void main(String[] args) throws Exception {
 
 		ClientUniResolver uniResolver = new ClientUniResolver();
-		uniResolver.setResolverUri("https://uniresolver.danubetech.com/1.0/identifiers/");
+		uniResolver.setResolveUri("https://uniresolver.danubetech.com/1.0/identifiers/");
 
 		ResolutionResult resolutionResult1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
 		System.out.println(resolutionResult1.toJson());
