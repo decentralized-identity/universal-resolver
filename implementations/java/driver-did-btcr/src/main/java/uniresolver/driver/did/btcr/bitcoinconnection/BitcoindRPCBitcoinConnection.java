@@ -1,8 +1,14 @@
 package uniresolver.driver.did.btcr.bitcoinconnection;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 
 import info.weboftrust.txrefconversion.TxrefConverter.Chain;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
@@ -13,6 +19,9 @@ import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.RawTransaction.Out;
 public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BitcoindRPCBitcoinConnection implements BitcoinConnection {
 
 	private static final BitcoindRPCBitcoinConnection instance = new BitcoindRPCBitcoinConnection();
+
+	private static final Pattern patternAsmInputScriptPubKey = Pattern.compile("^[^\\s]+ ([0-9a-fA-F]+)$");
+	private static final Pattern patternAsmFragmentUri = Pattern.compile("^OP_RETURN ([0-9a-fA-F]+)$");
 
 	public BitcoindRPCBitcoinConnection(URL rpcUrlMainnet, URL rpcUrlTestnet) {
 
@@ -48,10 +57,15 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 
 		for (In in : vIn) {
 
-			if (in.scriptPubKey() != null) {
+			if (in.scriptSig() != null && in.scriptSig().get("asm") != null) {
 
-				inputScriptPubKey = in.scriptPubKey();
-				break;
+				Matcher matcher = patternAsmInputScriptPubKey.matcher((String) in.scriptSig().get("asm"));
+
+				if (matcher.matches() && matcher.groupCount() == 1) {
+
+					inputScriptPubKey = matcher.group(1);
+					break;
+				}
 			}
 		}
 
@@ -66,10 +80,21 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 
 		for (Out out : vOut) {
 
-			if (out.scriptPubKey() != null) {
+			if (out.scriptPubKey() != null && out.scriptPubKey().asm() != null) {
 
-				fragmentUri = URI.create("http://localhost/?" + out.value());
-				break;
+				Matcher matcher = patternAsmFragmentUri.matcher(out.scriptPubKey().asm());
+
+				if (matcher.matches() && matcher.groupCount() == 1) {
+
+					try {
+
+						fragmentUri = URI.create(new String(Hex.decodeHex(matcher.group(1).toCharArray()), "UTF-8"));
+						break;
+					} catch (UnsupportedEncodingException | DecoderException ex) {
+
+						continue;
+					}
+				}
 			}
 		}
 

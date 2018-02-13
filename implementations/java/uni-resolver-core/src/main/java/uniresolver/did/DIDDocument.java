@@ -23,9 +23,11 @@ import com.github.jsonldjava.utils.JsonUtils;
 
 public class DIDDocument {
 
+	public static final String MIME_TYPE = "application/json";
+
 	public static final String JSONLD_TERM_ID = "id";
 	public static final String JSONLD_TERM_TYPE = "type";
-	public static final String JSONLD_TERM_SERVICES = "services";
+	public static final String JSONLD_TERM_SERVICE = "service";
 	public static final String JSONLD_TERM_SERVICEENDPOINT = "serviceEndpoint";
 	public static final String JSONLD_TERM_PUBLICKEY = "publicKey";
 	public static final String JSONLD_TERM_PUBLICKEYBASE64 = "publicKeyBase64";
@@ -101,7 +103,7 @@ public class DIDDocument {
 				servicesJsonLdArray.add(serviceJsonLdObject);
 			}
 
-			jsonLdObject.put(JSONLD_TERM_SERVICES, servicesJsonLdArray);
+			jsonLdObject.put(JSONLD_TERM_SERVICE, servicesJsonLdArray);
 		}
 
 		// done
@@ -197,7 +199,7 @@ public class DIDDocument {
 	@SuppressWarnings("unchecked")
 	public List<Service> getServices() {
 
-		Object entry = this.jsonLdObject.get(JSONLD_TERM_SERVICES);
+		Object entry = this.jsonLdObject.get(JSONLD_TERM_SERVICE);
 		if (entry == null) return null;
 		if (! (entry instanceof List<?>)) return null;
 

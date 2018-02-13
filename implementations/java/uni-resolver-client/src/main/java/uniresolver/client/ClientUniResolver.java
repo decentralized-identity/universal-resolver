@@ -112,7 +112,7 @@ public class ClientUniResolver implements UniResolver {
 		String uriString = this.getPropertiesUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", ResolutionResult.MIME_TYPE);
+		httpGet.addHeader("Accept", UniResolver.PROPERTIES_MIME_TYPE);
 
 		// execute HTTP request
 

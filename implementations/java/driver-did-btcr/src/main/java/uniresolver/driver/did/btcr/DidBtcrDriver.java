@@ -93,8 +93,8 @@ public class DidBtcrDriver implements Driver {
 
 				this.setBitcoinConnection(new BitcoindRPCBitcoinConnection());
 
-				String prop_rpcUrlMainnet = System.getenv("rpcUrlMainnet");
-				String prop_rpcUrlTestnet = System.getenv("rpcUrlTestnet");
+				String prop_rpcUrlMainnet = (String) this.getProperties().get("rpcUrlMainnet");
+				String prop_rpcUrlTestnet = (String) this.getProperties().get("rpcUrlTestnet");
 
 				if (prop_rpcUrlMainnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlMainnet(prop_rpcUrlMainnet);
 				if (prop_rpcUrlTestnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlTestnet(prop_rpcUrlTestnet);
@@ -152,23 +152,27 @@ public class DidBtcrDriver implements Driver {
 
 		// retrieve DID DOCUMENT FRAGEMENT
 
-		HttpGet httpGet = new HttpGet(btcrData.getFragmentUri());
 		DIDDocument didDocumentFragment = null;
 
-		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
+		if (btcrData != null) {
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getFragmentUri() + ": " + httpResponse.getStatusLine());
+			HttpGet httpGet = new HttpGet(btcrData.getFragmentUri());
 
-			HttpEntity httpEntity = httpResponse.getEntity();
+			try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			didDocumentFragment = DIDDocument.fromJson(EntityUtils.toString(httpEntity));
-			EntityUtils.consume(httpEntity);
-		} catch (IOException ex) {
+				if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getFragmentUri() + ": " + httpResponse.getStatusLine());
 
-			throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getFragmentUri() + ": " + ex.getMessage(), ex);
+				HttpEntity httpEntity = httpResponse.getEntity();
+
+				didDocumentFragment = DIDDocument.fromJson(EntityUtils.toString(httpEntity));
+				EntityUtils.consume(httpEntity);
+			} catch (IOException ex) {
+
+				throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getFragmentUri() + ": " + ex.getMessage(), ex);
+			}
+
+			if (log.isInfoEnabled()) log.info("Retrieved DID DOCUMENT FRAGMENT for " + txref + " (" + btcrData.getFragmentUri() + "): " + didDocumentFragment);
 		}
-
-		if (log.isInfoEnabled()) log.info("Retrieved DID DOCUMENT FRAGMENT for " + txref + " (" + btcrData.getFragmentUri() + "): " + didDocumentFragment);
 
 		// DID DOCUMENT id
 
@@ -176,13 +180,28 @@ public class DidBtcrDriver implements Driver {
 
 		// DID DOCUMENT publicKeys
 
-		PublicKey publicKey = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, btcrData.getInputScriptPubKey());
+		List<PublicKey> publicKeys;
 
-		List<PublicKey> publicKeys = Collections.singletonList(publicKey);
+		if (btcrData != null) {
+
+			PublicKey publicKey = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, btcrData.getInputScriptPubKey());
+			publicKeys = Collections.singletonList(publicKey);
+		} else {
+
+			publicKeys = Collections.emptyList();
+		}
 
 		// DID DOCUMENT services
 
-		List<Service> services = didDocumentFragment.getServices();
+		List<Service> services;
+
+		if (btcrData != null) {
+
+			services = didDocumentFragment.getServices();
+		} else {
+
+			services = Collections.emptyList();
+		}
 
 		// create DID DOCUMENT
 
@@ -191,8 +210,8 @@ public class DidBtcrDriver implements Driver {
 		// create DRIVER METADATA
 
 		Map<String, Object> driverMetadata = new LinkedHashMap<String, Object> ();
-		driverMetadata.put("fragmentUri", btcrData.getFragmentUri());
-		driverMetadata.put("fragment", didDocumentFragment);
+		if (btcrData != null) driverMetadata.put("fragmentUri", btcrData.getFragmentUri());
+		if (didDocumentFragment != null) driverMetadata.put("fragment", didDocumentFragment);
 
 		// create RESOLUTION RESULT
 

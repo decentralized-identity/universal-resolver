@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import uniresolver.ResolutionException;
+import uniresolver.UniResolver;
 import uniresolver.web.WebUniResolver;
 
 public class PropertiesServlet extends WebUniResolver {
@@ -37,30 +38,32 @@ public class PropertiesServlet extends WebUniResolver {
 		// execute the request
 
 		Map<String, Map<String, Object>> properties;
+		String propertiesString;
 
 		try {
 
 			properties = this.properties();
+			propertiesString = properties == null ? null : objectMapper.writeValueAsString(properties);
 		} catch (ResolutionException ex) {
 
-			if (log.isWarnEnabled()) log.warn("Resolution problem: " + ex.getMessage(), ex);
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolution problem: " + ex.getMessage());
+			if (log.isWarnEnabled()) log.warn("Driver reported: " + ex.getMessage(), ex);
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Driver reported: " + ex.getMessage());
 			return;
 		}
+
+		if (log.isInfoEnabled()) log.info("Properties: " + properties);
 
 		// no result?
 
 		if (properties == null) {
 
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No result.");
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No properties.");
 			return;
 		}
 
 		// write result
 
-		StringWriter stringWriter = new StringWriter();
-		objectMapper.writeValue(stringWriter, properties);
-		WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, null, stringWriter.getBuffer().toString());
+		WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.PROPERTIES_MIME_TYPE, propertiesString);
 	}
 
 	@Override

@@ -24,8 +24,6 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 	private static Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
-	public static final String MIME_TYPE = "application/json";
-
 	private Driver driver;
 
 	public ResolveServlet() {
@@ -112,11 +110,11 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("Resolution result for " + identifier + ": " + resolutionResult);
+		if (log.isInfoEnabled()) log.info("Resolution result for " + identifier + ": " + resolutionResultString);
 
 		// no resolution result?
 
-		if (resolutionResult == null) {
+		if (resolutionResultString == null) {
 
 			sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No resolution result for " + identifier);
 			return;
@@ -124,7 +122,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		// write resolution result
 
-		sendResponse(response, HttpServletResponse.SC_OK, MIME_TYPE, resolutionResultString);
+		sendResponse(response, HttpServletResponse.SC_OK, ResolutionResult.MIME_TYPE, resolutionResultString);
 	}
 
 	/*

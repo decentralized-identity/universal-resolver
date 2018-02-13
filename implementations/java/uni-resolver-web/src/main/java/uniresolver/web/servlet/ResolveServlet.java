@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import uniresolver.ResolutionException;
 import uniresolver.result.ResolutionResult;
 import uniresolver.web.WebUniResolver;
@@ -59,10 +57,12 @@ public class ResolveServlet extends WebUniResolver {
 		// execute the request
 
 		ResolutionResult resolutionResult;
+		String resolutionResultString;
 
 		try {
 
 			resolutionResult = this.resolve(identifier);
+			resolutionResultString = resolutionResult == null ? null : resolutionResult.toJson();
 		} catch (ResolutionException ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolution problem for " + identifier + ": " + ex.getMessage(), ex);
@@ -70,9 +70,11 @@ public class ResolveServlet extends WebUniResolver {
 			return;
 		}
 
+		if (log.isInfoEnabled()) log.info("Resolution result for " + identifier + ": " + resolutionResultString);
+
 		// no result?
 
-		if (resolutionResult == null) {
+		if (resolutionResultString == null) {
 
 			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No result for " + identifier + ".");
 			return;
@@ -80,13 +82,7 @@ public class ResolveServlet extends WebUniResolver {
 
 		// write result
 
-		try {
-
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, MIME_TYPE, resolutionResult.toJson());
-		} catch (JsonProcessingException ex) {
-
-			throw new IOException("JSON processing error: " + ex.getMessage(), ex);
-		}
+		WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, MIME_TYPE, resolutionResultString);
 	}
 
 	@Override

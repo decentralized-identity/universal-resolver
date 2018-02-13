@@ -5,9 +5,9 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile-driver-did-btcr
       args: 
-        bitcoinConnection: blockcypherapi
-        rpcUrlMainnet: http://user:pass@localhost:8332/
-        rpcUrlTestnet: http://user:pass@localhost:18332/
+        bitcoinConnection: bitcoind
+        rpcUrlMainnet: http://user:pass@172.18.0.1:8332/
+        rpcUrlTestnet: http://user:pass@172.18.0.1:18332/
     ports:
       - "8081:8081"
   driver-did-sov:

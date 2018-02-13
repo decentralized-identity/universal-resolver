@@ -26,8 +26,6 @@ public class PropertiesServlet extends HttpServlet implements Servlet {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	public static final String MIME_TYPE = "application/json";
-
 	private Driver driver;
 
 	public PropertiesServlet() {
@@ -88,8 +86,8 @@ public class PropertiesServlet extends HttpServlet implements Servlet {
 			propertiesString = properties == null ? null : objectMapper.writeValueAsString(properties);
 		} catch (Exception ex) {
 
-			if (log.isWarnEnabled()) log.warn("Driver reported: " + ex.getMessage(), ex);
-			sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Driver reported: " + ex.getMessage());
+			if (log.isWarnEnabled()) log.warn("Properties problem: " + ex.getMessage(), ex);
+			sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Properties problem: " + ex.getMessage());
 			return;
 		}
 
@@ -105,7 +103,7 @@ public class PropertiesServlet extends HttpServlet implements Servlet {
 
 		// write properties
 
-		sendResponse(response, HttpServletResponse.SC_OK, MIME_TYPE, propertiesString);
+		sendResponse(response, HttpServletResponse.SC_OK, Driver.PROPERTIES_MIME_TYPE, propertiesString);
 	}
 
 	/*

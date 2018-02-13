@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import uniresolver.ResolutionException;
 import uniresolver.did.DIDDocument;
 import uniresolver.driver.Driver;
+import uniresolver.driver.servlet.PropertiesServlet;
 import uniresolver.result.ResolutionResult;
 
 public class HttpDriver implements Driver {
@@ -99,7 +101,7 @@ public class HttpDriver implements Driver {
 		}
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", ResolutionResult.MIME_TYPE);
+		httpGet.addHeader("Accept", this.isRawDidDocument() ? DIDDocument.MIME_TYPE : ResolutionResult.MIME_TYPE);
 
 		// execute HTTP request
 
@@ -150,6 +152,30 @@ public class HttpDriver implements Driver {
 	@Override
 	public Map<String, Object> properties() throws ResolutionException {
 
+		// prepare properties
+
+		Map<String, Object> httpProperties = new HashMap<String, Object> ();
+
+		httpProperties.put("driverUri", this.getResolveUri().toString());
+		httpProperties.put("pattern", this.getPattern().toString());
+		httpProperties.put("rawIdentifier", Boolean.toString(this.isRawIdentifier()));
+		httpProperties.put("rawDidDocument", Boolean.toString(this.isRawDidDocument()));
+
+		Map<String, Object> properties = new HashMap<String, Object> ();
+		properties.put("http", httpProperties);
+
+		// remote properties
+
+		Map<String, Object> remoteProperties = this.remoteProperties();
+		if (remoteProperties != null) properties.putAll(remoteProperties);
+
+		// done
+
+		return properties;
+	}
+
+	public Map<String, Object> remoteProperties() throws ResolutionException {
+
 		if (this.getPropertiesUri() == null) return null;
 
 		// prepare HTTP request
@@ -157,7 +183,7 @@ public class HttpDriver implements Driver {
 		String uriString = this.getPropertiesUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", ResolutionResult.MIME_TYPE);
+		httpGet.addHeader("Accept", Driver.PROPERTIES_MIME_TYPE);
 
 		// execute HTTP request
 
@@ -195,11 +221,6 @@ public class HttpDriver implements Driver {
 		if (log.isDebugEnabled()) log.debug("Retrieved DRIVER PROPERTIES (" + uriString + "): " + properties);
 
 		// done
-
-		properties.put("driverUri", this.getResolveUri().toString());
-		properties.put("pattern", this.getPattern().toString());
-		properties.put("rawIdentifier", Boolean.toString(this.isRawIdentifier()));
-		properties.put("rawDidDocument", Boolean.toString(this.isRawDidDocument()));
 
 		return properties;
 	}
