@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.binary.Hex;
 import org.hyperledger.indy.sdk.IndyException;
 import org.hyperledger.indy.sdk.LibIndy;
 import org.hyperledger.indy.sdk.ledger.Ledger;
@@ -45,7 +46,7 @@ public class DidSovDriver implements Driver {
 
 	public static final Pattern DID_SOV_PATTERN = Pattern.compile("^did:sov:(\\S*)$");
 
-	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Ed25519SigningKey" };
+	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Ed25519VerificationKey" };
 
 	private Map<String, Object> properties;
 
@@ -185,8 +186,9 @@ public class DidSovDriver implements Driver {
 		JsonPrimitive jsonGetNymVerkey = jsonGetNymDataContent == null ? null : jsonGetNymDataContent.getAsJsonPrimitive("verkey");
 
 		String verkey = jsonGetNymVerkey == null ? null : jsonGetNymVerkey.getAsString();
+		String verkeyHex= Hex.encodeHexString(Base58.decode(verkey));
 
-		List<PublicKey> publicKeys = Collections.singletonList(PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, verkey, null));
+		List<PublicKey> publicKeys = Collections.singletonList(PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, verkeyHex));
 
 		// DID DOCUMENT services
 
