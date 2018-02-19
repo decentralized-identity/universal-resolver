@@ -31,6 +31,7 @@ public class DIDDocument {
 	public static final String JSONLD_TERM_SERVICEENDPOINT = "serviceEndpoint";
 	public static final String JSONLD_TERM_PUBLICKEY = "publicKey";
 	public static final String JSONLD_TERM_PUBLICKEYBASE64 = "publicKeyBase64";
+	public static final String JSONLD_TERM_PUBLICKEYBASE58 = "publicKeyBase58";
 	public static final String JSONLD_TERM_PUBLICKEYHEX = "publicKeyHex";
 
 	public static final Object JSONLD_CONTEXT;

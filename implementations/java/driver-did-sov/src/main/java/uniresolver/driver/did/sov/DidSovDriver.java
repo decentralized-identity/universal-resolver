@@ -186,9 +186,8 @@ public class DidSovDriver implements Driver {
 		JsonPrimitive jsonGetNymVerkey = jsonGetNymDataContent == null ? null : jsonGetNymDataContent.getAsJsonPrimitive("verkey");
 
 		String verkey = jsonGetNymVerkey == null ? null : jsonGetNymVerkey.getAsString();
-		String verkeyHex= Hex.encodeHexString(Base58.decode(verkey));
 
-		List<PublicKey> publicKeys = Collections.singletonList(PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, verkeyHex));
+		List<PublicKey> publicKeys = Collections.singletonList(PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, verkey, null));
 
 		// DID DOCUMENT services
 

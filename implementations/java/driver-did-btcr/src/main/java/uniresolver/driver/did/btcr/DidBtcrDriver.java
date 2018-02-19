@@ -184,7 +184,7 @@ public class DidBtcrDriver implements Driver {
 
 		if (btcrData != null) {
 
-			PublicKey publicKey = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, btcrData.getInputScriptPubKey());
+			PublicKey publicKey = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, btcrData.getInputScriptPubKey());
 			publicKeys = Collections.singletonList(publicKey);
 		} else {
 

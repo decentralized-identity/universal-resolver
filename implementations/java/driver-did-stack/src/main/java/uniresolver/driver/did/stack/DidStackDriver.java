@@ -146,7 +146,7 @@ public class DidStackDriver implements Driver {
         String id = identifier;
 
         // DDO publicKeys
-        PublicKey publicKey = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, publicKeyHex);
+        PublicKey publicKey = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, publicKeyHex);
 
         List<PublicKey> publicKeys = Collections.singletonList(publicKey);
 
