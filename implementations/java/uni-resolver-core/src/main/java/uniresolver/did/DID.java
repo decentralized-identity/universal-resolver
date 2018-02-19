@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -38,6 +40,10 @@ public class DID {
 	private String path;
 	private String query;
 	private String fragment;
+
+	private DID() {
+
+	}
 
 	private DID(String didReference) throws IllegalArgumentException, ParserException {
 
@@ -150,44 +156,100 @@ public class DID {
 	 * Getters
 	 */
 
-	public String getDidReference() {
+	@JsonGetter
+	public final String getDidReference() {
 
 		return this.didReference;
 	}
 
-	public String getDid() {
+	@JsonSetter
+	public final void setDidReference(String didReference) {
+
+		this.didReference = didReference;
+	}
+
+	@JsonGetter
+	public final String getDid() {
 
 		return this.did;
 	}
 
-	public String getMethod() {
+	@JsonSetter
+	public final void setDid(String did) {
+
+		this.did = did;
+	}
+
+	@JsonGetter
+	public final String getMethod() {
 
 		return this.method;
 	}
 
-	public String getSpecificId() {
+	@JsonSetter
+	public final void setMethod(String method) {
+
+		this.method = method;
+	}
+
+	@JsonGetter
+	public final String getSpecificId() {
 
 		return this.specificId;
 	}
 
-	public String getService() {
+	@JsonSetter
+	public final void setSpecificId(String specificId) {
+
+		this.specificId = specificId;
+	}
+
+	@JsonGetter
+	public final String getService() {
 
 		return this.service;
 	}
 
-	public String getPath() {
+	@JsonSetter
+	public final void setService(String service) {
+
+		this.service = service;
+	}
+
+	@JsonGetter
+	public final String getPath() {
 
 		return this.path;
 	}
 
-	public String getQuery() {
+	@JsonSetter
+	public final void setPath(String path) {
+
+		this.path = path;
+	}
+
+	@JsonGetter
+	public final String getQuery() {
 
 		return this.query;
 	}
 
-	public String getFragment() {
+	@JsonSetter
+	public final void setQuery(String query) {
+
+		this.query = query;
+	}
+
+	@JsonGetter
+	public final String getFragment() {
 
 		return this.fragment;
+	}
+
+	@JsonSetter
+	public final void setFragment(String fragment) {
+
+		this.fragment = fragment;
 	}
 
 	/*

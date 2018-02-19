@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import uniresolver.did.DID;
 import uniresolver.did.DIDDocument;
 
-@JsonPropertyOrder({ "result", "metadata" })
+@JsonPropertyOrder({ "didReference", "didDocument", "resolverMetaata", "driverMetadata" })
 public class ResolutionResult {
 
 	public static final String MIME_TYPE = "application/json";
