@@ -11,7 +11,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.codec.binary.Hex;
 import org.hyperledger.indy.sdk.IndyException;
 import org.hyperledger.indy.sdk.LibIndy;
 import org.hyperledger.indy.sdk.ledger.Ledger;
@@ -202,7 +201,7 @@ public class DidSovDriver implements Driver {
 				JsonPrimitive jsonGetAttrEndpointValue = jsonGetAttrEndpoint == null ? null : jsonGetAttrEndpoint.getAsJsonPrimitive(jsonService.getKey());
 				String value = jsonGetAttrEndpointValue == null ? null : jsonGetAttrEndpointValue.getAsString();
 
-				Service service = Service.build(jsonService.getKey(), value);
+				Service service = Service.build(jsonService.getKey(), null, value);
 
 				services.add(service);
 			}

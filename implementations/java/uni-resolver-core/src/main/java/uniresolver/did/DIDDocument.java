@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ public class DIDDocument {
 	public static final String JSONLD_TERM_ID = "id";
 	public static final String JSONLD_TERM_TYPE = "type";
 	public static final String JSONLD_TERM_SERVICE = "service";
+	public static final String JSONLD_TERM_NAME = "name";
 	public static final String JSONLD_TERM_SERVICEENDPOINT = "serviceEndpoint";
 	public static final String JSONLD_TERM_PUBLICKEY = "publicKey";
 	public static final String JSONLD_TERM_PUBLICKEYBASE64 = "publicKeyBase64";
@@ -110,6 +112,37 @@ public class DIDDocument {
 		// done
 
 		return new DIDDocument(jsonLdObject);
+	}
+
+	/*
+	 * Service selection
+	 */
+
+	public Integer[] selectServices(String selectServiceName, String selectServiceType) {
+
+		int i = -1;
+		List<Integer> selectedServices = new ArrayList<Integer> ();
+
+		for (Service service : this.getServices()) {
+
+			i++;
+
+			if (selectServiceName != null) {
+
+				if (service.getName() == null) continue;
+				if (! service.getName().equals(selectServiceName)) continue;
+			}
+
+			if (selectServiceType != null) {
+
+				if (service.getTypes() == null) continue;
+				if (! Arrays.asList(service.getTypes()).contains(selectServiceType)) continue;
+			}
+
+			selectedServices.add(Integer.valueOf(i));
+		}
+
+		return selectedServices.toArray(new Integer[selectedServices.size()]);
 	}
 
 	/*

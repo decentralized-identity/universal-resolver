@@ -31,6 +31,12 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	}
 
 	@Override
+	public ResolutionResult resolve(String identifier, String selectServiceType) throws ResolutionException {
+
+		return this.getUniResolver() == null ? null : this.getUniResolver().resolve(identifier, selectServiceType);
+	}
+
+	@Override
 	public Map<String, Map<String, Object>> properties() throws ResolutionException {
 
 		return this.getUniResolver() == null ? null : this.getUniResolver().properties();

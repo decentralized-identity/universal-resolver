@@ -42,6 +42,12 @@ public class ClientUniResolver implements UniResolver {
 	@Override
 	public ResolutionResult resolve(String identifier) throws ResolutionException {
 
+		return this.resolve(identifier, null);
+	}
+
+	@Override
+	public ResolutionResult resolve(String identifier, String selectServiceType) throws ResolutionException {
+
 		// encode identifier
 
 		String encodedIdentifier;
