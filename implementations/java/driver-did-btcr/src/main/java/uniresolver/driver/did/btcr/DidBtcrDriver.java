@@ -23,7 +23,9 @@ import info.weboftrust.txrefconversion.TxrefConverter;
 import info.weboftrust.txrefconversion.TxrefConverter.Chain;
 import info.weboftrust.txrefconversion.TxrefConverter.ChainAndTxid;
 import uniresolver.ResolutionException;
+import uniresolver.did.Authentication;
 import uniresolver.did.DIDDocument;
+import uniresolver.did.Encryption;
 import uniresolver.did.PublicKey;
 import uniresolver.did.Service;
 import uniresolver.driver.Driver;
@@ -41,6 +43,7 @@ public class DidBtcrDriver implements Driver {
 	public static final Pattern DID_BTCR_PATTERN = Pattern.compile("^did:btcr:(\\S*)$");
 
 	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "EdDsaSAPublicKeySecp256k1" };
+	public static final String[] DIDDOCUMENT_AUTHENTICATION_TYPES = new String[] { "EdDsaSASignatureAuthentication2018" };
 
 	private Map<String, Object> properties;
 
@@ -180,15 +183,27 @@ public class DidBtcrDriver implements Driver {
 
 		// DID DOCUMENT publicKeys
 
+		int keyNum = 0;
 		List<PublicKey> publicKeys;
+		List<Authentication> authentications;
+		List<Encryption> encryptions;
 
 		if (btcrData != null) {
 
+			String keyId = id + "#key-" + (++keyNum);
+
 			PublicKey publicKey = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, btcrData.getInputScriptPubKey());
 			publicKeys = Collections.singletonList(publicKey);
+
+			Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
+			authentications = Collections.singletonList(authentication);
+
+			encryptions = Collections.emptyList();
 		} else {
 
 			publicKeys = Collections.emptyList();
+			authentications = Collections.emptyList();
+			encryptions = Collections.emptyList();
 		}
 
 		// DID DOCUMENT services
@@ -205,7 +220,7 @@ public class DidBtcrDriver implements Driver {
 
 		// create DID DOCUMENT
 
-		DIDDocument didDocument = DIDDocument.build(id, publicKeys, services);
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, encryptions, services);
 
 		// create DRIVER METADATA
 

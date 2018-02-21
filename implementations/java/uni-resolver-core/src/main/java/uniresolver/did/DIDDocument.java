@@ -35,6 +35,8 @@ public class DIDDocument {
 	public static final String JSONLD_TERM_PUBLICKEYBASE64 = "publicKeyBase64";
 	public static final String JSONLD_TERM_PUBLICKEYBASE58 = "publicKeyBase58";
 	public static final String JSONLD_TERM_PUBLICKEYHEX = "publicKeyHex";
+	public static final String JSONLD_TERM_AUTHENTICATION = "authentication";
+	public static final String JSONLD_TERM_ENCRYPTION = "encryption";
 
 	public static final Object JSONLD_CONTEXT;
 
@@ -70,12 +72,28 @@ public class DIDDocument {
 		return new DIDDocument(jsonLdObject);
 	}
 
-	public static DIDDocument build(String id, List<PublicKey> publicKeys, List<Service> services) {
+	public static DIDDocument build(String id, List<PublicKey> publicKeys, List<Authentication> authentications, List<Encryption> encryptions, List<Service> services) {
 
 		// add 'id'
 
 		Map<String, Object> jsonLdObject = new LinkedHashMap<String, Object> ();
 		jsonLdObject.put(JSONLD_TERM_ID, id);
+
+		// add 'publicKey'
+
+		if (publicKeys != null) {
+
+			LinkedList<Object> publicKeysJsonLdArray = new LinkedList<Object> ();
+
+			for (PublicKey publicKey : publicKeys) {
+
+				Map<String, Object> publicKeyJsonLdObject = publicKey.getJsonLdObject();
+
+				publicKeysJsonLdArray.add(publicKeyJsonLdObject);
+			}
+
+			jsonLdObject.put(JSONLD_TERM_PUBLICKEY, publicKeysJsonLdArray);
+		}
 
 		// add 'publicKey'
 
@@ -107,6 +125,38 @@ public class DIDDocument {
 			}
 
 			jsonLdObject.put(JSONLD_TERM_SERVICE, servicesJsonLdArray);
+		}
+
+		// add 'authentication'
+
+		if (authentications != null && authentications.size() > 0) {
+
+			LinkedList<Object> authenticationsJsonLdArray = new LinkedList<Object> ();
+
+			for (Authentication authentication : authentications) {
+
+				Map<String, Object> authenticationJsonLdObject = authentication.getJsonLdObject();
+
+				authenticationsJsonLdArray.add(authenticationJsonLdObject);
+			}
+
+			jsonLdObject.put(JSONLD_TERM_AUTHENTICATION, authenticationsJsonLdArray);
+		}
+
+		// add 'encryption'
+
+		if (encryptions != null && encryptions.size() > 0) {
+
+			LinkedList<Object> encryptionsJsonLdArray = new LinkedList<Object> ();
+
+			for (Encryption encryption : encryptions) {
+
+				Map<String, Object> encryptionJsonLdObject = encryption.getJsonLdObject();
+
+				encryptionsJsonLdArray.add(encryptionJsonLdObject);
+			}
+
+			jsonLdObject.put(JSONLD_TERM_ENCRYPTION, encryptionsJsonLdArray);
 		}
 
 		// done
@@ -228,6 +278,52 @@ public class DIDDocument {
 		}
 
 		return publicKeys;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Authentication> getAuthentications() {
+
+		Object entry = this.jsonLdObject.get(JSONLD_TERM_AUTHENTICATION);
+		if (entry == null) return null;
+		if (! (entry instanceof List<?>)) return null;
+
+		List<Object> authenticationsJsonLdArray = (List<Object>) entry;
+
+		List<Authentication> authentications = new ArrayList<Authentication> ();
+
+		for (Object entry2 : authenticationsJsonLdArray) {
+
+			if (! (entry2 instanceof LinkedHashMap<?, ?>)) continue;
+
+			LinkedHashMap<String, Object> authenticationJsonLdObject = (LinkedHashMap<String, Object>) entry2;
+
+			authentications.add(Authentication.build(authenticationJsonLdObject));
+		}
+
+		return authentications;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Encryption> getEncryptions() {
+
+		Object entry = this.jsonLdObject.get(JSONLD_TERM_ENCRYPTION);
+		if (entry == null) return null;
+		if (! (entry instanceof List<?>)) return null;
+
+		List<Object> encryptionsJsonLdArray = (List<Object>) entry;
+
+		List<Encryption> encryptions = new ArrayList<Encryption> ();
+
+		for (Object entry2 : encryptionsJsonLdArray) {
+
+			if (! (entry2 instanceof LinkedHashMap<?, ?>)) continue;
+
+			LinkedHashMap<String, Object> encryptionJsonLdObject = (LinkedHashMap<String, Object>) entry2;
+
+			encryptions.add(Encryption.build(encryptionJsonLdObject));
+		}
+
+		return encryptions;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -33,7 +33,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import uniresolver.ResolutionException;
+import uniresolver.did.Authentication;
 import uniresolver.did.DIDDocument;
+import uniresolver.did.Encryption;
 import uniresolver.did.PublicKey;
 import uniresolver.did.Service;
 import uniresolver.driver.Driver;
@@ -46,6 +48,7 @@ public class DidSovDriver implements Driver {
 	public static final Pattern DID_SOV_PATTERN = Pattern.compile("^did:sov:(\\S*)$");
 
 	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Ed25519VerificationKey" };
+	public static final String[] DIDDOCUMENT_AUTHENTICATION_TYPES = new String[] { "Ed25519SignatureAuthentication2018" };
 
 	private Map<String, Object> properties;
 
@@ -186,7 +189,20 @@ public class DidSovDriver implements Driver {
 
 		String verkey = jsonGetNymVerkey == null ? null : jsonGetNymVerkey.getAsString();
 
-		List<PublicKey> publicKeys = Collections.singletonList(PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, verkey, null));
+		int keyNum = 0;
+		List<PublicKey> publicKeys;
+		List<Authentication> authentications;
+		List<Encryption> encryptions;
+
+		String keyId = id + "#key-" + (++keyNum);
+
+		PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, verkey, null);
+		publicKeys = Collections.singletonList(publicKey);
+
+		Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
+		authentications = Collections.singletonList(authentication);
+
+		encryptions = Collections.emptyList();
 
 		// DID DOCUMENT services
 
@@ -209,7 +225,7 @@ public class DidSovDriver implements Driver {
 
 		// create DID DOCUMENT
 
-		DIDDocument didDocument = DIDDocument.build(id, publicKeys, services);
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, encryptions, services);
 
 		// create DRIVER METADATA
 
