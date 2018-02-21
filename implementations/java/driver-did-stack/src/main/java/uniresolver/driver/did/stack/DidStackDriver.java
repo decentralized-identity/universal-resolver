@@ -31,7 +31,7 @@ public class DidStackDriver implements Driver {
 
     public static final Pattern DID_STACK_PATTERN = Pattern.compile("^did:stack:v0:([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{33,34})-([0-9]+)$");
 
-    public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "EdDsaSAPublicKeySecp256k1" };
+    public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Secp256k1SignatureVerificationKey2018" };
 
     public static final String DEFAULT_BLOCKSTACK_CORE_URL = "https://core.blockstack.org";
     public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
