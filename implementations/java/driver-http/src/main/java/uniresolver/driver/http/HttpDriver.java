@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import uniresolver.ResolutionException;
 import uniresolver.did.DIDDocument;
 import uniresolver.driver.Driver;
-import uniresolver.driver.servlet.PropertiesServlet;
 import uniresolver.result.ResolutionResult;
 
 public class HttpDriver implements Driver {
