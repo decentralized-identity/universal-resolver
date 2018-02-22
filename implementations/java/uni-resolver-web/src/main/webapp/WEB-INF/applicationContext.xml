@@ -14,6 +14,7 @@
 				<entry key="did:v1"><ref bean="DidV1Driver" /></entry>
 				<entry key="did:ipid"><ref bean="DidIpidDriver" /></entry>
 				<entry key="did:stack"><ref bean="DidStackDriver" /></entry>
+				<entry key="did:erc725"><ref bean="DidErc725Driver" /></entry>
 			</util:map>
 		</property>
 	</bean>
@@ -84,6 +85,12 @@
 		<property name="resolveUri" value="http://driver-did-stack:8084/1.0/identifiers/$1" />
 		<property name="propertiesUri" value="http://driver-did-stack:8084/1.0/properties" />
 		<property name="pattern" value="^(did:stack:.+)$" />
+	</bean>
+
+	<bean id="DidErc725Driver" class="uniresolver.driver.http.HttpDriver">
+		<property name="resolveUri" value="http://driver-did-erc725:8085/1.0/identifiers/$1" />
+		<property name="propertiesUri" value="http://driver-did-erc725:8085/1.0/properties" />
+		<property name="pattern" value="^(did:erc725:.+)$" />
 	</bean>
 
 </beans>

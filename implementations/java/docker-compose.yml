@@ -31,6 +31,22 @@ services:
     image: chrislun/uni-resolver-driver-did-uport
     ports:
       - "8083:8081"
+  driver-did-erc725:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-driver-did-erc725
+      args:
+        ethereumConnection: hybrid
+        rpcUrlMainnet: https://mainnet.infura.io/9W2fvWQMP6cJCMH3ESqP
+        rpcUrlRopsten: https://ropsten.infura.io/9W2fvWQMP6cJCMH3ESqP
+        rpcUrlRinkeby: https://rinkeby.infura.io/9W2fvWQMP6cJCMH3ESqP
+        rpcUrlKovan: https://kovan.infura.io/9W2fvWQMP6cJCMH3ESqP
+        etherscanApiMainnet: http://api.etherscan.io/api
+        etherscanApiRopsten: http://api-ropsten.etherscan.io/api
+        etherscanApiRinkeby: http://api-rinkeby.etherscan.io/api
+        etherscanApiKovan: http://api-kovan.etherscan.io/api
+    ports:
+      - "8085:8085"
   uni-resolver-web:
     build:
       context: .

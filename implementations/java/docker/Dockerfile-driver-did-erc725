@@ -1,0 +1,55 @@
+# Dockerfile
+
+FROM debian:stretch
+MAINTAINER Markus Sabadello <markus@danubetech.com>
+
+USER root
+
+RUN apt-get -y update
+
+RUN apt-get install -y --no-install-recommends openjdk-8-jdk maven
+
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
+ENV PATH $JAVA_HOME/bin:$PATH
+
+# build driver-did-erc725
+
+ADD . /opt/uni-resolver-java
+
+RUN cd /opt/uni-resolver-java && mvn clean
+RUN cd /opt/uni-resolver-java && mvn install -N -DskipTests
+RUN cd /opt/uni-resolver-java/uni-resolver-core && mvn install -N -DskipTests
+RUN cd /opt/uni-resolver-java/driver && mvn install -N -DskipTests
+RUN cd /opt/uni-resolver-java/driver-did-erc725 && mvn install package -N -DskipTests
+
+# clean up
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# variables
+
+ARG ethereumConnection=jsonrpc
+ARG rpcUrlMainnet=https://mainnet.infura.io/9W2fvWQMP6cJCMH3ESqP
+ARG rpcUrlRopsten=https://ropsten.infura.io/9W2fvWQMP6cJCMH3ESqP
+ARG rpcUrlRinkeby=https://rinkeby.infura.io/9W2fvWQMP6cJCMH3ESqP
+ARG rpcUrlKovan=https://kovan.infura.io/9W2fvWQMP6cJCMH3ESqP
+ARG etherscanApiMainnet=http://api.etherscan.io/api
+ARG etherscanApiRopsten=http://api-ropsten.etherscan.io/api
+ARG etherscanApiRinkeby=http://api-rinkeby.etherscan.io/api
+ARG etherscanApiKovan=http://api-kovan.etherscan.io/api
+
+ENV uniresolver_driver_did_erc725_ethereumConnection $ethereumConnection
+ENV uniresolver_driver_did_erc725_rpcUrlMainnet $rpcUrlMainnet
+ENV uniresolver_driver_did_erc725_rpcUrlRopsten $rpcUrlRopsten
+ENV uniresolver_driver_did_erc725_rpcUrlRinkeby $rpcUrlRinkeby
+ENV uniresolver_driver_did_erc725_rpcUrlKovan $rpcUrlKovan
+ENV uniresolver_driver_did_erc725_etherscanApiMainnet $etherscanApiMainnet
+ENV uniresolver_driver_did_erc725_etherscanApiRopsten $etherscanApiRopsten
+ENV uniresolver_driver_did_erc725_etherscanApiRinkeby $etherscanApiRinkeby
+ENV uniresolver_driver_did_erc725_etherscanApiKovan $etherscanApiKovan
+
+# done
+
+EXPOSE 8080
+
+CMD "/opt/uni-resolver-java/docker/run-driver-did-erc725.sh"
