@@ -38,6 +38,10 @@
 						<artifactId>jetty-maven-plugin</artifactId>
 						<version>9.4.0.M1</version>
 						<configuration>
+							<webApp>
+								<webInfIncludeJarPattern>^$</webInfIncludeJarPattern>
+								<containerIncludeJarPattern>^$</containerIncludeJarPattern>
+							</webApp>
 							<jettyConfig>
 								${basedir}/src/test/resources/jetty.xml
 							</jettyConfig>
