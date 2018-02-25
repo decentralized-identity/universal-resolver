@@ -33,7 +33,7 @@ public class DidErc725Driver implements Driver {
 
 	public static final Pattern DID_ERC725_PATTERN = Pattern.compile("^did:erc725:(\\S+)?:(\\S+)$");
 
-	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Secp256k1SignatureVerificationKey2018" };
+	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Secp256k1VerificationKey2018" };
 	public static final String[] DIDDOCUMENT_AUTHENTICATION_TYPES = new String[] { "Secp256k1SignatureAuthentication2018" };
 	public static final String[] DIDDOCUMENT_ENCRYPTION_TYPES = new String[] { "Secp256k1Encryption2018" };
 

@@ -47,7 +47,7 @@ public class DidSovDriver implements Driver {
 
 	public static final Pattern DID_SOV_PATTERN = Pattern.compile("^did:sov:(\\S*)$");
 
-	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Ed25519SignatureVerificationKey2018" };
+	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Ed25519VerificationKey2018" };
 	public static final String[] DIDDOCUMENT_AUTHENTICATION_TYPES = new String[] { "Ed25519SignatureAuthentication2018" };
 
 	private Map<String, Object> properties;
