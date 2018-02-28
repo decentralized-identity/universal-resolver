@@ -196,7 +196,7 @@ public class DidSovDriver implements Driver {
 
 		String keyId = id + "#key-" + (++keyNum);
 
-		PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, verkey, null);
+		PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, verkey, null, null);
 		publicKeys = Collections.singletonList(publicKey);
 
 		Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);

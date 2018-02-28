@@ -14,7 +14,7 @@ public class PublicKey extends JsonLdObject {
 		return new PublicKey(jsonLdObject);
 	}
 
-	public static PublicKey build(String id, String[] types, String publicKeyBase64, String publicKeyBase58, String publicKeyHex) {
+	public static PublicKey build(String id, String[] types, String publicKeyBase64, String publicKeyBase58, String publicKeyHex, String publicKeyPem) {
 
 		Map<String, Object> jsonLdObject = JsonLdObject.init(id, types);
 
@@ -37,6 +37,13 @@ public class PublicKey extends JsonLdObject {
 		if (publicKeyHex != null) {
 
 			jsonLdObject.put(DIDDocument.JSONLD_TERM_PUBLICKEYHEX, publicKeyHex);
+		}
+
+		// add 'publicKeyPem'
+
+		if (publicKeyPem != null) {
+
+			jsonLdObject.put(DIDDocument.JSONLD_TERM_PUBLICKEYPEM, publicKeyPem);
 		}
 
 		// done
@@ -79,5 +86,16 @@ public class PublicKey extends JsonLdObject {
 		String publicKeyHex = (String) entry;
 
 		return publicKeyHex;
+	}
+
+	public String getPublicKeyPem() {
+
+		Object entry = this.jsonLdObject.get(DIDDocument.JSONLD_TERM_PUBLICKEYPEM);
+		if (entry == null) return null;
+		if (! (entry instanceof String)) return null;
+
+		String publicKeyPem = (String) entry;
+
+		return publicKeyPem;
 	}
 }

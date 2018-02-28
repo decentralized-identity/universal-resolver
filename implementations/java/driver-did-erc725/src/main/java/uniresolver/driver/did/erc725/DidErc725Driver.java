@@ -177,7 +177,7 @@ public class DidErc725Driver implements Driver {
 
 				String keyId = id + "#key-" + (++keyNum);
 
-				PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, Hex.encodeHexString(managementKey));
+				PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, Hex.encodeHexString(managementKey), null);
 				publicKeys.add(publicKey);
 			}
 
@@ -185,7 +185,7 @@ public class DidErc725Driver implements Driver {
 
 				String keyId = id + "#key-" + (++keyNum);
 
-				PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, Hex.encodeHexString(actionKey));
+				PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, Hex.encodeHexString(actionKey), null);
 				publicKeys.add(publicKey);
 
 				Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
@@ -196,7 +196,7 @@ public class DidErc725Driver implements Driver {
 
 				String keyId = id + "#key-" + (++keyNum);
 
-				PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, Hex.encodeHexString(claimKey));
+				PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, Hex.encodeHexString(claimKey), null);
 				publicKeys.add(publicKey);
 
 				Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
@@ -207,7 +207,7 @@ public class DidErc725Driver implements Driver {
 
 				String keyId = id + "#key-" + (++keyNum);
 
-				PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, Hex.encodeHexString(actionKey));
+				PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, Hex.encodeHexString(actionKey), null);
 				publicKeys.add(publicKey);
 
 				Encryption encryption = Encryption.build(null, DIDDOCUMENT_ENCRYPTION_TYPES, keyId);
