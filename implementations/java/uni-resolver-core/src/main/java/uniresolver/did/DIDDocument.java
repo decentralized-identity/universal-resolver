@@ -7,6 +7,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -263,6 +264,7 @@ public class DIDDocument {
 
 		Object entry = this.jsonLdObject.get(JSONLD_TERM_PUBLICKEY);
 		if (entry == null) return null;
+		if (entry instanceof LinkedHashMap<?, ?>) entry = Collections.singletonList(entry);
 		if (! (entry instanceof List<?>)) return null;
 
 		List<Object> publicKeysJsonLdArray = (List<Object>) entry;
@@ -286,6 +288,7 @@ public class DIDDocument {
 
 		Object entry = this.jsonLdObject.get(JSONLD_TERM_AUTHENTICATION);
 		if (entry == null) return null;
+		if (entry instanceof LinkedHashMap<?, ?>) entry = Collections.singletonList(entry);
 		if (! (entry instanceof List<?>)) return null;
 
 		List<Object> authenticationsJsonLdArray = (List<Object>) entry;
@@ -309,6 +312,7 @@ public class DIDDocument {
 
 		Object entry = this.jsonLdObject.get(JSONLD_TERM_ENCRYPTION);
 		if (entry == null) return null;
+		if (entry instanceof LinkedHashMap<?, ?>) entry = Collections.singletonList(entry);
 		if (! (entry instanceof List<?>)) return null;
 
 		List<Object> encryptionsJsonLdArray = (List<Object>) entry;
@@ -332,6 +336,7 @@ public class DIDDocument {
 
 		Object entry = this.jsonLdObject.get(JSONLD_TERM_SERVICE);
 		if (entry == null) return null;
+		if (entry instanceof LinkedHashMap<?, ?>) entry = Collections.singletonList(entry);
 		if (! (entry instanceof List<?>)) return null;
 
 		List<Object> servicesJsonLdArray = (List<Object>) entry;
