@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.weboftrust.txrefconversion.TxrefConverter.Chain;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
@@ -17,6 +19,8 @@ import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.RawTransaction.In;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.RawTransaction.Out;
 
 public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BitcoindRPCBitcoinConnection implements BitcoinConnection {
+
+	private static Logger log = LoggerFactory.getLogger(BitcoindRPCBitcoinConnection.class);
 
 	private static final BitcoindRPCBitcoinConnection instance = new BitcoindRPCBitcoinConnection();
 
@@ -61,7 +65,11 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 
 				Matcher matcher = patternAsmInputScriptPubKey.matcher((String) in.scriptSig().get("asm"));
 
+				if (log.isDebugEnabled()) log.debug("IN: " + in.scriptSig().get("asm") + " (MATCHES: " + matcher.matches() + ")");
+				
 				if (matcher.matches() && matcher.groupCount() == 1) {
+
+					if (log.isDebugEnabled()) log.debug("inputScriptPubKey: " + matcher.group(1));
 
 					inputScriptPubKey = matcher.group(1);
 					break;
@@ -70,6 +78,7 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 		}
 
 		if (inputScriptPubKey == null) return null;
+		if (inputScriptPubKey.length() > 66) inputScriptPubKey = inputScriptPubKey.substring(inputScriptPubKey.length() - 66);
 
 		// find DID DOCUMENT FRAGMENT URI
 
@@ -84,7 +93,11 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 
 				Matcher matcher = patternAsmFragmentUri.matcher(out.scriptPubKey().asm());
 
+				if (log.isDebugEnabled()) log.debug("OUT: " + out.scriptPubKey().asm() + " (MATCHES: " + matcher.matches() + ")");
+
 				if (matcher.matches() && matcher.groupCount() == 1) {
+
+					if (log.isDebugEnabled()) log.debug("fragmentUri: " + matcher.group(1));
 
 					try {
 

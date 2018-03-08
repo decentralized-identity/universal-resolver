@@ -74,6 +74,7 @@ public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconver
 		}
 
 		if (inputScriptPubKey == null) return null;
+		if (inputScriptPubKey.length() > 66) inputScriptPubKey = inputScriptPubKey.substring(inputScriptPubKey.length() - 66);
 
 		// find DID DOCUMENT FRAGMENT URI
 

@@ -225,8 +225,11 @@ public class DidBtcrDriver implements Driver {
 		// create DRIVER METADATA
 
 		Map<String, Object> driverMetadata = new LinkedHashMap<String, Object> ();
+		if (btcrData != null) driverMetadata.put("inputScriptPubKey", btcrData.getInputScriptPubKey());
 		if (btcrData != null) driverMetadata.put("fragmentUri", btcrData.getFragmentUri());
 		if (didDocumentFragment != null) driverMetadata.put("fragment", didDocumentFragment);
+		if (chain != null) driverMetadata.put("chain", chain);
+		if (txid != null) driverMetadata.put("txid", txid);
 
 		// create RESOLUTION RESULT
 
