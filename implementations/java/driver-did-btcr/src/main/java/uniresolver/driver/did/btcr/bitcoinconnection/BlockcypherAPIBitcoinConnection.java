@@ -109,8 +109,6 @@ public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconver
 			}
 		}
 
-		if (fragmentUri == null) return null;
-
 		// done
 
 		return new BtcrData(inputScriptPubKey, fragmentUri);

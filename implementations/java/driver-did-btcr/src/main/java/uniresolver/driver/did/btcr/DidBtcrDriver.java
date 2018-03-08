@@ -157,7 +157,7 @@ public class DidBtcrDriver implements Driver {
 
 		DIDDocument didDocumentFragment = null;
 
-		if (btcrData != null) {
+		if (btcrData != null && btcrData.getFragmentUri() != null) {
 
 			HttpGet httpGet = new HttpGet(btcrData.getFragmentUri());
 
@@ -210,7 +210,7 @@ public class DidBtcrDriver implements Driver {
 
 		List<Service> services;
 
-		if (btcrData != null) {
+		if (didDocumentFragment != null) {
 
 			services = didDocumentFragment.getServices();
 		} else {
