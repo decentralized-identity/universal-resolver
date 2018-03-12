@@ -252,15 +252,14 @@ public class Parser
     if (file == null)
       throw new IllegalArgumentException("null file");
 
-    BufferedReader in = new BufferedReader(new FileReader(file));
-    int ch = 0;
-    StringBuffer out = new StringBuffer();
-    while ((ch = in.read()) != -1)
-      out.append((char)ch);
-
-    in.close();
-
-    return parse(rulename, out.toString(), trace);
+    try (BufferedReader in = new BufferedReader(new FileReader(file))) {
+      int ch;
+      StringBuilder out = new StringBuilder();
+      while ((ch = in.read()) != -1) {
+        out.append((char) ch);
+      }
+      return parse(rulename, out.toString(), trace);
+    }
   }
 }
 
