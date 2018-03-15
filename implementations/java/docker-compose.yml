@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile-driver-did-btcr
-      args: 
+      args:
         bitcoinConnection: bitcoind
         rpcUrlMainnet: http://user:pass@172.18.0.1:8332/
         rpcUrlTestnet: http://user:pass@172.18.0.1:18332/
@@ -14,7 +14,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile-driver-did-sov
-      args: 
+      args:
         libIndyPath: ./sovrin/lib/
         poolConfigName: 11347-04
         poolGenesisTxn: ./sovrin/11347-04.txn
@@ -47,10 +47,15 @@ services:
         etherscanApiKovan: http://api-kovan.etherscan.io/api
     ports:
       - "8085:8085"
+  driver-did-dom:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-driver-did-dom
+    ports:
+      - "8086:8086"
   uni-resolver-web:
     build:
       context: .
       dockerfile: ./docker/Dockerfile-uni-resolver-web
     ports:
       - "8080:8080"
-
