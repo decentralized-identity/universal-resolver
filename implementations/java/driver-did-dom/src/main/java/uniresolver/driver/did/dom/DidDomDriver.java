@@ -29,7 +29,7 @@ import uniresolver.result.ResolutionResult;
 
 public class DidDomDriver implements Driver {
     
-    public static final Pattern DID_DOM_PATTERN = Pattern.compile("^did:dom:([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{33,34})$");
+    public static final Pattern DID_DOM_PATTERN = Pattern.compile("^did:dom:[a-km-zA-HJ-NP-Z1-9]{32,32}$");
     
     private final String DID_DOM_RESOLVER_URL = "https://did-resolver.dominode.com";
     
@@ -45,7 +45,7 @@ public class DidDomDriver implements Driver {
         DIDDOCUMENT_PUBLICKEY_TYPES.put("RsaVerificationKey2018", "publicKeyPem");
         DIDDOCUMENT_PUBLICKEY_TYPES.put("Secp256k1VerificationKey2018", "publicKeyHex");
     }
-
+    
     @Override
     public ResolutionResult resolve(String identifier) throws ResolutionException {
 
