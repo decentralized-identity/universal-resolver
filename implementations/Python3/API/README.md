@@ -23,18 +23,18 @@ print(response)
 ```
 
 response will look like this:
-```JSON
-{u'control': [], 
-    u'owner': {
-        u'curve': u'ed25519', 
-        u'publicKeyBase64': u'H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV', 
-        u'type': [u'CryptographicKey', u'EdDsaSAPublicKey'], 
-        u'id': u'did:sov:WRfXPg8dantKVubE3HX8pw'
+```javascript
+{'control': [], 
+    'owner': {
+        'curve': 'ed25519', 
+        'publicKeyBase64': 'H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV', 
+        'type': ['CryptographicKey', 'EdDsaSAPublicKey'], 
+        'id': 'did:sov:WRfXPg8dantKVubE3HX8pw'
     }, 
-    u'id': u'did:sov:WRfXPg8dantKVubE3HX8pw', 
-    u'service': {
-            u'xdi': u'http://127.0.0.1:8080/xdi'
+    'id': 'did:sov:WRfXPg8dantKVubE3HX8pw', 
+    'service': {
+            'xdi': 'http://127.0.0.1:8080/xdi'
     }, 
-    u'@context': u'https://example.org/did/v1'
+    '@context': 'https://example.org/did/v1'
 }
 ```
