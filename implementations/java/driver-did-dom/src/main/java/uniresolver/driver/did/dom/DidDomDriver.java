@@ -29,7 +29,7 @@ import uniresolver.result.ResolutionResult;
 
 public class DidDomDriver implements Driver {
     
-    public static final Pattern DID_DOM_PATTERN = Pattern.compile("^did:dom:[a-km-zA-HJ-NP-Z1-9]{32,32}$");
+    public static final Pattern DID_DOM_PATTERN = Pattern.compile("^did:dom:[a-km-zA-HJ-NP-Z1-9]{30,30}$");
     
     private final String DID_DOM_RESOLVER_URL = "https://did-resolver.dominode.com";
     
