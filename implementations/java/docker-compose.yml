@@ -4,12 +4,21 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile-driver-did-btcr
+      args: 
+        bitcoinConnection: bitcoind
+        rpcUrlMainnet: http://user:pass@172.18.0.1:8332/
+        rpcUrlTestnet: http://user:pass@172.18.0.1:18332/
     ports:
       - "8081:8081"
   driver-did-sov:
     build:
       context: .
       dockerfile: ./docker/Dockerfile-driver-did-sov
+      args: 
+        libIndyPath: ./sovrin/lib/
+        poolConfigName: 11347-04
+        poolGenesisTxn: ./sovrin/11347-04.txn
+        walletName: default
     ports:
       - "8082:8082"
   driver-did-stack:
@@ -22,6 +31,22 @@ services:
     image: chrislun/uni-resolver-driver-did-uport
     ports:
       - "8083:8081"
+  driver-did-erc725:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-driver-did-erc725
+      args:
+        ethereumConnection: hybrid
+        rpcUrlMainnet: https://mainnet.infura.io/9W2fvWQMP6cJCMH3ESqP
+        rpcUrlRopsten: https://ropsten.infura.io/9W2fvWQMP6cJCMH3ESqP
+        rpcUrlRinkeby: https://rinkeby.infura.io/9W2fvWQMP6cJCMH3ESqP
+        rpcUrlKovan: https://kovan.infura.io/9W2fvWQMP6cJCMH3ESqP
+        etherscanApiMainnet: http://api.etherscan.io/api
+        etherscanApiRopsten: http://api-ropsten.etherscan.io/api
+        etherscanApiRinkeby: http://api-rinkeby.etherscan.io/api
+        etherscanApiKovan: http://api-kovan.etherscan.io/api
+    ports:
+      - "8085:8085"
   uni-resolver-web:
     build:
       context: .

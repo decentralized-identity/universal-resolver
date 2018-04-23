@@ -10,18 +10,29 @@
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 
-	<!-- SERVLET -->
+	<!-- SERVLETS -->
 
 	<servlet>
 		<description></description>
-		<display-name>WebUniResolver</display-name>
-		<servlet-name>WebUniResolver</servlet-name>
+		<display-name>ResolveServlet</display-name>
+		<servlet-name>ResolveServlet</servlet-name>
 		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>WebUniResolver</servlet-name>
-		<url-pattern>/1.0/identifiers</url-pattern>
+		<servlet-name>ResolveServlet</servlet-name>
 		<url-pattern>/1.0/identifiers/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<description></description>
+		<display-name>PropertiesServlet</display-name>
+		<servlet-name>PropertiesServlet</servlet-name>
+		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PropertiesServlet</servlet-name>
+		<url-pattern>/1.0/properties</url-pattern>
+		<url-pattern>/1.0/properties/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- LISTENERS -->

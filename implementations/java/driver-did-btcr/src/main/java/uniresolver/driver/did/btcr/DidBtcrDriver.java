@@ -2,6 +2,8 @@ package uniresolver.driver.did.btcr;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -21,12 +23,18 @@ import info.weboftrust.txrefconversion.TxrefConverter;
 import info.weboftrust.txrefconversion.TxrefConverter.Chain;
 import info.weboftrust.txrefconversion.TxrefConverter.ChainAndTxid;
 import uniresolver.ResolutionException;
-import uniresolver.ddo.DDO;
-import uniresolver.ddo.DDO.Owner;
+import uniresolver.did.Authentication;
+import uniresolver.did.DIDDocument;
+import uniresolver.did.Encryption;
+import uniresolver.did.PublicKey;
+import uniresolver.did.Service;
 import uniresolver.driver.Driver;
-import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIExtendedBitcoinConnection;
-import uniresolver.driver.did.btcr.bitcoinconnection.ExtendedBitcoinConnection;
-import uniresolver.driver.did.btcr.bitcoinconnection.ExtendedBitcoinConnection.BtcrData;
+import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection;
+import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection.BtcrData;
+import uniresolver.driver.did.btcr.bitcoinconnection.BitcoindRPCBitcoinConnection;
+import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinjSPVBitcoinConnection;
+import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection;
+import uniresolver.result.ResolutionResult;
 
 public class DidBtcrDriver implements Driver {
 
@@ -34,21 +42,80 @@ public class DidBtcrDriver implements Driver {
 
 	public static final Pattern DID_BTCR_PATTERN = Pattern.compile("^did:btcr:(\\S*)$");
 
-	public static final String[] DDO_OWNER_TYPES = new String[] { "CryptographicKey", "EdDsaSAPublicKey" };
-	public static final String DDO_CURVE = "secp256k1";
+	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Secp256k1VerificationKey2018" };
+	public static final String[] DIDDOCUMENT_AUTHENTICATION_TYPES = new String[] { "EdDsaSASignatureAuthentication2018" };
 
-	public static final ExtendedBitcoinConnection DEFAULT_EXTENDED_BITCOIN_CONNECTION = BlockcypherAPIExtendedBitcoinConnection.get();
-	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
+	private Map<String, Object> properties;
 
-	private ExtendedBitcoinConnection extendedBitcoinConnection = DEFAULT_EXTENDED_BITCOIN_CONNECTION;
-	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
+	private BitcoinConnection bitcoinConnection;
+
+	private HttpClient httpClient = HttpClients.createDefault();
+
+	public DidBtcrDriver(Map<String, Object> properties) {
+
+		this.setProperties(properties);
+	}
 
 	public DidBtcrDriver() {
 
+		this.setProperties(getPropertiesFromEnvironment());
+	}
+
+	private static Map<String, Object> getPropertiesFromEnvironment() {
+
+		if (log.isDebugEnabled()) log.debug("Loading from environment: " + System.getenv());
+
+		Map<String, Object> properties = new HashMap<String, Object> ();
+
+		try {
+
+			String env_bitcoinConnection = System.getenv("uniresolver_driver_did_btcr_bitcoinConnection");
+			String env_rpcUrlMainnet = System.getenv("uniresolver_driver_did_btcr_rpcUrlMainnet");
+			String env_rpcUrlTestnet = System.getenv("uniresolver_driver_did_btcr_rpcUrlTestnet");
+
+			if (env_bitcoinConnection != null) properties.put("bitcoinConnection", env_bitcoinConnection);
+			if (env_rpcUrlMainnet != null) properties.put("rpcUrlMainnet", env_rpcUrlMainnet);
+			if (env_rpcUrlTestnet != null) properties.put("rpcUrlTestnet", env_rpcUrlTestnet);
+		} catch (Exception ex) {
+
+			throw new IllegalArgumentException(ex.getMessage(), ex);
+		}
+
+		return properties;
+	}
+
+	private void configureFromProperties() {
+
+		if (log.isDebugEnabled()) log.debug("Configuring from properties: " + this.getProperties());
+
+		try {
+
+			String prop_bitcoinConnection = (String) this.getProperties().get("bitcoinConnection");
+
+			if ("bitcoind".equals(prop_bitcoinConnection)) {
+
+				this.setBitcoinConnection(new BitcoindRPCBitcoinConnection());
+
+				String prop_rpcUrlMainnet = (String) this.getProperties().get("rpcUrlMainnet");
+				String prop_rpcUrlTestnet = (String) this.getProperties().get("rpcUrlTestnet");
+
+				if (prop_rpcUrlMainnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlMainnet(prop_rpcUrlMainnet);
+				if (prop_rpcUrlTestnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlTestnet(prop_rpcUrlTestnet);
+			} else if ("bitcoinj".equals(prop_bitcoinConnection)) {
+
+				this.setBitcoinConnection(new BitcoinjSPVBitcoinConnection());
+			} else  if ("blockcypherapi".equals(prop_bitcoinConnection)) {
+
+				this.setBitcoinConnection(new BlockcypherAPIBitcoinConnection());
+			}
+		} catch (Exception ex) {
+
+			throw new IllegalArgumentException(ex.getMessage(), ex);
+		}
 	}
 
 	@Override
-	public DDO resolve(String identifier) throws ResolutionException {
+	public ResolutionResult resolve(String identifier) throws ResolutionException {
 
 		// parse identifier
 
@@ -72,13 +139,13 @@ public class DidBtcrDriver implements Driver {
 
 		try {
 
-			TxrefConverter txrefConverter = new TxrefConverter(this.getExtendedBitcoinConnection());
+			TxrefConverter txrefConverter = new TxrefConverter(this.getBitcoinConnection());
 
 			ChainAndTxid chainAndTxid = txrefConverter.txrefToTxid(txref);
 			chain = chainAndTxid.getChain();
 			txid = chainAndTxid.getTxid();
 
-			btcrData = this.getExtendedBitcoinConnection().getBtcrData(chain, txid);
+			btcrData = this.getBitcoinConnection().getBtcrData(chain, txid);
 		} catch (IOException ex) {
 
 			throw new ResolutionException("Cannot retrieve BTCR data for " + txref + ": " + ex.getMessage());
@@ -86,65 +153,122 @@ public class DidBtcrDriver implements Driver {
 
 		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ txid + " on chain " + chain + "): " + btcrData);
 
-		// retrieve more DDO
+		// retrieve DID DOCUMENT FRAGEMENT
 
-		HttpGet httpGet = new HttpGet(btcrData.getMoreDdoUri());
-		DDO moreDdo = null;
+		DIDDocument didDocumentFragment = null;
 
-		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
+		if (btcrData != null && btcrData.getFragmentUri() != null) {
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve more DDO for " + txref + " from " + btcrData.getMoreDdoUri() + ": " + httpResponse.getStatusLine());
+			HttpGet httpGet = new HttpGet(btcrData.getFragmentUri());
 
-			HttpEntity httpEntity = httpResponse.getEntity();
+			try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			moreDdo = DDO.fromString(EntityUtils.toString(httpEntity));
-			EntityUtils.consume(httpEntity);
-		} catch (IOException ex) {
+				if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getFragmentUri() + ": " + httpResponse.getStatusLine());
 
-			throw new ResolutionException("Cannot retrieve more DDO for " + txref + " from " + btcrData.getMoreDdoUri() + ": " + ex.getMessage(), ex);
+				HttpEntity httpEntity = httpResponse.getEntity();
+
+				didDocumentFragment = DIDDocument.fromJson(EntityUtils.toString(httpEntity));
+				EntityUtils.consume(httpEntity);
+			} catch (IOException ex) {
+
+				throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getFragmentUri() + ": " + ex.getMessage(), ex);
+			}
+
+			if (log.isInfoEnabled()) log.info("Retrieved DID DOCUMENT FRAGMENT for " + txref + " (" + btcrData.getFragmentUri() + "): " + didDocumentFragment);
 		}
 
-		if (log.isInfoEnabled()) log.info("Retrieved more DDO for " + txref + " (" + btcrData.getMoreDdoUri() + "): " + moreDdo);
-
-		// DDO id
+		// DID DOCUMENT id
 
 		String id = identifier;
 
-		// DDO owners
+		// DID DOCUMENT publicKeys
 
-		Owner owner = Owner.build(identifier, DDO_OWNER_TYPES, DDO_CURVE, null, btcrData.getInputScriptPubKey());
+		int keyNum = 0;
+		List<PublicKey> publicKeys;
+		List<Authentication> authentications;
+		List<Encryption> encryptions;
 
-		List<DDO.Owner> owners = Collections.singletonList(owner);
+		if (btcrData != null) {
 
-		// DDO controls
+			String keyId = id + "#key-" + (++keyNum);
 
-		List<DDO.Control> controls = Collections.emptyList();
+			PublicKey publicKey = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, btcrData.getInputScriptPubKey(), null);
+			publicKeys = Collections.singletonList(publicKey);
 
-		// DDO services
+			Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
+			authentications = Collections.singletonList(authentication);
 
-		Map<String, String> services = moreDdo.getServices();
+			encryptions = Collections.emptyList();
+		} else {
 
-		// create DDO
+			publicKeys = Collections.emptyList();
+			authentications = Collections.emptyList();
+			encryptions = Collections.emptyList();
+		}
 
-		DDO ddo = DDO.build(id, owners, controls, services);
+		// DID DOCUMENT services
+
+		List<Service> services;
+
+		if (didDocumentFragment != null) {
+
+			services = didDocumentFragment.getServices();
+		} else {
+
+			services = Collections.emptyList();
+		}
+
+		// create DID DOCUMENT
+
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, encryptions, services);
+
+		// create DRIVER METADATA
+
+		Map<String, Object> driverMetadata = new LinkedHashMap<String, Object> ();
+		if (btcrData != null) driverMetadata.put("inputScriptPubKey", btcrData.getInputScriptPubKey());
+		if (btcrData != null) driverMetadata.put("fragmentUri", btcrData.getFragmentUri());
+		if (didDocumentFragment != null) driverMetadata.put("fragment", didDocumentFragment);
+		if (chain != null) driverMetadata.put("chain", chain);
+		if (txid != null) driverMetadata.put("txid", txid);
+
+		// create RESOLUTION RESULT
+
+		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, driverMetadata);
 
 		// done
 
-		return ddo;
+		return resolutionResult;
+	}
+
+	@Override
+	public Map<String, Object> properties() {
+
+		return this.getProperties();
 	}
 
 	/*
 	 * Getters and setters
 	 */
 
-	public ExtendedBitcoinConnection getExtendedBitcoinConnection() {
+	public Map<String, Object> getProperties() {
 
-		return this.extendedBitcoinConnection;
+		return this.properties;
 	}
 
-	public void setExtendedBitcoinConnection(ExtendedBitcoinConnection extendedBitcoinConnection) {
+	public void setProperties(Map<String, Object> properties) {
 
-		this.extendedBitcoinConnection = extendedBitcoinConnection;
+		this.properties = properties;
+		this.configureFromProperties();
+	}
+
+	public BitcoinConnection getBitcoinConnection() {
+
+		return this.bitcoinConnection;
+	}
+
+	public void setBitcoinConnection(BitcoinConnection bitcoinConnection) {
+
+		this.bitcoinConnection = bitcoinConnection;
 	}
 
 	public HttpClient getHttpClient() {

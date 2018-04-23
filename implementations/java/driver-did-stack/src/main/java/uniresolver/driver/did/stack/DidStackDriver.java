@@ -1,35 +1,31 @@
 package uniresolver.driver.did.stack;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.UUID;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.util.EntityUtils;
-
-import org.json.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import uniresolver.ResolutionException;
-import uniresolver.ddo.DDO;
-import uniresolver.ddo.DDO.Owner;
+import uniresolver.did.DIDDocument;
+import uniresolver.did.PublicKey;
+import uniresolver.did.Service;
 import uniresolver.driver.Driver;
+import uniresolver.result.ResolutionResult;
 
 public class DidStackDriver implements Driver {
 
@@ -37,8 +33,7 @@ public class DidStackDriver implements Driver {
 
     public static final Pattern DID_STACK_PATTERN = Pattern.compile("^did:stack:v0:([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{25,34})-([0-9]+)$");
 
-    public static final String[] DDO_OWNER_TYPES = new String[] { "CryptographicKey", "EdDsaPublicKey" };
-    public static final String DDO_CURVE = "secp256k1";
+    public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Secp256k1VerificationKey2018" };
 
     public static final String DEFAULT_BLOCKSTACK_CORE_URL = "https://core.blockstack.org";
     public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
@@ -90,7 +85,7 @@ public class DidStackDriver implements Driver {
     }
 
     @Override
-    public DDO resolve(String identifier) throws ResolutionException {
+    public ResolutionResult resolve(String identifier) throws ResolutionException {
 
         // match 
         Matcher matcher = DID_STACK_PATTERN.matcher(identifier);
@@ -152,25 +147,30 @@ public class DidStackDriver implements Driver {
         // DDO id
         String id = identifier;
 
-        // DDO owners
-        Owner owner = Owner.build(identifier, DDO_OWNER_TYPES, DDO_CURVE, null, publicKeyHex);
+        // DDO publicKeys
+        PublicKey publicKey = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, publicKeyHex, null);
 
-        List<DDO.Owner> owners = Collections.singletonList(owner);
-
-        // DDO controls
-        List<DDO.Control> controls = Collections.emptyList();
+        List<PublicKey> publicKeys = Collections.singletonList(publicKey);
 
         // DDO services
-        Map<String, String> services = new HashMap<String, String>();
-        services.put("blockstack", DEFAULT_BLOCKSTACK_CORE_URL);
+        List<Service> services = new ArrayList<Service>();
+        services.add(Service.build("blockstack", null, DEFAULT_BLOCKSTACK_CORE_URL));
 
         // create DDO
-        DDO ddo = DDO.build(id, owners, controls, services);
+        DIDDocument didDocument = DIDDocument.build(id, publicKeys, null, null, services);
 
         // done
-        return ddo;
+        return ResolutionResult.build(didDocument);
     }
 
+    public Map<String, Object> properties() {
+
+    	Map<String, Object> properties = new HashMap<String, Object> ();
+    	properties.put("blockstackCoreUrl", this.getBlockstackCoreUrl());
+    	
+    	return properties;
+    }
+    
     /*
      * Getters and setters
      */

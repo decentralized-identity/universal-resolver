@@ -1,7 +1,10 @@
 package uniresolver.client;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -12,58 +15,149 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
-import uniresolver.ddo.DDO;
+import uniresolver.result.ResolutionResult;
 
 public class ClientUniResolver implements UniResolver {
 
 	private static Logger log = LoggerFactory.getLogger(ClientUniResolver.class);
 
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+
 	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
-	public static final URI DEFAULT_RESOLVER_URI = URI.create("http://localhost:8080/1.0/identifiers/");
+	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers/");
+	public static final URI DEFAULT_PROPERTIES_URI = URI.create("http://localhost:8080/1.0/properties");
 
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
-	private URI resolverUri = DEFAULT_RESOLVER_URI;
+	private URI resolveUri = DEFAULT_RESOLVE_URI;
+	private URI propertiesUri = DEFAULT_PROPERTIES_URI;
 
 	public ClientUniResolver() {
 
 	}
 
 	@Override
-	public DDO resolve(String identifier) throws ResolutionException {
+	public ResolutionResult resolve(String identifier) throws ResolutionException {
+
+		return this.resolve(identifier, null);
+	}
+
+	@Override
+	public ResolutionResult resolve(String identifier, String selectServiceType) throws ResolutionException {
+
+		// encode identifier
+
+		String encodedIdentifier;
+
+		try {
+
+			encodedIdentifier = URLEncoder.encode(identifier, "UTF-8");
+		} catch (UnsupportedEncodingException ex) {
+
+			throw new ResolutionException(ex.getMessage(), ex);
+		}
 
 		// prepare HTTP request
 
-		String uriString = this.getResolverUri().toString();
+		String uriString = this.getResolveUri().toString();
+
 		if (! uriString.endsWith("/")) uriString += "/";
-		uriString += identifier;
+		uriString += encodedIdentifier;
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		httpGet.addHeader("Accept", ResolutionResult.MIME_TYPE);
 
-		// retrieve DDO
+		// execute HTTP request
 
-		DDO ddo;
+		ResolutionResult resolutionResult;
+
+		if (log.isDebugEnabled()) log.debug("Request for identifier " + identifier + " to: " + uriString);
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
-			if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DDO for " + identifier + " from " + uriString + ": " + httpResponse.getStatusLine());
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+
+			if (statusCode == 404) return null;
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-
-			ddo = DDO.fromString(EntityUtils.toString(httpEntity));
+			String httpBody = EntityUtils.toString(httpEntity);
 			EntityUtils.consume(httpEntity);
+
+			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
+
+			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+
+				if (log.isWarnEnabled()) log.warn("Cannot retrieve RESOLUTION RESULT for " + identifier + " from " + uriString + ": " + httpBody);
+				throw new ResolutionException(httpBody);
+			}
+
+			resolutionResult = ResolutionResult.fromJson(httpBody);
 		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve DDO for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot retrieve RESULTION RESULT for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved DDO for " + identifier + " (" + uriString + "): " + ddo);
+		if (log.isDebugEnabled()) log.debug("Retrieved RESULTION RESULT for " + identifier + " (" + uriString + "): " + resolutionResult);
 
 		// done
 
-		return ddo;
+		return resolutionResult;
+	}
+
+	@Override
+	public Map<String, Map<String, Object>> properties() throws ResolutionException {
+
+		// prepare HTTP request
+
+		String uriString = this.getPropertiesUri().toString();
+
+		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		httpGet.addHeader("Accept", UniResolver.PROPERTIES_MIME_TYPE);
+
+		// execute HTTP request
+
+		Map<String, Map<String, Object>> properties;
+
+		if (log.isDebugEnabled()) log.debug("Request to: " + uriString);
+
+		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
+
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+
+			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
+
+			HttpEntity httpEntity = httpResponse.getEntity();
+			String httpBody = EntityUtils.toString(httpEntity);
+			EntityUtils.consume(httpEntity);
+
+			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
+
+			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+
+				if (log.isWarnEnabled()) log.warn("Cannot retrieve DRIVER PROPERTIES from " + uriString + ": " + httpBody);
+				throw new ResolutionException(httpBody);
+			}
+
+			properties = (Map<String, Map<String, Object>>) objectMapper.readValue(httpBody, Map.class);
+		} catch (IOException ex) {
+
+			throw new ResolutionException("Cannot retrieve DRIVER PROPERTIES from " + uriString + ": " + ex.getMessage(), ex);
+		}
+
+		if (log.isDebugEnabled()) log.debug("Retrieved DRIVER PROPERTIES (" + uriString + "): " + properties);
+
+		// done
+
+		return properties;
 	}
 
 	/*
@@ -80,18 +174,33 @@ public class ClientUniResolver implements UniResolver {
 		this.httpClient = httpClient;
 	}
 
-	public URI getResolverUri() {
+	public URI getResolveUri() {
 
-		return this.resolverUri;
+		return this.resolveUri;
 	}
 
-	public void setResolverUri(URI resolverUri) {
+	public void setResolveUri(URI resolveUri) {
 
-		this.resolverUri = resolverUri;
+		this.resolveUri = resolveUri;
 	}
 
-	public void setResolverUri(String resolverUri) {
+	public void setResolveUri(String resolveUri) {
 
-		this.resolverUri = URI.create(resolverUri);
+		this.resolveUri = URI.create(resolveUri);
+	}
+
+	public URI getPropertiesUri() {
+
+		return this.propertiesUri;
+	}
+
+	public void setPropertiesUri(URI propertiesUri) {
+
+		this.propertiesUri = propertiesUri;
+	}
+
+	public void setPropertiesUri(String propertiesUri) {
+
+		this.propertiesUri = URI.create(propertiesUri);
 	}
 }

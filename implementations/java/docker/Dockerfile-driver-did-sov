@@ -19,7 +19,7 @@ RUN apt-get install -y --no-install-recommends build-essential pkg-config cmake 
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
-RUN cd /opt/ && git clone https://github.com/hyperledger/indy-sdk.git && cd indy-sdk && git checkout v1.0.0
+RUN cd /opt/ && git clone https://github.com/hyperledger/indy-sdk.git && cd indy-sdk && git checkout v1.3.0
 RUN cd /opt/indy-sdk/libindy/ && ~/.cargo/bin/cargo clean && ~/.cargo/bin/cargo build
 RUN cd /opt/indy-sdk/wrappers/java/ && mvn clean install -DskipTests
 
@@ -36,10 +36,24 @@ RUN cd /opt/uni-resolver-java/driver-did-sov && mvn install package -N -DskipTes
 RUN mkdir /opt/uni-resolver-java/driver-did-sov/lib/
 RUN cp /opt/indy-sdk/libindy/target/debug/libindy.so /opt/uni-resolver-java/driver-did-sov/sovrin/lib/
 
-# done
+# clean up
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# variables
+
+ARG libIndyPath=./sovrin/lib/
+ARG poolConfigName=11347-04
+ARG poolGenesisTxn=./sovrin/11347-04.txn
+ARG walletName=default
+
+ENV uniresolver_driver_did_sov_libIndyPath $libIndyPath
+ENV uniresolver_driver_did_sov_poolConfigName $poolConfigName
+ENV uniresolver_driver_did_sov_poolGenesisTxn $poolGenesisTxn
+ENV uniresolver_driver_did_sov_walletName $walletName
+
+# done
+
 EXPOSE 8080
 
-ENTRYPOINT ["/bin/bash", "/opt/uni-resolver-java/docker/run-driver-did-sov.sh"]
+CMD "/opt/uni-resolver-java/docker/run-driver-did-sov.sh"

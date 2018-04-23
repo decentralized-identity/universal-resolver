@@ -1,25 +1,28 @@
 package uniresolver.driver.did.sov;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.hyperledger.indy.sdk.ErrorCode;
 import org.hyperledger.indy.sdk.IndyException;
 import org.hyperledger.indy.sdk.LibIndy;
 import org.hyperledger.indy.sdk.ledger.Ledger;
 import org.hyperledger.indy.sdk.pool.Pool;
 import org.hyperledger.indy.sdk.pool.PoolJSONParameters.CreatePoolLedgerConfigJSONParameter;
 import org.hyperledger.indy.sdk.pool.PoolJSONParameters.OpenPoolLedgerJSONParameter;
+import org.hyperledger.indy.sdk.pool.PoolLedgerConfigExistsException;
 import org.hyperledger.indy.sdk.signus.Signus;
 import org.hyperledger.indy.sdk.signus.SignusJSONParameters.CreateAndStoreMyDidJSONParameter;
 import org.hyperledger.indy.sdk.signus.SignusResults.CreateAndStoreMyDidResult;
 import org.hyperledger.indy.sdk.wallet.Wallet;
+import org.hyperledger.indy.sdk.wallet.WalletExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,9 +33,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import uniresolver.ResolutionException;
-import uniresolver.ddo.DDO;
-import uniresolver.ddo.DDO.Owner;
+import uniresolver.did.Authentication;
+import uniresolver.did.DIDDocument;
+import uniresolver.did.Encryption;
+import uniresolver.did.PublicKey;
+import uniresolver.did.Service;
 import uniresolver.driver.Driver;
+import uniresolver.result.ResolutionResult;
 
 public class DidSovDriver implements Driver {
 
@@ -40,31 +47,80 @@ public class DidSovDriver implements Driver {
 
 	public static final Pattern DID_SOV_PATTERN = Pattern.compile("^did:sov:(\\S*)$");
 
-	public static final String[] DDO_OWNER_TYPES = new String[] { "CryptographicKey", "EdDsaSAPublicKey" };
-	public static final String DDO_CURVE = "ed25519";
+	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Ed25519VerificationKey2018" };
+	public static final String[] DIDDOCUMENT_AUTHENTICATION_TYPES = new String[] { "Ed25519SignatureAuthentication2018" };
 
-	public static final String DEFAULT_LIBINDY_PATH = null;
-	public static final String DEFAULT_POOL_CONFIG_NAME = "live";
-	public static final String DEFAULT_POOL_GENESIS_TXN = "live.txn";
-	public static final String DEFAULT_WALLET_NAME = "default";
+	private Map<String, Object> properties;
 
 	private static final Gson gson = new Gson();
 
-	private String libIndyPath = DEFAULT_LIBINDY_PATH;
-	private String poolConfigName = DEFAULT_POOL_CONFIG_NAME;
-	private String poolGenesisTxn = DEFAULT_POOL_GENESIS_TXN;
-	private String walletName = DEFAULT_WALLET_NAME;
+	private String libIndyPath;
+	private String poolConfigName;
+	private String poolGenesisTxn;
+	private String walletName;
 
 	private Pool pool = null;
 	private Wallet wallet = null;
 	private String submitterDid = null;
 
+	public DidSovDriver(Map<String, Object> properties) {
+
+		this.setProperties(properties);
+	}
+
 	public DidSovDriver() {
 
+		this.setProperties(getPropertiesFromEnvironment());
+	}
+
+	private static Map<String, Object> getPropertiesFromEnvironment() {
+
+		if (log.isDebugEnabled()) log.debug("Loading from environment: " + System.getenv());
+
+		Map<String, Object> properties = new HashMap<String, Object> ();
+
+		try {
+
+			String env_libIndyPath = System.getenv("uniresolver_driver_did_sov_libIndyPath");
+			String env_poolConfigName = System.getenv("uniresolver_driver_did_sov_poolConfigName");
+			String env_poolGenesisTxn = System.getenv("uniresolver_driver_did_sov_poolGenesisTxn");
+			String env_walletName = System.getenv("uniresolver_driver_did_sov_walletName");
+
+			if (env_libIndyPath != null) properties.put("libIndyPath", env_libIndyPath);
+			if (env_poolConfigName != null) properties.put("poolConfigName", env_poolConfigName);
+			if (env_poolGenesisTxn != null) properties.put("poolGenesisTxn", env_poolGenesisTxn);
+			if (env_walletName != null) properties.put("walletName", env_walletName);
+		} catch (Exception ex) {
+
+			throw new IllegalArgumentException(ex.getMessage(), ex);
+		}
+
+		return properties;
+	}
+
+	private void configureFromProperties() {
+
+		if (log.isDebugEnabled()) log.debug("Configuring from properties: " + this.getProperties());
+
+		try {
+
+			String prop_libIndyPath = (String) this.getProperties().get("libIndyPath");
+			String prop_poolConfigName = (String) this.getProperties().get("poolConfigName");
+			String prop_poolGenesisTxn = (String) this.getProperties().get("poolGenesisTxn");
+			String prop_walletName = (String) this.getProperties().get("walletName");
+
+			if (prop_libIndyPath != null) this.setLibIndyPath(prop_libIndyPath);
+			if (prop_poolConfigName != null) this.setPoolConfigName(prop_poolConfigName);
+			if (prop_poolGenesisTxn != null) this.setPoolGenesisTxn(prop_poolGenesisTxn);
+			if (prop_walletName != null) this.setWalletName(prop_walletName);
+		} catch (Exception ex) {
+
+			throw new IllegalArgumentException(ex.getMessage(), ex);
+		}
 	}
 
 	@Override
-	public DDO resolve(String identifier) throws ResolutionException {
+	public ResolutionResult resolve(String identifier) throws ResolutionException {
 
 		// open pool
 
@@ -92,6 +148,15 @@ public class DidSovDriver implements Driver {
 
 		if (log.isInfoEnabled()) log.info("GET_NYM for " + targetDid + ": " + getNymResponse);
 
+		// GET_NYM response data
+
+		JsonObject jsonGetNymResponse = gson.fromJson(getNymResponse, JsonObject.class);
+		JsonObject jsonGetNymResult = jsonGetNymResponse == null ? null : jsonGetNymResponse.getAsJsonObject("result");
+		JsonElement jsonGetNymData = jsonGetNymResult == null ? null : jsonGetNymResult.get("data");
+		JsonObject jsonGetNymDataContent = (jsonGetNymData == null || jsonGetNymData instanceof JsonNull) ? null : gson.fromJson(jsonGetNymData.getAsString(), JsonObject.class);
+
+		if (jsonGetNymDataContent == null) return null;
+
 		// send GET_ATTR request
 
 		String getAttrResponse;
@@ -107,37 +172,43 @@ public class DidSovDriver implements Driver {
 
 		if (log.isInfoEnabled()) log.info("GET_ATTR for " + targetDid + ": " + getAttrResponse);
 
-		// DDO id
-
-		String id = identifier;
-
-		// DDO owners
-
-		JsonObject jsonGetNymResponse = gson.fromJson(getNymResponse, JsonObject.class);
-		JsonObject jsonGetNymResult = jsonGetNymResponse == null ? null : jsonGetNymResponse.getAsJsonObject("result");
-		JsonElement jsonGetNymData = jsonGetNymResult == null ? null : jsonGetNymResult.get("data");
-		JsonObject jsonGetNymDataContent = (jsonGetNymData == null || jsonGetNymData instanceof JsonNull) ? null : gson.fromJson(jsonGetNymData.getAsString(), JsonObject.class);
-		JsonPrimitive jsonGetNymVerkey = jsonGetNymDataContent == null ? null : jsonGetNymDataContent.getAsJsonPrimitive("verkey");
-
-		String verkey = jsonGetNymVerkey == null ? null : jsonGetNymVerkey.getAsString();
-
-		Owner owner = Owner.build(identifier, DDO_OWNER_TYPES, DDO_CURVE, verkey, null);
-
-		List<DDO.Owner> owners = Collections.singletonList(owner);
-
-		// DDO controls
-
-		List<DDO.Control> controls = Collections.emptyList();
-
-		// DDO services
+		// GET_ATTR response data
 
 		JsonObject jsonGetAttrResponse = gson.fromJson(getAttrResponse, JsonObject.class);
 		JsonObject jsonGetAttrResult = jsonGetAttrResponse == null ? null : jsonGetAttrResponse.getAsJsonObject("result");
 		JsonElement jsonGetAttrData = jsonGetAttrResult == null ? null : jsonGetAttrResult.get("data");
 		JsonObject jsonGetAttrDataContent = (jsonGetAttrData == null || jsonGetAttrData instanceof JsonNull) ? null : gson.fromJson(jsonGetAttrData.getAsString(), JsonObject.class);
+
+		// DID DOCUMENT id
+
+		String id = identifier;
+
+		// DID DOCUMENT publicKeys
+
+		JsonPrimitive jsonGetNymVerkey = jsonGetNymDataContent == null ? null : jsonGetNymDataContent.getAsJsonPrimitive("verkey");
+
+		String verkey = jsonGetNymVerkey == null ? null : jsonGetNymVerkey.getAsString();
+
+		int keyNum = 0;
+		List<PublicKey> publicKeys;
+		List<Authentication> authentications;
+		List<Encryption> encryptions;
+
+		String keyId = id + "#key-" + (++keyNum);
+
+		PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, verkey, null, null);
+		publicKeys = Collections.singletonList(publicKey);
+
+		Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
+		authentications = Collections.singletonList(authentication);
+
+		encryptions = Collections.emptyList();
+
+		// DID DOCUMENT services
+
 		JsonObject jsonGetAttrEndpoint = jsonGetAttrDataContent == null ? null : jsonGetAttrDataContent.getAsJsonObject("endpoint");
 
-		Map<String, String> services = new HashMap<String, String> ();
+		List<Service> services = new ArrayList<Service> ();
 
 		if (jsonGetAttrEndpoint != null) {
 
@@ -146,17 +217,35 @@ public class DidSovDriver implements Driver {
 				JsonPrimitive jsonGetAttrEndpointValue = jsonGetAttrEndpoint == null ? null : jsonGetAttrEndpoint.getAsJsonPrimitive(jsonService.getKey());
 				String value = jsonGetAttrEndpointValue == null ? null : jsonGetAttrEndpointValue.getAsString();
 
-				services.put(jsonService.getKey(), value);
+				Service service = Service.build(jsonService.getKey(), null, value);
+
+				services.add(service);
 			}
 		}
 
-		// create DDO
+		// create DID DOCUMENT
 
-		DDO ddo = DDO.build(id, owners, controls, services);
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, encryptions, services);
+
+		// create DRIVER METADATA
+
+		Map<String, Object> driverMetadata = new LinkedHashMap<String, Object> ();
+		driverMetadata.put("nymResponse", gson.fromJson(jsonGetNymResponse, Map.class));
+		driverMetadata.put("attrResponse", gson.fromJson(jsonGetAttrResponse, Map.class));
+
+		// create RESOLUTION RESULT
+
+		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, driverMetadata);
 
 		// done
 
-		return ddo;
+		return resolutionResult;
+	}
+
+	@Override
+	public Map<String, Object> properties() {
+
+		return this.getProperties();
 	}
 
 	private void openIndy() throws ResolutionException {
@@ -181,7 +270,7 @@ public class DidSovDriver implements Driver {
 			IndyException iex = null;
 			if (ex instanceof IndyException) iex = (IndyException) ex;
 			if (ex instanceof ExecutionException && ex.getCause() instanceof IndyException) iex = (IndyException) ex.getCause();
-			if (iex != null && ErrorCode.PoolLedgerConfigAlreadyExistsError.equals(iex.getErrorCode())) {
+			if (iex instanceof PoolLedgerConfigExistsException) {
 
 				if (log.isInfoEnabled()) log.info("Pool config " + this.getPoolConfigName() + " has already been created.");
 			} else {
@@ -201,7 +290,7 @@ public class DidSovDriver implements Driver {
 			IndyException iex = null;
 			if (ex instanceof IndyException) iex = (IndyException) ex;
 			if (ex instanceof ExecutionException && ex.getCause() instanceof IndyException) iex = (IndyException) ex.getCause();
-			if (iex != null && ErrorCode.WalletAlreadyExistsError.equals(((IndyException) iex).getErrorCode())) {
+			if (iex instanceof WalletExistsException) {
 
 				if (log.isInfoEnabled()) log.info("Wallet " + this.getWalletName() + " has already been created.");
 			} else {
@@ -240,13 +329,24 @@ public class DidSovDriver implements Driver {
 			this.submitterDid = createAndStoreMyDidResultTrustee.getDid();
 		} catch (IndyException | InterruptedException | ExecutionException ex) {
 
-			throw new ResolutionException("Cannot open wallet " + this.getWalletName() + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot create submitter DID: " + ex.getMessage(), ex);
 		}
 	}
 
 	/*
 	 * Getters and setters
 	 */
+
+	public Map<String, Object> getProperties() {
+
+		return this.properties;
+	}
+
+	public void setProperties(Map<String, Object> properties) {
+
+		this.properties = properties;
+		this.configureFromProperties();
+	}
 
 	public String getLibIndyPath() {
 

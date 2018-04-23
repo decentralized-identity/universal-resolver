@@ -1,0 +1,38 @@
+did-reference      = did [ "/" did-path ] [ "?" did-query ] [ "#" did-fragment ] ;
+did                = "did:" method ":" specific-idstring [ ";" service ] ;
+method             = 1*namechar ;
+namechar           = %x61-7A / DIGIT ;
+specific-idstring  = idstring *( ":" idstring ) ;
+idstring           = 1*idchar ;
+idchar             = ALPHA / DIGIT / "." / "-" ;
+service            = 1*namechar *( ";" 1*namechar ) ;
+
+
+did-path           = path-rootless ;
+did-query          = query ;
+did-fragment       = fragment ;
+
+
+   path-rootless = segment-nz *( "/" segment ) ;
+
+   segment       = *pchar ;
+   segment-nz    = 1*pchar ;
+   segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" ) ;
+
+   pchar         = unreserved / pct-encoded / sub-delims / ":" / "@" ;
+
+   query         = *( pchar / "/" / "?" ) ;
+
+   fragment      = *( pchar / "/" / "?" ) ;
+
+   pct-encoded   = "%" HEXDIG HEXDIG ;
+
+   unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~" ;
+   reserved      = gen-delims / sub-delims ;
+   gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@" ;
+   sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "=" ;
+
+
+         ALPHA          =  %x41-5A / %x61-7A ;
+         DIGIT          =  %x30-39 ;
+         HEXDIG         =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F" ;
