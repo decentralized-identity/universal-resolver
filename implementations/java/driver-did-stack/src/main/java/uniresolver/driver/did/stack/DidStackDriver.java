@@ -35,7 +35,7 @@ public class DidStackDriver implements Driver {
 
     private static Logger log = LoggerFactory.getLogger(DidStackDriver.class);
 
-    public static final Pattern DID_STACK_PATTERN = Pattern.compile("^did:stack:v0:([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{33,34})-([0-9]+)$");
+    public static final Pattern DID_STACK_PATTERN = Pattern.compile("^did:stack:v0:([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{25,34})-([0-9]+)$");
 
     public static final String[] DDO_OWNER_TYPES = new String[] { "CryptographicKey", "EdDsaPublicKey" };
     public static final String DDO_CURVE = "secp256k1";
