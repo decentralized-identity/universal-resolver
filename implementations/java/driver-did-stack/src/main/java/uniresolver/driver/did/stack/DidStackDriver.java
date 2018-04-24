@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +28,11 @@ import uniresolver.did.Service;
 import uniresolver.driver.Driver;
 import uniresolver.result.ResolutionResult;
 
+import org.bitcoinj.core.Base58;
+import org.bitcoinj.core.Sha256Hash;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 public class DidStackDriver implements Driver {
 
     private static Logger log = LoggerFactory.getLogger(DidStackDriver.class);
@@ -45,7 +51,15 @@ public class DidStackDriver implements Driver {
 
     }
 
-    private String getNameFromDID(String address, int index) throws ResolutionException {
+    private static boolean isSubdomain(String candidate) {
+        return candidate.split("\\.").length == 3;
+    }
+
+    private static boolean isDomain(String candidate) {
+        return candidate.split("\\.").length == 2;
+    }
+
+    private String getNameFromDID(String address, int index, boolean useSubdomains) throws ResolutionException {
 
         // find names owned by address 
         String addressUri = this.getBlockstackCoreUrl() + "/v1/addresses/bitcoin/" + address;
@@ -71,12 +85,27 @@ public class DidStackDriver implements Driver {
            }
 
            JSONArray namesList = jo.getJSONArray("names");
-           if(namesList.length() <= index) {
-              throw new ResolutionException("DID name index in `" + address + "-" + index + "` is out-of-bounds");
+           ArrayList<String> filteredList = new ArrayList<String>();
+
+           for (int i = 0; i < namesList.length(); i++) {
+               String currentName = namesList.getString(i);
+               if (useSubdomains) {
+                   if (DidStackDriver.isSubdomain(currentName))
+                       filteredList.add(currentName);
+               } else {
+                   if (DidStackDriver.isDomain(currentName))
+                       filteredList.add(currentName);
+               }
            }
 
-           String name = namesList.getString(index);
-           return name;
+           if(filteredList.size() <= index) {
+               String type = useSubdomains ? "subdomain" : "domain";
+               throw new ResolutionException(
+                   "DID " + type + " index `" + index + "` is out-of-bounds for owner `" +
+                   address + "`");
+           }
+
+           return filteredList.get(index);
         } catch (IOException ex) {
             throw new ResolutionException("Cannot lookup address-to-name list for `" + address + "-" + index + "` from " + addressUri);
         } catch (JSONException jex) {
@@ -84,20 +113,51 @@ public class DidStackDriver implements Driver {
         }
     }
 
+    public static String encodeChecked(int version, byte[] payload) {
+        if (version < 0 || version > 255)
+            throw new IllegalArgumentException("Version not in range.");
+
+        // A stringified buffer is:
+        // 1 byte version + data bytes + 4 bytes check code (a truncated hash)
+        byte[] addressBytes = new byte[1 + payload.length + 4];
+        addressBytes[0] = (byte) version;
+        System.arraycopy(payload, 0, addressBytes, 1, payload.length);
+        byte[] checksum = Sha256Hash.hashTwice(addressBytes, 0, payload.length + 1);
+        System.arraycopy(checksum, 0, addressBytes, payload.length + 1, 4);
+        return Base58.encode(addressBytes);
+    }
+
     @Override
     public ResolutionResult resolve(String identifier) throws ResolutionException {
-
         // match 
         Matcher matcher = DID_STACK_PATTERN.matcher(identifier);
         if(!matcher.matches()) {
            return null;
         }
 
-        String address = matcher.group(1);
+        String didAddress = matcher.group(1);
         String indexStr = matcher.group(2);
         int nameIndex = Integer.parseInt(indexStr);
 
-        String name = this.getNameFromDID(address, nameIndex);
+        byte[] decodedVersionHash = Base58.decodeChecked(didAddress);
+        byte version = decodedVersionHash[0];
+        byte[] decodedHash = Arrays.copyOfRange(decodedVersionHash, 1, decodedVersionHash.length);
+        byte reencodeVersion;
+        if (version == 50 || version == 5) {
+            reencodeVersion = 5;
+        } else if (version == 63 || version == 0) {
+            reencodeVersion = 0;
+        } else {
+            throw new ResolutionException("Invalid address version in " +
+                                          didAddress + ". Must be one of [0, 5, 50, 63]");
+        }
+        boolean useSubdomains = (version == 63 || version == 50);
+
+        String reencodedAddress = DidStackDriver.encodeChecked(reencodeVersion, decodedHash);
+
+        log.debug("Re-encoding " + didAddress + " to " + reencodedAddress);
+
+        String name = this.getNameFromDID(reencodedAddress, nameIndex, useSubdomains);
 
         // fetch data from Core node
         String nameUri = this.getBlockstackCoreUrl() + "/v1/users/" + name;
