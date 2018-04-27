@@ -56,7 +56,7 @@ public class HttpDriver implements Driver {
 
 		// match identifier
 
-		String matchedIdentifier;
+		String matchedIdentifier = null;
 
 		if (this.getPattern() != null) {
 
@@ -66,13 +66,21 @@ public class HttpDriver implements Driver {
 
 				if (log.isDebugEnabled()) log.debug("Skipping identifier " + identifier + " - does not match pattern " + this.getPattern());
 				return null;
+			} else {
+
+				if (log.isDebugEnabled()) log.debug("Identifier " + identifier + " matches pattern " + this.getPattern() + " with " + matcher.groupCount() + " groups");
 			}
 
-			matchedIdentifier = (matcher.groupCount() > 0) ? matcher.group(1) : identifier;
-		} else {
+			if (matcher.groupCount() > 0) {
 
-			matchedIdentifier = identifier;
+				identifier = "";
+				for (int i=1; i<=matcher.groupCount(); i++) if (matcher.group(i) != null) identifier += matcher.group(i);
+			}
 		}
+
+		if (matchedIdentifier == null) matchedIdentifier = identifier;
+
+		if (log.isDebugEnabled()) log.debug("Matched identifier: " + matchedIdentifier);
 
 		// encode identifier
 
@@ -85,6 +93,8 @@ public class HttpDriver implements Driver {
 
 			throw new ResolutionException(ex.getMessage(), ex);
 		}
+
+		if (log.isDebugEnabled()) log.debug("Encoded identifier: " + encodedIdentifier);
 
 		// prepare HTTP request
 
