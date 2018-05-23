@@ -3,7 +3,7 @@ package uniresolver.driver.did.btcr.bitcoinconnection;
 import java.io.IOException;
 import java.net.URI;
 
-import info.weboftrust.txrefconversion.TxrefConverter.Chain;
+import info.weboftrust.txrefconversion.Chain;
 
 public interface BitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BitcoinConnection {
 
