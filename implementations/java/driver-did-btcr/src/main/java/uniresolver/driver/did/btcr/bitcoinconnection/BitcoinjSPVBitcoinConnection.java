@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.bitcoinj.core.BlockChain;
 
-import info.weboftrust.txrefconversion.TxrefConverter.Chain;
+import info.weboftrust.txrefconversion.Chain;
 
 public class BitcoinjSPVBitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BitcoinjSPVBitcoinConnection implements BitcoinConnection {
 

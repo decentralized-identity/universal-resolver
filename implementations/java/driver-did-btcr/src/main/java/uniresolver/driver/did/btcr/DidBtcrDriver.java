@@ -19,9 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.weboftrust.txrefconversion.Bech32;
+import info.weboftrust.txrefconversion.Chain;
+import info.weboftrust.txrefconversion.ChainAndTxid;
 import info.weboftrust.txrefconversion.TxrefConverter;
-import info.weboftrust.txrefconversion.TxrefConverter.Chain;
-import info.weboftrust.txrefconversion.TxrefConverter.ChainAndTxid;
 import uniresolver.ResolutionException;
 import uniresolver.did.Authentication;
 import uniresolver.did.DIDDocument;
