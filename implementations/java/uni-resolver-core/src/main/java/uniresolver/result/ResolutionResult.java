@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import uniresolver.did.DID;
 import uniresolver.did.DIDDocument;
 
-@JsonPropertyOrder({ "didReference", "didDocument", "resolverMetadata", "driverMetadata" })
+@JsonPropertyOrder({ "didReference", "didDocument", "resolverMetadata", "methodMetadata" })
 public class ResolutionResult {
 
 	public static final String MIME_TYPE = "application/json";
@@ -34,32 +34,32 @@ public class ResolutionResult {
 	private Map<String, Object> resolverMetadata;
 
 	@JsonProperty
-	private Map<String, Object> driverMetadata;
+	private Map<String, Object> methodMetadata;
 
 	private ResolutionResult() {
 		
 	}
 
-	private ResolutionResult(DID didReference, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> driverMetadata) {
+	private ResolutionResult(DID didReference, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
 		this.didReference = didReference;
 		this.didDocument = didDocument;
 		this.resolverMetadata = resolverMetadata;
-		this.driverMetadata = driverMetadata;
+		this.methodMetadata = methodMetadata;
 	}
 
 	/*
 	 * Factory methods
 	 */
 
-	public static ResolutionResult build(DID didReference, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> driverMetadata) {
+	public static ResolutionResult build(DID didReference, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
-		return new ResolutionResult(didReference, didDocument, resolverMetadata, driverMetadata);
+		return new ResolutionResult(didReference, didDocument, resolverMetadata, methodMetadata);
 	}
 
-	public static ResolutionResult build(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> driverMetadata) {
+	public static ResolutionResult build(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
-		return new ResolutionResult(null, didDocument, resolverMetadata, driverMetadata);
+		return new ResolutionResult(null, didDocument, resolverMetadata, methodMetadata);
 	}
 
 	public static ResolutionResult build(DIDDocument didDocument) {
@@ -132,14 +132,14 @@ public class ResolutionResult {
 	}
 
 	@JsonGetter
-	public final Map<String, Object> getDriverMetadata() {
+	public final Map<String, Object> getMethodMetadata() {
 
-		return this.driverMetadata;
+		return this.methodMetadata;
 	}
 
 	@JsonSetter
-	public final void setDriverMetadata(Map<String, Object> driverMetadata) {
+	public final void setMethodMetadata(Map<String, Object> methodMetadata) {
 
-		this.driverMetadata = driverMetadata;
+		this.methodMetadata = methodMetadata;
 	}
 }
