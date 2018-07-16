@@ -14,12 +14,12 @@ import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import did.Authentication;
+import did.DIDDocument;
+import did.Encryption;
+import did.PublicKey;
+import did.Service;
 import uniresolver.ResolutionException;
-import uniresolver.did.Authentication;
-import uniresolver.did.DIDDocument;
-import uniresolver.did.Encryption;
-import uniresolver.did.PublicKey;
-import uniresolver.did.Service;
 import uniresolver.driver.Driver;
 import uniresolver.driver.did.erc725.ethereumconnection.EthereumConnection;
 import uniresolver.driver.did.erc725.ethereumconnection.EthereumConnection.ERC725Keys;

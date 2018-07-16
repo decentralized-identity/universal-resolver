@@ -20,8 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import did.DIDDocument;
 import uniresolver.ResolutionException;
-import uniresolver.did.DIDDocument;
 import uniresolver.driver.Driver;
 import uniresolver.result.ResolutionResult;
 
@@ -32,8 +32,8 @@ public class HttpDriver implements Driver {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
-	public static final URI DEFAULT_RESOLVE_URI = null;
-	public static final URI DEFAULT_PROPERTIES_URI = null;
+	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers/");
+	public static final URI DEFAULT_PROPERTIES_URI = URI.create("http://localhost:8080/1.0/properties");
 	public static final Pattern DEFAULT_PATTERN = null;
 	public static final boolean DEFAULT_RAW_IDENTIFIER = false;
 	public static final boolean DEFAULT_RAW_DID_DOCUMENT = false;
@@ -253,14 +253,14 @@ public class HttpDriver implements Driver {
 		return this.resolveUri;
 	}
 
-	public void setResolveUri(URI driverResolveUri) {
+	public void setResolveUri(URI resolveUri) {
 
-		this.resolveUri = driverResolveUri;
+		this.resolveUri = resolveUri;
 	}
 
-	public void setDriverResolveUri(String driverResolveUri) {
+	public void setResolveUri(String resolveUri) {
 
-		this.resolveUri = URI.create(driverResolveUri);
+		this.resolveUri = URI.create(resolveUri);
 	}
 
 	public URI getPropertiesUri() {
@@ -268,14 +268,14 @@ public class HttpDriver implements Driver {
 		return this.propertiesUri;
 	}
 
-	public void setPropertiesUri(URI driverPropertiesUri) {
+	public void setPropertiesUri(URI propertiesUri) {
 
-		this.propertiesUri = driverPropertiesUri;
+		this.propertiesUri = propertiesUri;
 	}
 
-	public void setDriverPropertiesUri(String driverPropertiesUri) {
+	public void setPropertiesUri(String propertiesUri) {
 
-		this.propertiesUri = URI.create(driverPropertiesUri);
+		this.propertiesUri = URI.create(propertiesUri);
 	}
 
 	public Pattern getPattern() {

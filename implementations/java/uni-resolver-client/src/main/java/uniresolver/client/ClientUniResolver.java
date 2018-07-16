@@ -63,7 +63,6 @@ public class ClientUniResolver implements UniResolver {
 		// prepare HTTP request
 
 		String uriString = this.getResolveUri().toString();
-
 		if (! uriString.endsWith("/")) uriString += "/";
 		uriString += encodedIdentifier;
 
@@ -100,10 +99,10 @@ public class ClientUniResolver implements UniResolver {
 			resolutionResult = ResolutionResult.fromJson(httpBody);
 		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve RESULTION RESULT for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot retrieve RESOLUTION RESULT for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved RESULTION RESULT for " + identifier + " (" + uriString + "): " + resolutionResult);
+		if (log.isDebugEnabled()) log.debug("Retrieved RESOLUTION RESULT for " + identifier + " (" + uriString + "): " + resolutionResult);
 
 		// done
 

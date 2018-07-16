@@ -1,7 +1,6 @@
 package uniresolver.web.servlet;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -64,11 +63,5 @@ public class PropertiesServlet extends WebUniResolver {
 		// write result
 
 		WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.PROPERTIES_MIME_TYPE, propertiesString);
-	}
-
-	@Override
-	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		if ("GET".equals(request.getMethod())) this.doGet(request, response);
 	}
 }

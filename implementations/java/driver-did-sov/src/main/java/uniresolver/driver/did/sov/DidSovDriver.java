@@ -13,14 +13,14 @@ import java.util.regex.Pattern;
 
 import org.hyperledger.indy.sdk.IndyException;
 import org.hyperledger.indy.sdk.LibIndy;
+import org.hyperledger.indy.sdk.did.Did;
+import org.hyperledger.indy.sdk.did.DidJSONParameters.CreateAndStoreMyDidJSONParameter;
+import org.hyperledger.indy.sdk.did.DidResults.CreateAndStoreMyDidResult;
 import org.hyperledger.indy.sdk.ledger.Ledger;
 import org.hyperledger.indy.sdk.pool.Pool;
 import org.hyperledger.indy.sdk.pool.PoolJSONParameters.CreatePoolLedgerConfigJSONParameter;
 import org.hyperledger.indy.sdk.pool.PoolJSONParameters.OpenPoolLedgerJSONParameter;
 import org.hyperledger.indy.sdk.pool.PoolLedgerConfigExistsException;
-import org.hyperledger.indy.sdk.signus.Signus;
-import org.hyperledger.indy.sdk.signus.SignusJSONParameters.CreateAndStoreMyDidJSONParameter;
-import org.hyperledger.indy.sdk.signus.SignusResults.CreateAndStoreMyDidResult;
 import org.hyperledger.indy.sdk.wallet.Wallet;
 import org.hyperledger.indy.sdk.wallet.WalletExistsException;
 import org.slf4j.Logger;
@@ -32,12 +32,12 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import did.Authentication;
+import did.DIDDocument;
+import did.Encryption;
+import did.PublicKey;
+import did.Service;
 import uniresolver.ResolutionException;
-import uniresolver.did.Authentication;
-import uniresolver.did.DIDDocument;
-import uniresolver.did.Encryption;
-import uniresolver.did.PublicKey;
-import uniresolver.did.Service;
 import uniresolver.driver.Driver;
 import uniresolver.result.ResolutionResult;
 
@@ -163,7 +163,7 @@ public class DidSovDriver implements Driver {
 
 		try {
 
-			String getAttrRequest = Ledger.buildGetAttribRequest(this.getSubmitterDid(), targetDid, "endpoint").get();
+			String getAttrRequest = Ledger.buildGetAttribRequest(this.getSubmitterDid(), targetDid, "endpoint", null, null).get();
 			getAttrResponse = Ledger.signAndSubmitRequest(this.getPool(), this.getWallet(), this.getSubmitterDid(), getAttrRequest).get();
 		} catch (IndyException | InterruptedException | ExecutionException ex) {
 
@@ -325,7 +325,7 @@ public class DidSovDriver implements Driver {
 		try {
 
 			CreateAndStoreMyDidJSONParameter createAndStoreMyDidJSONParameterTrustee = new CreateAndStoreMyDidJSONParameter(null, null, null, null);
-			CreateAndStoreMyDidResult createAndStoreMyDidResultTrustee = Signus.createAndStoreMyDid(this.getWallet(), createAndStoreMyDidJSONParameterTrustee.toJson()).get();
+			CreateAndStoreMyDidResult createAndStoreMyDidResultTrustee = Did.createAndStoreMyDid(this.getWallet(), createAndStoreMyDidJSONParameterTrustee.toJson()).get();
 			this.submitterDid = createAndStoreMyDidResultTrustee.getDid();
 		} catch (IndyException | InterruptedException | ExecutionException ex) {
 

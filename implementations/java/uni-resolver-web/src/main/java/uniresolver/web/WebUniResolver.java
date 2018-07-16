@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.HttpRequestHandler;
@@ -22,6 +24,15 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	protected WebUniResolver() {
 
 		super();
+	}
+
+	@Override
+	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		if ("GET".equals(request.getMethod())) this.doGet(request, response);
+		if ("POST".equals(request.getMethod())) this.doPost(request, response);
+		if ("PUT".equals(request.getMethod())) this.doPut(request, response);
+		if ("DELETE".equals(request.getMethod())) this.doDelete(request, response);
 	}
 
 	@Override

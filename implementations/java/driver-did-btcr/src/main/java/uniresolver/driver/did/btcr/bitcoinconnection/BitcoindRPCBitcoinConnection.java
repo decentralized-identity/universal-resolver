@@ -113,6 +113,6 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 
 		// done
 
-		return new BtcrData(inputScriptPubKey, fragmentUri);
+		return new BtcrData(null, inputScriptPubKey, fragmentUri);
 	}
 }

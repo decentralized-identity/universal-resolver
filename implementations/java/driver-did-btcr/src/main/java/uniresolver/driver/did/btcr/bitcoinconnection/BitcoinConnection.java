@@ -10,15 +10,18 @@ public interface BitcoinConnection extends info.weboftrust.txrefconversion.bitco
 	public BtcrData getBtcrData(Chain chain, String txid) throws IOException;
 
 	public static class BtcrData {
-		
+
+		private String spentInTxid;
 		private String inputScriptPubKey;
 		private URI fragmentUri;
 
-		public BtcrData(String inputScriptPubKey, URI fragmentUri) { this.inputScriptPubKey = inputScriptPubKey; this.fragmentUri = fragmentUri; }
+		public BtcrData(String spentInTxid, String inputScriptPubKey, URI fragmentUri) { this.spentInTxid = spentInTxid; this.inputScriptPubKey = inputScriptPubKey; this.fragmentUri = fragmentUri; }
+
+		public String getSpentInTxid() { return this.spentInTxid; }
 		public String getInputScriptPubKey() { return this.inputScriptPubKey; }
 		public URI getFragmentUri() { return this.fragmentUri; }
 
 		@Override
-		public String toString() { return "BtcrData [inputScriptPubKey=" + inputScriptPubKey + ", fragmentUri=" + fragmentUri + "]"; }
+		public String toString() { return "BtcrData [spentInTxid=" + spentInTxid + ", inputScriptPubKey=" + inputScriptPubKey + ", fragmentUri=" + fragmentUri + "]"; }
 	}
 }

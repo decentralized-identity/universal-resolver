@@ -1,6 +1,7 @@
 package uniresolver.result;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +15,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import uniresolver.did.DID;
-import uniresolver.did.DIDDocument;
+import did.DID;
+import did.DIDDocument;
 
 @JsonPropertyOrder({ "didReference", "didDocument", "resolverMetadata", "methodMetadata" })
 public class ResolutionResult {
@@ -37,7 +38,7 @@ public class ResolutionResult {
 	private Map<String, Object> methodMetadata;
 
 	private ResolutionResult() {
-		
+
 	}
 
 	private ResolutionResult(DID didReference, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
@@ -79,6 +80,11 @@ public class ResolutionResult {
 	public static ResolutionResult fromJson(String json) throws JsonParseException, JsonMappingException, IOException {
 
 		return objectMapper.readValue(json, ResolutionResult.class);
+	}
+
+	public static ResolutionResult fromJson(Reader reader) throws JsonParseException, JsonMappingException, IOException {
+
+		return objectMapper.readValue(reader, ResolutionResult.class);
 	}
 
 	public String toJson() throws JsonProcessingException {

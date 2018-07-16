@@ -112,6 +112,6 @@ public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconver
 
 		// done
 
-		return new BtcrData(inputScriptPubKey, fragmentUri);
+		return new BtcrData(null, inputScriptPubKey, fragmentUri);
 	}
 }

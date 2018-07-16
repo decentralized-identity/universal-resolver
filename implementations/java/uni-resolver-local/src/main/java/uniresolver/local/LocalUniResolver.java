@@ -9,21 +9,32 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import did.DID;
+import did.parser.ParserException;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
-import uniresolver.did.DID;
-import uniresolver.did.parser.ParserException;
 import uniresolver.driver.Driver;
+import uniresolver.driver.did.btcr.DidBtcrDriver;
+import uniresolver.driver.did.sov.DidSovDriver;
 import uniresolver.result.ResolutionResult;
 
 public class LocalUniResolver implements UniResolver {
 
 	private static Logger log = LoggerFactory.getLogger(LocalUniResolver.class);
 
-	private static final Map<String, Driver> DEFAULT_DRIVERS = new LinkedHashMap<String, Driver> ();
-	private static final LocalUniResolver DEFAULT_RESOLVER = new LocalUniResolver();
+	private static final Map<String, Driver> DEFAULT_DRIVERS;
+	private static final LocalUniResolver DEFAULT_RESOLVER;
 
 	private Map<String, Driver> drivers = DEFAULT_DRIVERS;
+
+	static {
+
+		DEFAULT_DRIVERS = new HashMap<String, Driver> ();
+		DEFAULT_DRIVERS.put("did:btcr", new DidBtcrDriver());
+		DEFAULT_DRIVERS.put("did:sov", new DidSovDriver());
+
+		DEFAULT_RESOLVER = new LocalUniResolver();
+	}
 
 	public LocalUniResolver() {
 
@@ -64,7 +75,7 @@ public class LocalUniResolver implements UniResolver {
 
 		long start = System.currentTimeMillis();
 
-		// try all drivers to resolve identifier
+		// try all drivers
 
 		ResolutionResult resolutionResult = null;
 		String usedDriverId = null;
@@ -87,7 +98,7 @@ public class LocalUniResolver implements UniResolver {
 
 		long stop = System.currentTimeMillis();
 
-		// no driver was able to resolve the identifier?
+		// no driver was able to fulfill a request?
 
 		if (resolutionResult == null) {
 

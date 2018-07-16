@@ -46,7 +46,7 @@ public class ResolveServlet extends WebUniResolver {
 			throw new IOException(ex.getMessage(), ex);
 		}
 
-		if (log.isInfoEnabled()) log.info("Incoming request for identifier: " + identifier);
+		if (log.isInfoEnabled()) log.info("Incoming resolution request for identifier: " + identifier);
 
 		if (identifier == null) {
 
@@ -76,18 +76,12 @@ public class ResolveServlet extends WebUniResolver {
 
 		if (resolutionResultString == null) {
 
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No result for " + identifier + ".");
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No resolution result for " + identifier + ".");
 			return;
 		}
 
 		// write result
 
 		WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, MIME_TYPE, resolutionResultString);
-	}
-
-	@Override
-	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		if ("GET".equals(request.getMethod())) this.doGet(request, response);
 	}
 }

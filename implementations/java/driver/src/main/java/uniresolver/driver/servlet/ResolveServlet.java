@@ -86,7 +86,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 			throw new IOException(ex.getMessage(), ex);
 		}
 
-		if (log.isInfoEnabled()) log.info("Incoming request for identifier: " + identifier);
+		if (log.isInfoEnabled()) log.info("Incoming resolution request for identifier: " + identifier);
 
 		if (identifier == null) {
 
@@ -94,7 +94,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 			return;
 		}
 
-		// resolve the identifier
+		// invoke the driver
 
 		ResolutionResult resolutionResult;
 		String resolutionResultString;
