@@ -228,14 +228,14 @@ public class DidErc725Driver implements Driver {
 
 		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, encryptions, services);
 
-		// create DRIVER METADATA
+		// create METHOD METADATA
 
-		Map<String, Object> driverMetadata = new LinkedHashMap<String, Object> ();
-		if (keys != null) driverMetadata.put("keys", keys.toJsonMap());
+		Map<String, Object> methodMetadata = new LinkedHashMap<String, Object> ();
+		if (keys != null) methodMetadata.put("keys", keys.toJsonMap());
 
 		// create RESOLUTION RESULT
 
-		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, driverMetadata);
+		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, methodMetadata);
 
 		// done
 

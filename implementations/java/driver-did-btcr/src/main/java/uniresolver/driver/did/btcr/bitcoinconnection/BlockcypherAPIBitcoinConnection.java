@@ -15,7 +15,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import info.weboftrust.txrefconversion.TxrefConverter.Chain;
+import info.weboftrust.txrefconversion.Chain;
 
 public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BlockcypherAPIBitcoinConnection implements BitcoinConnection {
 

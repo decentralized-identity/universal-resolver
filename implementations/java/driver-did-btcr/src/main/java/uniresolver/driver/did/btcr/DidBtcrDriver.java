@@ -19,9 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.weboftrust.txrefconversion.Bech32;
+import info.weboftrust.txrefconversion.Chain;
+import info.weboftrust.txrefconversion.ChainAndTxid;
 import info.weboftrust.txrefconversion.TxrefConverter;
-import info.weboftrust.txrefconversion.TxrefConverter.Chain;
-import info.weboftrust.txrefconversion.TxrefConverter.ChainAndTxid;
 import uniresolver.ResolutionException;
 import uniresolver.did.Authentication;
 import uniresolver.did.DIDDocument;
@@ -222,18 +222,18 @@ public class DidBtcrDriver implements Driver {
 
 		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, encryptions, services);
 
-		// create DRIVER METADATA
+		// create METHOD METADATA
 
-		Map<String, Object> driverMetadata = new LinkedHashMap<String, Object> ();
-		if (btcrData != null) driverMetadata.put("inputScriptPubKey", btcrData.getInputScriptPubKey());
-		if (btcrData != null) driverMetadata.put("fragmentUri", btcrData.getFragmentUri());
-		if (didDocumentFragment != null) driverMetadata.put("fragment", didDocumentFragment);
-		if (chain != null) driverMetadata.put("chain", chain);
-		if (txid != null) driverMetadata.put("txid", txid);
+		Map<String, Object> methodMetadata = new LinkedHashMap<String, Object> ();
+		if (btcrData != null) methodMetadata.put("inputScriptPubKey", btcrData.getInputScriptPubKey());
+		if (btcrData != null) methodMetadata.put("fragmentUri", btcrData.getFragmentUri());
+		if (didDocumentFragment != null) methodMetadata.put("fragment", didDocumentFragment);
+		if (chain != null) methodMetadata.put("chain", chain);
+		if (txid != null) methodMetadata.put("txid", txid);
 
 		// create RESOLUTION RESULT
 
-		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, driverMetadata);
+		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, methodMetadata);
 
 		// done
 

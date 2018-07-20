@@ -229,13 +229,13 @@ public class DidSovDriver implements Driver {
 
 		// create DRIVER METADATA
 
-		Map<String, Object> driverMetadata = new LinkedHashMap<String, Object> ();
-		driverMetadata.put("nymResponse", gson.fromJson(jsonGetNymResponse, Map.class));
-		driverMetadata.put("attrResponse", gson.fromJson(jsonGetAttrResponse, Map.class));
+		Map<String, Object> methodMetadata = new LinkedHashMap<String, Object> ();
+		methodMetadata.put("nymResponse", gson.fromJson(jsonGetNymResponse, Map.class));
+		methodMetadata.put("attrResponse", gson.fromJson(jsonGetAttrResponse, Map.class));
 
 		// create RESOLUTION RESULT
 
-		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, driverMetadata);
+		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, methodMetadata);
 
 		// done
 
