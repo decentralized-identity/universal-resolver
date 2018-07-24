@@ -32,8 +32,8 @@ public class HttpDriver implements Driver {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
-	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers/");
-	public static final URI DEFAULT_PROPERTIES_URI = URI.create("http://localhost:8080/1.0/properties");
+	public static final URI DEFAULT_RESOLVE_URI = null;
+	public static final URI DEFAULT_PROPERTIES_URI = null;
 	public static final Pattern DEFAULT_PATTERN = null;
 	public static final boolean DEFAULT_RAW_IDENTIFIER = false;
 	public static final boolean DEFAULT_RAW_DID_DOCUMENT = false;
@@ -165,8 +165,8 @@ public class HttpDriver implements Driver {
 
 		Map<String, Object> httpProperties = new HashMap<String, Object> ();
 
-		httpProperties.put("driverUri", this.getResolveUri().toString());
-		httpProperties.put("pattern", this.getPattern().toString());
+		if (this.getResolveUri() != null) httpProperties.put("driverUri", this.getResolveUri().toString());
+		if (this.getPattern() != null) httpProperties.put("pattern", this.getPattern().toString());
 		httpProperties.put("rawIdentifier", Boolean.toString(this.isRawIdentifier()));
 		httpProperties.put("rawDidDocument", Boolean.toString(this.isRawDidDocument()));
 
