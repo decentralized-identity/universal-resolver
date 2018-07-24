@@ -18,6 +18,8 @@
 <body>
 
 	<h1>Universal Resolver</h1>
+	<p>See <a href="https://github.com/decentralized-identity/universal-resolver/">here</a> for more details.</p>
+	<img src="logo-dif.png">
 
 </body>
 </html>
