@@ -10,12 +10,7 @@
 			<util:map>
 				<entry key="did:btcr"><ref bean="DidBtcrDriver" /></entry>
 				<entry key="did:sov"><ref bean="DidSovDriver" /></entry>
-				<entry key="did:uport"><ref bean="DidUportDriver" /></entry>
 				<entry key="did:v1"><ref bean="DidV1Driver" /></entry>
-				<entry key="did:ipid"><ref bean="DidIpidDriver" /></entry>
-				<entry key="did:stack"><ref bean="DidStackDriver" /></entry>
-				<entry key="did:erc725"><ref bean="DidErc725Driver" /></entry>
-				<entry key="did:dom"><ref bean="DidDomDriver" /></entry>
 			</util:map>
 		</property>
 	</bean>
@@ -30,8 +25,6 @@
 
 	<!-- DRIVERS (VIA JAVA API) -->
 
-<!--
-
 	<bean id="DidBtcrDriver" class="uniresolver.driver.did.btcr.DidBtcrDriver">
 		<property name="bitcoinConnection">
 			<bean class="uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection" />
@@ -40,18 +33,18 @@
 
 	<bean id="DidSovDriver" class="uniresolver.driver.did.sov.DidSovDriver">
 		<property name="libIndyPath" value="./sovrin/lib/" />
-		<property name="poolConfigName" value="live" />
-		<property name="poolGenesisTxn" value="./sovrin/live.txn" />
+		<property name="poolConfigName" value="11347-04" />
+		<property name="poolGenesisTxn" value="./sovrin/11347-04.txn" />
 		<property name="walletName" value="default" />
 	</bean>
 
 	<bean id="DidV1Driver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="https://testnet.veres.one/dids/" />
-	</bean> -->
+	</bean>
 
 	<!-- DRIVERS (VIA DOCKER REST API) -->
 
-	<bean id="DidBtcrDriver" class="uniresolver.driver.http.HttpDriver">
+<!-- 	<bean id="DidBtcrDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="http://driver-did-btcr:8081/1.0/identifiers/$1" />
 		<property name="propertiesUri" value="http://driver-did-btcr:8081/1.0/properties" />
 		<property name="pattern" value="^(did:btcr:.+)$" />
@@ -80,8 +73,6 @@
 	<bean id="DidIpidDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="https://ipfs.io/ipns/$1" />
 		<property name="pattern" value="^did:ipid:(.+)$" />
-		<property name="rawIdentifier" value="true" />
-		<property name="rawDidDocument" value="true" />
 	</bean>
 
 	<bean id="DidStackDriver" class="uniresolver.driver.http.HttpDriver">
@@ -100,6 +91,6 @@
 		<property name="resolveUri" value="http://driver-did-dom:8086/1.0/identifiers/$1" />
 		<property name="propertiesUri" value="http://driver-did-dom:8086/1.0/properties" />
 		<property name="pattern" value="^(did:dom:.+)$" />
-	</bean>
+	</bean> -->
 
 </beans>
