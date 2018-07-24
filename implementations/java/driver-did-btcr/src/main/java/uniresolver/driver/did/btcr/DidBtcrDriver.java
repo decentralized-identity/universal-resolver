@@ -192,7 +192,7 @@ public class DidBtcrDriver implements Driver {
 
 			String keyId = id + "#key-" + (++keyNum);
 
-			PublicKey publicKey = PublicKey.build(identifier, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, btcrData.getInputScriptPubKey(), null);
+			PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, btcrData.getInputScriptPubKey(), null);
 			publicKeys = Collections.singletonList(publicKey);
 
 			Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
