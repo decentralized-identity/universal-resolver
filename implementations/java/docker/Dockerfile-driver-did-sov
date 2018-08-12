@@ -42,15 +42,10 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # variables
 
-ARG libIndyPath=./sovrin/lib/
-ARG poolConfigName=11347-04
-ARG poolGenesisTxn=./sovrin/11347-04.txn
-ARG walletName=default
-
-ENV uniresolver_driver_did_sov_libIndyPath $libIndyPath
-ENV uniresolver_driver_did_sov_poolConfigName $poolConfigName
-ENV uniresolver_driver_did_sov_poolGenesisTxn $poolGenesisTxn
-ENV uniresolver_driver_did_sov_walletName $walletName
+ENV uniresolver_driver_did_sov_libIndyPath ./sovrin/lib/
+ENV uniresolver_driver_did_sov_poolConfigName 11347-04
+ENV uniresolver_driver_did_sov_poolGenesisTxn ./sovrin/11347-04.txn
+ENV uniresolver_driver_did_sov_walletName default
 
 # done
 

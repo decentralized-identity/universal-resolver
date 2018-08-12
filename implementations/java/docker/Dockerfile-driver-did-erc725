@@ -28,25 +28,15 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # variables
 
-ARG ethereumConnection=jsonrpc
-ARG rpcUrlMainnet=https://mainnet.infura.io/9W2fvWQMP6cJCMH3ESqP
-ARG rpcUrlRopsten=https://ropsten.infura.io/9W2fvWQMP6cJCMH3ESqP
-ARG rpcUrlRinkeby=https://rinkeby.infura.io/9W2fvWQMP6cJCMH3ESqP
-ARG rpcUrlKovan=https://kovan.infura.io/9W2fvWQMP6cJCMH3ESqP
-ARG etherscanApiMainnet=http://api.etherscan.io/api
-ARG etherscanApiRopsten=http://api-ropsten.etherscan.io/api
-ARG etherscanApiRinkeby=http://api-rinkeby.etherscan.io/api
-ARG etherscanApiKovan=http://api-kovan.etherscan.io/api
-
-ENV uniresolver_driver_did_erc725_ethereumConnection $ethereumConnection
-ENV uniresolver_driver_did_erc725_rpcUrlMainnet $rpcUrlMainnet
-ENV uniresolver_driver_did_erc725_rpcUrlRopsten $rpcUrlRopsten
-ENV uniresolver_driver_did_erc725_rpcUrlRinkeby $rpcUrlRinkeby
-ENV uniresolver_driver_did_erc725_rpcUrlKovan $rpcUrlKovan
-ENV uniresolver_driver_did_erc725_etherscanApiMainnet $etherscanApiMainnet
-ENV uniresolver_driver_did_erc725_etherscanApiRopsten $etherscanApiRopsten
-ENV uniresolver_driver_did_erc725_etherscanApiRinkeby $etherscanApiRinkeby
-ENV uniresolver_driver_did_erc725_etherscanApiKovan $etherscanApiKovan
+ENV uniresolver_driver_did_erc725_ethereumConnection jsonrpc
+ENV uniresolver_driver_did_erc725_rpcUrlMainnet https://mainnet.infura.io/9W2fvWQMP6cJCMH3ESqP
+ENV uniresolver_driver_did_erc725_rpcUrlRopsten https://ropsten.infura.io/9W2fvWQMP6cJCMH3ESqP
+ENV uniresolver_driver_did_erc725_rpcUrlRinkeby https://rinkeby.infura.io/9W2fvWQMP6cJCMH3ESqP
+ENV uniresolver_driver_did_erc725_rpcUrlKovan https://kovan.infura.io/9W2fvWQMP6cJCMH3ESqP
+ENV uniresolver_driver_did_erc725_etherscanApiMainnet http://api.etherscan.io/api
+ENV uniresolver_driver_did_erc725_etherscanApiRopsten http://api-ropsten.etherscan.io/api
+ENV uniresolver_driver_did_erc725_etherscanApiRinkeby http://api-rinkeby.etherscan.io/api
+ENV uniresolver_driver_did_erc725_etherscanApiKovan http://api-kovan.etherscan.io/api
 
 # done
 
