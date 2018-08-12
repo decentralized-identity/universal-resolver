@@ -16,6 +16,9 @@ ENV PATH $JAVA_HOME/bin:$PATH
 
 RUN apt-get install -y --no-install-recommends git
 
+RUN cd /opt/ && git clone https://github.com/peacekeeper/did-common-java.git
+RUN cd /opt/did-common-java/ && mvn clean install -DskipTests
+
 RUN cd /opt/ && git clone https://github.com/WebOfTrustInfo/txref-conversion-java.git
 RUN cd /opt/txref-conversion-java/ && mvn clean install -DskipTests
 

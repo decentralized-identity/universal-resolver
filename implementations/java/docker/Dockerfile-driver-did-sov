@@ -14,8 +14,12 @@ ENV PATH $JAVA_HOME/bin:$PATH
 
 # build dependencies
 
-RUN apt-get install -y --no-install-recommends git curl
-RUN apt-get install -y --no-install-recommends build-essential pkg-config cmake libssl-dev libsqlite3-dev libsodium-dev
+RUN apt-get install -y --no-install-recommends git
+
+RUN cd /opt/ && git clone https://github.com/peacekeeper/did-common-java.git
+RUN cd /opt/did-common-java/ && mvn clean install -DskipTests
+
+RUN apt-get install -y --no-install-recommends curl build-essential pkg-config cmake libssl-dev libsqlite3-dev libsodium-dev
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
