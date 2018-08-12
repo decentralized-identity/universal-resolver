@@ -110,8 +110,22 @@ public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconver
 			}
 		}
 
+		// find spent in tx
+
+		String spentInTxid = null;
+
+		for (Iterator<JsonElement> i = ((JsonArray) txData.get("outputs")).iterator(); i.hasNext(); ) {
+
+			JsonObject output = i.next().getAsJsonObject();
+			JsonElement spentBy = output.get("spent_by");
+			if (spentBy == null || ! spentBy.isJsonPrimitive()) continue;
+
+			spentInTxid = spentBy.getAsString();
+			break;
+		}
+
 		// done
 
-		return new BtcrData(null, inputScriptPubKey, fragmentUri);
+		return new BtcrData(spentInTxid, inputScriptPubKey, fragmentUri);
 	}
 }

@@ -1,6 +1,7 @@
 package uniresolver.driver.did.btcr;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -24,11 +25,11 @@ import did.Encryption;
 import did.PublicKey;
 import did.Service;
 import info.weboftrust.txrefconversion.Bech32;
-import info.weboftrust.txrefconversion.Chain;
-import info.weboftrust.txrefconversion.ChainAndTxid;
+import info.weboftrust.txrefconversion.ChainAndBlockLocation;
 import info.weboftrust.txrefconversion.TxrefConverter;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
+import uniresolver.driver.did.btcr.bitcoinconnection.BTCDRPCBitcoinConnection;
 import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection;
 import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection.BtcrData;
 import uniresolver.driver.did.btcr.bitcoinconnection.BitcoindRPCBitcoinConnection;
@@ -42,7 +43,7 @@ public class DidBtcrDriver implements Driver {
 
 	public static final Pattern DID_BTCR_PATTERN = Pattern.compile("^did:btcr:(\\S*)$");
 
-	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Secp256k1VerificationKey2018" };
+	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "EdDsaSAPublicKeySecp256k1" };
 	public static final String[] DIDDOCUMENT_AUTHENTICATION_TYPES = new String[] { "EdDsaSASignatureAuthentication2018" };
 
 	private Map<String, Object> properties;
@@ -101,6 +102,15 @@ public class DidBtcrDriver implements Driver {
 
 				if (prop_rpcUrlMainnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlMainnet(prop_rpcUrlMainnet);
 				if (prop_rpcUrlTestnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlTestnet(prop_rpcUrlTestnet);
+			} else if ("btcd".equals(prop_bitcoinConnection)) {
+
+					this.setBitcoinConnection(new BTCDRPCBitcoinConnection());
+
+					String prop_rpcUrlMainnet = (String) this.getProperties().get("rpcUrlMainnet");
+					String prop_rpcUrlTestnet = (String) this.getProperties().get("rpcUrlTestnet");
+
+					if (prop_rpcUrlMainnet != null) ((BTCDRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlMainnet(prop_rpcUrlMainnet);
+					if (prop_rpcUrlTestnet != null) ((BTCDRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlTestnet(prop_rpcUrlTestnet);
 			} else if ("bitcoinj".equals(prop_bitcoinConnection)) {
 
 				this.setBitcoinConnection(new BitcoinjSPVBitcoinConnection());
@@ -133,25 +143,39 @@ public class DidBtcrDriver implements Driver {
 
 		// retrieve btcr data
 
-		Chain chain;
+		ChainAndBlockLocation chainAndBlockLocation;
 		String txid;
-		BtcrData btcrData;
+		BtcrData btcrData = null;
+		List<String> spentInTxids = new ArrayList<String> ();
 
 		try {
 
-			TxrefConverter txrefConverter = new TxrefConverter(this.getBitcoinConnection());
+			chainAndBlockLocation = TxrefConverter.get().txrefDecode(txref);
+			txid = this.getBitcoinConnection().getTxid(chainAndBlockLocation);
 
-			ChainAndTxid chainAndTxid = txrefConverter.txrefToTxid(txref);
-			chain = chainAndTxid.getChain();
-			txid = chainAndTxid.getTxid();
+			while (true) {
 
-			btcrData = this.getBitcoinConnection().getBtcrData(chain, txid);
+				btcrData = this.getBitcoinConnection().getBtcrData(chainAndBlockLocation.getChain(), txid);
+				if (btcrData == null) break;
+
+				// check if we need to follow the tip
+
+				if (btcrData.getSpentInTxid() == null) {
+
+					break;
+				} else {
+
+					spentInTxids.add(btcrData.getSpentInTxid());
+					txid = btcrData.getSpentInTxid();
+					chainAndBlockLocation = this.getBitcoinConnection().getChainAndBlockLocation(chainAndBlockLocation.getChain(), txid);
+				}
+			}
 		} catch (IOException ex) {
 
 			throw new ResolutionException("Cannot retrieve BTCR data for " + txref + ": " + ex.getMessage());
 		}
 
-		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ txid + " on chain " + chain + "): " + btcrData);
+		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ txid + " on chain " + chainAndBlockLocation.getChain() + "): " + btcrData);
 
 		// retrieve DID DOCUMENT FRAGEMENT
 
@@ -222,14 +246,24 @@ public class DidBtcrDriver implements Driver {
 
 		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, encryptions, services);
 
+		// revoked?
+
+		if (! spentInTxids.isEmpty()) {
+
+			didDocument = null;
+		}
+
 		// create METHOD METADATA
 
 		Map<String, Object> methodMetadata = new LinkedHashMap<String, Object> ();
 		if (btcrData != null) methodMetadata.put("inputScriptPubKey", btcrData.getInputScriptPubKey());
 		if (btcrData != null) methodMetadata.put("fragmentUri", btcrData.getFragmentUri());
 		if (didDocumentFragment != null) methodMetadata.put("fragment", didDocumentFragment);
-		if (chain != null) methodMetadata.put("chain", chain);
+		if (chainAndBlockLocation != null) methodMetadata.put("chain", chainAndBlockLocation.getChain());
+		if (chainAndBlockLocation != null) methodMetadata.put("blockHeight", chainAndBlockLocation.getBlockHeight());
+		if (chainAndBlockLocation != null) methodMetadata.put("blockIndex", chainAndBlockLocation.getBlockIndex());
 		if (txid != null) methodMetadata.put("txid", txid);
+		if (spentInTxids != null) methodMetadata.put("spentInTxids", spentInTxids);
 
 		// create RESOLUTION RESULT
 
