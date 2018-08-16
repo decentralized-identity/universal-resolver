@@ -14,24 +14,17 @@ import did.parser.ParserException;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.driver.Driver;
-import uniresolver.driver.did.btcr.DidBtcrDriver;
-import uniresolver.driver.did.sov.DidSovDriver;
 import uniresolver.result.ResolutionResult;
 
 public class LocalUniResolver implements UniResolver {
 
 	private static Logger log = LoggerFactory.getLogger(LocalUniResolver.class);
 
-	private static final Map<String, Driver> DEFAULT_DRIVERS;
 	private static final LocalUniResolver DEFAULT_RESOLVER;
 
-	private Map<String, Driver> drivers = DEFAULT_DRIVERS;
+	private Map<String, Driver> drivers = new HashMap<String, Driver> ();
 
 	static {
-
-		DEFAULT_DRIVERS = new HashMap<String, Driver> ();
-		DEFAULT_DRIVERS.put("did:btcr", new DidBtcrDriver());
-		DEFAULT_DRIVERS.put("did:sov", new DidSovDriver());
 
 		DEFAULT_RESOLVER = new LocalUniResolver();
 	}
