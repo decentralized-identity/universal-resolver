@@ -12,13 +12,6 @@
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 
-	<repositories>
-		<repository>
-			<id>evernym</id>
-			<url>https://repo.evernym.com/artifactory/libindy-maven-local</url>
-		</repository>
-	</repositories>
-
 	<profiles>
 
 		<profile>
@@ -106,7 +99,7 @@
 		<dependency>
 			<groupId>org.hyperledger</groupId>
 			<artifactId>indy</artifactId>
-			<version>1.4.0</version>
+			<version>1.6.2</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

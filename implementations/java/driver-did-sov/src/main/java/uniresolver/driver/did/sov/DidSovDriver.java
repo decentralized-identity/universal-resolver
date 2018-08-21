@@ -258,6 +258,14 @@ public class DidSovDriver implements Driver {
 			LibIndy.init(this.getLibIndyPath());
 		}
 
+		try {
+
+			Pool.setProtocolVersion(2);
+		} catch (IndyException ex) {
+
+			throw new ResolutionException("Cannot set Indy protocol version 2: " + ex.getMessage(), ex);
+		}
+
 		// create pool config
 
 		try {
@@ -283,7 +291,9 @@ public class DidSovDriver implements Driver {
 
 		try {
 
-			Wallet.createWallet(this.getPoolConfigName(), this.getWalletName(), "default", null, null).get();
+			String walletConfig = "{ \"id\":\"" + this.getWalletName() + "\", \"storage_type\":\"" + "default" + "\"}";
+			String walletCredentials = "{ \"key\":\"key\" }";
+			Wallet.createWallet(walletConfig, walletCredentials).get();
 			if (log.isInfoEnabled()) log.info("Wallet " + this.getWalletName() + " successfully created.");
 		} catch (IndyException | InterruptedException | ExecutionException ex) {
 
@@ -303,7 +313,7 @@ public class DidSovDriver implements Driver {
 
 		try {
 
-			OpenPoolLedgerJSONParameter openPoolLedgerJSONParameter = new OpenPoolLedgerJSONParameter(Boolean.TRUE, null, null);
+			OpenPoolLedgerJSONParameter openPoolLedgerJSONParameter = new OpenPoolLedgerJSONParameter(null, null);
 			this.pool = Pool.openPoolLedger(this.getPoolConfigName(), openPoolLedgerJSONParameter.toJson()).get();
 		} catch (IndyException | InterruptedException | ExecutionException ex) {
 
@@ -314,7 +324,9 @@ public class DidSovDriver implements Driver {
 
 		try {
 
-			this.wallet = Wallet.openWallet(this.getWalletName(), null, null).get();
+			String walletConfig = "{ \"id\":\"" + this.getWalletName() + "\", \"storage_type\":\"" + "default" + "\"}";
+			String walletCredentials = "{ \"key\":\"key\" }";
+			this.wallet = Wallet.openWallet(walletConfig, walletCredentials).get();
 		} catch (IndyException | InterruptedException | ExecutionException ex) {
 
 			throw new ResolutionException("Cannot open wallet " + this.getWalletName() + ": " + ex.getMessage(), ex);
