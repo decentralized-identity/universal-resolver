@@ -1,4 +1,4 @@
-![DIF Logo](https://github.com/decentralized-identity/universal-resolver/blob/master/implementations/java/logo-dif.png?raw=true)
+![DIF Logo](https://raw.githubusercontent.com/decentralized-identity/decentralized-identity.github.io/master/images/logo-small.png)
 
 ### Information
 
