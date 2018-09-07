@@ -12,8 +12,8 @@ Incomplete implementation! Not ready for production use! Use at your own risk! P
 
 You can deploy the Universal Resolver on your local machine by cloning this Github repository, and using `docker-compose` to build and run the Universal Resolver as well as its drivers:
 
-	git clone https://github.com/decentralized-identity/universal-resolver.git
-	cd universal-resolver/implementations/java/
+	git clone https://github.com/decentralized-identity/universal-resolver-java
+	cd universal-resolver-java/
 	docker-compose -f docker-compose.yml build
 	docker-compose -f docker-compose.yml up
 
