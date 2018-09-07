@@ -12,8 +12,8 @@ Incomplete implementation! Not ready for production use! Use at your own risk! P
 
 You can deploy the Universal Resolver on your local machine by cloning this Github repository, and using `docker-compose` to build and run the Universal Resolver as well as its drivers:
 
-	git clone https://github.com/decentralized-identity/universal-resolver.git
-	cd universal-resolver/implementations/java/
+	git clone https://github.com/decentralized-identity/universal-resolver-java
+	cd universal-resolver-java/
 	docker-compose -f docker-compose.yml build
 	docker-compose -f docker-compose.yml up
 
@@ -110,6 +110,18 @@ Dependency:
 Drivers can be invoked either locally as a Maven dependency, or they can be invoked via a REST GET call to a Docker container.
 
 Drivers for the **did:sov**, **did:btcr**, and **did:stack** methods are included in this repository. A driver for the **did:uport** method is available at https://github.com/uport-project/uport-did-driver.
+
+### Troubleshooting
+
+If docker-compose complains about wrong versions than you probably have a too old docker-compose version.
+
+On Ubuntu 16.04 remove docker-compose and install a new version e.g.
+```
+sudo apt-get remove docker-compose
+curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+```
+You might want to adjust the version number 1.22.0 to the latest one. Please see: [Installing docker-compose](https://docs.docker.com/compose/install/#install-compose)
 
 ### About
 
