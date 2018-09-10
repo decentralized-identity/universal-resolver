@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cd /opt/uni-resolver-java/driver-did-btcr/
+cd /opt/driver-did-btcr/
 mvn jetty:run -P war

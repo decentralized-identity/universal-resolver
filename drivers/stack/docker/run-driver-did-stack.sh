@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cd /opt/uni-resolver-java/driver-did-stack/
+cd /opt/driver-did-stack/
 mvn jetty:run -P war

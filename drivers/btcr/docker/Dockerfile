@@ -19,7 +19,7 @@ RUN apt-get install -y --no-install-recommends git
 RUN cd /opt/ && git clone https://github.com/decentralized-identity/did-common-java.git
 RUN cd /opt/did-common-java/ && mvn clean install -DskipTests
 
-RUN cd /opt/ && git clone https://github.com/peacekeeper/universal-resolver-java.git
+RUN cd /opt/ && git clone https://github.com/decentralized-identity/universal-resolver-java.git
 RUN cd /opt/universal-resolver-java && mvn clean install -N -DskipTests
 RUN cd /opt/universal-resolver-java/uni-resolver-core && mvn install -N -DskipTests
 RUN cd /opt/universal-resolver-java/driver && mvn install -N -DskipTests
@@ -46,4 +46,5 @@ ENV uniresolver_driver_did_btcr_rpcUrlTestnet http://user:pass@localhost:18332/
 
 EXPOSE 8080
 
+RUN chmod a+rx /opt/driver-did-btcr/docker/run-driver-did-btcr.sh
 CMD "/opt/driver-did-btcr/docker/run-driver-did-btcr.sh"

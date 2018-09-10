@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cd /opt/uni-resolver-java/driver-did-sov/
+cd /opt/driver-did-sov/
 mvn jetty:run -P war
