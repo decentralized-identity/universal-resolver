@@ -52,14 +52,14 @@
 	<!-- DRIVERS (VIA DOCKER REST API) -->
 
 	<bean id="DidBtcrDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://driver-did-btcr:8081/1.0/identifiers/$1" />
-		<property name="propertiesUri" value="http://driver-did-btcr:8081/1.0/properties" />
+		<property name="resolveUri" value="http://driver-did-btcr:8080/1.0/identifiers/$1" />
+		<property name="propertiesUri" value="http://driver-did-btcr:8080/1.0/properties" />
 		<property name="pattern" value="^(did:btcr:.+)$" />
 	</bean>
 
 	<bean id="DidSovDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://driver-did-sov:8082/1.0/identifiers/$1" />
-		<property name="propertiesUri" value="http://driver-did-sov:8082/1.0/properties" />
+		<property name="resolveUri" value="http://driver-did-sov:8080/1.0/identifiers/$1" />
+		<property name="propertiesUri" value="http://driver-did-sov:8080/1.0/properties" />
 		<property name="pattern" value="^(did:sov:.+)$" />
 	</bean>
 
@@ -85,20 +85,20 @@
 	</bean>
 
 	<bean id="DidStackDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://driver-did-stack:8084/1.0/identifiers/$1" />
-		<property name="propertiesUri" value="http://driver-did-stack:8084/1.0/properties" />
+		<property name="resolveUri" value="http://driver-did-stack:8080/1.0/identifiers/$1" />
+		<property name="propertiesUri" value="http://driver-did-stack:8080/1.0/properties" />
 		<property name="pattern" value="^(did:stack:.+)$" />
 	</bean>
 
 	<bean id="DidErc725Driver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://driver-did-erc725:8085/1.0/identifiers/$1" />
-		<property name="propertiesUri" value="http://driver-did-erc725:8085/1.0/properties" />
+		<property name="resolveUri" value="http://driver-did-erc725:8080/1.0/identifiers/$1" />
+		<property name="propertiesUri" value="http://driver-did-erc725:8080/1.0/properties" />
 		<property name="pattern" value="^(did:erc725:.+)$" />
 	</bean>
 
 	<bean id="DidDomDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://driver-did-dom:8086/1.0/identifiers/$1" />
-		<property name="propertiesUri" value="http://driver-did-dom:8086/1.0/properties" />
+		<property name="resolveUri" value="http://driver-did-dom:8080/1.0/identifiers/$1" />
+		<property name="propertiesUri" value="http://driver-did-dom:8080/1.0/properties" />
 		<property name="pattern" value="^(did:dom:.+)$" />
 	</bean>
 

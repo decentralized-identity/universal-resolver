@@ -1,40 +1,32 @@
 version: "3"
 services:
   driver-did-btcr:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile-driver-did-btcr
+    image: universalresolver/driver-did-btcr
     environment:
       uniresolver_driver_did_btcr_bitcoinConnection: ${uniresolver_driver_did_btcr_bitcoinConnection}
       uniresolver_driver_did_btcr_rpcUrlMainnet: ${uniresolver_driver_did_btcr_rpcUrlMainnet}
       uniresolver_driver_did_btcr_rpcUrlTestnet: ${uniresolver_driver_did_btcr_rpcUrlTestnet}
     ports:
-      - "8081:8081"
+      - "8081:8080"
   driver-did-sov:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile-driver-did-sov
+    image: universalresolver/driver-did-sov
     environment:
       uniresolver_driver_did_sov_libIndyPath: ${uniresolver_driver_did_sov_libIndyPath}
       uniresolver_driver_did_sov_poolConfigName: ${uniresolver_driver_did_sov_poolConfigName}
       uniresolver_driver_did_sov_poolGenesisTxn: ${uniresolver_driver_did_sov_poolGenesisTxn}
       uniresolver_driver_did_sov_walletName: ${uniresolver_driver_did_sov_walletName}
     ports:
-      - "8082:8082"
-  driver-did-stack:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile-driver-did-stack
-    ports:
-      - "8084:8084"
+      - "8082:8080"
   driver-did-uport:
     image: uport/uni-resolver-driver-did-uport
     ports:
       - "8083:8081"
+  driver-did-stack:
+    image: universalresolver/driver-did-stack
+    ports:
+      - "8084:8080"
   driver-did-erc725:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile-driver-did-erc725
+    image: universalresolver/driver-did-erc725
     environment:
       uniresolver_driver_did_erc725_ethereumConnection: ${uniresolver_driver_did_erc725_ethereumConnection}
       uniresolver_driver_did_erc725_rpcUrlMainnet: ${uniresolver_driver_did_erc725_rpcUrlMainnet}
@@ -46,16 +38,14 @@ services:
       uniresolver_driver_did_erc725_etherscanApiRinkeby: ${uniresolver_driver_did_erc725_etherscanApiRinkeby}
       uniresolver_driver_did_erc725_etherscanApiKovan: ${uniresolver_driver_did_erc725_etherscanApiKovan}
     ports:
-      - "8085:8085"
+      - "8085:8080"
   driver-did-dom:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile-driver-did-dom
+    image: universalresolver/driver-did-dom
     ports:
-      - "8086:8086"
+      - "8086:8080"
   uni-resolver-web:
     build:
       context: .
-      dockerfile: ./docker/Dockerfile-uni-resolver-web
+      dockerfile: ./docker/Dockerfile
     ports:
       - "8080:8080"

@@ -16,7 +16,7 @@ ENV PATH $JAVA_HOME/bin:$PATH
 
 RUN apt-get install -y --no-install-recommends git
 
-RUN cd /opt/ && git clone https://github.com/universal-resolver/did-common-java.git
+RUN cd /opt/ && git clone https://github.com/decentralized-identity/did-common-java.git
 RUN cd /opt/did-common-java/ && mvn clean install -DskipTests
 
 # build uni-resolver-web
@@ -37,4 +37,5 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 8080
 
+RUN chmod a+rx /opt/uni-resolver-java/docker/run-uni-resolver-web.sh
 CMD "/opt/uni-resolver-java/docker/run-uni-resolver-web.sh"
