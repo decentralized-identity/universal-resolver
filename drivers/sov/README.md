@@ -1,0 +1,60 @@
+![DIF Logo](https://raw.githubusercontent.com/decentralized-identity/decentralized-identity.github.io/master/images/logo-small.png)
+
+# Universal Resolver Driver: did:sov
+
+This is a [Universal Resolver](https://github.com/decentralized-identity/universal-resolver/) driver for **did:sov** identifiers.
+
+## Specifications
+
+* [Decentralized Identifiers](https://w3c-ccg.github.io/did-spec/)
+* [Sovrin DID Method Specification](https://sovrin-foundation.github.io/sovrin/spec/did-method-spec-template.html)
+
+## Example DIDs
+
+```
+did:sov:WRfXPg8dantKVubE3HX8pw
+```
+
+## Build and Run (Docker)
+
+```
+docker build -f ./docker/Dockerfile . -t universalresolver/driver-did-sov
+docker run -p 8080:8080 universalresolver/driver-did-sov
+curl -X GET http://localhost:8080/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
+```
+
+## Build (native)
+
+ 1. First, build https://github.com/decentralized-identity/universal-resolver-java
+ 1. Then, `mvn clean install`
+
+## Driver Environment Variables
+
+The driver recognizes the following environment variables:
+
+### `uniresolver_driver_did_sov_libIndyPath`
+
+ * Specifies the path to the Indy SDK library.
+ * Default value: `./sovrin/lib/`
+
+### `uniresolver_driver_did_sov_poolConfigName`
+
+ * Specifies the name of the Indy pool configuration.
+ * Default value: `11347-04`
+
+### `uniresolver_driver_did_sov_poolGenesisTxn`
+
+ * Specifies the path to the Indy pool configuration file.
+ * Default value: `./sovrin/11347-04.txn`
+
+### `uniresolver_driver_did_sov_walletName`
+
+ * Specifies the name of the Indy wallet.
+ * Default value: `default`
+
+## Driver Metadata
+
+The driver returns the following metadata in addition to a DID document:
+
+* `nymResponse`: Response to the Indy `GET_NYM` operation, including `txnTime`, `state_proof`, and other information.
+* `attrResponse`: Response to the Indy `GET_ATTR` operation, including `txnTime`, `state_proof`, and other information.
