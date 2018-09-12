@@ -1,4 +1,5 @@
 package uniresolver.examples;
+import did.DIDDocument;
 import uniresolver.client.ClientUniResolver;
 import uniresolver.result.ResolutionResult;
 
@@ -9,10 +10,13 @@ public class TestClientUniResolver {
 		ClientUniResolver uniResolver = new ClientUniResolver();
 		uniResolver.setResolveUri("https://uniresolver.danubetech.com/1.0/identifiers/");
 
-		ResolutionResult resolutionResult1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
-		System.out.println(resolutionResult1.toJson());
+		DIDDocument didDocument1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw").getDidDocument();
+		System.out.println(didDocument1.toJson());
 
-		ResolutionResult resolutionResult2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
-		System.out.println(resolutionResult2.toJson());
+		DIDDocument didDocument2 = uniResolver.resolve("did:btcr:xz35-jzv2-qqs2-9wjt").getDidDocument();
+		System.out.println(didDocument2.toJson());
+
+		DIDDocument didDocument3 = uniResolver.resolve("did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0").getDidDocument();
+		System.out.println(didDocument3.toJson());
 	}
 }

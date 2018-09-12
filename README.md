@@ -2,7 +2,7 @@
 
 ### Information
 
-This is a work-in-progress Java implementation of a Universal Resolver (aka Community Resolver) to be used for a decentralized naming system. It includes core resolution logic, a web API, a client library, and drivers for the **did:sov**, **did:btcr**, and **did:stack** methods.
+This is a work-in-progress Java implementation of a Universal Resolver (aka Community Resolver) to be used for decentralized identifier systems. It includes core resolution logic, a web API, and a client library.
 
 See the [specifications](https://github.com/decentralized-identity/universal-resolver/blob/master/docs/api-documentation.md) for more information.
 
@@ -30,17 +30,13 @@ Also see the [Examples](https://github.com/decentralized-identity/universal-reso
 
 ### Build
 
-In order to build the **did:sov** driver, you first need to build [libindy-sdk](https://github.com/hyperledger/indy-sdk/) and its [Java wrapper](https://github.com/hyperledger/indy-sdk/tree/master/wrappers/java).
-
-In order to build the **did:btcr** driver, you first need to build [txref-conversion-java](https://github.com/WebOfTrustInfo/txref-conversion-java/).
-
 Build all:
 
 	mvn clean install
 
 ### Local Resolver
 
-You can use a [Local Resolver](https://github.com/decentralized-identity/universal-resolver/tree/master/implementations/java/uni-resolver-local) in your Java project that invokes drivers locally (either directly via their JAVA API or via a Docker REST API).
+You can use a [Local Resolver](https://github.com/peacekeeper/universal-resolver-java/tree/master/uni-resolver-client) in your Java project that invokes drivers locally (either directly via their JAVA API or via a Docker REST API).
 
 Dependency:
 
@@ -50,28 +46,28 @@ Dependency:
 		<version>0.1-SNAPSHOT</version>
 	</dependency>
 
-[Example Use](https://github.com/decentralized-identity/universal-resolver/blob/master/implementations/java/examples/src/main/java/uniresolver/examples/TestLocalUniResolver.java):
+[Example Use](https://github.com/decentralized-identity/universal-resolver-java/blob/master/examples/src/main/java/uniresolver/examples/TestLocalUniResolver.java):
 
 	LocalUniResolver uniResolver = LocalUniResolver.getDefault();
 	uniResolver.getDriver(DidSovDriver.class).setLibIndyPath("./sovrin/lib/");
 	uniResolver.getDriver(DidSovDriver.class).setPoolConfigName("live");
 	uniResolver.getDriver(DidSovDriver.class).setPoolGenesisTxn("live.txn");
-	uniResolver.getDriver(DidBtcrDriver.class).setExtendedBitcoinConnection(BlockcypherAPIExtendedBitcoinConnection.get());
+	uniResolver.getDriver(DidBtcrDriver.class).setBitcoinConnection(BlockcypherAPIBitcoinConnection.get());
 	
-	DDO ddo1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
-	System.out.println(ddo1.serialize());
+	DIDDocument ddo1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw").getDidDocument();
+	System.out.println(ddo1.toJson());
 	
-	DDO ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
-	System.out.println(ddo2.serialize());
-
-	DDO ddo3 = uniResolver.resolve("did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0");
-	System.out.println(ddo3.serialize());
+	DIDDocument ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl").getDidDocument();
+	System.out.println(ddo2.toJson());
+	
+	DIDDocument ddo3 = uniResolver.resolve("did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0").getDidDocument();
+	System.out.println(ddo3.toJson());
 
 ### Web Resolver
 
-You can deploy a [Web Resolver](https://github.com/decentralized-identity/universal-resolver/tree/master/implementations/java/uni-resolver-web) that can be called by clients and invokes drivers locally (either directly via their JAVA API or via a Docker REST API).
+You can deploy a [Web Resolver](https://github.com/peacekeeper/universal-resolver-java/tree/master/uni-resolver-web) that can be called by clients and invokes drivers locally (either directly via their JAVA API or via a Docker REST API).
 
-See the [Example Configuration](https://github.com/decentralized-identity/universal-resolver/tree/master/implementations/java/uni-resolver-web/src/main/webapp/WEB-INF/applicationContext.xml).
+See the [Example Configuration](https://github.com/peacekeeper/universal-resolver-java/blob/master/uni-resolver-web/src/main/webapp/WEB-INF/applicationContext.xml).
 
 How to run:
 
@@ -79,7 +75,7 @@ How to run:
 
 ### Client Resolver
 
-You can use a [Client Resolver](https://github.com/decentralized-identity/universal-resolver/tree/master/implementations/java/uni-resolver-client) in your Java project that calls a remote Web Resolver.
+You can use a [Client Resolver](https://github.com/peacekeeper/universal-resolver-java/tree/master/uni-resolver-client) in your Java project that calls a remote Web Resolver.
 
 Dependency:
 
@@ -89,27 +85,25 @@ Dependency:
 		<version>0.1-SNAPSHOT</version>
 	</dependency>
 
-[Example Use](https://github.com/decentralized-identity/universal-resolver/blob/master/implementations/java/examples/src/main/java/uniresolver/examples/TestClientUniResolver.java):
+[Example Use](https://github.com/decentralized-identity/universal-resolver-java/blob/master/examples/src/main/java/uniresolver/examples/TestClientUniResolver.java):
 
 	ClientUniResolver uniResolver = new ClientUniResolver();
 	uniResolver.setResolveUri("https://uniresolver.danubetech.com/1.0/identifiers/");
 	
-	DDO ddo1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
-	System.out.println(ddo1.serialize());
+	DIDDocument didDocument1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw").getDidDocument();
+	System.out.println(didDocument1.toJson());
 	
-	DDO ddo2 = uniResolver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
-	System.out.println(ddo2.serialize());
-
-	DDO ddo3 = uniResolver.resolve("did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0");
-	System.out.println(ddo3.serialize());
+	DIDDocument didDocument2 = uniResolver.resolve("did:btcr:xz35-jzv2-qqs2-9wjt").getDidDocument();
+	System.out.println(didDocument2.toJson());
+	
+	DIDDocument didDocument3 = uniResolver.resolve("did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0").getDidDocument();
+	System.out.println(didDocument3.toJson());
 
 ### Drivers
 
-**TODO** more details
-
 Drivers can be invoked either locally as a Maven dependency, or they can be invoked via a REST GET call to a Docker container.
 
-Drivers for the **did:sov**, **did:btcr**, and **did:stack** methods are included in this repository. A driver for the **did:uport** method is available at https://github.com/uport-project/uport-did-driver.
+See [universal-resolver](https://github.com/decentralized-identity/universal-resolver/) for information about Universal Resolver drivers.
 
 ### Troubleshooting
 
