@@ -10,7 +10,7 @@ See this [blog post](https://medium.com/decentralized-identity/a-universal-resol
 
 The following implementations are available for use:
 
- * [Java](https://github.com/decentralized-identity/universal-resolver-java)
+ * [Java](https://github.com/decentralized-identity/universal-resolver-java) - (public instance running at https://uniresolver.io/)
  * [Python3](https://github.com/decentralized-identity/universal-resolver-python)
 
 ## Drivers
