@@ -23,7 +23,7 @@ docker run -p 8080:8080 universalresolver/driver-did-erc725
 curl -X GET http://localhost:8080/1.0/identifiers/did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E
 ```
 
-## Build (native)
+## Build (native Java)
 
  1. First, build https://github.com/decentralized-identity/universal-resolver-java
  1. Then, `mvn clean install`

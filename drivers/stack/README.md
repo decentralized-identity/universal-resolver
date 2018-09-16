@@ -23,7 +23,7 @@ docker run -p 8080:8080 universalresolver/driver-did-stack
 curl -X GET http://localhost:8080/1.0/identifiers/did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0
 ```
 
-## Build (native)
+## Build (native Java)
 
  1. First, build https://github.com/decentralized-identity/universal-resolver-java
  1. Then, `mvn clean install`
