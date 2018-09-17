@@ -59,15 +59,11 @@
 	<bean id="DidUportDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="http://driver-did-uport:8081/1.0/identifiers/$1" />
 		<property name="pattern" value="^(did:uport:.+)$|^(did:muport:.+)$|^(did:eth:.+)$|^(did:ethr:.+)$" />
-		<property name="rawIdentifier" value="true" />
-		<property name="rawDidDocument" value="true" />
 	</bean>
 
 	<bean id="DidV1Driver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="https://genesis.testnet.veres.one/dids/$1" />
 		<property name="pattern" value="^(did:v1:.+)$" />
-		<property name="rawIdentifier" value="true" />
-		<property name="rawDidDocument" value="true" />
 	</bean>
 
 	<bean id="DidIpidDriver" class="uniresolver.driver.http.HttpDriver">

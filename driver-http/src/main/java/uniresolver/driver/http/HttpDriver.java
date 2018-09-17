@@ -35,15 +35,13 @@ public class HttpDriver implements Driver {
 	public static final URI DEFAULT_RESOLVE_URI = null;
 	public static final URI DEFAULT_PROPERTIES_URI = null;
 	public static final Pattern DEFAULT_PATTERN = null;
-	public static final boolean DEFAULT_RAW_IDENTIFIER = false;
-	public static final boolean DEFAULT_RAW_DID_DOCUMENT = false;
+	public static final String DEFAULT_ENCODE_IDENTIFIER = null;
 
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
 	private URI resolveUri = DEFAULT_RESOLVE_URI;
 	private URI propertiesUri = DEFAULT_PROPERTIES_URI;
 	private Pattern pattern = DEFAULT_PATTERN;
-	private boolean rawIdentifier = DEFAULT_RAW_IDENTIFIER;
-	private boolean rawDidDocument = DEFAULT_RAW_DID_DOCUMENT;
+	private String encodeIdentifier = DEFAULT_ENCODE_IDENTIFIER;
 
 	public HttpDriver() {
 
@@ -88,7 +86,8 @@ public class HttpDriver implements Driver {
 
 		try {
 
-			encodedIdentifier = this.isRawIdentifier() ? matchedIdentifier : URLEncoder.encode(matchedIdentifier, "UTF-8");
+			if ("url".equals(this.getEncodeIdentifier())) encodedIdentifier = URLEncoder.encode(matchedIdentifier, "UTF-8");
+			else encodedIdentifier = matchedIdentifier;
 		} catch (UnsupportedEncodingException ex) {
 
 			throw new ResolutionException(ex.getMessage(), ex);
@@ -110,7 +109,7 @@ public class HttpDriver implements Driver {
 		}
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", this.isRawDidDocument() ? DIDDocument.MIME_TYPE : ResolutionResult.MIME_TYPE);
+		httpGet.addHeader("Accept", ResolutionResult.MIME_TYPE);
 
 		// execute HTTP request
 
@@ -139,12 +138,12 @@ public class HttpDriver implements Driver {
 				throw new ResolutionException(httpBody);
 			}
 
-			if (this.isRawDidDocument()) {
-
-				resolutionResult = ResolutionResult.build(DIDDocument.fromJson(httpBody));
-			} else {
+			try {
 
 				resolutionResult = ResolutionResult.fromJson(httpBody);
+			} catch (Exception ex) {
+
+				resolutionResult = ResolutionResult.build(DIDDocument.fromJson(httpBody));
 			}
 		} catch (IOException ex) {
 
@@ -167,8 +166,7 @@ public class HttpDriver implements Driver {
 
 		if (this.getResolveUri() != null) httpProperties.put("driverUri", this.getResolveUri().toString());
 		if (this.getPattern() != null) httpProperties.put("pattern", this.getPattern().toString());
-		httpProperties.put("rawIdentifier", Boolean.toString(this.isRawIdentifier()));
-		httpProperties.put("rawDidDocument", Boolean.toString(this.isRawDidDocument()));
+		httpProperties.put("encodeIdentifier", this.getEncodeIdentifier());
 
 		Map<String, Object> properties = new HashMap<String, Object> ();
 		properties.put("http", httpProperties);
@@ -293,23 +291,13 @@ public class HttpDriver implements Driver {
 		this.pattern = Pattern.compile(pattern);
 	}
 
-	public boolean isRawIdentifier() {
+	public String getEncodeIdentifier() {
 
-		return this.rawIdentifier;
+		return this.encodeIdentifier;
 	}
 
-	public void setRawIdentifier(boolean rawIdentifier) {
+	public void setEncodeIdentifier(String encodeIdentifier) {
 
-		this.rawIdentifier = rawIdentifier;
-	}
-
-	public boolean isRawDidDocument() {
-
-		return this.rawDidDocument;
-	}
-
-	public void setRawDidDocument(boolean rawDidDocument) {
-
-		this.rawDidDocument = rawDidDocument;
+		this.encodeIdentifier = encodeIdentifier;
 	}
 }
