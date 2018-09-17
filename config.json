@@ -1,3 +1,65 @@
 {
-  
+	"drivers": [
+		{
+			"pattern": "^(did:btcr:.+)$",
+			"image": "universalresolver/driver-did-btcr",
+			"tag": "latest",
+			"testIdentifiers": [ "did:btcr:xz35-jzv2-qqs2-9wjt", "did:btcr:x705-jzv2-qqaz-7vuz", "did:btcr:xkrn-xzcr-qqlv-j6sl" ],
+			"env": {
+				"uniresolver_driver_did_btcr_bitcoinConnection": "blockcypherapi",
+				"uniresolver_driver_did_btcr_rpcUrlMainnet": "http://user:pass@localhost:8332/",
+				"uniresolver_driver_did_btcr_rpcUrlTestnet": "http://user:pass@localhost:18332/"
+			}
+		}, {
+			"pattern": "^(did:sov:.+)$",
+			"image": "universalresolver/driver-did-sov",
+			"tag": "latest",
+			"testIdentifiers": [ "did:sov:WRfXPg8dantKVubE3HX8pw" ],
+			"env": {
+				"uniresolver_driver_did_sov_libIndyPath": "./sovrin/lib/",
+				"uniresolver_driver_did_sov_poolConfigName": "11347-04",
+				"uniresolver_driver_did_sov_poolGenesisTxn": "./sovrin/11347-04.txn",
+				"uniresolver_driver_did_sov_walletName": "default"
+			}
+		}, {
+			"pattern": "^(did:erc725:.+)$",
+			"image": "universalresolver/driver-did-erc725",
+			"tag": "latest",
+			"testIdentifiers": [ "did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E" ],
+			"env": {
+				"uniresolver_driver_did_erc725_ethereumConnection": "jsonrpc",
+				"uniresolver_driver_did_erc725_rpcUrlMainnet": "https://mainnet.infura.io/9W2fvWQMP6cJCMH3ESqP",
+				"uniresolver_driver_did_erc725_rpcUrlRopsten": "https://ropsten.infura.io/9W2fvWQMP6cJCMH3ESqP",
+				"uniresolver_driver_did_erc725_rpcUrlRinkeby": "https://rinkeby.infura.io/9W2fvWQMP6cJCMH3ESqP",
+				"uniresolver_driver_did_erc725_rpcUrlKovan": "https://kovan.infura.io/9W2fvWQMP6cJCMH3ESqP",
+				"uniresolver_driver_did_erc725_etherscanApiMainnet": "http://api.etherscan.io/api",
+				"uniresolver_driver_did_erc725_etherscanApiRopsten": "http://api-ropsten.etherscan.io/api",
+				"uniresolver_driver_did_erc725_etherscanApiRinkeby": "http://api-rinkeby.etherscan.io/api",
+				"uniresolver_driver_did_erc725_etherscanApiKovan": "http://api-kovan.etherscan.io/api"
+			}
+		}, {
+			"pattern": "^(did:v1:.+)$",
+			"url": "https://genesis.testnet.veres.one/dids/$1",
+			"testIdentifiers": [ "did:v1:test:nym:3AEJTDMSxDDQpyUftjuoeZ2Bazp4Bswj1ce7FJGybCUu", "did:v1:test:nym:UxYjr6F3hqwiF3yffplpcsV3pXSWSzVQ2396WT65e2E" ]
+		}, {
+			"pattern": "^did:ipid:(.+)$",
+			"url": "https://ipfs.io/ipns/$1",
+			"testIdentifiers": [ "did:ipid:QmYA7p467t4BGgBL4NmyHtsXMoPrYH9b3kSG6dbgFYskJm" ]
+		}, {
+			"pattern": "^(did:stack:.+)$",
+			"image": "universalresolver/driver-did-stack",
+			"tag": "latest",
+			"testIdentifiers": [ "did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0" ]
+		}, {
+			"pattern": "^(did:uport:.+)$|^(did:muport:.+)$|^(did:eth:.+)$|^(did:ethr:.+)$",
+			"image": "universalresolver/driver-did-uport",
+			"tag": "latest",
+			"testIdentifiers": [ "did:uport:2omWsSGspY7zhxaG6uHyoGtcYxoGeeohQXz", "did:muport:Qmbrpc3gKtapsL5k6nZuzYvoMQZwMup5qWvss1q4XuaRJd", "did:eth:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736", "did:ethr:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736" ]
+		}, {
+			"pattern": "^(did:dom:.+)$",
+			"image": "universalresolver/driver-did-dom",
+			"tag": "latest",
+			"testIdentifiers": [ "did:dom:Jjbfgyu7My4RrbRNrXTPBz4PnhnMEE" ]
+		}
+	]
 }
