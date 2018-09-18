@@ -33,8 +33,8 @@
 
 	<bean id="DidSovDriver" class="uniresolver.driver.did.sov.DidSovDriver">
 		<property name="libIndyPath" value="./sovrin/lib/" />
-		<property name="poolConfigName" value="11347-04" />
-		<property name="poolGenesisTxn" value="./sovrin/11347-04.txn" />
+		<property name="poolConfigName" value="11347-05" />
+		<property name="poolGenesisTxn" value="./sovrin/11347-05.txn" />
 		<property name="walletName" value="default" />
 	</bean>
 
