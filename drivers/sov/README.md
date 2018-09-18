@@ -40,12 +40,12 @@ The driver recognizes the following environment variables:
 ### `uniresolver_driver_did_sov_poolConfigName`
 
  * Specifies the name of the Indy pool configuration.
- * Default value: `11347-04`
+ * Default value: `11347-05`
 
 ### `uniresolver_driver_did_sov_poolGenesisTxn`
 
  * Specifies the path to the Indy pool configuration file.
- * Default value: `./sovrin/11347-04.txn`
+ * Default value: `./sovrin/11347-05.txn`
 
 ### `uniresolver_driver_did_sov_walletName`
 
