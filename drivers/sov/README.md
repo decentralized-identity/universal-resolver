@@ -13,6 +13,7 @@ This is a [Universal Resolver](https://github.com/decentralized-identity/univers
 
 ```
 did:sov:WRfXPg8dantKVubE3HX8pw
+did:sov:stn:WRfXPg8dantKVubE3HX8pw
 ```
 
 ## Build and Run (Docker)
@@ -37,10 +38,15 @@ The driver recognizes the following environment variables:
  * Specifies the path to the Indy SDK library.
  * Default value: `./sovrin/lib/`
 
-### `uniresolver_driver_did_sov_poolConfigName`
+### `uniresolver_driver_did_sov_poolConfigs`
 
- * Specifies the name of the Indy pool configuration.
- * Default value: `11347-05`
+ * Specifies a semi-colon-separated list of Indy network names and pool configuration files. The default network is `_`.
+ * Default value: `_;./sovrin/live.txn;stn;./sovrin/stn.txn;danube;./sovrin/11347-05.txn`
+
+### `uniresolver_driver_did_sov_poolVersions`
+
+ * Specifies a semi-colon-separated list of Indy network names and pool protocol versions. The default network is `_`.
+ * Default value: `_;1;stn;1;danube;2`
 
 ### `uniresolver_driver_did_sov_poolGenesisTxn`
 
