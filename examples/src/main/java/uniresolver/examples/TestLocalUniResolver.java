@@ -11,8 +11,8 @@ public class TestLocalUniResolver {
 
 		LocalUniResolver uniResolver = LocalUniResolver.getDefault();
 		uniResolver.getDriver(DidSovDriver.class).setLibIndyPath("./sovrin/lib/");
-		uniResolver.getDriver(DidSovDriver.class).setPoolConfigName("live");
-		uniResolver.getDriver(DidSovDriver.class).setPoolGenesisTxn("live.txn");
+		uniResolver.getDriver(DidSovDriver.class).setPoolConfigs("_;./sovrin/live.txn;stn;./sovrin/stn.txn;danube;./sovrin/11347-05.txn");
+		uniResolver.getDriver(DidSovDriver.class).setPoolVersions("_;1;stn;1;danube;2");
 		uniResolver.getDriver(DidBtcrDriver.class).setBitcoinConnection(BlockcypherAPIBitcoinConnection.get());
 
 		ResolutionResult resolutionResult1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");

@@ -8,8 +8,7 @@ public class TestDriverDidSov {
 
 		DidSovDriver driver = new DidSovDriver();
 		driver.setLibIndyPath("./sovrin/lib/");
-		driver.setPoolConfigName("live");
-		driver.setPoolGenesisTxn("live.txn");
+		driver.setPoolConfigs(";./sovrin/live.txn");
 
 		ResolutionResult resolutionResult = driver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
 		System.out.println(resolutionResult.toJson());

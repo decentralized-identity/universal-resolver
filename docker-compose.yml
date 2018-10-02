@@ -12,8 +12,8 @@ services:
     image: universalresolver/driver-did-sov
     environment:
       uniresolver_driver_did_sov_libIndyPath: ${uniresolver_driver_did_sov_libIndyPath}
-      uniresolver_driver_did_sov_poolConfigName: ${uniresolver_driver_did_sov_poolConfigName}
-      uniresolver_driver_did_sov_poolGenesisTxn: ${uniresolver_driver_did_sov_poolGenesisTxn}
+      uniresolver_driver_did_sov_poolConfigs: ${uniresolver_driver_did_sov_poolConfigs}
+      uniresolver_driver_did_sov_poolVersions: ${uniresolver_driver_did_sov_poolVersions}
       uniresolver_driver_did_sov_walletName: ${uniresolver_driver_did_sov_walletName}
     ports:
       - "8082:8080"
