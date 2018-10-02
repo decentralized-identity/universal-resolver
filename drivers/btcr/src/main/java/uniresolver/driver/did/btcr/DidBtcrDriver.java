@@ -104,13 +104,13 @@ public class DidBtcrDriver implements Driver {
 				if (prop_rpcUrlTestnet != null) ((BitcoindRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlTestnet(prop_rpcUrlTestnet);
 			} else if ("btcd".equals(prop_bitcoinConnection)) {
 
-					this.setBitcoinConnection(new BTCDRPCBitcoinConnection());
+				this.setBitcoinConnection(new BTCDRPCBitcoinConnection());
 
-					String prop_rpcUrlMainnet = (String) this.getProperties().get("rpcUrlMainnet");
-					String prop_rpcUrlTestnet = (String) this.getProperties().get("rpcUrlTestnet");
+				String prop_rpcUrlMainnet = (String) this.getProperties().get("rpcUrlMainnet");
+				String prop_rpcUrlTestnet = (String) this.getProperties().get("rpcUrlTestnet");
 
-					if (prop_rpcUrlMainnet != null) ((BTCDRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlMainnet(prop_rpcUrlMainnet);
-					if (prop_rpcUrlTestnet != null) ((BTCDRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlTestnet(prop_rpcUrlTestnet);
+				if (prop_rpcUrlMainnet != null) ((BTCDRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlMainnet(prop_rpcUrlMainnet);
+				if (prop_rpcUrlTestnet != null) ((BTCDRPCBitcoinConnection) this.getBitcoinConnection()).setRpcUrlTestnet(prop_rpcUrlTestnet);
 			} else if ("bitcoinj".equals(prop_bitcoinConnection)) {
 
 				this.setBitcoinConnection(new BitcoinjSPVBitcoinConnection());
