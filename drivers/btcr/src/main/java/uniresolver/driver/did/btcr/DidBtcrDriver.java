@@ -143,7 +143,9 @@ public class DidBtcrDriver implements Driver {
 
 		// retrieve btcr data
 
+		ChainAndBlockLocation initialChainAndBlockLocation;
 		ChainAndBlockLocation chainAndBlockLocation;
+		String initialTxid;
 		String txid;
 		BtcrData btcrData = null;
 		List<String> spentInTxids = new ArrayList<String> ();
@@ -152,6 +154,9 @@ public class DidBtcrDriver implements Driver {
 
 			chainAndBlockLocation = TxrefConverter.get().txrefDecode(txref);
 			txid = this.getBitcoinConnection().getTxid(chainAndBlockLocation);
+
+			initialTxid = txid;
+			initialChainAndBlockLocation = chainAndBlockLocation;
 
 			while (true) {
 
@@ -260,6 +265,9 @@ public class DidBtcrDriver implements Driver {
 		if (btcrData != null) methodMetadata.put("fragmentUri", btcrData.getFragmentUri());
 		if (didDocumentFragment != null) methodMetadata.put("fragment", didDocumentFragment);
 		if (chainAndBlockLocation != null) methodMetadata.put("chain", chainAndBlockLocation.getChain());
+		if (initialChainAndBlockLocation != null) methodMetadata.put("initialBlockHeight", initialChainAndBlockLocation.getBlockHeight());
+		if (initialChainAndBlockLocation != null) methodMetadata.put("initialBlockIndex", initialChainAndBlockLocation.getBlockIndex());
+		if (initialTxid != null) methodMetadata.put("initialTxid", initialTxid);
 		if (chainAndBlockLocation != null) methodMetadata.put("blockHeight", chainAndBlockLocation.getBlockHeight());
 		if (chainAndBlockLocation != null) methodMetadata.put("blockIndex", chainAndBlockLocation.getBlockIndex());
 		if (txid != null) methodMetadata.put("txid", txid);
