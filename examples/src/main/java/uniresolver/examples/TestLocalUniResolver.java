@@ -10,6 +10,8 @@ public class TestLocalUniResolver {
 	public static void main(String[] args) throws Exception {
 
 		LocalUniResolver uniResolver = LocalUniResolver.getDefault();
+		uniResolver.getDrivers().put("btcr", new DidBtcrDriver());
+		uniResolver.getDrivers().put("sov", new DidSovDriver());
 		uniResolver.getDriver(DidSovDriver.class).setLibIndyPath("./sovrin/lib/");
 		uniResolver.getDriver(DidSovDriver.class).setPoolConfigs("_;./sovrin/live.txn;stn;./sovrin/stn.txn;danube;./sovrin/11347-05.txn");
 		uniResolver.getDriver(DidSovDriver.class).setPoolVersions("_;1;stn;1;danube;2");
