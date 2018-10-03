@@ -253,7 +253,7 @@ public class DidBtcrDriver implements Driver {
 
 		// revoked?
 
-		if (! spentInTxids.isEmpty()) {
+		if ((! spentInTxids.isEmpty()) && didDocumentFragment == null) {
 
 			didDocument = null;
 		}
