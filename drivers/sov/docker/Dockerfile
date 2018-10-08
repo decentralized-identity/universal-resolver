@@ -37,7 +37,6 @@ RUN cd /opt/indy-sdk/wrappers/java/ && mvn clean install -DskipTests
 ADD . /opt/driver-did-sov
 RUN cd /opt/driver-did-sov && mvn install package -N -DskipTests
 
-RUN mkdir /opt/driver-did-sov/lib/
 RUN cp /opt/indy-sdk/libindy/target/debug/libindy.so /opt/driver-did-sov/sovrin/lib/
 
 # clean up
