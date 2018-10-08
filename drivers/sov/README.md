@@ -46,7 +46,7 @@ The driver recognizes the following environment variables:
 ### `uniresolver_driver_did_sov_poolVersions`
 
  * Specifies a semi-colon-separated list of Indy network names and pool protocol versions. The default network is `_`.
- * Default value: `_;1;stn;1;danube;2`
+ * Default value: `_;1;stn;2;danube;2`
 
 ### `uniresolver_driver_did_sov_poolGenesisTxn`
 
