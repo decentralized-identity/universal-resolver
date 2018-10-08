@@ -15,7 +15,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import did.DID;
 import did.DIDDocument;
 
 @JsonPropertyOrder({ "didReference", "didDocument", "resolverMetadata", "methodMetadata" })
@@ -24,9 +23,6 @@ public class ResolutionResult {
 	public static final String MIME_TYPE = "application/json";
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
-
-	@JsonProperty
-	private DID didReference;
 
 	@JsonProperty
 	private DIDDocument didDocument;
@@ -41,9 +37,8 @@ public class ResolutionResult {
 
 	}
 
-	private ResolutionResult(DID didReference, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
+	private ResolutionResult(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
-		this.didReference = didReference;
 		this.didDocument = didDocument;
 		this.resolverMetadata = resolverMetadata;
 		this.methodMetadata = methodMetadata;
@@ -53,24 +48,19 @@ public class ResolutionResult {
 	 * Factory methods
 	 */
 
-	public static ResolutionResult build(DID didReference, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
-
-		return new ResolutionResult(didReference, didDocument, resolverMetadata, methodMetadata);
-	}
-
 	public static ResolutionResult build(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
-		return new ResolutionResult(null, didDocument, resolverMetadata, methodMetadata);
+		return new ResolutionResult(didDocument, resolverMetadata, methodMetadata);
 	}
 
 	public static ResolutionResult build(DIDDocument didDocument) {
 
-		return new ResolutionResult(null, didDocument, new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolutionResult(didDocument, new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
 	public static ResolutionResult build() {
 
-		return new ResolutionResult(null, DIDDocument.build(new HashMap<String, Object> ()), new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolutionResult(DIDDocument.build(new HashMap<String, Object> ()), new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
 	/*
@@ -95,18 +85,6 @@ public class ResolutionResult {
 	/*
 	 * Getters and setters
 	 */
-
-	@JsonGetter
-	public final DID getDidReference() {
-
-		return this.didReference;
-	}
-
-	@JsonSetter
-	public final void setDidReference(DID didReference) {
-
-		this.didReference = didReference;
-	}
 
 	@JsonRawValue
 	public final DIDDocument getDidDocument() {

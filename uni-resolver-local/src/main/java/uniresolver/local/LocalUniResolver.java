@@ -1,8 +1,10 @@
 package uniresolver.local;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -49,21 +51,6 @@ public class LocalUniResolver implements UniResolver {
 
 		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
 
-		// parse DID
-
-		DID didReference = null;
-
-		try {
-
-			didReference = DID.fromString(identifier);
-			log.debug("identifier " + identifier + " is a valid DID reference: " + didReference.getDid());
-
-			identifier = didReference.getDid();
-		} catch (IllegalArgumentException | ParserException ex) {
-
-			log.debug("Identifier " + identifier + " is not a valid DID reference: " + ex.getMessage());
-		}
-
 		// start time
 
 		long start = System.currentTimeMillis();
@@ -87,6 +74,31 @@ public class LocalUniResolver implements UniResolver {
 			}
 		}
 
+		// result contains a new did?
+
+		List<String> initialIdentifiers = new ArrayList<String> ();
+
+		while (resolutionResult != null && resolutionResult.getMethodMetadata().containsKey("did")) {
+
+			initialIdentifiers.add(identifier);
+			identifier = (String) resolutionResult.getMethodMetadata().get("did");
+
+			for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
+
+				if (log.isDebugEnabled()) log.debug("Attemping to resolve " + identifier + " with driver " + driver.getValue().getClass());
+				resolutionResult = driver.getValue().resolve(identifier);
+
+				if (resolutionResult != null) {
+
+					usedDriverId = driver.getKey();
+					usedDriver = driver.getValue();
+					break;
+				}
+			}
+		}
+
+		if (initialIdentifiers.isEmpty()) initialIdentifiers = null;
+
 		// stop time
 
 		long stop = System.currentTimeMillis();
@@ -99,10 +111,19 @@ public class LocalUniResolver implements UniResolver {
 			return null;
 		}
 
-		if (resolutionResult.getDidDocument() == null) {
+		// parse DID
 
-			if (log.isDebugEnabled()) log.debug("No DID document.");
-			return null;
+		DID didReference = null;
+
+		try {
+
+			didReference = DID.fromString(identifier);
+			log.debug("identifier " + identifier + " is a valid DID reference: " + didReference.getDid());
+
+			identifier = didReference.getDid();
+		} catch (IllegalArgumentException | ParserException ex) {
+
+			log.debug("Identifier " + identifier + " is not a valid DID reference: " + ex.getMessage());
 		}
 
 		// service selection
@@ -118,16 +139,14 @@ public class LocalUniResolver implements UniResolver {
 			selectedServices = resolutionResult.getDidDocument().selectServices(selectServiceName, selectServiceType);
 		}
 
-		// add DID REFERENCE
-
-		if (didReference != null) resolutionResult.setDidReference(didReference);
-
 		// add RESOLVER METADATA
 
 		Map<String, Object> resolverMetadata = new LinkedHashMap<String, Object> ();
 		resolverMetadata.put("driverId", usedDriverId);
 		resolverMetadata.put("driver", usedDriver.getClass().getSimpleName());
 		resolverMetadata.put("duration", Long.valueOf(stop - start));
+		if (initialIdentifiers != null) resolverMetadata.put("initialIdentifiers", initialIdentifiers);
+		if (didReference != null) resolverMetadata.put("didReference", didReference);
 		if (selectedServices != null) resolverMetadata.put("selectedServices", selectedServices);
 
 		resolutionResult.setResolverMetadata(resolverMetadata);
