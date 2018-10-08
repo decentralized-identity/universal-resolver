@@ -74,13 +74,18 @@ public class LocalUniResolver implements UniResolver {
 			}
 		}
 
+		if (log.isDebugEnabled()) log.debug("Resolved " + identifier + " with driver " + usedDriverId);
+
 		// result contains a new did?
 
 		List<String> initialIdentifiers = new ArrayList<String> ();
+		List<ResolutionResult> initialResolutionResults = new ArrayList<ResolutionResult> ();
 
 		while (resolutionResult != null && resolutionResult.getMethodMetadata().containsKey("did")) {
 
 			initialIdentifiers.add(identifier);
+			initialResolutionResults.add(resolutionResult);
+
 			identifier = (String) resolutionResult.getMethodMetadata().get("did");
 
 			for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
@@ -95,15 +100,25 @@ public class LocalUniResolver implements UniResolver {
 					break;
 				}
 			}
+
+			if (log.isDebugEnabled()) log.debug("Resolved " + identifier + " with driver " + usedDriverId);
 		}
 
 		if (initialIdentifiers.isEmpty()) initialIdentifiers = null;
+		if (initialResolutionResults.isEmpty()) initialResolutionResults = null;
 
 		// stop time
 
 		long stop = System.currentTimeMillis();
 
 		// no driver was able to fulfill a request?
+
+		if (resolutionResult == null && initialResolutionResults != null && initialIdentifiers != null) {
+
+			identifier = initialIdentifiers.get(0);
+			resolutionResult = initialResolutionResults.get(0);
+			if (log.isDebugEnabled()) log.debug("Falling back to initial identifier and resolution result: " + identifier);
+		}
 
 		if (resolutionResult == null) {
 

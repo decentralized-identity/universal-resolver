@@ -43,6 +43,12 @@ services:
     image: universalresolver/driver-did-dom
     ports:
       - "8086:8080"
+  driver-dns:
+    image: universalresolver/driver-dns
+    environment:
+      uniresolver_driver_dns_dnsServers: ${uniresolver_driver_dns_dnsServers}
+    ports:
+      - "8087:8080"
   uni-resolver-web:
     build:
       context: .

@@ -16,6 +16,7 @@
 				<entry key="did:stack"><ref bean="DidStackDriver" /></entry>
 				<entry key="did:erc725"><ref bean="DidErc725Driver" /></entry>
 				<entry key="did:dom"><ref bean="DidDomDriver" /></entry>
+				<entry key="dns-did"><ref bean="DnsDriver" /></entry>
 			</util:map>
 		</property>
 	</bean>
@@ -28,27 +29,6 @@
 		<property name="uniResolver" ref="UniResolver" />
 	</bean>
 
-	<!-- DRIVERS (VIA JAVA API) -->
-
-<!--
-
-	<bean id="DidBtcrDriver" class="uniresolver.driver.did.btcr.DidBtcrDriver">
-		<property name="bitcoinConnection">
-			<bean class="uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection" />
-		</property>
-	</bean>
-
-	<bean id="DidSovDriver" class="uniresolver.driver.did.sov.DidSovDriver">
-		<property name="libIndyPath" value="./sovrin/lib/" />
-		<property name="poolConfigName" value="live" />
-		<property name="poolGenesisTxn" value="./sovrin/live.txn" />
-		<property name="walletName" value="default" />
-	</bean>
-
-	<bean id="DidV1Driver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="https://testnet.veres.one/dids/" />
-	</bean> -->
-
 	<!-- DRIVERS (VIA DOCKER REST API) -->
 
 	<bean id="DidBtcrDriver" class="uniresolver.driver.http.HttpDriver">
@@ -60,7 +40,7 @@
 	<bean id="DidSovDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="http://driver-did-sov:8082/1.0/identifiers/$1" />
 		<property name="propertiesUri" value="http://driver-did-sov:8082/1.0/properties" />
-		<property name="pattern" value="^(did:sov:.+)$" />
+		<property name="pattern" value="^(did:sov:(?:(?:\w[-\w]*(?::\w[-\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$" />
 	</bean>
 
 	<bean id="DidUportDriver" class="uniresolver.driver.http.HttpDriver">
@@ -94,6 +74,12 @@
 		<property name="resolveUri" value="http://driver-did-dom:8086/1.0/identifiers/$1" />
 		<property name="propertiesUri" value="http://driver-did-dom:8086/1.0/properties" />
 		<property name="pattern" value="^(did:dom:.+)$" />
+	</bean>
+
+	<bean id="DnsDriver" class="uniresolver.driver.http.HttpDriver">
+		<property name="resolveUri" value="http://driver-dns:8080/1.0/identifiers/$1" />
+		<property name="propertiesUri" value="http://driver-dns:8080/1.0/properties" />
+		<property name="pattern" value="^((?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*(?:[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))$" />
 	</bean>
 
 </beans>

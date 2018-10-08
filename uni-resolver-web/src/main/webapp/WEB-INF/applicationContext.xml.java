@@ -34,59 +34,12 @@
 	<bean id="DidSovDriver" class="uniresolver.driver.did.sov.DidSovDriver">
 		<property name="libIndyPath" value="./sovrin/lib/" />
 		<property name="poolConfigs" value="_;./sovrin/live.txn;stn;./sovrin/stn.txn;danube;./sovrin/11347-05.txn" />
-		<property name="poolVersions" value="_;1;stn;1;danube;2" />
+		<property name="poolVersions" value="_;1;stn;2;danube;2" />
 		<property name="walletName" value="default" />
 	</bean>
 
 	<bean id="DidV1Driver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="https://testnet.veres.one/dids/" />
 	</bean>
-
-	<!-- DRIVERS (VIA DOCKER REST API) -->
-
-<!-- 	<bean id="DidBtcrDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://driver-did-btcr:8081/1.0/identifiers/$1" />
-		<property name="propertiesUri" value="http://driver-did-btcr:8081/1.0/properties" />
-		<property name="pattern" value="^(did:btcr:.+)$" />
-	</bean>
-
-	<bean id="DidSovDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://driver-did-sov:8082/1.0/identifiers/$1" />
-		<property name="propertiesUri" value="http://driver-did-sov:8082/1.0/properties" />
-		<property name="pattern" value="^(did:sov:.+)$" />
-	</bean>
-
-	<bean id="DidUportDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://driver-did-uport:8081/1.0/identifiers/$1" />
-		<property name="pattern" value="^(did:uport:.+)$|^(did:muport:.+)$|^(did:eth:.+)$|^(did:ethr:.+)$" />
-	</bean>
-
-	<bean id="DidV1Driver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="https://genesis.testnet.veres.one/dids/$1" />
-		<property name="pattern" value="^(did:v1:.+)$" />
-	</bean>
-
-	<bean id="DidIpidDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="https://ipfs.io/ipns/$1" />
-		<property name="pattern" value="^did:ipid:(.+)$" />
-	</bean>
-
-	<bean id="DidStackDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://driver-did-stack:8084/1.0/identifiers/$1" />
-		<property name="propertiesUri" value="http://driver-did-stack:8084/1.0/properties" />
-		<property name="pattern" value="^(did:stack:.+)$" />
-	</bean>
-
-	<bean id="DidErc725Driver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://driver-did-erc725:8085/1.0/identifiers/$1" />
-		<property name="propertiesUri" value="http://driver-did-erc725:8085/1.0/properties" />
-		<property name="pattern" value="^(did:erc725:.+)$" />
-	</bean>
-
-	<bean id="DidDomDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://driver-did-dom:8086/1.0/identifiers/$1" />
-		<property name="propertiesUri" value="http://driver-did-dom:8086/1.0/properties" />
-		<property name="pattern" value="^(did:dom:.+)$" />
-	</bean> -->
 
 </beans>
