@@ -11,7 +11,7 @@
 				"uniresolver_driver_did_btcr_rpcUrlTestnet": "http://user:pass@localhost:18332/"
 			}
 		}, {
-			"pattern": "^(did:sov:.+)$",
+			"pattern": "^(did:sov:(?:(\\w[-\\w]*(?::\\w[-\\w]*)*):)?([1-9A-HJ-NP-Za-km-z]{21,22}))$",
 			"image": "universalresolver/driver-did-sov",
 			"tag": "latest",
 			"testIdentifiers": [ "did:sov:WRfXPg8dantKVubE3HX8pw" ],
@@ -60,6 +60,14 @@
 			"image": "universalresolver/driver-did-dom",
 			"tag": "latest",
 			"testIdentifiers": [ "did:dom:Jjbfgyu7My4RrbRNrXTPBz4PnhnMEE" ]
+		}, {
+			"pattern": "^((?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*(?:[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9]))$",
+			"image": "universalresolver/driver-dns",
+			"tag": "latest",
+			"testIdentifiers": [ "ssi.labs.nic.at" ],
+			"env": {
+				"uniresolver_driver_dns_dnsServers": ""
+			}
 		}
 	]
 }
