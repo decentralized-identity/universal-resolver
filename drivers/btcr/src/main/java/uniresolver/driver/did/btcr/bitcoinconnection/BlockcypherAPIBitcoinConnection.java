@@ -76,9 +76,9 @@ public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconver
 		if (inputScriptPubKey == null) return null;
 		if (inputScriptPubKey.length() > 66) inputScriptPubKey = inputScriptPubKey.substring(inputScriptPubKey.length() - 66);
 
-		// find DID DOCUMENT FRAGMENT URI
+		// find DID DOCUMENT CONTINUATION URI
 
-		URI fragmentUri = null;
+		URI continuationUri = null;
 
 		for (Iterator<JsonElement> i = ((JsonArray) txData.get("outputs")).iterator(); i.hasNext(); ) {
 
@@ -105,7 +105,7 @@ public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconver
 
 				if (data == null || data.length < 1) throw new IOException("Cannot find data in script " + script.getAsString());
 
-				fragmentUri = URI.create(new String(data, StandardCharsets.UTF_8));
+				continuationUri = URI.create(new String(data, StandardCharsets.UTF_8));
 				break;
 			}
 		}
@@ -126,6 +126,6 @@ public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconver
 
 		// done
 
-		return new BtcrData(spentInTxid, inputScriptPubKey, fragmentUri);
+		return new BtcrData(spentInTxid, inputScriptPubKey, continuationUri);
 	}
 }

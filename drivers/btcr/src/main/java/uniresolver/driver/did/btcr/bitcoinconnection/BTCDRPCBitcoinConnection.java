@@ -29,7 +29,7 @@ public class BTCDRPCBitcoinConnection extends info.weboftrust.txrefconversion.bi
 	private static final BTCDRPCBitcoinConnection instance = new BTCDRPCBitcoinConnection();
 
 	private static final Pattern patternAsmInputScriptPubKey = Pattern.compile("^[^\\s]+ ([0-9a-fA-F]+)$");
-	private static final Pattern patternAsmFragmentUri = Pattern.compile("^OP_RETURN ([0-9a-fA-F]+)$");
+	private static final Pattern patternAsmContinuationUri = Pattern.compile("^OP_RETURN ([0-9a-fA-F]+)$");
 
 	public BTCDRPCBitcoinConnection(URL rpcUrlMainnet, URL rpcUrlTestnet) {
 
@@ -100,9 +100,9 @@ public class BTCDRPCBitcoinConnection extends info.weboftrust.txrefconversion.bi
 		if (inputScriptPubKey == null) return null;
 		if (inputScriptPubKey.length() > 66) inputScriptPubKey = inputScriptPubKey.substring(inputScriptPubKey.length() - 66);
 
-		// find DID DOCUMENT FRAGMENT URI
+		// find DID DOCUMENT CONTINUATION URI
 
-		URI fragmentUri = null;
+		URI continuationUri = null;
 
 		ArrayList<Object> vOut = (ArrayList<Object>) getrawtransaction_result.get("vout");
 		if (vOut == null || vOut.size() < 1) return null;
@@ -117,17 +117,17 @@ public class BTCDRPCBitcoinConnection extends info.weboftrust.txrefconversion.bi
 			String asm = (String) scriptPubKey.get("asm");
 			if (asm == null) continue;
 
-			Matcher matcher = patternAsmFragmentUri.matcher(asm);
+			Matcher matcher = patternAsmContinuationUri.matcher(asm);
 
 			if (log.isDebugEnabled()) log.debug("OUT: " + asm + " (MATCHES: " + matcher.matches() + ")");
 
 			if (matcher.matches() && matcher.groupCount() == 1) {
 
-				if (log.isDebugEnabled()) log.debug("fragmentUri: " + matcher.group(1));
+				if (log.isDebugEnabled()) log.debug("continuationUri: " + matcher.group(1));
 
 				try {
 
-					fragmentUri = URI.create(new String(Hex.decodeHex(matcher.group(1).toCharArray()), "UTF-8"));
+					continuationUri = URI.create(new String(Hex.decodeHex(matcher.group(1).toCharArray()), "UTF-8"));
 					break;
 				} catch (UnsupportedEncodingException | DecoderException ex) {
 
@@ -231,7 +231,7 @@ public class BTCDRPCBitcoinConnection extends info.weboftrust.txrefconversion.bi
 
 		// done
 
-		return new BtcrData(spentInTxid, inputScriptPubKey, fragmentUri);
+		return new BtcrData(spentInTxid, inputScriptPubKey, continuationUri);
 	}
 
 	/*

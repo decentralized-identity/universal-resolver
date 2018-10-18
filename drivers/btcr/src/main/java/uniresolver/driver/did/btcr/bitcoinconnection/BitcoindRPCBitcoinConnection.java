@@ -25,7 +25,7 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 	private static final BitcoindRPCBitcoinConnection instance = new BitcoindRPCBitcoinConnection();
 
 	private static final Pattern patternAsmInputScriptPubKey = Pattern.compile("^[^\\s]+ ([0-9a-fA-F]+)$");
-	private static final Pattern patternAsmFragmentUri = Pattern.compile("^OP_RETURN ([0-9a-fA-F]+)$");
+	private static final Pattern patternAsmContinuationUri = Pattern.compile("^OP_RETURN ([0-9a-fA-F]+)$");
 
 	public BitcoindRPCBitcoinConnection(URL rpcUrlMainnet, URL rpcUrlTestnet) {
 
@@ -80,9 +80,9 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 		if (inputScriptPubKey == null) return null;
 		if (inputScriptPubKey.length() > 66) inputScriptPubKey = inputScriptPubKey.substring(inputScriptPubKey.length() - 66);
 
-		// find DID DOCUMENT FRAGMENT URI
+		// find DID DOCUMENT CONTINUATION URI
 
-		URI fragmentUri = null;
+		URI continuationUri = null;
 
 		List<Out> vOut = rawTransaction.vOut();
 		if (vOut == null || vOut.size() < 1) return null;
@@ -91,17 +91,17 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 
 			if (out.scriptPubKey() != null && out.scriptPubKey().asm() != null) {
 
-				Matcher matcher = patternAsmFragmentUri.matcher(out.scriptPubKey().asm());
+				Matcher matcher = patternAsmContinuationUri.matcher(out.scriptPubKey().asm());
 
 				if (log.isDebugEnabled()) log.debug("OUT: " + out.scriptPubKey().asm() + " (MATCHES: " + matcher.matches() + ")");
 
 				if (matcher.matches() && matcher.groupCount() == 1) {
 
-					if (log.isDebugEnabled()) log.debug("fragmentUri: " + matcher.group(1));
+					if (log.isDebugEnabled()) log.debug("continuationUri: " + matcher.group(1));
 
 					try {
 
-						fragmentUri = URI.create(new String(Hex.decodeHex(matcher.group(1).toCharArray()), "UTF-8"));
+						continuationUri = URI.create(new String(Hex.decodeHex(matcher.group(1).toCharArray()), "UTF-8"));
 						break;
 					} catch (UnsupportedEncodingException | DecoderException ex) {
 
@@ -113,6 +113,6 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 
 		// done
 
-		return new BtcrData(null, inputScriptPubKey, fragmentUri);
+		return new BtcrData(null, inputScriptPubKey, continuationUri);
 	}
 }

@@ -13,15 +13,15 @@ public interface BitcoinConnection extends info.weboftrust.txrefconversion.bitco
 
 		private String spentInTxid;
 		private String inputScriptPubKey;
-		private URI fragmentUri;
+		private URI continuationUri;
 
-		public BtcrData(String spentInTxid, String inputScriptPubKey, URI fragmentUri) { this.spentInTxid = spentInTxid; this.inputScriptPubKey = inputScriptPubKey; this.fragmentUri = fragmentUri; }
+		public BtcrData(String spentInTxid, String inputScriptPubKey, URI continuationUri) { this.spentInTxid = spentInTxid; this.inputScriptPubKey = inputScriptPubKey; this.continuationUri = continuationUri; }
 
 		public String getSpentInTxid() { return this.spentInTxid; }
 		public String getInputScriptPubKey() { return this.inputScriptPubKey; }
-		public URI getFragmentUri() { return this.fragmentUri; }
+		public URI getContinuationUri() { return this.continuationUri; }
 
 		@Override
-		public String toString() { return "BtcrData [spentInTxid=" + spentInTxid + ", inputScriptPubKey=" + inputScriptPubKey + ", fragmentUri=" + fragmentUri + "]"; }
+		public String toString() { return "BtcrData [spentInTxid=" + spentInTxid + ", inputScriptPubKey=" + inputScriptPubKey + ", continuationUri=" + continuationUri + "]"; }
 	}
 }

@@ -182,28 +182,28 @@ public class DidBtcrDriver implements Driver {
 
 		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ txid + " on chain " + chainAndBlockLocation.getChain() + "): " + btcrData);
 
-		// retrieve DID DOCUMENT FRAGEMENT
+		// retrieve DID DOCUMENT CONTINUATION
 
-		DIDDocument didDocumentFragment = null;
+		DIDDocument didDocumentContinuation = null;
 
-		if (btcrData != null && btcrData.getFragmentUri() != null) {
+		if (btcrData != null && btcrData.getContinuationUri() != null) {
 
-			HttpGet httpGet = new HttpGet(btcrData.getFragmentUri());
+			HttpGet httpGet = new HttpGet(btcrData.getContinuationUri());
 
 			try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-				if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getFragmentUri() + ": " + httpResponse.getStatusLine());
+				if (httpResponse.getStatusLine().getStatusCode() > 200) throw new ResolutionException("Cannot retrieve DID DOCUMENT CONTINUATION for " + txref + " from " + btcrData.getContinuationUri() + ": " + httpResponse.getStatusLine());
 
 				HttpEntity httpEntity = httpResponse.getEntity();
 
-				didDocumentFragment = DIDDocument.fromJson(EntityUtils.toString(httpEntity));
+				didDocumentContinuation = DIDDocument.fromJson(EntityUtils.toString(httpEntity));
 				EntityUtils.consume(httpEntity);
 			} catch (IOException ex) {
 
-				throw new ResolutionException("Cannot retrieve DID DOCUMENT FRAGMENT for " + txref + " from " + btcrData.getFragmentUri() + ": " + ex.getMessage(), ex);
+				throw new ResolutionException("Cannot retrieve DID DOCUMENT CONTINUATION for " + txref + " from " + btcrData.getContinuationUri() + ": " + ex.getMessage(), ex);
 			}
 
-			if (log.isInfoEnabled()) log.info("Retrieved DID DOCUMENT FRAGMENT for " + txref + " (" + btcrData.getFragmentUri() + "): " + didDocumentFragment);
+			if (log.isInfoEnabled()) log.info("Retrieved DID DOCUMENT CONTINUATION for " + txref + " (" + btcrData.getContinuationUri() + "): " + didDocumentContinuation);
 		}
 
 		// DID DOCUMENT id
@@ -239,9 +239,9 @@ public class DidBtcrDriver implements Driver {
 
 		List<Service> services;
 
-		if (didDocumentFragment != null) {
+		if (didDocumentContinuation != null) {
 
-			services = didDocumentFragment.getServices();
+			services = didDocumentContinuation.getServices();
 		} else {
 
 			services = Collections.emptyList();
@@ -253,7 +253,7 @@ public class DidBtcrDriver implements Driver {
 
 		// revoked?
 
-		if ((! spentInTxids.isEmpty()) && didDocumentFragment == null) {
+		if ((! spentInTxids.isEmpty()) && didDocumentContinuation == null) {
 
 			didDocument = null;
 		}
@@ -262,8 +262,8 @@ public class DidBtcrDriver implements Driver {
 
 		Map<String, Object> methodMetadata = new LinkedHashMap<String, Object> ();
 		if (btcrData != null) methodMetadata.put("inputScriptPubKey", btcrData.getInputScriptPubKey());
-		if (btcrData != null) methodMetadata.put("fragmentUri", btcrData.getFragmentUri());
-		if (didDocumentFragment != null) methodMetadata.put("fragment", didDocumentFragment);
+		if (btcrData != null) methodMetadata.put("continuationUri", btcrData.getContinuationUri());
+		if (didDocumentContinuation != null) methodMetadata.put("continuation", didDocumentContinuation);
 		if (chainAndBlockLocation != null) methodMetadata.put("chain", chainAndBlockLocation.getChain());
 		if (initialChainAndBlockLocation != null) methodMetadata.put("initialBlockHeight", initialChainAndBlockLocation.getBlockHeight());
 		if (initialChainAndBlockLocation != null) methodMetadata.put("initialBlockIndex", initialChainAndBlockLocation.getBlockIndex());
