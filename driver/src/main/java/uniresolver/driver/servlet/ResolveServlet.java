@@ -1,66 +1,28 @@
 package uniresolver.driver.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uniresolver.driver.Driver;
 import uniresolver.result.ResolutionResult;
 
-public class ResolveServlet extends HttpServlet implements Servlet {
+public class ResolveServlet extends AbstractServlet implements Servlet {
 
 	private static final long serialVersionUID = -531456245094927384L;
 
 	private static Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
-	private Driver driver;
-
 	public ResolveServlet() {
 
 		super();
-	}
-
-	public ResolveServlet(Driver driver) {
-
-		super();
-		this.driver = driver;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-
-		super.init(config);
-
-		if (this.driver == null) {
-
-			String driverClassName = config.getInitParameter("Driver");
-			Class<? extends Driver> driverClass;
-
-			try {
-
-				driverClass = driverClassName == null ? null : (Class<? extends Driver>) Class.forName(driverClassName);
-				this.driver = driverClass == null ? null : driverClass.newInstance();
-			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-
-				throw new ServletException(ex.getMessage(), ex);
-			}
-
-			if (this.driver == null) throw new ServletException("Unable to load driver: " + driverClassName);
-
-			if (log.isInfoEnabled()) log.info("Loaded driver: " + driverClass);
-		}
 	}
 
 	@Override
@@ -101,7 +63,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		try {
 
-			resolutionResult = this.getDriver().resolve(identifier);
+			resolutionResult = InitServlet.getDriver().resolve(identifier);
 			resolutionResultString = resolutionResult == null ? null : resolutionResult.toJson();
 		} catch (Exception ex) {
 
@@ -123,40 +85,5 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 		// write resolution result
 
 		sendResponse(response, HttpServletResponse.SC_OK, ResolutionResult.MIME_TYPE, resolutionResultString);
-	}
-
-	/*
-	 * Helper methods
-	 */
-
-	private static void sendResponse(HttpServletResponse response, int status, String contentType, String body) throws IOException {
-
-		response.setStatus(status);
-
-		if (contentType != null) response.setContentType(contentType);
-
-		response.setHeader("Access-Control-Allow-Origin", "*");
-
-		if (body != null) {
-
-			PrintWriter writer = response.getWriter();
-			writer.write(body);
-			writer.flush();
-			writer.close();
-		}
-	}
-
-	/*
-	 * Getters and setters
-	 */
-
-	public Driver getDriver() {
-
-		return this.driver;
-	}
-
-	public void setDriver(Driver driver) {
-
-		this.driver = driver;
 	}
 }
