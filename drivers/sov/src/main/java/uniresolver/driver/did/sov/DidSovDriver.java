@@ -405,6 +405,8 @@ public class DidSovDriver implements Driver {
 
 			throw new ResolutionException("Cannot create submitter DID: " + ex.getMessage(), ex);
 		}
+
+		if (log.isInfoEnabled()) log.info("Created submitter DID: " + this.submitterDid);
 	}
 
 	/*
