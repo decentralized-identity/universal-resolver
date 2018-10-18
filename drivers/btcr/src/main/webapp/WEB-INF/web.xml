@@ -9,24 +9,25 @@
 	<!-- SERVLET -->
 
 	<servlet>
-		<display-name>ResolveServlet</display-name>
-		<servlet-name>ResolveServlet</servlet-name>
-		<servlet-class>uniresolver.driver.servlet.ResolveServlet</servlet-class>
+		<display-name>InitServlet</display-name>
+		<servlet-name>InitServlet</servlet-name>
+		<servlet-class>uniresolver.driver.servlet.InitServlet</servlet-class>
 		<init-param>
 			<param-name>Driver</param-name>
 			<param-value>uniresolver.driver.did.btcr.DidBtcrDriver</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+
+	<servlet>
+		<display-name>ResolveServlet</display-name>
+		<servlet-name>ResolveServlet</servlet-name>
+		<servlet-class>uniresolver.driver.servlet.ResolveServlet</servlet-class>
+	</servlet>
 	<servlet>
 		<display-name>PropertiesServlet</display-name>
 		<servlet-name>PropertiesServlet</servlet-name>
 		<servlet-class>uniresolver.driver.servlet.PropertiesServlet</servlet-class>
-		<init-param>
-			<param-name>Driver</param-name>
-			<param-value>uniresolver.driver.did.btcr.DidBtcrDriver</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ResolveServlet</servlet-name>
