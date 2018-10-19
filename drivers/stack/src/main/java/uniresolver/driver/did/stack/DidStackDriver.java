@@ -30,7 +30,7 @@ import did.PublicKey;
 import did.Service;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class DidStackDriver implements Driver {
 
@@ -127,7 +127,7 @@ public class DidStackDriver implements Driver {
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier) throws ResolutionException {
+	public ResolveResult resolve(String identifier) throws ResolutionException {
 		// match 
 		Matcher matcher = DID_STACK_PATTERN.matcher(identifier);
 		if(!matcher.matches()) {
@@ -219,7 +219,7 @@ public class DidStackDriver implements Driver {
 		DIDDocument didDocument = DIDDocument.build(id, publicKeys, null, null, services);
 
 		// done
-		return ResolutionResult.build(didDocument);
+		return ResolveResult.build(didDocument);
 	}
 
 	public Map<String, Object> properties() {

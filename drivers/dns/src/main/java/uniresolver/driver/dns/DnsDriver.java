@@ -19,7 +19,7 @@ import org.xbill.DNS.URIRecord;
 
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class DnsDriver implements Driver {
 
@@ -78,7 +78,7 @@ public class DnsDriver implements Driver {
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier) throws ResolutionException {
+	public ResolveResult resolve(String identifier) throws ResolutionException {
 
 		// open pool
 
@@ -127,13 +127,13 @@ public class DnsDriver implements Driver {
 		if (did != null) methodMetadata.put("did", did);
 		if (priority != null) methodMetadata.put("priority", priority);
 
-		// create RESOLUTION RESULT
+		// create RESOLVE RESULT
 
-		ResolutionResult resolutionResult = ResolutionResult.build(did, null, null, methodMetadata);
+		ResolveResult resolveResult = ResolveResult.build(did, null, null, methodMetadata);
 
 		// done
 
-		return resolutionResult;
+		return resolveResult;
 	}
 
 	@Override

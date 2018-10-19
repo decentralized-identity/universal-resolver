@@ -35,7 +35,7 @@ import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection.BtcrData;
 import uniresolver.driver.did.btcr.bitcoinconnection.BitcoindRPCBitcoinConnection;
 import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinjSPVBitcoinConnection;
 import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class DidBtcrDriver implements Driver {
 
@@ -125,7 +125,7 @@ public class DidBtcrDriver implements Driver {
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier) throws ResolutionException {
+	public ResolveResult resolve(String identifier) throws ResolutionException {
 
 		// parse identifier
 
@@ -273,13 +273,13 @@ public class DidBtcrDriver implements Driver {
 		if (txid != null) methodMetadata.put("txid", txid);
 		if (spentInTxids != null) methodMetadata.put("spentInTxids", spentInTxids);
 
-		// create RESOLUTION RESULT
+		// create RESOLVE RESULT
 
-		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, methodMetadata);
+		ResolveResult resolveResult = ResolveResult.build(didDocument, null, methodMetadata);
 
 		// done
 
-		return resolutionResult;
+		return resolveResult;
 	}
 
 	@Override

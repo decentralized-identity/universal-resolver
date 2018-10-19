@@ -39,7 +39,7 @@ import did.PublicKey;
 import did.Service;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class DidSovDriver implements Driver {
 
@@ -121,7 +121,7 @@ public class DidSovDriver implements Driver {
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier) throws ResolutionException {
+	public ResolveResult resolve(String identifier) throws ResolutionException {
 
 		// open pool
 
@@ -256,13 +256,13 @@ public class DidSovDriver implements Driver {
 		methodMetadata.put("nymResponse", gson.fromJson(jsonGetNymResponse, Map.class));
 		methodMetadata.put("attrResponse", gson.fromJson(jsonGetAttrResponse, Map.class));
 
-		// create RESOLUTION RESULT
+		// create RESOLVE RESULT
 
-		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, methodMetadata);
+		ResolveResult resolveResult = ResolveResult.build(didDocument, null, methodMetadata);
 
 		// done
 
-		return resolutionResult;
+		return resolveResult;
 	}
 
 	@Override

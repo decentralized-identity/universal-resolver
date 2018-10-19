@@ -25,7 +25,7 @@ import did.PublicKey;
 import did.Service;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class DidDomDriver implements Driver {
 
@@ -47,7 +47,7 @@ public class DidDomDriver implements Driver {
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier) throws ResolutionException {
+	public ResolveResult resolve(String identifier) throws ResolutionException {
 
 		// match 
 		Matcher matcher = DID_DOM_PATTERN.matcher(identifier);
@@ -194,7 +194,7 @@ public class DidDomDriver implements Driver {
 		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, null, services);
 
 		// done
-		return ResolutionResult.build(didDocument);
+		return ResolveResult.build(didDocument);
 	}
 
 	public Map<String, Object> properties() {

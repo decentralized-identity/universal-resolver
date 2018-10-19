@@ -25,7 +25,7 @@ import uniresolver.driver.did.erc725.ethereumconnection.EthereumConnection;
 import uniresolver.driver.did.erc725.ethereumconnection.EthereumConnection.ERC725Keys;
 import uniresolver.driver.did.erc725.ethereumconnection.HybridEthereumConnection;
 import uniresolver.driver.did.erc725.ethereumconnection.JsonRPCEthereumConnection;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class DidErc725Driver implements Driver {
 
@@ -136,7 +136,7 @@ public class DidErc725Driver implements Driver {
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier) throws ResolutionException {
+	public ResolveResult resolve(String identifier) throws ResolutionException {
 
 		// parse identifier
 
@@ -233,13 +233,13 @@ public class DidErc725Driver implements Driver {
 		Map<String, Object> methodMetadata = new LinkedHashMap<String, Object> ();
 		if (keys != null) methodMetadata.put("keys", keys.toJsonMap());
 
-		// create RESOLUTION RESULT
+		// create RESOLVE RESULT
 
-		ResolutionResult resolutionResult = ResolutionResult.build(didDocument, null, methodMetadata);
+		ResolveResult resolveResult = ResolveResult.build(didDocument, null, methodMetadata);
 
 		// done
 
-		return resolutionResult;
+		return resolveResult;
 	}
 
 	@Override
