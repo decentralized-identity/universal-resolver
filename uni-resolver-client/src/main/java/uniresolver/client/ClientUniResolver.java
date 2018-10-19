@@ -48,6 +48,8 @@ public class ClientUniResolver implements UniResolver {
 	@Override
 	public ResolutionResult resolve(String identifier, String selectServiceType) throws ResolutionException {
 
+		if (identifier == null) throw new NullPointerException();
+
 		// encode identifier
 
 		String encodedIdentifier;
