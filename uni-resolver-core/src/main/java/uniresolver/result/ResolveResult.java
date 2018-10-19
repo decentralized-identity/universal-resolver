@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import did.DIDDocument;
 
 @JsonPropertyOrder({ "redirect", "didDocument", "resolverMetadata", "methodMetadata" })
-public class ResolutionResult {
+public class ResolveResult {
 
 	public static final String MIME_TYPE = "application/json";
 
@@ -36,11 +36,11 @@ public class ResolutionResult {
 	@JsonProperty
 	private Map<String, Object> methodMetadata;
 
-	private ResolutionResult() {
+	private ResolveResult() {
 
 	}
 
-	private ResolutionResult(String redirect, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
+	private ResolveResult(String redirect, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
 		this.redirect = redirect;
 		this.didDocument = didDocument;
@@ -52,38 +52,38 @@ public class ResolutionResult {
 	 * Factory methods
 	 */
 
-	public static ResolutionResult build(String redirect, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
+	public static ResolveResult build(String redirect, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
-		return new ResolutionResult(redirect, didDocument, resolverMetadata, methodMetadata);
+		return new ResolveResult(redirect, didDocument, resolverMetadata, methodMetadata);
 	}
 
-	public static ResolutionResult build(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
+	public static ResolveResult build(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
-		return new ResolutionResult(null, didDocument, resolverMetadata, methodMetadata);
+		return new ResolveResult(null, didDocument, resolverMetadata, methodMetadata);
 	}
 
-	public static ResolutionResult build(DIDDocument didDocument) {
+	public static ResolveResult build(DIDDocument didDocument) {
 
-		return new ResolutionResult(null, didDocument, new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolveResult(null, didDocument, new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
-	public static ResolutionResult build() {
+	public static ResolveResult build() {
 
-		return new ResolutionResult(null, DIDDocument.build(new HashMap<String, Object> ()), new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolveResult(null, DIDDocument.build(new HashMap<String, Object> ()), new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
 	/*
 	 * Serialization
 	 */
 
-	public static ResolutionResult fromJson(String json) throws JsonParseException, JsonMappingException, IOException {
+	public static ResolveResult fromJson(String json) throws JsonParseException, JsonMappingException, IOException {
 
-		return objectMapper.readValue(json, ResolutionResult.class);
+		return objectMapper.readValue(json, ResolveResult.class);
 	}
 
-	public static ResolutionResult fromJson(Reader reader) throws JsonParseException, JsonMappingException, IOException {
+	public static ResolveResult fromJson(Reader reader) throws JsonParseException, JsonMappingException, IOException {
 
-		return objectMapper.readValue(reader, ResolutionResult.class);
+		return objectMapper.readValue(reader, ResolveResult.class);
 	}
 
 	public String toJson() throws JsonProcessingException {

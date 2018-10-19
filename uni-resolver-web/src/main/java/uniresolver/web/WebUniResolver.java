@@ -13,7 +13,7 @@ import org.springframework.web.HttpRequestHandler;
 
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public abstract class WebUniResolver extends HttpServlet implements HttpRequestHandler, UniResolver {
 
@@ -36,13 +36,13 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier) throws ResolutionException {
+	public ResolveResult resolve(String identifier) throws ResolutionException {
 
 		return this.getUniResolver() == null ? null : this.getUniResolver().resolve(identifier);
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier, String selectServiceType) throws ResolutionException {
+	public ResolveResult resolve(String identifier, String selectServiceType) throws ResolutionException {
 
 		return this.getUniResolver() == null ? null : this.getUniResolver().resolve(identifier, selectServiceType);
 	}

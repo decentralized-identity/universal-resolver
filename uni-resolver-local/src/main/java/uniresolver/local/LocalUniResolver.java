@@ -16,7 +16,7 @@ import did.parser.ParserException;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.driver.Driver;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class LocalUniResolver implements UniResolver {
 
@@ -41,13 +41,13 @@ public class LocalUniResolver implements UniResolver {
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier) throws ResolutionException {
+	public ResolveResult resolve(String identifier) throws ResolutionException {
 
 		return this.resolve(identifier, null);
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier, String selectServiceType) throws ResolutionException {
+	public ResolveResult resolve(String identifier, String selectServiceType) throws ResolutionException {
 
 		if (identifier == null) throw new NullPointerException();
 
@@ -59,16 +59,16 @@ public class LocalUniResolver implements UniResolver {
 
 		// try all drivers
 
-		ResolutionResult resolutionResult = null;
+		ResolveResult ResolveResult = null;
 		String usedDriverId = null;
 		Driver usedDriver = null;
 
 		for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
 
 			if (log.isDebugEnabled()) log.debug("Attemping to resolve " + identifier + " with driver " + driver.getValue().getClass());
-			resolutionResult = driver.getValue().resolve(identifier);
+			ResolveResult = driver.getValue().resolve(identifier);
 
-			if (resolutionResult != null) {
+			if (ResolveResult != null) {
 
 				usedDriverId = driver.getKey();
 				usedDriver = driver.getValue();
@@ -81,21 +81,21 @@ public class LocalUniResolver implements UniResolver {
 		// result contains a new did?
 
 		List<String> initialIdentifiers = new ArrayList<String> ();
-		List<ResolutionResult> initialResolutionResults = new ArrayList<ResolutionResult> ();
+		List<ResolveResult> initialResolveResults = new ArrayList<ResolveResult> ();
 
-		while (resolutionResult != null && resolutionResult.getMethodMetadata().containsKey("did")) {
+		while (ResolveResult != null && ResolveResult.getMethodMetadata().containsKey("did")) {
 
 			initialIdentifiers.add(identifier);
-			initialResolutionResults.add(resolutionResult);
+			initialResolveResults.add(ResolveResult);
 
-			identifier = (String) resolutionResult.getMethodMetadata().get("did");
+			identifier = (String) ResolveResult.getMethodMetadata().get("did");
 
 			for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
 
 				if (log.isDebugEnabled()) log.debug("Attemping to resolve " + identifier + " with driver " + driver.getValue().getClass());
-				resolutionResult = driver.getValue().resolve(identifier);
+				ResolveResult = driver.getValue().resolve(identifier);
 
-				if (resolutionResult != null) {
+				if (ResolveResult != null) {
 
 					usedDriverId = driver.getKey();
 					usedDriver = driver.getValue();
@@ -107,7 +107,7 @@ public class LocalUniResolver implements UniResolver {
 		}
 
 		if (initialIdentifiers.isEmpty()) initialIdentifiers = null;
-		if (initialResolutionResults.isEmpty()) initialResolutionResults = null;
+		if (initialResolveResults.isEmpty()) initialResolveResults = null;
 
 		// stop time
 
@@ -115,16 +115,16 @@ public class LocalUniResolver implements UniResolver {
 
 		// no driver was able to fulfill a request?
 
-		if (resolutionResult == null && initialResolutionResults != null && initialIdentifiers != null) {
+		if (ResolveResult == null && initialResolveResults != null && initialIdentifiers != null) {
 
 			identifier = initialIdentifiers.get(0);
-			resolutionResult = initialResolutionResults.get(0);
-			if (log.isDebugEnabled()) log.debug("Falling back to initial identifier and resolution result: " + identifier);
+			ResolveResult = initialResolveResults.get(0);
+			if (log.isDebugEnabled()) log.debug("Falling back to initial identifier and resolve result: " + identifier);
 		}
 
-		if (resolutionResult == null) {
+		if (ResolveResult == null) {
 
-			if (log.isDebugEnabled()) log.debug("No resolution result.");
+			if (log.isDebugEnabled()) log.debug("No resolve result.");
 			return null;
 		}
 
@@ -153,7 +153,7 @@ public class LocalUniResolver implements UniResolver {
 			selectedServices = null;
 		} else {
 
-			selectedServices = resolutionResult.getDidDocument().selectServices(selectServiceName, selectServiceType);
+			selectedServices = ResolveResult.getDidDocument().selectServices(selectServiceName, selectServiceType);
 		}
 
 		// add RESOLVER METADATA
@@ -166,11 +166,11 @@ public class LocalUniResolver implements UniResolver {
 		if (didReference != null) resolverMetadata.put("didReference", didReference);
 		if (selectedServices != null) resolverMetadata.put("selectedServices", selectedServices);
 
-		resolutionResult.setResolverMetadata(resolverMetadata);
+		ResolveResult.setResolverMetadata(resolverMetadata);
 
 		// done
 
-		return resolutionResult;
+		return ResolveResult;
 	}
 
 	@Override

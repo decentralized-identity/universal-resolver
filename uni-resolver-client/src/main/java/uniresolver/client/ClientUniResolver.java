@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class ClientUniResolver implements UniResolver {
 
@@ -40,13 +40,13 @@ public class ClientUniResolver implements UniResolver {
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier) throws ResolutionException {
+	public ResolveResult resolve(String identifier) throws ResolutionException {
 
 		return this.resolve(identifier, null);
 	}
 
 	@Override
-	public ResolutionResult resolve(String identifier, String selectServiceType) throws ResolutionException {
+	public ResolveResult resolve(String identifier, String selectServiceType) throws ResolutionException {
 
 		if (identifier == null) throw new NullPointerException();
 
@@ -69,11 +69,11 @@ public class ClientUniResolver implements UniResolver {
 		uriString += encodedIdentifier;
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", ResolutionResult.MIME_TYPE);
+		httpGet.addHeader("Accept", ResolveResult.MIME_TYPE);
 
 		// execute HTTP request
 
-		ResolutionResult resolutionResult;
+		ResolveResult resolveResult;
 
 		if (log.isDebugEnabled()) log.debug("Request for identifier " + identifier + " to: " + uriString);
 
@@ -94,21 +94,21 @@ public class ClientUniResolver implements UniResolver {
 
 			if (httpResponse.getStatusLine().getStatusCode() > 200) {
 
-				if (log.isWarnEnabled()) log.warn("Cannot retrieve RESOLUTION RESULT for " + identifier + " from " + uriString + ": " + httpBody);
+				if (log.isWarnEnabled()) log.warn("Cannot retrieve RESOLVE RESULT for " + identifier + " from " + uriString + ": " + httpBody);
 				throw new ResolutionException(httpBody);
 			}
 
-			resolutionResult = ResolutionResult.fromJson(httpBody);
+			resolveResult = ResolveResult.fromJson(httpBody);
 		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve RESOLUTION RESULT for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot retrieve RESOLVE RESULT for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved RESOLUTION RESULT for " + identifier + " (" + uriString + "): " + resolutionResult);
+		if (log.isDebugEnabled()) log.debug("Retrieved RESOLVE RESULT for " + identifier + " (" + uriString + "): " + resolveResult);
 
 		// done
 
-		return resolutionResult;
+		return resolveResult;
 	}
 
 	@Override

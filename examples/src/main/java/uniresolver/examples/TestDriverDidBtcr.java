@@ -1,7 +1,7 @@
 package uniresolver.examples;
 import uniresolver.driver.did.btcr.DidBtcrDriver;
 import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class TestDriverDidBtcr {
 
@@ -10,7 +10,7 @@ public class TestDriverDidBtcr {
 		DidBtcrDriver driver = new DidBtcrDriver();
 		driver.setBitcoinConnection(BlockcypherAPIBitcoinConnection.get());
 
-		ResolutionResult resolutionResult = driver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
-		System.out.println(resolutionResult.toJson());
+		ResolveResult ResolveResult = driver.resolve("did:btcr:xkrn-xzcr-qqlv-j6sl");
+		System.out.println(ResolveResult.toJson());
 	}
 }

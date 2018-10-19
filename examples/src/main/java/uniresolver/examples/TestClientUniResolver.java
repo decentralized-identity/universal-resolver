@@ -1,7 +1,7 @@
 package uniresolver.examples;
 import did.DIDDocument;
 import uniresolver.client.ClientUniResolver;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class TestClientUniResolver {
 

@@ -1,6 +1,6 @@
 package uniresolver.examples;
 import uniresolver.driver.did.sov.DidSovDriver;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class TestDriverDidSov {
 
@@ -10,7 +10,7 @@ public class TestDriverDidSov {
 		driver.setLibIndyPath("./sovrin/lib/");
 		driver.setPoolConfigs(";./sovrin/live.txn");
 
-		ResolutionResult resolutionResult = driver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
-		System.out.println(resolutionResult.toJson());
+		ResolveResult ResolveResult = driver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
+		System.out.println(ResolveResult.toJson());
 	}
 }

@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uniresolver.ResolutionException;
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 import uniresolver.web.WebUniResolver;
 
 public class ResolveServlet extends WebUniResolver {
@@ -46,42 +46,42 @@ public class ResolveServlet extends WebUniResolver {
 			throw new IOException(ex.getMessage(), ex);
 		}
 
-		if (log.isInfoEnabled()) log.info("Incoming resolution request for identifier: " + identifier);
+		if (log.isInfoEnabled()) log.info("Incoming resolve request for identifier: " + identifier);
 
 		if (identifier == null) {
 
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "No identifier found in resolution request.");
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "No identifier found in resolve request.");
 			return;
 		}
 
 		// execute the request
 
-		ResolutionResult resolutionResult;
-		String resolutionResultString;
+		ResolveResult resolveResult;
+		String resolveResultString;
 
 		try {
 
-			resolutionResult = this.resolve(identifier);
-			resolutionResultString = resolutionResult == null ? null : resolutionResult.toJson();
+			resolveResult = this.resolve(identifier);
+			resolveResultString = resolveResult == null ? null : resolveResult.toJson();
 		} catch (ResolutionException ex) {
 
-			if (log.isWarnEnabled()) log.warn("Resolution problem for " + identifier + ": " + ex.getMessage(), ex);
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolution problem for " + identifier + ": " + ex.getMessage());
+			if (log.isWarnEnabled()) log.warn("Resolve problem for " + identifier + ": " + ex.getMessage(), ex);
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolve problem for " + identifier + ": " + ex.getMessage());
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("Resolution result for " + identifier + ": " + resolutionResultString);
+		if (log.isInfoEnabled()) log.info("Resolve result for " + identifier + ": " + resolveResultString);
 
-		// no result?
+		// no resolve result?
 
-		if (resolutionResultString == null) {
+		if (resolveResultString == null) {
 
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No resolution result for " + identifier + ".");
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No resolve result for " + identifier + ".");
 			return;
 		}
 
-		// write result
+		// write resolve result
 
-		WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, MIME_TYPE, resolutionResultString);
+		WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, MIME_TYPE, resolveResultString);
 	}
 }

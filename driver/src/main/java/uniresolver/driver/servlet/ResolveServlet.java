@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uniresolver.result.ResolutionResult;
+import uniresolver.result.ResolveResult;
 
 public class ResolveServlet extends AbstractServlet implements Servlet {
 
@@ -48,23 +48,23 @@ public class ResolveServlet extends AbstractServlet implements Servlet {
 			throw new IOException(ex.getMessage(), ex);
 		}
 
-		if (log.isInfoEnabled()) log.info("Incoming resolution request for identifier: " + identifier);
+		if (log.isInfoEnabled()) log.info("Incoming resolve request for identifier: " + identifier);
 
 		if (identifier == null) {
 
-			sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "No identifier found in resolution request.");
+			sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "No identifier found in resolve request.");
 			return;
 		}
 
 		// invoke the driver
 
-		ResolutionResult resolutionResult;
-		String resolutionResultString;
+		ResolveResult resolveResult;
+		String resolveResultString;
 
 		try {
 
-			resolutionResult = InitServlet.getDriver().resolve(identifier);
-			resolutionResultString = resolutionResult == null ? null : resolutionResult.toJson();
+			resolveResult = InitServlet.getDriver().resolve(identifier);
+			resolveResultString = resolveResult == null ? null : resolveResult.toJson();
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Driver reported for " + identifier + ": " + ex.getMessage(), ex);
@@ -72,18 +72,18 @@ public class ResolveServlet extends AbstractServlet implements Servlet {
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("Resolution result for " + identifier + ": " + resolutionResultString);
+		if (log.isInfoEnabled()) log.info("Resolve result for " + identifier + ": " + resolveResultString);
 
-		// no resolution result?
+		// no resolve result?
 
-		if (resolutionResultString == null) {
+		if (resolveResultString == null) {
 
-			sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No resolution result for " + identifier);
+			sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No resolve result for " + identifier);
 			return;
 		}
 
-		// write resolution result
+		// write resolve result
 
-		sendResponse(response, HttpServletResponse.SC_OK, ResolutionResult.MIME_TYPE, resolutionResultString);
+		sendResponse(response, HttpServletResponse.SC_OK, ResolveResult.MIME_TYPE, resolveResultString);
 	}
 }
