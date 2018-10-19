@@ -52,6 +52,6 @@ services:
   uni-resolver-web:
     build:
       context: .
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./uni-resolver-web/docker/Dockerfile
     ports:
       - "8080:8080"
