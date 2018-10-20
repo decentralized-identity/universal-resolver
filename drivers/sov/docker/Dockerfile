@@ -8,7 +8,6 @@ MAINTAINER Markus Sabadello <markus@danubetech.com>
 RUN apt-get install -y --no-install-recommends curl build-essential pkg-config cmake libssl-dev libsqlite3-dev libsodium-dev libzmq3-dev
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-
 RUN cd /opt/ && git clone https://github.com/hyperledger/indy-sdk.git && cd indy-sdk && git checkout v1.6.2
 RUN cd /opt/indy-sdk/libindy/ && ~/.cargo/bin/cargo clean && ~/.cargo/bin/cargo build
 RUN cd /opt/indy-sdk/wrappers/java/ && mvn clean install -DskipTests
