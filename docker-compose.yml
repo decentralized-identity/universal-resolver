@@ -1,7 +1,7 @@
 version: "3"
 services:
   driver-did-btcr:
-    image: universalresolver/driver-did-btcr
+    image: universalresolver/driver-did-btcr:latest
     environment:
       uniresolver_driver_did_btcr_bitcoinConnection: ${uniresolver_driver_did_btcr_bitcoinConnection}
       uniresolver_driver_did_btcr_rpcUrlMainnet: ${uniresolver_driver_did_btcr_rpcUrlMainnet}
@@ -9,7 +9,7 @@ services:
     ports:
       - "8081:8080"
   driver-did-sov:
-    image: universalresolver/driver-did-sov
+    image: universalresolver/driver-did-sov:latest
     environment:
       uniresolver_driver_did_sov_libIndyPath: ${uniresolver_driver_did_sov_libIndyPath}
       uniresolver_driver_did_sov_poolConfigs: ${uniresolver_driver_did_sov_poolConfigs}
@@ -18,15 +18,15 @@ services:
     ports:
       - "8082:8080"
   driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport
+    image: uport/uni-resolver-driver-did-uport:latest
     ports:
       - "8083:8081"
   driver-did-stack:
-    image: universalresolver/driver-did-stack
+    image: universalresolver/driver-did-stack:latest
     ports:
       - "8084:8080"
   driver-did-erc725:
-    image: universalresolver/driver-did-erc725
+    image: universalresolver/driver-did-erc725:latest
     environment:
       uniresolver_driver_did_erc725_ethereumConnection: ${uniresolver_driver_did_erc725_ethereumConnection}
       uniresolver_driver_did_erc725_rpcUrlMainnet: ${uniresolver_driver_did_erc725_rpcUrlMainnet}
@@ -40,11 +40,11 @@ services:
     ports:
       - "8085:8080"
   driver-did-dom:
-    image: universalresolver/driver-did-dom
+    image: universalresolver/driver-did-dom:latest
     ports:
       - "8086:8080"
   driver-dns:
-    image: universalresolver/driver-dns
+    image: universalresolver/driver-dns:latest
     environment:
       uniresolver_driver_dns_dnsServers: ${uniresolver_driver_dns_dnsServers}
     ports:
