@@ -33,6 +33,15 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 		if ("POST".equals(request.getMethod())) this.doPost(request, response);
 		if ("PUT".equals(request.getMethod())) this.doPut(request, response);
 		if ("DELETE".equals(request.getMethod())) this.doDelete(request, response);
+		if ("OPTIONS".equals(request.getMethod())) this.doOptions(request, response);
+	}
+
+	@Override
+	protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
 	@Override
