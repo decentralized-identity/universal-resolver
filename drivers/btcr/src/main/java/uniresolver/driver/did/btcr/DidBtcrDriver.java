@@ -177,7 +177,7 @@ public class DidBtcrDriver implements Driver {
 			}
 		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve BTCR data for " + txref + ": " + ex.getMessage());
+			throw new ResolutionException("Cannot retrieve BTCR data for " + txref + ": " + ex.getMessage(), ex);
 		}
 
 		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ txid + " on chain " + chainAndBlockLocation.getChain() + "): " + btcrData);
