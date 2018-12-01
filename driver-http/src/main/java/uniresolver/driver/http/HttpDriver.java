@@ -164,7 +164,8 @@ public class HttpDriver implements Driver {
 
 		Map<String, Object> httpProperties = new HashMap<String, Object> ();
 
-		if (this.getResolveUri() != null) httpProperties.put("driverUri", this.getResolveUri().toString());
+		if (this.getResolveUri() != null) httpProperties.put("resolveUri", this.getResolveUri().toString());
+		if (this.getPropertiesUri() != null) httpProperties.put("propertiesUri", this.getPropertiesUri().toString());
 		if (this.getPattern() != null) httpProperties.put("pattern", this.getPattern().toString());
 		if (this.getEncodeIdentifier() != null) httpProperties.put("encodeIdentifier", this.getEncodeIdentifier());
 
