@@ -14,7 +14,7 @@ You can deploy the Java Universal Resolver on your local machine by cloning this
 
 	git clone https://github.com/decentralized-identity/universal-resolver-java
 	cd universal-resolver-java/
-	docker-compose -f docker-compose.yml build
+	docker-compose -f docker-compose.yml pull
 	docker-compose -f docker-compose.yml up
 
 You should then be able to resolve identifiers locally using simple `curl` requests as follows:
