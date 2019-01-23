@@ -68,6 +68,11 @@
 			"env": {
 				"uniresolver_driver_dns_dnsServers": ""
 			}
+		}, {
+			"pattern": "^(did:jolo:.+)$",
+			"image": "jolocomgmbh/jolocom-did-driver",
+			"tag": "latest",
+			"testIdentifiers": [ "did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21" ]
 		}
 	]
 }
