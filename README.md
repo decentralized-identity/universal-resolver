@@ -31,8 +31,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 
 The following implementations are available for use:
 
- * [Java](https://github.com/peacekeeper/universal-resolver/tree/master/resolver/java)
- * [Python3](https://github.com/peacekeeper/universal-resolver/tree/master/resolver/python)
+ * [Java](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java)
+ * [Python3](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/python)
 
 ## Drivers
 
