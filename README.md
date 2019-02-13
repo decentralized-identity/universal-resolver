@@ -27,13 +27,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET  http://localhost:8080/1.0/identifiers/did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21
 	curl -X GET  http://localhost:8080/1.0/identifiers/did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0
 
-## Implementations
-
-The following implementations are available for use:
-
- * [Java](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java)
- * [Python3](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/python)
-
 ## Drivers
 
 | Driver Name | Driver Version | DID Spec Version | DID Method Spec Version | Docker Image |
@@ -47,6 +40,13 @@ The following implementations are available for use:
 | did-v1 |  | [0.11](https://w3c-ccg.github.io/did-spec/) | [1.0](https://w3c-ccg.github.io/didm-veres-one/) |
 | did-ipid |  | [0.11](https://w3c-ccg.github.io/did-spec/) | [0.1](https://github.com/jonnycrunch/ipid) |
 | [did-jolo](https://github.com/jolocom/jolocom-did-driver) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) | [jolocomgmbh/jolocom-did-driver](https://hub.docker.com/r/jolocomgmbh/jolocom-did-driver) |
+
+## Implementations
+
+The following resolver implementations are available here:
+
+ * [Java](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java)
+ * [Python3](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/python)
 
 ## Troubleshooting
 
