@@ -48,6 +48,18 @@ The following implementations are available for use:
 | did-ipid |  | [0.11](https://w3c-ccg.github.io/did-spec/) | [0.1](https://github.com/jonnycrunch/ipid) |
 | [did-jolo](https://github.com/jolocom/jolocom-did-driver) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) | [jolocomgmbh/jolocom-did-driver](https://hub.docker.com/r/jolocomgmbh/jolocom-did-driver) |
 
+## Troubleshooting
+
+If docker-compose complains about wrong versions than you probably have a too old docker-compose version.
+
+On Ubuntu 16.04 remove docker-compose and install a new version e.g.
+```
+sudo apt-get remove docker-compose
+curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+```
+You might want to adjust the version number 1.22.0 to the latest one. Please see: [Installing docker-compose](https://docs.docker.com/compose/install/#install-compose)
+
 ## More Information
 
  * [Design Goals](/docs/design-goals.md)

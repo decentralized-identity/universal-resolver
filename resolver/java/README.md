@@ -79,18 +79,6 @@ Dependency:
 	DIDDocument didDocument3 = uniResolver.resolve("did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0").getDidDocument();
 	System.out.println(didDocument3.toJson());
 
-## Troubleshooting
-
-If docker-compose complains about wrong versions than you probably have a too old docker-compose version.
-
-On Ubuntu 16.04 remove docker-compose and install a new version e.g.
-```
-sudo apt-get remove docker-compose
-curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
-```
-You might want to adjust the version number 1.22.0 to the latest one. Please see: [Installing docker-compose](https://docs.docker.com/compose/install/#install-compose)
-
 ## About
 
 Decentralized Identity Foundation - http://identity.foundation/
