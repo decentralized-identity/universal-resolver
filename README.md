@@ -8,12 +8,31 @@ See this [blog post](https://medium.com/decentralized-identity/a-universal-resol
 
 See https://uniresolver.io/ for a publicly hosted instance of a Universal Resolver.
 
+## Quick Start
+
+You can deploy the Universal Resolver on your local machine by cloning this Github repository, and using `docker-compose` to build and run the Universal Resolver as well as its drivers:
+
+	git clone https://github.com/decentralized-identity/universal-resolver
+	cd universal-resolver/
+	docker-compose -f docker-compose.yml pull
+	docker-compose -f docker-compose.yml up
+
+You should then be able to resolve identifiers locally using simple `curl` requests as follows:
+
+	curl -X GET  http://localhost:8080/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
+	curl -X GET  http://localhost:8080/1.0/identifiers/did:btcr:xkrn-xzcr-qqlv-j6sl
+	curl -X GET  http://localhost:8080/1.0/identifiers/did:v1:test:nym:3AEJTDMSxDDQpyUftjuoeZ2Bazp4Bswj1ce7FJGybCUu
+	curl -X GET  http://localhost:8080/1.0/identifiers/did:ipid:QmYA7p467t4BGgBL4NmyHtsXMoPrYH9b3kSG6dbgFYskJm
+	curl -X GET  http://localhost:8080/1.0/identifiers/did:uport:2omWsSGspY7zhxaG6uHyoGtcYxoGeeohQXz
+	curl -X GET  http://localhost:8080/1.0/identifiers/did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21
+	curl -X GET  http://localhost:8080/1.0/identifiers/did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0
+
 ## Implementations
 
 The following implementations are available for use:
 
- * [Java](https://github.com/decentralized-identity/universal-resolver-java)
- * [Python3](https://github.com/decentralized-identity/universal-resolver-python)
+ * [Java](https://github.com/peacekeeper/universal-resolver/tree/master/resolver/java)
+ * [Python3](https://github.com/peacekeeper/universal-resolver/tree/master/resolver/python)
 
 ## Drivers
 
