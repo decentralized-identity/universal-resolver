@@ -25,7 +25,7 @@ curl -X GET http://localhost:8080/1.0/identifiers/ssi.labs.nic.at
 
 ## Build (native Java)
 
- 1. First, build https://github.com/decentralized-identity/universal-resolver-java
+ 1. First, build https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java
  1. Then, `mvn clean install`
 
 ## Driver Environment Variables
