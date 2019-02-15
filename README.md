@@ -29,6 +29,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 
 ## Drivers
 
+Are you developing a DID method and Universal Resolver driver? Click [here](https://github.com/decentralized-identity/universal-resolver/blob/master/docs/driver-development.md) for instructions.
+
 | Driver Name | Driver Version | DID Spec Version | DID Method Spec Version | Docker Image |
 | ----------- | -------------- | ---------------- | ----------------------- | ------------ |
 | [did-btcr](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers/btcr/) | 0.1-SNAPSHOT | [0.11](https://w3c-ccg.github.io/did-spec/) | [0.1](https://w3c-ccg.github.io/didm-btcr) | [universalresolver/driver-did-btcr](https://hub.docker.com/r/universalresolver/driver-did-btcr/)
