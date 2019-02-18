@@ -27,9 +27,28 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET  http://localhost:8080/1.0/identifiers/did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21
 	curl -X GET  http://localhost:8080/1.0/identifiers/did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0
 
+## Troubleshooting
+
+If docker-compose complains about wrong versions than you probably have a too old docker-compose version.
+
+On Ubuntu 16.04 remove docker-compose and install a new version e.g.
+```
+sudo apt-get remove docker-compose
+curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+```
+You might want to adjust the version number 1.22.0 to the latest one. Please see: [Installing docker-compose](https://docs.docker.com/compose/install/#install-compose)
+
+## Implementations
+
+The following resolver implementations are available here:
+
+ * [Java](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java)
+ * [Python3](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/python)
+
 ## Drivers
 
-Are you developing a DID method and Universal Resolver driver? Click [here](https://github.com/decentralized-identity/universal-resolver/blob/master/docs/driver-development.md) for instructions.
+Are you developing a DID method and Universal Resolver driver? Click [here](/docs/driver-development.md) for instructions.
 
 | Driver Name | Driver Version | DID Spec Version | DID Method Spec Version | Docker Image |
 | ----------- | -------------- | ---------------- | ----------------------- | ------------ |
@@ -43,30 +62,10 @@ Are you developing a DID method and Universal Resolver driver? Click [here](http
 | did-ipid |  | [0.11](https://w3c-ccg.github.io/did-spec/) | [0.1](https://github.com/jonnycrunch/ipid) |
 | [did-jolo](https://github.com/jolocom/jolocom-did-driver) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) | [jolocomgmbh/jolocom-did-driver](https://hub.docker.com/r/jolocomgmbh/jolocom-did-driver) |
 
-## Implementations
-
-The following resolver implementations are available here:
-
- * [Java](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java)
- * [Python3](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/python)
-
-## Troubleshooting
-
-If docker-compose complains about wrong versions than you probably have a too old docker-compose version.
-
-On Ubuntu 16.04 remove docker-compose and install a new version e.g.
-```
-sudo apt-get remove docker-compose
-curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
-```
-You might want to adjust the version number 1.22.0 to the latest one. Please see: [Installing docker-compose](https://docs.docker.com/compose/install/#install-compose)
-
 ## More Information
 
  * [Design Goals](/docs/design-goals.md)
- * [Architecture and Drivers](/docs/architecture-drivers.md)
- * [API Definition](/docs/api-definition.md)
+ * [Driver Development](/docs/driver-development.md)
 
 ## About
 
