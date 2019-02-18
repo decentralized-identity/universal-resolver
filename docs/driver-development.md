@@ -6,7 +6,7 @@ Each driver is an implementation of the function `resolve(did) -> diddoc` and it
 
 `http://<your-image>:8080/1.0/identifiers/<your-did>`
 
-In this call, your driver will receive an Accept header with the value `application/json+ld`, and it should return a valid DID Document in the HTTP body.
+In this call, your driver will receive an Accept header with the value `application/json+ld`, and it should return a valid [DID Document](https://w3c-ccg.github.io/did-resolution/#output-diddocument) or a [DID Resolution Result](https://w3c-ccg.github.io/did-resolution/#output-didresolutionresult) (which contains the DID Document plus additional result data) in the HTTP body.
 
 Beyond this interface, each driver may implement its own way to communicate with its respective decentralized ledgers or distributed filesystems (the "target system"). For those drivers performing operations on DLT's, the driver may do so via web API, communicating with a remote node, running a full node, or another experimental configuration.
 
