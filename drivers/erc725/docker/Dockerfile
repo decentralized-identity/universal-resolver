@@ -14,11 +14,11 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # variables
 
-ENV uniresolver_driver_did_erc725_ethereumConnection=jsonrpc
-ENV uniresolver_driver_did_erc725_rpcUrlMainnet=https://mainnet.infura.io/9W2fvWQMP6cJCMH3ESqP
-ENV uniresolver_driver_did_erc725_rpcUrlRopsten=https://ropsten.infura.io/9W2fvWQMP6cJCMH3ESqP
-ENV uniresolver_driver_did_erc725_rpcUrlRinkeby=https://rinkeby.infura.io/9W2fvWQMP6cJCMH3ESqP
-ENV uniresolver_driver_did_erc725_rpcUrlKovan=https://kovan.infura.io/9W2fvWQMP6cJCMH3ESqP
+ENV uniresolver_driver_did_erc725_ethereumConnection=hybrid
+ENV uniresolver_driver_did_erc725_rpcUrlMainnet=https://mainnet.infura.io/v3/fd9e225bc1234f49b48b295c611078eb
+ENV uniresolver_driver_did_erc725_rpcUrlRopsten=https://ropsten.infura.io/v3/fd9e225bc1234f49b48b295c611078eb
+ENV uniresolver_driver_did_erc725_rpcUrlRinkeby=https://rinkeby.infura.io/v3/fd9e225bc1234f49b48b295c611078eb
+ENV uniresolver_driver_did_erc725_rpcUrlKovan=https://kovan.infura.io/v3/fd9e225bc1234f49b48b295c611078eb
 ENV uniresolver_driver_did_erc725_etherscanApiMainnet=http://api.etherscan.io/api
 ENV uniresolver_driver_did_erc725_etherscanApiRopsten=http://api-ropsten.etherscan.io/api
 ENV uniresolver_driver_did_erc725_etherscanApiRinkeby=http://api-rinkeby.etherscan.io/api

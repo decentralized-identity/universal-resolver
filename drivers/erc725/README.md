@@ -38,27 +38,27 @@ The driver recognizes the following environment variables:
  * Possible values: 
    * `jsonrpc`: Connects to a [geth](https://geth.ethereum.org/downloads/) instance via JSON-RPC
    * `hybrid`: Connects to a [geth](https://geth.ethereum.org/downloads/) instance via JSON-RPC as well as to the [EtherScan API](https://etherscan.io/apis)
- * Default value: `jsonrpc`
+ * Default value: `hybrid`
 
 ### `uniresolver_driver_did_erc725_rpcUrlMainnet`
 
  * Specifies the JSON-RPC URL of a geth instance running on Mainnet.
- * Default value: `https://mainnet.infura.io/9W2fvWQMP6cJCMH3ESqP`
+ * Default value: `https://mainnet.infura.io/v3/fd9e225bc1234f49b48b295c611078eb`
 
 ### `uniresolver_driver_did_erc725_rpcUrlRopsten`
 
  * Specifies the JSON-RPC URL of a geth instance running on Ropsten.
- * Default value: `https://ropsten.infura.io/9W2fvWQMP6cJCMH3ESqP`
+ * Default value: `https://ropsten.infura.io/v3/fd9e225bc1234f49b48b295c611078eb`
 
 ### `uniresolver_driver_did_erc725_rpcUrlRinkeby`
 
  * Specifies the JSON-RPC URL of a geth instance running on Rinkeby.
- * Default value: `https://rinkeby.infura.io/9W2fvWQMP6cJCMH3ESqP`
+ * Default value: `https://rinkeby.infura.io/v3/fd9e225bc1234f49b48b295c611078eb`
 
 ### `uniresolver_driver_did_erc725_rpcUrlKovan`
 
  * Specifies the JSON-RPC URL of a geth instance running on Kovan.
- * Default value: `https://kovan.infura.io/9W2fvWQMP6cJCMH3ESqP`
+ * Default value: `https://kovan.infura.io/v3/fd9e225bc1234f49b48b295c611078eb`
 
 ### `uniresolver_driver_did_erc725_etherscanApiMainnet`
 
