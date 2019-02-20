@@ -48,11 +48,6 @@ The driver recognizes the following environment variables:
  * Specifies a semi-colon-separated list of Indy network names and pool protocol versions. The default network is `_`.
  * Default value: `_;2;stn;2;danube;2`
 
-### `uniresolver_driver_did_sov_poolGenesisTxn`
-
- * Specifies the path to the Indy pool configuration file.
- * Default value: `./sovrin/11347-05.txn`
-
 ### `uniresolver_driver_did_sov_walletName`
 
  * Specifies the name of the Indy wallet.
