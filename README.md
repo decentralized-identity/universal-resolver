@@ -51,6 +51,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | did-v1 |  | [0.11](https://w3c-ccg.github.io/did-spec/) | [1.0](https://w3c-ccg.github.io/didm-veres-one/) |
 | did-ipid |  | [0.11](https://w3c-ccg.github.io/did-spec/) | [0.1](https://github.com/jonnycrunch/ipid) |
 | [did-jolo](https://github.com/jolocom/jolocom-did-driver) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | [0.1](https://github.com/jolocom/jolocom-did-driver/blob/master/jolocom-did-method-specification.md) | [jolocomgmbh/jolocom-did-driver](https://hub.docker.com/r/jolocomgmbh/jolocom-did-driver) |
+| [did-hacera](https://github.com/hacera/hacera-did-driver) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) | [hacera/hacera-did-driver](https://hub.docker.com/r/hacera/hacera-did-driver) |
 
 ## More Information
 

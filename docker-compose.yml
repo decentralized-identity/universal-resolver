@@ -53,6 +53,10 @@ services:
     image: jolocomgmbh/jolocom-did-driver:latest
     ports:
       - "8088:8080"
+  driver-did-hacera:
+    image: hacera/hacera-did-driver:latest
+    ports:
+      - "8089:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
