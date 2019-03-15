@@ -16,7 +16,7 @@ In addition to contributing a driver, developers may wish to build native applic
 ## Requirements
 - driver must be fully open-source under a permissive license (Apache 2.0 preferred)
 - driver must run as a single Docker container
-- driver image must be published on [Dockerhub](https://hub.docker.com/) with version tags
+- driver image must be published on [Docker Hub](https://hub.docker.com/) with version tags
 - driver must be tested as standalone Docker container
 - driver must be tested by running the Universal Resolver `docker-compose`
 - contributor expectations:
@@ -31,7 +31,7 @@ Contributing a driver to the Universal Resolver is a common process used to expa
 
 New contributions are submitted as Pull Requests to the [main repository](https://github.com/decentralized-identity/universal-resolver). Since the Universal Resolver runs as a set of modular virtual containers, your implementation is expected to be well-documented, tested, and working before you submit a PR. 
 
-In order to contribute a driver to the Universal Resolver, the driver must be published in a few different ways. As mentioned, all drivers are open-source and use permissive licensing. You may choose to publish your code at the [Decentralized Identity Foundation](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers) or on another publicly available site (note: if hosting your code outside of the main repo, please provide a link). In addition, your Docker image must be published on [Dockerhub](https://hub.docker.com/) with version tags to allow configuration of your driver. Ideally, the same Dockerhub image is kept up-to-date to preserve versioning history.
+In order to contribute a driver to the Universal Resolver, the driver must be published in a few different ways. As mentioned, all drivers are open-source and use permissive licensing. You may choose to publish your code at the [Decentralized Identity Foundation](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers) or on another publicly available site (note: if hosting your code outside of the main repo, please provide a link). In addition, your Docker image must be published on [Docker Hub](https://hub.docker.com/) with version tags to allow configuration of your driver. Ideally, the same Docker Hub image is kept up-to-date to preserve versioning history.
 
 The documentation should be clear enough to explain how to run your driver, how to debug it, and how to update the driver over time. There are several items that need to be documented upon contribution of your new driver. I
 Make sure you include the following in your PR:
@@ -46,13 +46,13 @@ Make sure you include the following in your PR:
     * driver name (e.g. `did-btcr`), with link to driver source code
     * driver version (e.g. `0.1`)
     * DID spec version that the driver conforms to, with link to DID spec
-    * Docker image name (e.g. `universalresolver/driver-did-btcr`) with link to Docker image at Dockerhub
+    * Docker image name (e.g. `universalresolver/driver-did-btcr`) with link to Docker image at Docker Hub
     * {optional} DID resolution spec version that the driver conforms to, with link to DID resolution spec
     * {optional} DID method spec version (e.g. BTCR), with link to DID method spec
 
 ## How to update a driver
 
-As DID methods are developed and matured, the Universal Resolver should do the same. Contributors should keep their drivers up-to-date as changes happen to the driver, DID spec, and DID Resolution spec. Contributors may only wish to direct users to the latest driver, or they may have a `stable` version, a `developer` version, etc. The driver version specified in the README.md file should be reflected in a Dockerhub image with a tag that matches the driver version. As always, the Docker image should be tested as a standalone container as well as a container cluster with `docker-compose`.
+As DID methods are developed and matured, the Universal Resolver should do the same. Contributors should keep their drivers up-to-date as changes happen to the driver, DID spec, and DID Resolution spec. Contributors may only wish to direct users to the latest driver, or they may have a `stable` version, a `developer` version, etc. The driver version specified in the README.md file should be reflected in a Docker Hub image with a tag that matches the driver version. As always, the Docker image should be tested as a standalone container as well as a container cluster with `docker-compose`.
 
 As with contributing a driver, there are a few documentation requirements that should be met before submitting a PR: 
 
@@ -60,5 +60,5 @@ As with contributing a driver, there are a few documentation requirements that s
 - edit files in the Universal Resolver root directory:
   * config.json (update driver version)
   * docker-compose.yml (update driver version)
-  * README.md (update driver version, DID spec version, DID Resolution spec version, Dockerhub link)
+  * README.md (update driver version, DID spec version, DID Resolution spec version, Docker Hub link)
 
