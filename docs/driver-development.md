@@ -55,9 +55,9 @@ Make sure you include the following in your PR:
     * {optional} DID resolution spec version that the driver conforms to, with link to DID resolution spec
 - edit files in the Universal Resolver Java directory (`/resolver/java/uni-resolver-web/src/main/webapp/WEB-INF/`):
   * applicationContext.xml
-    * add entry for driver with drivers's internal URI
+    * add entry for driver with drivers's externally callable URI
   * applicationContext.xml.docker
-    * add entry for driver with driver's internal URI
+    * add entry for driver with driver's internal URI and increment port number
 
 ## How to update a driver
 
