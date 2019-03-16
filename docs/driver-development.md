@@ -1,28 +1,30 @@
 ## Introduction
 
-The Universal Resolver's main function is wrapping an API around a number of colocated virtual containers running DID-method-specific operations. Although each driver can be implemented in whichever language and architecture the contributor decides, drivers that are contributed still share a few common characteristics.
+The Universal Resolver's main function is wrapping an API around a number of colocated Docker containers running DID-method-specific resolvers. As such, the resolver supports all open-source drivers which have been contributed to-date. The Universal Resolver is meant to support additional DID methods as they are developed by members of various communities. The contribution for a new DID method consists of a Docker image which exposes an HTTP GET interface for resolving DIDs. Although drivers can be implemented in whichever language and architecture the contributor prefers, drivers that are contributed will share a few common characteristics.
 
-Each driver is an implementation of the function `resolve(did) -> diddoc` and it exposes an HTTP GET interface. Your driver will be invoked via an HTTP GET call to:
+Each driver is an implementation of the function `resolve(did) -> diddoc` for a given DID method and it exposes an HTTP GET interface. Your driver will be invoked via an HTTP GET call to:
 
 `http://<your-image>:8080/1.0/identifiers/<your-did>`
 
-In this call, your driver will receive an Accept header with the value `application/json+ld`, and it should return a valid [DID Document](https://w3c-ccg.github.io/did-resolution/#output-diddocument) or a [DID Resolution Result](https://w3c-ccg.github.io/did-resolution/#output-didresolutionresult) (which contains the DID Document plus additional result data) in the HTTP body.
+In this call, your driver will receive an Accept header with the value `application/json+ld`, and it should return a valid JSON-LD [DID Document](https://w3c-ccg.github.io/did-resolution/#output-diddocument) or, optionally, a [DID Resolution Result](https://w3c-ccg.github.io/did-resolution/#output-didresolutionresult) (which contains the DID Document plus additional result data) in the HTTP body.
 
-Beyond this interface, each driver may implement its own way to communicate with its respective decentralized ledgers or distributed filesystems (the "target system"). For those drivers performing operations on DLT's, the driver may do so via web API, communicating with a remote node, running a full node, or another experimental configuration.
+Depending on the DID method, oftentimes DID drivers will need to read some decentralized ledger or distributed filesystem (the "target system") in order to resolve a DID. Each driver may decide how it will communicate with its respective target system. For those drivers performing operations on DLT's, the driver may do so via web API, communicating with a remote node, running a full node, or another experimental configuration.
 
-In addition to contributing a driver, developers may wish to build native applications that locally run the Universal Resolver. The core implementation of the Resolver is a [Java library](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java) which can be forked to add functionality for additional DID methods. Although the most common interface for new DID methods are language-agnostic drivers which expose an HTTP interface, the option remains for expansion of native applications in Java or a contributed implementation in another language.
+In addition to contributing a driver, developers may wish to build native applications that locally run the Universal Resolver. The core implementation of the Resolver is a [Java library](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java) which can be forked to add functionality for additional DID methods. Although the most common interface for new DID drivers are language-agnostic Docker images which expose an HTTP interface, the option remains to expand the native Universal Resolver library in Java or contribute an implementation in another language.
 
 
 ## Requirements
+- driver must expose an HTTP GET interface for resolving a DID
+- driver must return a valid JSON-LD DID Document or DID Resolution Result for at least 1 working example
 - driver must be fully open-source under a permissive license (Apache 2.0 preferred)
 - driver must run as a single Docker container
 - driver image must be published on [Docker Hub](https://hub.docker.com/) with version tags
 - driver must be tested as standalone Docker container
-- driver must be tested by running the Universal Resolver `docker-compose`
+- driver must be tested by running the Universal Resolver with the `docker-compose` command
 - contributor expectations:
     * follow the driver contributor guide below
     * add new DID method(s) to [DID method registry](https://w3c-ccg.github.io/did-method-registry/)
-    * specify DID method(s) supported
+    * specify which DID method(s) supported
     * document at least one working example identifier that can be resolved
 
 ## How to contribute a driver
@@ -31,9 +33,9 @@ Contributing a driver to the Universal Resolver is a common process used to expa
 
 New contributions are submitted as Pull Requests to the [main repository](https://github.com/decentralized-identity/universal-resolver). Since the Universal Resolver runs as a set of modular virtual containers, your implementation is expected to be well-documented, tested, and working before you submit a PR. 
 
-In order to contribute a driver to the Universal Resolver, the driver must be published in a few different ways. As mentioned, all drivers are open-source and use permissive licensing. You may choose to publish your code at the [Decentralized Identity Foundation](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers) or on another publicly available site (note: if hosting your code outside of the main repo, please provide a link). In addition, your Docker image must be published on [Docker Hub](https://hub.docker.com/) with version tags to allow configuration of your driver. Ideally, the same Docker Hub image is kept up-to-date to preserve versioning history.
+In order to contribute a driver to the Universal Resolver, the driver must be published in a few different ways. As mentioned, all drivers are open-source and use permissive licensing. You may choose to publish your code, including your implementation as well as your Dockerfile, at the [Decentralized Identity Foundation](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers) or on another publicly available site (note: if hosting your code outside of the main repo, please provide a link). In addition, your Docker image must be published on [Docker Hub](https://hub.docker.com/) with version tags to allow configuration of your driver. Ideally, the same Docker Hub image is kept up-to-date to preserve versioning history.
 
-The documentation should be clear enough to explain how to run your driver, how to debug it, and how to update the driver over time. There are several items that need to be documented upon contribution of your new driver. I
+The documentation for your driver should be clear enough to explain how to run your driver, how to troubleshoot it, and a process for updating the driver over time. There are several additional items that need to be documented upon contribution of your new driver.
 Make sure you include the following in your PR:
 
 - assign initial version number
@@ -52,7 +54,7 @@ Make sure you include the following in your PR:
 
 ## How to update a driver
 
-As DID methods are developed and matured, the Universal Resolver should do the same. Contributors should keep their drivers up-to-date as changes happen to the driver, DID spec, and DID Resolution spec. Contributors may only wish to direct users to the latest driver, or they may have a `stable` version, a `developer` version, etc. The driver version specified in the README.md file should be reflected in a Docker Hub image with a tag that matches the driver version. As always, the Docker image should be tested as a standalone container as well as a container cluster with `docker-compose`.
+As DID methods are developed and matured, the Universal Resolver should maintain its DID drivers with new changes. Contributors should keep their drivers up-to-date as changes happen to the DID method, DID spec, and DID Resolution spec. Contributors may only wish to direct users to the latest driver, or they may have a `stable` version, a `developer` version, etc. The driver version specified in the README.md file should be reflected in a Docker Hub image with a tag that matches the driver version. As always, the Docker image should be tested as a standalone container as well as a container cluster with `docker-compose`.
 
 As with contributing a driver, there are a few documentation requirements that should be met before submitting a PR: 
 
@@ -61,4 +63,3 @@ As with contributing a driver, there are a few documentation requirements that s
   * config.json (update driver version)
   * docker-compose.yml (update driver version)
   * README.md (update driver version, DID spec version, DID Resolution spec version, Docker Hub link)
-
