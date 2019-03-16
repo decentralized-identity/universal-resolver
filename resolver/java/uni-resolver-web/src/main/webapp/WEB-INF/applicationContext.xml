@@ -8,17 +8,17 @@
 	<bean name="UniResolver" class="uniresolver.local.LocalUniResolver">
 		<property name="drivers">
 			<util:map>
-				<entry key="did:btcr"><ref bean="DidBtcrDriver" /></entry>
-				<entry key="did:sov"><ref bean="DidSovDriver" /></entry>
-				<entry key="did:uport"><ref bean="DidUportDriver" /></entry>
-				<entry key="did:v1"><ref bean="DidV1Driver" /></entry>
-				<entry key="did:ipid"><ref bean="DidIpidDriver" /></entry>
-				<entry key="did:stack"><ref bean="DidStackDriver" /></entry>
-				<entry key="did:erc725"><ref bean="DidErc725Driver" /></entry>
-				<entry key="did:dom"><ref bean="DidDomDriver" /></entry>
+				<entry key="did-btcr"><ref bean="DidBtcrDriver" /></entry>
+				<entry key="did-sov"><ref bean="DidSovDriver" /></entry>
+				<entry key="did-uport"><ref bean="DidUportDriver" /></entry>
+				<entry key="did-v1"><ref bean="DidV1Driver" /></entry>
+				<entry key="did-ipid"><ref bean="DidIpidDriver" /></entry>
+				<entry key="did-stack"><ref bean="DidStackDriver" /></entry>
+				<entry key="did-erc725"><ref bean="DidErc725Driver" /></entry>
+				<entry key="did-dom"><ref bean="DidDomDriver" /></entry>
 				<entry key="dns-did"><ref bean="DnsDriver" /></entry>
-				<entry key="did:jolo"><ref bean="DidJoloDriver" /></entry>
-				<entry key="did:hcr"><ref bean="DidHaceraDriver" /></entry>
+				<entry key="did-jolo"><ref bean="DidJoloDriver" /></entry>
+				<entry key="did-hacera"><ref bean="DidHaceraDriver" /></entry>
 			</util:map>
 		</property>
 	</bean>
