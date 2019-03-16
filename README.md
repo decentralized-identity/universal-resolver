@@ -26,6 +26,9 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET  http://localhost:8080/1.0/identifiers/did:uport:2omWsSGspY7zhxaG6uHyoGtcYxoGeeohQXz
 	curl -X GET  http://localhost:8080/1.0/identifiers/did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21
 	curl -X GET  http://localhost:8080/1.0/identifiers/did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0
+	curl -X GET http://localhost:8080/1.0/identifiers/did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E
+	curl -X GET http://localhost:8080/1.0/identifiers/did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de
+	
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
