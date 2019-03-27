@@ -10,9 +10,6 @@ In this call, your driver will receive an Accept header with the value `applicat
 
 Depending on the DID method, oftentimes DID drivers will need to read some decentralized ledger or distributed filesystem (the "target system") in order to resolve a DID. Each driver may decide how it will communicate with its respective target system. For those drivers performing operations on DLT's, the driver may do so via web API, communicating with a remote node, running a full node, or another experimental configuration.
 
-In addition to contributing a driver, developers may wish to build native applications that locally run the Universal Resolver. The core implementation of the Resolver is a [Java library](https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java) which can be forked to add functionality for additional DID methods. Although the most common interface for new DID drivers are language-agnostic Docker images which expose an HTTP interface, the option remains to expand the native Universal Resolver library in Java or contribute an implementation in another language.
-
-
 ## Requirements
 - driver must expose an HTTP GET interface for resolving a DID
 - driver must return a valid JSON-LD DID Document or DID Resolution Result for at least 1 working example
