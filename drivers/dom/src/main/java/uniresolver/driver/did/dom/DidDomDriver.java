@@ -178,7 +178,7 @@ public class DidDomDriver implements Driver {
 
 					JSONObject objService = (JSONObject) itemService;
 
-					Service service = Service.build(objService.getString("type"), null, objService.getString("serviceEndpoint"));
+					Service service = Service.build(objService.getString("type"), objService.getString("serviceEndpoint"));
 					services.add(service);
 				}           
 			}
