@@ -213,7 +213,7 @@ public class DidStackDriver implements Driver {
 
 		// DDO services
 		List<Service> services = new ArrayList<Service>();
-		services.add(Service.build("blockstack", null, DEFAULT_BLOCKSTACK_CORE_URL));
+		services.add(Service.build("blockstack", DEFAULT_BLOCKSTACK_CORE_URL));
 
 		// create DDO
 		DIDDocument didDocument = DIDDocument.build(id, publicKeys, null, null, services);
