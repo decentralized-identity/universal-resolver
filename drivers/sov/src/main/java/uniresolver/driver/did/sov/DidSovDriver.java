@@ -237,7 +237,7 @@ public class DidSovDriver implements Driver {
 				JsonPrimitive jsonGetAttrEndpointValue = jsonGetAttrEndpoint == null ? null : jsonGetAttrEndpoint.getAsJsonPrimitive(jsonService.getKey());
 				String value = jsonGetAttrEndpointValue == null ? null : jsonGetAttrEndpointValue.getAsString();
 
-				Service service = Service.build(jsonService.getKey(), null, value);
+				Service service = Service.build(jsonService.getKey(), value);
 
 				services.add(service);
 			}
