@@ -124,7 +124,7 @@ public class DnsDriver implements Driver {
 		// create METHOD METADATA
 
 		Map<String, Object> methodMetadata = new LinkedHashMap<String, Object> ();
-		if (did != null) methodMetadata.put("did", did);
+		if (did != null) methodMetadata.put("redirect", did);
 		if (priority != null) methodMetadata.put("priority", priority);
 
 		// create RESOLVE RESULT
