@@ -1,0 +1,148 @@
+# Default values for did.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+resolvers:
+  btcr:
+    name: btcr
+    image:
+      repository: universalresolver/driver-did-btcr
+      tag: latest
+      imagePullPolicy: IfNotPresent
+    ports:
+      name: http-btcr
+      start: 8081
+      end: 8080
+    environment:
+  sov:
+    name: sov
+    image:
+      repository: universalresolver/driver-did-sov
+      tag: latest
+      imagePullPolicy: IfNotPresent
+    ports:
+      name: http-sov
+      start: 8082
+      end: 8080
+    environment:
+  uport:
+    name: uport
+    image:
+      repository: uport/uni-resolver-driver-did-uport
+      tag: latest
+      imagePullPolicy: IfNotPresent
+    ports:
+      name: http-uport
+      start: 8083
+      end: 8080
+    environment:
+  stack:
+    name: stack
+    image:
+      repository: universalresolver/driver-did-stack
+      tag: latest
+      imagePullPolicy: IfNotPresent
+    ports:
+      name: http-stack
+      start: 8084
+      end: 8080
+    environment:
+  erc725:
+    name: erc725
+    image:
+      repository: universalresolver/driver-did-erc725
+      tag: latest
+      imagePullPolicy: IfNotPresent
+    ports:
+      name: http-erc725
+      start: 8085
+      end: 8080
+    environment:
+  dom:
+    name: dom
+    image:
+      repository: universalresolver/driver-did-dom
+      tag: latest
+      imagePullPolicy: IfNotPresent
+    ports:
+      name: http-dom
+      start: 8086
+      end: 8080
+    environment:
+  dns:
+    name: dns
+    image:
+      repository: universalresolver/driver-dns
+      tag: latest
+      imagePullPolicy: IfNotPresent
+    ports:
+      name: http-dns
+      start: 8087
+      end: 8080
+    environment:
+  jolo:
+    name: jolo
+    image:
+      repository: jolocomgmbh/jolocom-did-driver
+      tag: latest
+      imagePullPolicy: IfNotPresent
+    ports:
+      name: http-jolo
+      start: 8088
+      end: 8080
+    environment:
+  hacera:
+    name: hacera
+    image:
+      repository: hacera/hacera-did-driver
+      tag: latest
+      imagePullPolicy: IfNotPresent
+    ports:
+      name: http-hacera
+      start: 8089
+      end: 8080
+    environment:
+  web:
+    name: web
+    image:
+      repository: universalresolver/uni-resolver-web
+      tag: latest
+      imagePullPolicy: IfNotPresent
+    mountCustomConfig: true
+    ports:
+      name: http-web
+      start: 8080
+      end: 8080
+    environment:
+  factom:
+    name: factom
+    image:
+      repository: factominc/driver-did-factom
+      tag: latest
+      imagePullPolicy: Always
+    ports:
+      name: http-factom
+      start: 8090
+      end: 8080
+    environment:
+      - name: uniresolver_driver_did_factom_factomConnection
+        value: factomd
+      - name: uniresolver_driver_did_factom_rpcUrlMainnet
+        value: https://api.factomd.net
+      - name: uniresolver_driver_did_factom_rpcUrlTestnet
+        value: https://dev.factomd.net
+      - name: uniresolver_driver_did_factom_tfaExplorerApiUrlMainnet
+        value: https://explorer.factoid.org/api/v1
+      - name: uniresolver_driver_did_factom_tfaExplorerApiUrlTestnet
+        value: https://testnet.factoid.org/api/v1
+      - name: uniresolver_driver_did_factom_harmonyApiUrl
+        value: http://connect-api.connect
+      - name: uniresolver_driver_did_factom_harmonyApiAppId
+        value:
+      - name: uniresolver_driver_did_factom_harmonyApiAppKey
+        value:
+      - name: uniresolver_driver_did_factom_harmonyApiCachingEnabled
+        value: false
+    volumes:

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: resolver
+  labels:
+    app.kubernetes.io/name: {{ include "did.name" . }}
+    helm.sh/chart: {{ include "did.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    {{ range .Values.resolvers }}
+    - port: {{ .ports.start }}
+      targetPort: {{ .ports.end }}
+      protocol: TCP
+      name: {{.ports.name }}
+    {{ end }}
+  selector:
+    app: did
+    component: resolvers

@@ -1,0 +1,46 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: did
+  labels:
+    app.kubernetes.io/name: {{ include "did.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: did
+      component: resolvers
+  template:
+    metadata:
+      labels:
+        app: did
+        component: resolvers
+    spec:
+      imagePullSecrets:
+        - name: dockerhub
+      volumes:
+      - name: factom-config
+        configMap:
+          name: factom-resolver-config
+      containers:
+        {{- range .Values.resolvers }}
+        - name: {{ .name }}
+          image: {{ .image.repository }}:{{ .image.tag }}
+          imagePullPolicy: {{.image.imagePullPolicy}}
+          ports:
+            - name: {{ .ports.name }}
+              containerPort: {{ .ports.end }}
+              protocol: TCP
+          environment:
+            {{- range .environment }}
+            name: {{ .name }}
+            value: {{ .value }}
+            {{- end }}
+          {{- if .mountCustomConfig }}
+          volumeMounts:
+          - name: factom-config
+            subPath: applicationContext.xml
+            mountPath: /opt/uni-resolver-java/uni-resolver-web/src/main/webapp/WEB-INF/applicationContext.xml
+          {{- end }}
+        {{- end }}
