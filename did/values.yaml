@@ -11,10 +11,6 @@ resolvers:
       repository: universalresolver/driver-did-btcr
       tag: latest
       imagePullPolicy: IfNotPresent
-    ports:
-      name: http-btcr
-      start: 8081
-      end: 8080
     environment:
   sov:
     name: sov
@@ -22,10 +18,6 @@ resolvers:
       repository: universalresolver/driver-did-sov
       tag: latest
       imagePullPolicy: IfNotPresent
-    ports:
-      name: http-sov
-      start: 8082
-      end: 8080
     environment:
   uport:
     name: uport
@@ -33,10 +25,6 @@ resolvers:
       repository: uport/uni-resolver-driver-did-uport
       tag: latest
       imagePullPolicy: IfNotPresent
-    ports:
-      name: http-uport
-      start: 8083
-      end: 8080
     environment:
   stack:
     name: stack
@@ -44,10 +32,6 @@ resolvers:
       repository: universalresolver/driver-did-stack
       tag: latest
       imagePullPolicy: IfNotPresent
-    ports:
-      name: http-stack
-      start: 8084
-      end: 8080
     environment:
   erc725:
     name: erc725
@@ -55,10 +39,6 @@ resolvers:
       repository: universalresolver/driver-did-erc725
       tag: latest
       imagePullPolicy: IfNotPresent
-    ports:
-      name: http-erc725
-      start: 8085
-      end: 8080
     environment:
   dom:
     name: dom
@@ -66,10 +46,6 @@ resolvers:
       repository: universalresolver/driver-did-dom
       tag: latest
       imagePullPolicy: IfNotPresent
-    ports:
-      name: http-dom
-      start: 8086
-      end: 8080
     environment:
   dns:
     name: dns
@@ -77,10 +53,6 @@ resolvers:
       repository: universalresolver/driver-dns
       tag: latest
       imagePullPolicy: IfNotPresent
-    ports:
-      name: http-dns
-      start: 8087
-      end: 8080
     environment:
   jolo:
     name: jolo
@@ -88,10 +60,6 @@ resolvers:
       repository: jolocomgmbh/jolocom-did-driver
       tag: latest
       imagePullPolicy: IfNotPresent
-    ports:
-      name: http-jolo
-      start: 8088
-      end: 8080
     environment:
   hacera:
     name: hacera
@@ -99,10 +67,6 @@ resolvers:
       repository: hacera/hacera-did-driver
       tag: latest
       imagePullPolicy: IfNotPresent
-    ports:
-      name: http-hacera
-      start: 8089
-      end: 8080
     environment:
   web:
     name: web
@@ -111,10 +75,6 @@ resolvers:
       tag: latest
       imagePullPolicy: IfNotPresent
     mountCustomConfig: true
-    ports:
-      name: http-web
-      start: 8080
-      end: 8080
     environment:
   factom:
     name: factom
@@ -122,10 +82,6 @@ resolvers:
       repository: factominc/driver-did-factom
       tag: latest
       imagePullPolicy: Always
-    ports:
-      name: http-factom
-      start: 8090
-      end: 8080
     environment:
       - name: uniresolver_driver_did_factom_factomConnection
         value: factomd

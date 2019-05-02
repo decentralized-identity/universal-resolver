@@ -1,21 +1,19 @@
+{{ range .Values.resolvers }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: resolver
+  name: resolver-{{ .name }}
   labels:
-    app.kubernetes.io/name: {{ include "did.name" . }}
-    helm.sh/chart: {{ include "did.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: did
 spec:
   type: ClusterIP
   ports:
-    {{ range .Values.resolvers }}
-    - port: {{ .ports.start }}
-      targetPort: {{ .ports.end }}
+    - port: 80
+      targetPort: 8080
       protocol: TCP
-      name: {{.ports.name }}
-    {{ end }}
   selector:
     app: did
     component: resolvers
+    resolver: {{ .name }}
+---
+{{ end }}
