@@ -84,7 +84,7 @@ resolvers:
       imagePullPolicy: Always
     environment:
       - name: uniresolver_driver_did_factom_factomConnection
-        value: factomd
+        value: harmony
       - name: uniresolver_driver_did_factom_rpcUrlMainnet
         value: https://api.factomd.net
       - name: uniresolver_driver_did_factom_rpcUrlTestnet
@@ -94,11 +94,11 @@ resolvers:
       - name: uniresolver_driver_did_factom_tfaExplorerApiUrlTestnet
         value: https://testnet.factoid.org/api/v1
       - name: uniresolver_driver_did_factom_harmonyApiUrl
-        value: http://connect-api.connect
+        value: http://harmony-identity.connect
       - name: uniresolver_driver_did_factom_harmonyApiAppId
         value:
       - name: uniresolver_driver_did_factom_harmonyApiAppKey
         value:
       - name: uniresolver_driver_did_factom_harmonyApiCachingEnabled
-        value: false
+        value: true
     volumes:
