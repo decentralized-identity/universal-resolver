@@ -1,16 +1,12 @@
 # Dockerfile for universalresolver/driver-did-erc725
 
-FROM universalresolver/driver
+FROM universalresolver/base-alpine
 MAINTAINER Markus Sabadello <markus@danubetech.com>
 
 # build driver-did-erc725
 
 ADD . /opt/driver-did-erc725
-RUN cd /opt/driver-did-erc725 && mvn install package -N -DskipTests
-
-# clean up
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN cd /opt/driver-did-erc725 && mvn clean install package -N -DskipTests
 
 # variables
 

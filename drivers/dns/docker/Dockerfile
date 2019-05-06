@@ -1,16 +1,12 @@
 # Dockerfile for universalresolver/driver-dns
 
-FROM universalresolver/driver
+FROM universalresolver/base-alpine
 MAINTAINER Markus Sabadello <markus@danubetech.com>
 
 # build driver-dns
 
 ADD . /opt/driver-dns
-RUN cd /opt/driver-dns && mvn install package -N -DskipTests
-
-# clean up
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN cd /opt/driver-dns && mvn clean install package -N -DskipTests
 
 # variables
 

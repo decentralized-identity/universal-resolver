@@ -1,0 +1,24 @@
+# Dockerfile for universalresolver/base
+
+FROM openjdk:8-alpine
+MAINTAINER Markus Sabadello <markus@danubetech.com>
+
+USER root
+
+RUN apk update && apk upgrade && \
+    apk add --no-cache maven git
+
+ENV PATH $JAVA_HOME/bin:$PATH
+
+# build dependencies
+
+RUN cd /opt/ && git clone https://github.com/peacekeeper/did-common-java.git
+RUN cd /opt/did-common-java/ && git checkout matrix-parameters && mvn clean install -DskipTests && mvn clean
+
+# build driver
+
+ADD . /opt/uni-resolver-java
+
+RUN cd /opt/uni-resolver-java && mvn clean install -N -DskipTests && mvn clean && \
+    cd /opt/uni-resolver-java/uni-resolver-core && mvn clean install -N -DskipTests && mvn clean && \
+    cd /opt/uni-resolver-java/driver && mvn clean install -N -DskipTests && mvn clean

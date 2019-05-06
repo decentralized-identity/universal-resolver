@@ -1,16 +1,14 @@
 # Dockerfile for universalresolver/driver-did-stack
 
-FROM universalresolver/driver
+FROM universalresolver/base-alpine
 MAINTAINER Markus Sabadello <markus@danubetech.com>
 
 # build driver-did-stack
 
 ADD . /opt/driver-did-stack
-RUN cd /opt/driver-did-stack && mvn install package -N -DskipTests
+RUN cd /opt/driver-did-stack && mvn clean install package -N -DskipTests
 
 # done
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 8084
 

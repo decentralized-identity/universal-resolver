@@ -1,21 +1,17 @@
 # Dockerfile for universalresolver/driver-did-btcr
 
-FROM universalresolver/driver
+FROM universalresolver/base-alpine
 MAINTAINER Markus Sabadello <markus@danubetech.com>
 
 # build dependencies
 
-RUN cd /opt/ && git clone https://github.com/WebOfTrustInfo/txref-conversion-java.git
-RUN cd /opt/txref-conversion-java/ && mvn clean install -DskipTests
+RUN cd /opt/ && git clone https://github.com/WebOfTrustInfo/txref-conversion-java.git && \
+    cd /opt/txref-conversion-java/ && mvn clean install -DskipTests && mvn clean
 
 # build driver-did-btcr
 
 ADD . /opt/driver-did-btcr
-RUN cd /opt/driver-did-btcr && mvn install package -N -DskipTests
-
-# clean up
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN cd /opt/driver-did-btcr && mvn clean install package -N -DskipTests
 
 # variables
 
