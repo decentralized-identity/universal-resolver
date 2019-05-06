@@ -1,5 +1,6 @@
 package uniresolver.local;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import did.DID;
+import did.DIDDocument;
+import did.DIDURL;
 import did.parser.ParserException;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
@@ -47,7 +50,7 @@ public class LocalUniResolver implements UniResolver {
 	}
 
 	@Override
-	public ResolveResult resolve(String identifier, String selectServiceType) throws ResolutionException {
+	public ResolveResult resolve(String identifier, Map<String, String> options) throws ResolutionException {
 
 		if (identifier == null) throw new NullPointerException();
 
@@ -57,45 +60,68 @@ public class LocalUniResolver implements UniResolver {
 
 		long start = System.currentTimeMillis();
 
+		// parse DID URL
+
+		DIDURL didUrl = null;
+		DID did = null;
+
+		try {
+
+			didUrl = DIDURL.fromString(identifier);
+			log.debug("Identifier " + identifier + " is a valid DID URL: " + didUrl.getDid());
+
+			did = didUrl.getDid();
+		} catch (IllegalArgumentException | ParserException ex) {
+
+			log.debug("Identifier " + identifier + " is not a valid DID URL: " + ex.getMessage());
+		}
+
+		// resolve earlier version?
+
+		String resolveIdentifier = did != null ? did.getDidString() : identifier;
+		ResolveResult resolveResult = null;
+
 		// try all drivers
 
-		ResolveResult ResolveResult = null;
 		String usedDriverId = null;
 		Driver usedDriver = null;
 
-		for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
+		if (resolveResult == null) {
 
-			if (log.isDebugEnabled()) log.debug("Attemping to resolve " + identifier + " with driver " + driver.getValue().getClass());
-			ResolveResult = driver.getValue().resolve(identifier);
+			for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
 
-			if (ResolveResult != null) {
+				if (log.isDebugEnabled()) log.debug("Attemping to resolve " + resolveIdentifier + " with driver " + driver.getValue().getClass());
+				resolveResult = driver.getValue().resolve(resolveIdentifier);
 
-				usedDriverId = driver.getKey();
-				usedDriver = driver.getValue();
-				break;
+				if (resolveResult != null) {
+
+					usedDriverId = driver.getKey();
+					usedDriver = driver.getValue();
+					break;
+				}
 			}
+
+			if (log.isDebugEnabled()) log.debug("Resolved " + resolveIdentifier + " with driver " + usedDriverId);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Resolved " + identifier + " with driver " + usedDriverId);
+		// result contains a new identifier to resolve (redirect)?
 
-		// result contains a new did?
+		List<String> redirectedIdentifiers = new ArrayList<String> ();
+		List<ResolveResult> redirectedResolveResults = new ArrayList<ResolveResult> ();
 
-		List<String> initialIdentifiers = new ArrayList<String> ();
-		List<ResolveResult> initialResolveResults = new ArrayList<ResolveResult> ();
+		while (resolveResult != null && resolveResult.getMethodMetadata().containsKey("redirect")) {
 
-		while (ResolveResult != null && ResolveResult.getMethodMetadata().containsKey("did")) {
+			redirectedIdentifiers.add(resolveIdentifier);
+			redirectedResolveResults.add(resolveResult);
 
-			initialIdentifiers.add(identifier);
-			initialResolveResults.add(ResolveResult);
-
-			identifier = (String) ResolveResult.getMethodMetadata().get("did");
+			resolveIdentifier = (String) resolveResult.getMethodMetadata().get("redirect");
 
 			for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
 
 				if (log.isDebugEnabled()) log.debug("Attemping to resolve " + identifier + " with driver " + driver.getValue().getClass());
-				ResolveResult = driver.getValue().resolve(identifier);
+				resolveResult = driver.getValue().resolve(identifier);
 
-				if (ResolveResult != null) {
+				if (resolveResult != null) {
 
 					usedDriverId = driver.getKey();
 					usedDriver = driver.getValue();
@@ -106,8 +132,15 @@ public class LocalUniResolver implements UniResolver {
 			if (log.isDebugEnabled()) log.debug("Resolved " + identifier + " with driver " + usedDriverId);
 		}
 
-		if (initialIdentifiers.isEmpty()) initialIdentifiers = null;
-		if (initialResolveResults.isEmpty()) initialResolveResults = null;
+		if (redirectedIdentifiers.isEmpty()) redirectedIdentifiers = null;
+		if (redirectedResolveResults.isEmpty()) redirectedResolveResults = null;
+
+		if (resolveResult == null && redirectedResolveResults != null && redirectedIdentifiers != null) {
+
+			resolveIdentifier = redirectedIdentifiers.get(0);
+			resolveResult = redirectedResolveResults.get(0);
+			if (log.isDebugEnabled()) log.debug("Falling back to redirected identifier and resolve result: " + identifier);
+		}
 
 		// stop time
 
@@ -115,62 +148,48 @@ public class LocalUniResolver implements UniResolver {
 
 		// no driver was able to fulfill a request?
 
-		if (ResolveResult == null && initialResolveResults != null && initialIdentifiers != null) {
-
-			identifier = initialIdentifiers.get(0);
-			ResolveResult = initialResolveResults.get(0);
-			if (log.isDebugEnabled()) log.debug("Falling back to initial identifier and resolve result: " + identifier);
-		}
-
-		if (ResolveResult == null) {
+		if (resolveResult == null) {
 
 			if (log.isDebugEnabled()) log.debug("No resolve result.");
 			return null;
 		}
 
-		// parse DID
+		// dereferencing
 
-		DID didReference = null;
+		Integer[] selectedServices = null;
+		String selectServiceName = didUrl.getParameters() == null ? null : didUrl.getParameters().get("service");
+		String selectServiceType = didUrl.getParameters() == null ? null : didUrl.getParameters().get("service-type");
 
-		try {
+		if (selectServiceName != null || selectServiceType != null) {
 
-			didReference = DID.fromString(identifier);
-			log.debug("identifier " + identifier + " is a valid DID reference: " + didReference.getDid());
-
-			identifier = didReference.getDid();
-		} catch (IllegalArgumentException | ParserException ex) {
-
-			log.debug("Identifier " + identifier + " is not a valid DID reference: " + ex.getMessage());
+			selectedServices = resolveResult.getDidDocument().selectServices(selectServiceName, selectServiceType).keySet().toArray(new Integer[0]);
 		}
 
-		// service selection
+		Integer[] selectedKeys = null;
+		String selectKeyName = didUrl.getParameters() == null ? null : didUrl.getParameters().get("key");
+		String selectKeyType = didUrl.getParameters() == null ? null : didUrl.getParameters().get("key-type");
 
-		String selectServiceName = didReference != null ? didReference.getService() : null;
-		Integer[] selectedServices;
+		if (selectKeyName != null || selectKeyType != null) {
 
-		if (selectServiceName == null && selectServiceType == null) {
-
-			selectedServices = null;
-		} else {
-
-			selectedServices = ResolveResult.getDidDocument().selectServices(selectServiceName, selectServiceType);
+			selectedKeys = resolveResult.getDidDocument().selectKeys(selectKeyName, selectKeyType).keySet().toArray(new Integer[0]);
 		}
 
 		// add RESOLVER METADATA
 
 		Map<String, Object> resolverMetadata = new LinkedHashMap<String, Object> ();
-		resolverMetadata.put("driverId", usedDriverId);
-		resolverMetadata.put("driver", usedDriver.getClass().getSimpleName());
 		resolverMetadata.put("duration", Long.valueOf(stop - start));
-		if (initialIdentifiers != null) resolverMetadata.put("initialIdentifiers", initialIdentifiers);
-		if (didReference != null) resolverMetadata.put("didReference", didReference);
+		if (usedDriverId != null) resolverMetadata.put("driverId", usedDriverId);
+		if (usedDriver != null) resolverMetadata.put("driver", usedDriver.getClass().getSimpleName());
+		if (didUrl != null) resolverMetadata.put("didUrl", didUrl);
+		if (redirectedIdentifiers != null) resolverMetadata.put("redirectedIdentifiers", redirectedIdentifiers);
 		if (selectedServices != null) resolverMetadata.put("selectedServices", selectedServices);
+		if (selectedKeys != null) resolverMetadata.put("selectedKeys", selectedKeys);
 
-		ResolveResult.setResolverMetadata(resolverMetadata);
+		resolveResult.setResolverMetadata(resolverMetadata);
 
 		// done
 
-		return ResolveResult;
+		return resolveResult;
 	}
 
 	@Override

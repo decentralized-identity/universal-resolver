@@ -46,7 +46,7 @@ public class ClientUniResolver implements UniResolver {
 	}
 
 	@Override
-	public ResolveResult resolve(String identifier, String selectServiceType) throws ResolutionException {
+	public ResolveResult resolve(String identifier, Map<String, String> options) throws ResolutionException {
 
 		if (identifier == null) throw new NullPointerException();
 
