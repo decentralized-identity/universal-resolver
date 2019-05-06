@@ -36,17 +36,17 @@ The driver recognizes the following environment variables:
 ### `uniresolver_driver_did_sov_libIndyPath`
 
  * Specifies the path to the Indy SDK library.
- * Default value: `./sovrin/lib/`
+ * Default value: (empty string)
 
 ### `uniresolver_driver_did_sov_poolConfigs`
 
  * Specifies a semi-colon-separated list of Indy network names and pool configuration files. The default network is `_`.
- * Default value: `_;./sovrin/live.txn;stn;./sovrin/stn.txn;danube;./sovrin/11347-05.txn`
+ * Default value: `_;./sovrin/mainnet.txn;staging;./sovrin/stagingnet.txn;builder;./sovrin/buildernet.txn;danube;./sovrin/danube.txn`
 
 ### `uniresolver_driver_did_sov_poolVersions`
 
  * Specifies a semi-colon-separated list of Indy network names and pool protocol versions. The default network is `_`.
- * Default value: `_;2;stn;2;danube;2`
+ * Default value: `_;2;staging;2;builder;2;danube;2`
 
 ### `uniresolver_driver_did_sov_walletName`
 
