@@ -12,6 +12,7 @@
 				<entry key="did-sov"><ref bean="DidSovDriver" /></entry>
 				<entry key="did-uport"><ref bean="DidUportDriver" /></entry>
 				<entry key="did-v1"><ref bean="DidV1Driver" /></entry>
+				<entry key="did-v1-test"><ref bean="DidV1TestnetDriver" /></entry>
 				<entry key="did-ipid"><ref bean="DidIpidDriver" /></entry>
 				<entry key="did-stack"><ref bean="DidStackDriver" /></entry>
 				<entry key="did-erc725"><ref bean="DidErc725Driver" /></entry>
@@ -52,7 +53,12 @@
 
 	<bean id="DidV1Driver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="https://genesis.testnet.veres.one/dids/$1" />
-		<property name="pattern" value="^(did:v1:.+)$" />
+		<property name="pattern" value="^(did:v1:nym:.+)$" />
+	</bean>
+
+	<bean id="DidV1TestnetDriver" class="uniresolver.driver.http.HttpDriver">
+		<property name="resolveUri" value="https://genesis.testnet.veres.one/dids/$1" />
+		<property name="pattern" value="^(did:v1:test:nym:.+)$" />
 	</bean>
 
 	<bean id="DidIpidDriver" class="uniresolver.driver.http.HttpDriver">
