@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import did.Authentication;
 import did.DIDDocument;
-import did.Encryption;
 import did.PublicKey;
 import did.Service;
 import uniresolver.ResolutionException;
@@ -169,7 +168,6 @@ public class DidErc725Driver implements Driver {
 		int keyNum = 0;
 		List<PublicKey> publicKeys = new ArrayList<PublicKey> ();
 		List<Authentication> authentications = new ArrayList<Authentication> ();
-		List<Encryption> encryptions = new ArrayList<Encryption> ();
 
 		if (keys != null) {
 
@@ -202,22 +200,10 @@ public class DidErc725Driver implements Driver {
 				Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
 				authentications.add(authentication);
 			}
-
-			for (byte[] actionKey : keys.getActionKeys()) {
-
-				String keyId = id + "#key-" + (++keyNum);
-
-				PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, Hex.encodeHexString(actionKey), null);
-				publicKeys.add(publicKey);
-
-				Encryption encryption = Encryption.build(null, DIDDOCUMENT_ENCRYPTION_TYPES, keyId);
-				encryptions.add(encryption);
-			}
 		} else {
 
 			publicKeys = Collections.emptyList();
 			authentications = Collections.emptyList();
-			encryptions = Collections.emptyList();
 		}
 
 		// DID DOCUMENT services
@@ -226,7 +212,7 @@ public class DidErc725Driver implements Driver {
 
 		// create DID DOCUMENT
 
-		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, encryptions, services);
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, services);
 
 		// create METHOD METADATA
 

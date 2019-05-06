@@ -191,7 +191,7 @@ public class DidDomDriver implements Driver {
 		}
 
 		// create DDO
-		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, null, services);
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, services);
 
 		// done
 		return ResolveResult.build(didDocument);

@@ -216,7 +216,7 @@ public class DidStackDriver implements Driver {
 		services.add(Service.build("blockstack", DEFAULT_BLOCKSTACK_CORE_URL));
 
 		// create DDO
-		DIDDocument didDocument = DIDDocument.build(id, publicKeys, null, null, services);
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, null, services);
 
 		// done
 		return ResolveResult.build(didDocument);
