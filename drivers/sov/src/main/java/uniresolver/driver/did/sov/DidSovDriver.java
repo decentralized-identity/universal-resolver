@@ -34,7 +34,6 @@ import com.google.gson.JsonPrimitive;
 
 import did.Authentication;
 import did.DIDDocument;
-import did.Encryption;
 import did.PublicKey;
 import did.Service;
 import uniresolver.ResolutionException;
@@ -212,7 +211,6 @@ public class DidSovDriver implements Driver {
 		int keyNum = 0;
 		List<PublicKey> publicKeys;
 		List<Authentication> authentications;
-		List<Encryption> encryptions;
 
 		String keyId = id + "#key-" + (++keyNum);
 
@@ -221,8 +219,6 @@ public class DidSovDriver implements Driver {
 
 		Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
 		authentications = Collections.singletonList(authentication);
-
-		encryptions = Collections.emptyList();
 
 		// DID DOCUMENT services
 
@@ -245,7 +241,7 @@ public class DidSovDriver implements Driver {
 
 		// create DID DOCUMENT
 
-		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, encryptions, services);
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, services);
 
 		// create DRIVER METADATA
 
@@ -275,10 +271,14 @@ public class DidSovDriver implements Driver {
 
 		// initialize libindy
 
-		if ((! LibIndy.isInitialized()) && this.getLibIndyPath() != null) {
+		if (this.getLibIndyPath() != null && ! this.getLibIndyPath().isEmpty()) {
 
 			if (log.isInfoEnabled()) log.info("Initializing libindy: " + this.getLibIndyPath() + " (" + new File(this.getLibIndyPath()).getAbsolutePath() + ")");
-			LibIndy.init(this.getLibIndyPath());
+			LibIndy.init(new File(this.getLibIndyPath()));
+		} else {
+
+			if (log.isInfoEnabled()) log.info("Initializing libindy.");
+			if (! LibIndy.isInitialized()) LibIndy.init();
 		}
 
 		// parse pool configs
