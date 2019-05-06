@@ -1,10 +1,8 @@
 package uniresolver.driver.did.btcr.bitcoinconnection;
 
-import java.io.IOException;
-
 import org.bitcoinj.core.BlockChain;
 
-import info.weboftrust.txrefconversion.Chain;
+import info.weboftrust.txrefconversion.ChainAndTxid;
 
 public class BitcoinjSPVBitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BitcoinjSPVBitcoinConnection implements BitcoinConnection {
 
@@ -26,7 +24,7 @@ public class BitcoinjSPVBitcoinConnection extends info.weboftrust.txrefconversio
 	}
 
 	@Override
-	public BtcrData getBtcrData(Chain chain, String txid) throws IOException {
+	public BtcrData getBtcrData(ChainAndTxid chainAndTxid) {
 
 		throw new RuntimeException("Not implemented.");
 	}

@@ -3,25 +3,25 @@ package uniresolver.driver.did.btcr.bitcoinconnection;
 import java.io.IOException;
 import java.net.URI;
 
-import info.weboftrust.txrefconversion.Chain;
+import info.weboftrust.txrefconversion.ChainAndTxid;
 
 public interface BitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BitcoinConnection {
 
-	public BtcrData getBtcrData(Chain chain, String txid) throws IOException;
+	public BtcrData getBtcrData(ChainAndTxid chainAndTxid) throws IOException;
 
 	public static class BtcrData {
 
-		private String spentInTxid;
+		private ChainAndTxid spentInChainAndTxid;
 		private String inputScriptPubKey;
 		private URI continuationUri;
 
-		public BtcrData(String spentInTxid, String inputScriptPubKey, URI continuationUri) { this.spentInTxid = spentInTxid; this.inputScriptPubKey = inputScriptPubKey; this.continuationUri = continuationUri; }
+		public BtcrData(ChainAndTxid spentInChainAndTxid, String inputScriptPubKey, URI continuationUri) { this.spentInChainAndTxid = spentInChainAndTxid; this.inputScriptPubKey = inputScriptPubKey; this.continuationUri = continuationUri; }
 
-		public String getSpentInTxid() { return this.spentInTxid; }
+		public ChainAndTxid getSpentInChainAndTxid() { return this.spentInChainAndTxid; }
 		public String getInputScriptPubKey() { return this.inputScriptPubKey; }
 		public URI getContinuationUri() { return this.continuationUri; }
 
 		@Override
-		public String toString() { return "BtcrData [spentInTxid=" + spentInTxid + ", inputScriptPubKey=" + inputScriptPubKey + ", continuationUri=" + continuationUri + "]"; }
+		public String toString() { return "BtcrData [spentInChainAndTxid=" + spentInChainAndTxid + ", inputScriptPubKey=" + inputScriptPubKey + ", continuationUri=" + continuationUri + "]"; }
 	}
 }

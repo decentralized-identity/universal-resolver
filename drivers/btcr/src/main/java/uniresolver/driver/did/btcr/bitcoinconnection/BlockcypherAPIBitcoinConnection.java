@@ -16,6 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import info.weboftrust.txrefconversion.Chain;
+import info.weboftrust.txrefconversion.ChainAndTxid;
 
 public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BlockcypherAPIBitcoinConnection implements BitcoinConnection {
 
@@ -31,15 +32,15 @@ public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconver
 	}
 
 	@Override
-	public BtcrData getBtcrData(Chain chain, String txid) throws IOException {
+	public BtcrData getBtcrData(ChainAndTxid chainAndTxid) throws IOException {
 
 		// retrieve transaction data
 
 		URI uri;
-		if (chain == Chain.MAINNET) {
-			uri = URI.create("https://api.blockcypher.com/v1/btc/main/txs/" + txid + "?limit=500");
+		if (chainAndTxid.getChain() == Chain.MAINNET) {
+			uri = URI.create("https://api.blockcypher.com/v1/btc/main/txs/" + chainAndTxid.getTxid() + "?limit=500");
 		} else {
-			uri = URI.create("https://api.blockcypher.com/v1/btc/test3/txs/" + txid + "?limit=500");
+			uri = URI.create("https://api.blockcypher.com/v1/btc/test3/txs/" + chainAndTxid.getTxid() + "?limit=500");
 		}
 
 		JsonObject txData = retrieveJson(uri);
@@ -112,20 +113,23 @@ public class BlockcypherAPIBitcoinConnection extends info.weboftrust.txrefconver
 
 		// find spent in tx
 
-		String spentInTxid = null;
+		int outTxid = -1;
+		ChainAndTxid spentInChainAndTxid = null;
 
 		for (Iterator<JsonElement> i = ((JsonArray) txData.get("outputs")).iterator(); i.hasNext(); ) {
 
+			outTxid++;
+			
 			JsonObject output = i.next().getAsJsonObject();
 			JsonElement spentBy = output.get("spent_by");
 			if (spentBy == null || ! spentBy.isJsonPrimitive()) continue;
 
-			spentInTxid = spentBy.getAsString();
+			spentInChainAndTxid = new ChainAndTxid(chainAndTxid.getChain(), spentBy.getAsString(), outTxid);
 			break;
 		}
 
 		// done
 
-		return new BtcrData(spentInTxid, inputScriptPubKey, continuationUri);
+		return new BtcrData(spentInChainAndTxid, inputScriptPubKey, continuationUri);
 	}
 }

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.weboftrust.txrefconversion.Chain;
+import info.weboftrust.txrefconversion.ChainAndTxid;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.RawTransaction;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.RawTransaction.In;
@@ -43,13 +44,13 @@ public class BitcoindRPCBitcoinConnection extends info.weboftrust.txrefconversio
 	}
 
 	@Override
-	public BtcrData getBtcrData(Chain chain, String txid) {
+	public BtcrData getBtcrData(ChainAndTxid chainAndTxid) {
 
 		// retrieve transaction data
 
-		BitcoindRpcClient bitcoindRpcClient = chain == Chain.MAINNET ? this.bitcoindRpcClientMainnet : this.bitcoindRpcClientTestnet;
+		BitcoindRpcClient bitcoindRpcClient = chainAndTxid.getChain() == Chain.MAINNET ? this.bitcoindRpcClientMainnet : this.bitcoindRpcClientTestnet;
 
-		RawTransaction rawTransaction = bitcoindRpcClient.getRawTransaction(txid);
+		RawTransaction rawTransaction = bitcoindRpcClient.getRawTransaction(chainAndTxid.getTxid());
 		if (rawTransaction == null) return null;
 
 		// find input script pub key

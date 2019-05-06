@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
 import info.weboftrust.txrefconversion.Chain;
+import info.weboftrust.txrefconversion.ChainAndTxid;
 
 public class BTCDRPCBitcoinConnection extends info.weboftrust.txrefconversion.bitcoinconnection.BTCDRPCBitcoinConnection implements BitcoinConnection {
 
@@ -48,9 +49,9 @@ public class BTCDRPCBitcoinConnection extends info.weboftrust.txrefconversion.bi
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public BtcrData getBtcrData(Chain chain, String txid) throws IOException {
+	public BtcrData getBtcrData(ChainAndTxid chainAndTxid) throws IOException {
 
-		JsonRpcHttpClient btcdRpcClient = chain == Chain.MAINNET ? this.btcdRpcClientMainnet : this.btcdRpcClientTestnet;
+		JsonRpcHttpClient btcdRpcClient = chainAndTxid.getChain() == Chain.MAINNET ? this.btcdRpcClientMainnet : this.btcdRpcClientTestnet;
 
 		// retrieve transaction data
 
@@ -58,7 +59,7 @@ public class BTCDRPCBitcoinConnection extends info.weboftrust.txrefconversion.bi
 
 		try {
 
-			getrawtransaction_result = btcdRpcClient.invoke("getrawtransaction", new Object[] { txid, 1 }, LinkedHashMap.class);
+			getrawtransaction_result = btcdRpcClient.invoke("getrawtransaction", new Object[] { chainAndTxid.getTxid(), 1 }, LinkedHashMap.class);
 		} catch (IOException ex) {
 
 			throw ex;
@@ -138,7 +139,7 @@ public class BTCDRPCBitcoinConnection extends info.weboftrust.txrefconversion.bi
 
 		// find spent in tx
 
-		String spentInTxid = null;
+		ChainAndTxid spentInChainAndTxid = null;
 
 		spentInTxid: for (int i=0; i<vOut.size(); i++) {
 
@@ -180,15 +181,16 @@ public class BTCDRPCBitcoinConnection extends info.weboftrust.txrefconversion.bi
 					if (log.isDebugEnabled()) log.debug("SEARCH OUT: transaction: " + outTxid);
 
 					String outInputScriptPubKey = null;
+					int outTxIndex = 0;
 					String outInTxid = null;
 					Integer outInVout = null;
 
 					ArrayList<Object> outTxvIn = (ArrayList<Object>) outTx.get("vin");
 					if (outTxvIn == null || outTxvIn.size() < 1) return null;
 
-					for (int iiii=0; iiii<outTxvIn.size(); iiii++) {
+					for (; outTxIndex<outTxvIn.size(); outTxIndex++) {
 
-						LinkedHashMap<String, Object> outTxIn = (LinkedHashMap<String, Object>) outTxvIn.get(iiii);
+						LinkedHashMap<String, Object> outTxIn = (LinkedHashMap<String, Object>) outTxvIn.get(outTxIndex);
 
 						outInTxid = (String) outTxIn.get("txid");
 						if (log.isDebugEnabled()) log.debug("SEARCH OUT: outInTxid: " + outInTxid);
@@ -220,9 +222,9 @@ public class BTCDRPCBitcoinConnection extends info.weboftrust.txrefconversion.bi
 					if (outInputScriptPubKey == null) continue;
 					if (outInputScriptPubKey.length() > 66) outInputScriptPubKey = outInputScriptPubKey.substring(outInputScriptPubKey.length() - 66);
 
-					if (address.equals(pubKeyToAddress(chain, outInputScriptPubKey)) && txid.equals(outInTxid) && i == outInVout.intValue()) {
+					if (address.equals(pubKeyToAddress(chainAndTxid.getChain(), outInputScriptPubKey)) && chainAndTxid.getTxid().equals(outInTxid) && i == outInVout.intValue()) {
 
-						spentInTxid = outTxid;
+						spentInChainAndTxid = new ChainAndTxid(chainAndTxid.getChain(), outTxid, outTxIndex);
 						break spentInTxid;
 					}
 				}
@@ -231,7 +233,7 @@ public class BTCDRPCBitcoinConnection extends info.weboftrust.txrefconversion.bi
 
 		// done
 
-		return new BtcrData(spentInTxid, inputScriptPubKey, continuationUri);
+		return new BtcrData(spentInChainAndTxid, inputScriptPubKey, continuationUri);
 	}
 
 	/*

@@ -19,14 +19,17 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jsonldjava.utils.JsonUtils;
+
 import did.Authentication;
 import did.DIDDocument;
-import did.Encryption;
 import did.PublicKey;
 import did.Service;
 import info.weboftrust.txrefconversion.Bech32;
 import info.weboftrust.txrefconversion.ChainAndBlockLocation;
-import info.weboftrust.txrefconversion.TxrefConverter;
+import info.weboftrust.txrefconversion.ChainAndTxid;
+import info.weboftrust.txrefconversion.TxrefConstants;
+import info.weboftrust.txrefconversion.TxrefDecoder;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
 import uniresolver.driver.did.btcr.bitcoinconnection.BTCDRPCBitcoinConnection;
@@ -137,42 +140,42 @@ public class DidBtcrDriver implements Driver {
 		// determine txref
 
 		String txref = null;
-		if (targetDid.charAt(0) == TxrefConverter.MAGIC_BTC_MAINNET_BECH32_CHAR) txref = TxrefConverter.TXREF_BECH32_HRP_MAINNET + Bech32.SEPARATOR + "-" + targetDid;
-		if (targetDid.charAt(0) == TxrefConverter.MAGIC_BTC_TESTNET_BECH32_CHAR) txref = TxrefConverter.TXREF_BECH32_HRP_TESTNET + Bech32.SEPARATOR + "-" + targetDid;
+		if (targetDid.charAt(0) == TxrefConstants.MAGIC_BTC_MAINNET_BECH32_CHAR || targetDid.charAt(0) == TxrefConstants.MAGIC_BTC_MAINNET_EXTENDED_BECH32_CHAR) txref = TxrefConstants.TXREF_BECH32_HRP_MAINNET + Bech32.SEPARATOR + "-" + targetDid;
+		if (targetDid.charAt(0) == TxrefConstants.MAGIC_BTC_TESTNET_BECH32_CHAR || targetDid.charAt(0) == TxrefConstants.MAGIC_BTC_TESTNET_EXTENDED_BECH32_CHAR) txref = TxrefConstants.TXREF_BECH32_HRP_TESTNET + Bech32.SEPARATOR + "-" + targetDid;
 		if (txref == null) throw new ResolutionException("Invalid magic byte in " + targetDid);
 
 		// retrieve btcr data
 
 		ChainAndBlockLocation initialChainAndBlockLocation;
 		ChainAndBlockLocation chainAndBlockLocation;
-		String initialTxid;
-		String txid;
+		ChainAndTxid initialChainAndTxid;
+		ChainAndTxid chainAndTxid;
 		BtcrData btcrData = null;
-		List<String> spentInTxids = new ArrayList<String> ();
+		List<ChainAndTxid> spentInChainAndTxids = new ArrayList<ChainAndTxid> ();
 
 		try {
 
-			chainAndBlockLocation = TxrefConverter.get().txrefDecode(txref);
-			txid = this.getBitcoinConnection().getTxid(chainAndBlockLocation);
+			chainAndBlockLocation = TxrefDecoder.txrefDecode(txref);
+			chainAndTxid = this.getBitcoinConnection().lookupChainAndTxid(chainAndBlockLocation);
 
-			initialTxid = txid;
+			initialChainAndTxid = chainAndTxid;
 			initialChainAndBlockLocation = chainAndBlockLocation;
 
 			while (true) {
 
-				btcrData = this.getBitcoinConnection().getBtcrData(chainAndBlockLocation.getChain(), txid);
+				btcrData = this.getBitcoinConnection().getBtcrData(chainAndTxid);
 				if (btcrData == null) break;
 
 				// check if we need to follow the tip
 
-				if (btcrData.getSpentInTxid() == null) {
+				if (btcrData.getSpentInChainAndTxid() == null) {
 
 					break;
 				} else {
 
-					spentInTxids.add(btcrData.getSpentInTxid());
-					txid = btcrData.getSpentInTxid();
-					chainAndBlockLocation = this.getBitcoinConnection().getChainAndBlockLocation(chainAndBlockLocation.getChain(), txid);
+					spentInChainAndTxids.add(btcrData.getSpentInChainAndTxid());
+					chainAndTxid = btcrData.getSpentInChainAndTxid();
+					chainAndBlockLocation = this.getBitcoinConnection().lookupChainAndBlockLocation(chainAndTxid);
 				}
 			}
 		} catch (IOException ex) {
@@ -180,7 +183,7 @@ public class DidBtcrDriver implements Driver {
 			throw new ResolutionException("Cannot retrieve BTCR data for " + txref + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ txid + " on chain " + chainAndBlockLocation.getChain() + "): " + btcrData);
+		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ chainAndTxid + " on chain " + chainAndBlockLocation.getChain() + "): " + btcrData);
 
 		// retrieve DID DOCUMENT CONTINUATION
 
@@ -196,7 +199,10 @@ public class DidBtcrDriver implements Driver {
 
 				HttpEntity httpEntity = httpResponse.getEntity();
 
-				didDocumentContinuation = DIDDocument.fromJson(EntityUtils.toString(httpEntity));
+				Map<String, Object> jsonLdObject = (LinkedHashMap<String, Object>) JsonUtils.fromString(EntityUtils.toString(httpEntity));
+				if (jsonLdObject.containsKey("didDocument")) jsonLdObject = (LinkedHashMap<String, Object>) jsonLdObject.get("didDocument");
+
+				didDocumentContinuation = DIDDocument.fromJson(jsonLdObject);
 				EntityUtils.consume(httpEntity);
 			} catch (IOException ex) {
 
@@ -213,26 +219,24 @@ public class DidBtcrDriver implements Driver {
 		// DID DOCUMENT publicKeys
 
 		int keyNum = 0;
-		List<PublicKey> publicKeys;
-		List<Authentication> authentications;
-		List<Encryption> encryptions;
+		List<PublicKey> publicKeys = new ArrayList<PublicKey> ();
+		List<Authentication> authentications = new ArrayList<Authentication> ();
 
 		if (btcrData != null) {
 
 			String keyId = id + "#key-" + (++keyNum);
 
 			PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, btcrData.getInputScriptPubKey(), null);
-			publicKeys = Collections.singletonList(publicKey);
+			publicKeys.add(publicKey);
 
 			Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
-			authentications = Collections.singletonList(authentication);
+			authentications.add(authentication);
+		}
 
-			encryptions = Collections.emptyList();
-		} else {
+		if (didDocumentContinuation != null) {
 
-			publicKeys = Collections.emptyList();
-			authentications = Collections.emptyList();
-			encryptions = Collections.emptyList();
+			if (didDocumentContinuation.getPublicKeys() != null) publicKeys.addAll(didDocumentContinuation.getPublicKeys());
+			if (didDocumentContinuation.getAuthentications() != null) authentications.addAll(didDocumentContinuation.getAuthentications());
 		}
 
 		// DID DOCUMENT services
@@ -249,11 +253,11 @@ public class DidBtcrDriver implements Driver {
 
 		// create DID DOCUMENT
 
-		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, encryptions, services);
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, services);
 
 		// revoked?
 
-		if ((! spentInTxids.isEmpty()) && didDocumentContinuation == null) {
+		if ((! spentInChainAndTxids.isEmpty()) && didDocumentContinuation == null) {
 
 			didDocument = null;
 		}
@@ -267,11 +271,11 @@ public class DidBtcrDriver implements Driver {
 		if (chainAndBlockLocation != null) methodMetadata.put("chain", chainAndBlockLocation.getChain());
 		if (initialChainAndBlockLocation != null) methodMetadata.put("initialBlockHeight", initialChainAndBlockLocation.getBlockHeight());
 		if (initialChainAndBlockLocation != null) methodMetadata.put("initialBlockIndex", initialChainAndBlockLocation.getBlockIndex());
-		if (initialTxid != null) methodMetadata.put("initialTxid", initialTxid);
+		if (initialChainAndTxid != null) methodMetadata.put("initialTxid", initialChainAndTxid);
 		if (chainAndBlockLocation != null) methodMetadata.put("blockHeight", chainAndBlockLocation.getBlockHeight());
 		if (chainAndBlockLocation != null) methodMetadata.put("blockIndex", chainAndBlockLocation.getBlockIndex());
-		if (txid != null) methodMetadata.put("txid", txid);
-		if (spentInTxids != null) methodMetadata.put("spentInTxids", spentInTxids);
+		if (chainAndTxid != null) methodMetadata.put("txid", chainAndTxid);
+		if (spentInChainAndTxids != null) methodMetadata.put("spentInChainAndTxids", spentInChainAndTxids);
 
 		// create RESOLVE RESULT
 
