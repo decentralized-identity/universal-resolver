@@ -39,10 +39,6 @@ services:
       uniresolver_driver_did_erc725_etherscanApiKovan: ${uniresolver_driver_did_erc725_etherscanApiKovan}
     ports:
       - "8085:8080"
-  driver-did-dom:
-    image: universalresolver/driver-did-dom:latest
-    ports:
-      - "8086:8080"
   driver-dns:
     image: universalresolver/driver-dns:latest
     environment:
