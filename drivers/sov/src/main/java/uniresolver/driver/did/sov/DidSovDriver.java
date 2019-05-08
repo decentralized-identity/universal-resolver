@@ -124,7 +124,10 @@ public class DidSovDriver implements Driver {
 
 		// open pool
 
-		if (this.getPoolMap() == null || this.getWallet() == null || this.getSubmitterDid() == null) this.openIndy();
+		synchronized (this) {
+
+			if (this.getPoolMap() == null || this.getWallet() == null || this.getSubmitterDid() == null) this.openIndy();
+		}
 
 		// parse identifier
 
