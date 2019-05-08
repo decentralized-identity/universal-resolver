@@ -9,7 +9,7 @@ RUN apt-get -y update && \
     apt-get install -y --no-install-recommends software-properties-common gnupg && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 68DB5E88 && \
     add-apt-repository "deb https://repo.sovrin.org/sdk/deb xenial stable" && \
-    apt-get install -y libindy && \
+    apt-get install -y libindy=1.8.2 && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN cd /opt/ && \
