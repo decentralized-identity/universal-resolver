@@ -81,6 +81,27 @@ public class LocalUniResolver implements UniResolver {
 		String resolveIdentifier = did != null ? did.getDidString() : identifier;
 		ResolveResult resolveResult = null;
 
+		if (didUrl != null) {
+
+			if (didUrl.getParameters().containsKey("version-time")) {
+
+				String versionTime = didUrl.getParameters().get("version-time");
+
+				DIDDocument didDocument;
+
+				try {
+
+					didDocument = VersionRepoService.getDidDocumentByVersionTime(resolveIdentifier, versionTime);
+					resolveResult = ResolveResult.build(didDocument);
+				} catch (IOException ex) {
+
+					throw new ResolutionException("Cannot retrieve version of DID Document: " + ex.getMessage(), ex);
+				}
+
+				if (log.isDebugEnabled()) log.debug("Retrieved version " + versionTime + " of DID Document for " + resolveIdentifier);
+			}
+		}
+
 		// try all drivers
 
 		String usedDriverId = null;
@@ -157,21 +178,29 @@ public class LocalUniResolver implements UniResolver {
 		// dereferencing
 
 		Integer[] selectedServices = null;
-		String selectServiceName = didUrl.getParameters() == null ? null : didUrl.getParameters().get("service");
-		String selectServiceType = didUrl.getParameters() == null ? null : didUrl.getParameters().get("service-type");
 
-		if (selectServiceName != null || selectServiceType != null) {
+		if (didUrl != null) {
 
-			selectedServices = resolveResult.getDidDocument().selectServices(selectServiceName, selectServiceType).keySet().toArray(new Integer[0]);
+			String selectServiceName = didUrl.getParameters() == null ? null : didUrl.getParameters().get("service");
+			String selectServiceType = didUrl.getParameters() == null ? null : didUrl.getParameters().get("service-type");
+
+			if (selectServiceName != null || selectServiceType != null) {
+
+				selectedServices = resolveResult.getDidDocument().selectServices(selectServiceName, selectServiceType).keySet().toArray(new Integer[0]);
+			}
 		}
 
 		Integer[] selectedKeys = null;
-		String selectKeyName = didUrl.getParameters() == null ? null : didUrl.getParameters().get("key");
-		String selectKeyType = didUrl.getParameters() == null ? null : didUrl.getParameters().get("key-type");
 
-		if (selectKeyName != null || selectKeyType != null) {
+		if (didUrl != null) {
 
-			selectedKeys = resolveResult.getDidDocument().selectKeys(selectKeyName, selectKeyType).keySet().toArray(new Integer[0]);
+			String selectKeyName = didUrl.getParameters() == null ? null : didUrl.getParameters().get("key");
+			String selectKeyType = didUrl.getParameters() == null ? null : didUrl.getParameters().get("key-type");
+
+			if (selectKeyName != null || selectKeyType != null) {
+
+				selectedKeys = resolveResult.getDidDocument().selectKeys(selectKeyName, selectKeyType).keySet().toArray(new Integer[0]);
+			}
 		}
 
 		// add RESOLVER METADATA
