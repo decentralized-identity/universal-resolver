@@ -139,8 +139,8 @@ public class LocalUniResolver implements UniResolver {
 
 			for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
 
-				if (log.isDebugEnabled()) log.debug("Attemping to resolve " + identifier + " with driver " + driver.getValue().getClass());
-				resolveResult = driver.getValue().resolve(identifier);
+				if (log.isDebugEnabled()) log.debug("Redirect: Attemping to resolve " + resolveIdentifier + " with driver " + driver.getValue().getClass());
+				resolveResult = driver.getValue().resolve(resolveIdentifier);
 
 				if (resolveResult != null) {
 
@@ -150,7 +150,7 @@ public class LocalUniResolver implements UniResolver {
 				}
 			}
 
-			if (log.isDebugEnabled()) log.debug("Resolved " + identifier + " with driver " + usedDriverId);
+			if (log.isDebugEnabled()) log.debug("Redirect: Resolved " + resolveIdentifier + " with driver " + usedDriverId);
 		}
 
 		if (redirectedIdentifiers.isEmpty()) redirectedIdentifiers = null;

@@ -12,8 +12,8 @@ ENV PATH $JAVA_HOME/bin:$PATH
 
 # build dependencies
 
-RUN cd /opt/ && git clone https://github.com/peacekeeper/did-common-java.git
-RUN cd /opt/did-common-java/ && git checkout matrix-parameters && mvn clean install -DskipTests && mvn clean
+RUN cd /opt/ && git clone https://github.com/decentralized-identity/did-common-java.git
+RUN cd /opt/did-common-java/ && mvn clean install -DskipTests && mvn clean
 
 RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -DrepoUrl=https://repo.maven.apache.org/maven2 -Dartifact=org.eclipse.jetty:jetty-maven-plugin:9.4.18.v20190429
 RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -DrepoUrl=https://repo.maven.apache.org/maven2 -Dartifact=org.apache.maven.plugins:maven-war-plugin:3.2.2
