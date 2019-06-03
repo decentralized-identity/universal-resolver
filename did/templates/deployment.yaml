@@ -35,10 +35,10 @@ spec:
             - name: {{ .name }}-http
               containerPort: 8080
               protocol: TCP
-          environment:
+          env:
             {{- range .environment }}
-            name: {{ .name }}
-            value: {{ .value }}
+          - name: {{ .name }}
+            value: {{ .value | quote}}
             {{- end }}
           {{- if .mountCustomConfig }}
           volumeMounts:
