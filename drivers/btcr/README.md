@@ -28,7 +28,11 @@ curl -X GET http://localhost:8080/1.0/identifiers/did:btcr:xz35-jzv2-qqs2-9wjt
 ## Build (native Java)
 
  1. First, build https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java
- 1. Then, run `mvn clean install`
+ 1. Then, build https://github.com/WebOfTrustInfo/txref-conversion-java
+
+Then run:
+
+	mvn clean install
 
 ## Driver Environment Variables
 

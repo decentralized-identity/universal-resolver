@@ -10,9 +10,11 @@ See https://uniresolver.io/ for a publicly hosted instance of a Universal Resolv
 
 ## Build (native Java)
 
-Run:
+First, build https://github.com/decentralized-identity/did-common-java
 
-	mvn clean install
+Then run:
+
+	mvn clean install -pl !examples
 
 ## Local Resolver
 

@@ -26,7 +26,10 @@ curl -X GET http://localhost:8080/1.0/identifiers/did:dom:Jjbfgyu7My4RrbRNrXTPBz
 ## Build (native Java)
 
  1. First, build https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java
- 1. Then, `mvn clean install`
+
+Then run:
+
+	mvn clean install
 
 ## Driver Environment Variables
 
