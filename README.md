@@ -72,4 +72,4 @@ Decentralized Identity Foundation - http://identity.foundation/
 
 <img align="left" src="https://raw.githubusercontent.com/peacekeeper/universal-resolver/master/docs/logo-ngi0pet.png" width="115">
 
-Supported by [NGI0 PET](https://nlnet.nl/PET/#NGI), which is made possible with financial support from the European Commission's [Next Generation Internet](https://ngi.eu/) programme.
+Supported by [NLnet](https://nlnet.nl/) and [NGI0 PET](https://nlnet.nl/PET/#NGI), which is made possible with financial support from the European Commission's [Next Generation Internet](https://ngi.eu/) programme.
