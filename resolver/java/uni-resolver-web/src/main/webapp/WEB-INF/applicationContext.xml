@@ -56,7 +56,7 @@
 	</bean>
 
 	<bean id="DidV1TestnetDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="https://genesis.testnet.veres.one/dids/$1" />
+		<property name="resolveUri" value="https://genesis.bee.veres.one/dids/$1" />
 		<property name="pattern" value="^(did:v1:test:nym:.+)$" />
 	</bean>
 
