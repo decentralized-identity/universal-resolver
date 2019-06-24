@@ -1,7 +1,6 @@
 package uniresolver.web.servlet;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import javax.servlet.ServletException;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uniresolver.ResolutionException;
 import uniresolver.result.ResolveResult;
 import uniresolver.web.WebUniResolver;
 
@@ -41,9 +39,11 @@ public class ResolveServlet extends WebUniResolver {
 		try {
 
 			identifier = URLDecoder.decode(identifier, "UTF-8");
-		} catch (UnsupportedEncodingException ex) {
+		} catch (Exception ex) {
 
-			throw new IOException(ex.getMessage(), ex);
+			if (log.isWarnEnabled()) log.warn("Request problem: " + ex.getMessage(), ex);
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Request problem: " + ex.getMessage());
+			return;
 		}
 
 		if (log.isInfoEnabled()) log.info("Incoming resolve request for identifier: " + identifier);
@@ -63,7 +63,7 @@ public class ResolveServlet extends WebUniResolver {
 
 			resolveResult = this.resolve(identifier);
 			resolveResultString = resolveResult == null ? null : resolveResult.toJson();
-		} catch (ResolutionException ex) {
+		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolve problem for " + identifier + ": " + ex.getMessage(), ex);
 			WebUniResolver.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolve problem for " + identifier + ": " + ex.getMessage());

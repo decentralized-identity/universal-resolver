@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.web.WebUniResolver;
 
@@ -43,7 +42,7 @@ public class PropertiesServlet extends WebUniResolver {
 
 			properties = this.properties();
 			propertiesString = properties == null ? null : objectMapper.writeValueAsString(properties);
-		} catch (ResolutionException ex) {
+		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Driver reported: " + ex.getMessage(), ex);
 			WebUniResolver.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Driver reported: " + ex.getMessage());
