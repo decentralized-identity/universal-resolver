@@ -31,6 +31,10 @@ import org.web3j.protocol.core.methods.response.EthLog.LogResult;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.http.HttpService;
 
+import okhttp3.Authenticator;
+import okhttp3.OkHttpClient;
+import okhttp3.Route;
+import okhttp3.logging.HttpLoggingInterceptor;
 import uniresolver.driver.did.erc725.ERC725Contract;
 
 public class JsonRPCEthereumConnection extends AbstractEthereumConnection implements EthereumConnection {
@@ -54,9 +58,9 @@ public class JsonRPCEthereumConnection extends AbstractEthereumConnection implem
 		this.credentials = createCredentials();
 	}
 
-	public JsonRPCEthereumConnection(String ethereumRpcUrlMainnet, String ethereumRpcUrlRopsten, String ethereumRpcUrlRinkeby, String ethereumRpcUrlKovan) {
+	public JsonRPCEthereumConnection(String ethereumRpcUrlMainnet, String usernameMainnet, String passwordMainnet, String ethereumRpcUrlRopsten, String usernameRopsten, String passwordRopsten, String ethereumRpcUrlRinkeby, String usernameRinkeby, String passwordRinkeby, String ethereumRpcUrlKovan, String usernameKovan, String passwordKovan) {
 
-		this(Web3j.build(new HttpService(ethereumRpcUrlMainnet)), Web3j.build(new HttpService(ethereumRpcUrlRopsten)), Web3j.build(new HttpService(ethereumRpcUrlRinkeby)), Web3j.build(new HttpService(ethereumRpcUrlKovan)));
+		this(createWeb3j(ethereumRpcUrlMainnet, usernameMainnet, passwordMainnet), createWeb3j(ethereumRpcUrlRopsten, usernameRopsten, passwordRopsten), createWeb3j(ethereumRpcUrlRinkeby, usernameRinkeby, passwordRinkeby), createWeb3j(ethereumRpcUrlKovan, usernameKovan, passwordKovan));
 	}
 
 	public JsonRPCEthereumConnection() {
@@ -67,17 +71,6 @@ public class JsonRPCEthereumConnection extends AbstractEthereumConnection implem
 	public static JsonRPCEthereumConnection get() {
 
 		return instance;
-	}
-
-	private static Credentials createCredentials() {
-
-		try {
-
-			return Credentials.create(Keys.createEcKeyPair());
-		} catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | NoSuchProviderException ex) {
-
-			throw new RuntimeException(ex.getMessage(), ex);
-		}
 	}
 
 	public Map<BigInteger, Map<String, byte[]>> getKeysByType(String network, String address) throws IOException {
@@ -205,6 +198,49 @@ public class JsonRPCEthereumConnection extends AbstractEthereumConnection implem
 		else if (NETWORK_KOVAN.equals(network)) web3j = this.ethereumWeb3jKovan;
 
 		return web3j;
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	private static Web3j createWeb3j(String url, String username, String password) {
+
+		OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
+
+		if (username != null && password != null) {
+
+			httpClientBuilder.authenticator(new Authenticator() {
+
+				public okhttp3.Request authenticate(Route route, okhttp3.Response response) throws IOException {
+					String credential = okhttp3.Credentials.basic(username, password);
+					return response.request().newBuilder().header("Authorization", credential).build();
+				}
+			});
+		}
+
+		if (log.isDebugEnabled()) {
+
+			HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(log::debug);
+			httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+			httpClientBuilder.addInterceptor(httpLoggingInterceptor);
+		}
+
+		OkHttpClient httpClient = httpClientBuilder.build();
+		HttpService httpService = new HttpService(url, httpClient, false);
+
+		return Web3j.build(httpService);
+	}
+
+	private static Credentials createCredentials() {
+
+		try {
+
+			return Credentials.create(Keys.createEcKeyPair());
+		} catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | NoSuchProviderException ex) {
+
+			throw new RuntimeException(ex.getMessage(), ex);
+		}
 	}
 
 	private static List<String> addressesToStrings(List<Address> addresses) {
