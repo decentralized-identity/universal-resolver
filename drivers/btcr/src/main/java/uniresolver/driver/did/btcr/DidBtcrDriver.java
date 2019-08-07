@@ -272,9 +272,11 @@ public class DidBtcrDriver implements Driver {
 		if (chainAndLocationData != null) methodMetadata.put("chain", chainAndLocationData.getChain());
 		if (initialChainAndLocationData != null) methodMetadata.put("initialBlockHeight", initialChainAndLocationData.getLocationData().getBlockHeight());
 		if (initialChainAndLocationData != null) methodMetadata.put("initialTransactionPosition", initialChainAndLocationData.getLocationData().getTransactionPosition());
+		if (initialChainAndLocationData != null) methodMetadata.put("initialTxoIndex", initialChainAndLocationData.getLocationData().getTxoIndex());
 		if (initialChainAndTxid != null) methodMetadata.put("initialTxid", initialChainAndTxid);
 		if (chainAndLocationData != null) methodMetadata.put("blockHeight", chainAndLocationData.getLocationData().getBlockHeight());
 		if (chainAndLocationData != null) methodMetadata.put("transactionPosition", chainAndLocationData.getLocationData().getTransactionPosition());
+		if (chainAndLocationData != null) methodMetadata.put("txoIndex", chainAndLocationData.getLocationData().getTxoIndex());
 		if (chainAndTxid != null) methodMetadata.put("txid", chainAndTxid);
 		if (spentInChainAndTxids != null) methodMetadata.put("spentInChainAndTxids", spentInChainAndTxids);
 
