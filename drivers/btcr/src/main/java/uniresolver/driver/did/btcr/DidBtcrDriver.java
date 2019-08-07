@@ -25,11 +25,8 @@ import did.Authentication;
 import did.DIDDocument;
 import did.PublicKey;
 import did.Service;
-import info.weboftrust.txrefconversion.Bech32;
-import info.weboftrust.txrefconversion.ChainAndBlockLocation;
+import info.weboftrust.txrefconversion.ChainAndLocationData;
 import info.weboftrust.txrefconversion.ChainAndTxid;
-import info.weboftrust.txrefconversion.TxrefConstants;
-import info.weboftrust.txrefconversion.TxrefDecoder;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
 import uniresolver.driver.did.btcr.bitcoinconnection.BTCDRPCBitcoinConnection;
@@ -139,15 +136,12 @@ public class DidBtcrDriver implements Driver {
 
 		// determine txref
 
-		String txref = null;
-		if (targetDid.charAt(0) == TxrefConstants.MAGIC_BTC_MAINNET_BECH32_CHAR || targetDid.charAt(0) == TxrefConstants.MAGIC_BTC_MAINNET_EXTENDED_BECH32_CHAR) txref = TxrefConstants.TXREF_BECH32_HRP_MAINNET + Bech32.SEPARATOR + "-" + targetDid;
-		if (targetDid.charAt(0) == TxrefConstants.MAGIC_BTC_TESTNET_BECH32_CHAR || targetDid.charAt(0) == TxrefConstants.MAGIC_BTC_TESTNET_EXTENDED_BECH32_CHAR) txref = TxrefConstants.TXREF_BECH32_HRP_TESTNET + Bech32.SEPARATOR + "-" + targetDid;
-		if (txref == null) throw new ResolutionException("Invalid magic byte in " + targetDid);
+		String txref = targetDid;
 
 		// retrieve btcr data
 
-		ChainAndBlockLocation initialChainAndBlockLocation;
-		ChainAndBlockLocation chainAndBlockLocation;
+		ChainAndLocationData initialChainAndLocationData;
+		ChainAndLocationData chainAndLocationData;
 		ChainAndTxid initialChainAndTxid;
 		ChainAndTxid chainAndTxid;
 		BtcrData btcrData = null;
@@ -155,11 +149,18 @@ public class DidBtcrDriver implements Driver {
 
 		try {
 
-			chainAndBlockLocation = TxrefDecoder.txrefDecode(txref);
-			chainAndTxid = this.getBitcoinConnection().lookupChainAndTxid(chainAndBlockLocation);
+			chainAndLocationData = ChainAndLocationData.txrefDecode(txref);
+
+			if (chainAndLocationData.getLocationData().getTxoIndex() == 0 && chainAndLocationData.isExtended()) {
+
+				String correctTxref = ChainAndLocationData.txrefEncode(chainAndLocationData);
+				throw new ResolutionException("Extended txref form not allowed if txoIndex == 0. You probabaly want to use " + correctTxref + " instead.");
+			}
+
+			chainAndTxid = this.getBitcoinConnection().lookupChainAndTxid(chainAndLocationData);
 
 			initialChainAndTxid = chainAndTxid;
-			initialChainAndBlockLocation = chainAndBlockLocation;
+			initialChainAndLocationData = chainAndLocationData;
 
 			while (true) {
 
@@ -175,7 +176,7 @@ public class DidBtcrDriver implements Driver {
 
 					spentInChainAndTxids.add(btcrData.getSpentInChainAndTxid());
 					chainAndTxid = btcrData.getSpentInChainAndTxid();
-					chainAndBlockLocation = this.getBitcoinConnection().lookupChainAndBlockLocation(chainAndTxid);
+					chainAndLocationData = this.getBitcoinConnection().lookupChainAndLocationData(chainAndTxid);
 				}
 			}
 		} catch (IOException ex) {
@@ -183,7 +184,7 @@ public class DidBtcrDriver implements Driver {
 			throw new ResolutionException("Cannot retrieve BTCR data for " + txref + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ chainAndTxid + " on chain " + chainAndBlockLocation.getChain() + "): " + btcrData);
+		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ chainAndTxid + " on chain " + chainAndLocationData.getChain() + "): " + btcrData);
 
 		// retrieve DID DOCUMENT CONTINUATION
 
@@ -268,12 +269,12 @@ public class DidBtcrDriver implements Driver {
 		if (btcrData != null) methodMetadata.put("inputScriptPubKey", btcrData.getInputScriptPubKey());
 		if (btcrData != null) methodMetadata.put("continuationUri", btcrData.getContinuationUri());
 		if (didDocumentContinuation != null) methodMetadata.put("continuation", didDocumentContinuation);
-		if (chainAndBlockLocation != null) methodMetadata.put("chain", chainAndBlockLocation.getChain());
-		if (initialChainAndBlockLocation != null) methodMetadata.put("initialBlockHeight", initialChainAndBlockLocation.getBlockHeight());
-		if (initialChainAndBlockLocation != null) methodMetadata.put("initialBlockIndex", initialChainAndBlockLocation.getBlockIndex());
+		if (chainAndLocationData != null) methodMetadata.put("chain", chainAndLocationData.getChain());
+		if (initialChainAndLocationData != null) methodMetadata.put("initialBlockHeight", initialChainAndLocationData.getLocationData().getBlockHeight());
+		if (initialChainAndLocationData != null) methodMetadata.put("initialTransactionPosition", initialChainAndLocationData.getLocationData().getTransactionPosition());
 		if (initialChainAndTxid != null) methodMetadata.put("initialTxid", initialChainAndTxid);
-		if (chainAndBlockLocation != null) methodMetadata.put("blockHeight", chainAndBlockLocation.getBlockHeight());
-		if (chainAndBlockLocation != null) methodMetadata.put("blockIndex", chainAndBlockLocation.getBlockIndex());
+		if (chainAndLocationData != null) methodMetadata.put("blockHeight", chainAndLocationData.getLocationData().getBlockHeight());
+		if (chainAndLocationData != null) methodMetadata.put("transactionPosition", chainAndLocationData.getLocationData().getTransactionPosition());
 		if (chainAndTxid != null) methodMetadata.put("txid", chainAndTxid);
 		if (spentInChainAndTxids != null) methodMetadata.put("spentInChainAndTxids", spentInChainAndTxids);
 
