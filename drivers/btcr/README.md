@@ -12,9 +12,9 @@ This is a [Universal Resolver](https://github.com/decentralized-identity/univers
 ## Example DIDs
 
 ```
-did:btcr:xz35-jzv2-qqs2-9wjt
-did:btcr:x705-jzv2-qqaz-7vuz
-did:btcr:xkrn-xzcr-qqlv-j6sl
+did:btcr:xz35-jznz-q6mr-7q6
+did:btcr:xkrn-xz7q-q0mx-4cl
+did:btcr:x705-jznz-qwvq-0uw
 ```
 
 ## Build and Run (Docker)
@@ -22,7 +22,7 @@ did:btcr:xkrn-xzcr-qqlv-j6sl
 ```
 docker build -f ./docker/Dockerfile . -t universalresolver/driver-did-btcr
 docker run -p 8080:8080 universalresolver/driver-did-btcr
-curl -X GET http://localhost:8080/1.0/identifiers/did:btcr:xz35-jzv2-qqs2-9wjt
+curl -X GET http://localhost:8080/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
 ```
 
 ## Build (native Java)
