@@ -25,16 +25,16 @@ import did.Authentication;
 import did.DIDDocument;
 import did.PublicKey;
 import did.Service;
-import info.weboftrust.txrefconversion.ChainAndLocationData;
-import info.weboftrust.txrefconversion.ChainAndTxid;
+import info.weboftrust.btctxlookup.ChainAndLocationData;
+import info.weboftrust.btctxlookup.ChainAndTxid;
+import info.weboftrust.btctxlookup.DidBtcrData;
+import info.weboftrust.btctxlookup.bitcoinconnection.BTCDRPCBitcoinConnection;
+import info.weboftrust.btctxlookup.bitcoinconnection.BitcoinConnection;
+import info.weboftrust.btctxlookup.bitcoinconnection.BitcoindRPCBitcoinConnection;
+import info.weboftrust.btctxlookup.bitcoinconnection.BitcoinjSPVBitcoinConnection;
+import info.weboftrust.btctxlookup.bitcoinconnection.BlockcypherAPIBitcoinConnection;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
-import uniresolver.driver.did.btcr.bitcoinconnection.BTCDRPCBitcoinConnection;
-import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection;
-import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinConnection.BtcrData;
-import uniresolver.driver.did.btcr.bitcoinconnection.BitcoindRPCBitcoinConnection;
-import uniresolver.driver.did.btcr.bitcoinconnection.BitcoinjSPVBitcoinConnection;
-import uniresolver.driver.did.btcr.bitcoinconnection.BlockcypherAPIBitcoinConnection;
 import uniresolver.result.ResolveResult;
 
 public class DidBtcrDriver implements Driver {
@@ -144,7 +144,7 @@ public class DidBtcrDriver implements Driver {
 		ChainAndLocationData chainAndLocationData;
 		ChainAndTxid initialChainAndTxid;
 		ChainAndTxid chainAndTxid;
-		BtcrData btcrData = null;
+		DidBtcrData btcrData = null;
 		List<ChainAndTxid> spentInChainAndTxids = new ArrayList<ChainAndTxid> ();
 
 		try {
@@ -164,7 +164,7 @@ public class DidBtcrDriver implements Driver {
 
 			while (true) {
 
-				btcrData = this.getBitcoinConnection().getBtcrData(chainAndTxid);
+				btcrData = this.getBitcoinConnection().getDidBtcrData(chainAndTxid);
 				if (btcrData == null) break;
 
 				// check if we need to follow the tip

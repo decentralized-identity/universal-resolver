@@ -11,8 +11,8 @@ RUN cd /opt/ && git clone https://github.com/dcdpr/libbech32-java.git && \
 RUN cd /opt/ && git clone https://github.com/dcdpr/libtxref-java.git && \
     cd /opt/libtxref-java/ && mvn clean install -DskipTests && mvn clean
 
-RUN cd /opt/ && git clone https://github.com/WebOfTrustInfo/txref-conversion-java.git && \
-    cd /opt/txref-conversion-java/ && git checkout use-libtxref-java && mvn clean install -DskipTests && mvn clean
+RUN cd /opt/ && git clone https://github.com/WebOfTrustInfo/btc-tx-lookup-java.git && \
+    cd /opt/btc-tx-lookup-java/ && mvn clean install -DskipTests && mvn clean
 
 # build driver-did-btcr
 
