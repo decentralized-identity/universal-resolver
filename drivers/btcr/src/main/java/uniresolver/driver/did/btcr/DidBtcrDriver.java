@@ -154,7 +154,7 @@ public class DidBtcrDriver implements Driver {
 			if (chainAndLocationData.getLocationData().getTxoIndex() == 0 && chainAndLocationData.isExtended()) {
 
 				String correctTxref = ChainAndLocationData.txrefEncode(chainAndLocationData);
-				throw new ResolutionException("Extended txref form not allowed if txoIndex == 0. You probabaly want to use " + correctTxref + " instead.");
+				throw new ResolutionException("Extended txref form not allowed if txoIndex == 0. You probably want to use " + correctTxref + " instead.");
 			}
 
 			chainAndTxid = this.getBitcoinConnection().lookupChainAndTxid(chainAndLocationData);
