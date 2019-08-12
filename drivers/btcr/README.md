@@ -28,7 +28,9 @@ curl -X GET http://localhost:8080/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
 ## Build (native Java)
 
  1. First, build https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java
- 1. Then, build https://github.com/WebOfTrustInfo/txref-conversion-java
+ 1. Then, build https://github.com/dcdpr/libbech32-java
+ 1. Then, build https://github.com/dcdpr/libtxref-java
+ 1. Then, build https://github.com/WebOfTrustInfo/btc-tx-lookup-java
 
 Then run:
 
