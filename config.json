@@ -16,9 +16,9 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:sov:WRfXPg8dantKVubE3HX8pw" ],
 			"env": {
-				"uniresolver_driver_did_sov_libIndyPath": "./sovrin/lib/",
-				"uniresolver_driver_did_sov_poolConfigs": ";./sovrin/live.txn;stn;./sovrin/stn.txn;danube;./sovrin/11347-05.txn",
-				"uniresolver_driver_did_sov_poolVersions": ";1;stn;2;danube;2",
+				"uniresolver_driver_did_sov_libIndyPath": "",
+				"uniresolver_driver_did_sov_poolConfigs": "_;./sovrin/mainnet.txn;staging;./sovrin/stagingnet.txn;builder;./sovrin/buildernet.txn;danube;./sovrin/danube.txn",
+				"uniresolver_driver_did_sov_poolVersions": "_;2;staging;2;builder;2;danube;2",
 				"uniresolver_driver_did_sov_walletName": "default"
 			}
 		}, {
@@ -27,11 +27,11 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E" ],
 			"env": {
-				"uniresolver_driver_did_erc725_ethereumConnection": "jsonrpc",
-				"uniresolver_driver_did_erc725_rpcUrlMainnet": "https://mainnet.infura.io/9W2fvWQMP6cJCMH3ESqP",
-				"uniresolver_driver_did_erc725_rpcUrlRopsten": "https://ropsten.infura.io/9W2fvWQMP6cJCMH3ESqP",
-				"uniresolver_driver_did_erc725_rpcUrlRinkeby": "https://rinkeby.infura.io/9W2fvWQMP6cJCMH3ESqP",
-				"uniresolver_driver_did_erc725_rpcUrlKovan": "https://kovan.infura.io/9W2fvWQMP6cJCMH3ESqP",
+				"uniresolver_driver_did_erc725_ethereumConnection": "hybrid",
+				"uniresolver_driver_did_erc725_rpcUrlMainnet": "https://mainnet.infura.io/v3/fd9e225bc1234f49b48b295c611078eb",
+				"uniresolver_driver_did_erc725_rpcUrlRopsten": "https://ropsten.infura.io/v3/fd9e225bc1234f49b48b295c611078eb",
+				"uniresolver_driver_did_erc725_rpcUrlRinkeby": "https://rinkeby.infura.io/v3/fd9e225bc1234f49b48b295c611078eb",
+				"uniresolver_driver_did_erc725_rpcUrlKovan": "https://kovan.infura.io/v3/fd9e225bc1234f49b48b295c611078eb",
 				"uniresolver_driver_did_erc725_etherscanApiMainnet": "http://api.etherscan.io/api",
 				"uniresolver_driver_did_erc725_etherscanApiRopsten": "http://api-ropsten.etherscan.io/api",
 				"uniresolver_driver_did_erc725_etherscanApiRinkeby": "http://api-rinkeby.etherscan.io/api",
