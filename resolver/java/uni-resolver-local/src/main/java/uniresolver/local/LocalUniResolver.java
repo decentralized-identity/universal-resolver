@@ -83,9 +83,9 @@ public class LocalUniResolver implements UniResolver {
 
 		if (didUrl != null) {
 
-			if (didUrl.getParameters().containsKey("version-time")) {
+			if (didUrl.getParametersMap().containsKey("version-time")) {
 
-				String versionTime = didUrl.getParameters().get("version-time");
+				String versionTime = didUrl.getParametersMap().get("version-time");
 
 				DIDDocument didDocument;
 
@@ -181,8 +181,8 @@ public class LocalUniResolver implements UniResolver {
 
 		if (didUrl != null) {
 
-			String selectServiceName = didUrl.getParameters() == null ? null : didUrl.getParameters().get("service");
-			String selectServiceType = didUrl.getParameters() == null ? null : didUrl.getParameters().get("service-type");
+			String selectServiceName = didUrl.getParametersMap() == null ? null : didUrl.getParametersMap().get("service");
+			String selectServiceType = didUrl.getParametersMap() == null ? null : didUrl.getParametersMap().get("service-type");
 
 			if (selectServiceName != null || selectServiceType != null) {
 
@@ -194,8 +194,8 @@ public class LocalUniResolver implements UniResolver {
 
 		if (didUrl != null) {
 
-			String selectKeyName = didUrl.getParameters() == null ? null : didUrl.getParameters().get("key");
-			String selectKeyType = didUrl.getParameters() == null ? null : didUrl.getParameters().get("key-type");
+			String selectKeyName = didUrl.getParametersMap() == null ? null : didUrl.getParametersMap().get("key");
+			String selectKeyType = didUrl.getParametersMap() == null ? null : didUrl.getParametersMap().get("key-type");
 
 			if (selectKeyName != null || selectKeyType != null) {
 
@@ -209,7 +209,7 @@ public class LocalUniResolver implements UniResolver {
 		resolverMetadata.put("duration", Long.valueOf(stop - start));
 		if (usedDriverId != null) resolverMetadata.put("driverId", usedDriverId);
 		if (usedDriver != null) resolverMetadata.put("driver", usedDriver.getClass().getSimpleName());
-		if (didUrl != null) resolverMetadata.put("didUrl", didUrl);
+		if (didUrl != null) resolverMetadata.put("didUrl", didUrl.toJsonObject());
 		if (redirectedIdentifiers != null) resolverMetadata.put("redirectedIdentifiers", redirectedIdentifiers);
 		if (selectedServices != null) resolverMetadata.put("selectedServices", selectedServices);
 		if (selectedKeys != null) resolverMetadata.put("selectedKeys", selectedKeys);
