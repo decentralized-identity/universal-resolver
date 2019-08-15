@@ -8,9 +8,9 @@
 	<bean name="UniResolver" class="uniresolver.local.LocalUniResolver">
 		<property name="drivers">
 			<util:map>
-				<entry key="did:btcr"><ref bean="DidBtcrDriver" /></entry>
-				<entry key="did:sov"><ref bean="DidSovDriver" /></entry>
-				<entry key="did:v1"><ref bean="DidV1Driver" /></entry>
+				<entry key="did-btcr"><ref bean="DidBtcrDriver" /></entry>
+				<entry key="did-sov"><ref bean="DidSovDriver" /></entry>
+				<entry key="did-v1"><ref bean="DidV1Driver" /></entry>
 			</util:map>
 		</property>
 	</bean>
@@ -32,9 +32,9 @@
 	</bean>
 
 	<bean id="DidSovDriver" class="uniresolver.driver.did.sov.DidSovDriver">
-		<property name="libIndyPath" value="./sovrin/lib/" />
-		<property name="poolConfigs" value="_;./sovrin/live.txn;stn;./sovrin/stn.txn;danube;./sovrin/11347-05.txn" />
-		<property name="poolVersions" value="_;1;stn;2;danube;2" />
+		<property name="libIndyPath" value="" />
+		<property name="poolConfigs" value="_;./sovrin/mainnet.txn;staging;./sovrin/stagingnet.txn;builder;./sovrin/buildernet.txn;danube;./sovrin/danube.txn" />
+		<property name="poolVersions" value="_;2;staging;2;builder;2;danube;2" />
 		<property name="walletName" value="default" />
 	</bean>
 
