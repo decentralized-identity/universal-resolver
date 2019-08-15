@@ -76,7 +76,7 @@
 		<property name="propertiesUri" value="http://driver-dns:8087/1.0/properties" />
 		<property name="pattern" value="^((?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*(?:[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))$" />
 	</bean>
-	
+
 	<bean id="DidJoloDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="http://driver-did-jolo:8088/1.0/identifiers/$1" />
 		<property name="pattern" value="^(did:jolo:.+)$" />
@@ -85,6 +85,11 @@
 	<bean id="DidHaceraDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="http://driver-did-hacera:8089/1.0/identifiers/$1" />
 		<property name="pattern" value="^(did:hcr:.+)$" />
+	</bean>
+
+	<bean id="DidSeraphIDDriver" class="universolver.driver.http.HttpDriver">
+		<property name="resolveUri" value="http://driver-did-sid:8080/1.0/identifiers/$1" />
+		<property name="pattern" value="^(did:sid:.+)$" />
 	</bean>
 
 </beans>

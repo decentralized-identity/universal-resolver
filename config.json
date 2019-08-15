@@ -77,6 +77,11 @@
 			"image": "hacera/hacera-did-driver",
 			"tag": "latest",
 			"testIdentifiers": [ "did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de" ]
-        }
+		}, {
+			"pattern": "^(did:sid:.+)$",
+			"image": "swisscom-blockchain/driver-did-sid",
+			"tag": "latest",
+			"testIdentifiers" : [ "did:sid:priv:3c6baf1e51732bea4b3bf897b588568dfbd606e2" ]
+		}
 	]
 }
