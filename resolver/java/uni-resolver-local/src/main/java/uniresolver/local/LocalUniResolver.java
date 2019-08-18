@@ -1,9 +1,14 @@
 package uniresolver.local;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +17,11 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import did.DID;
 import did.DIDDocument;
 import did.DIDURL;
@@ -19,6 +29,7 @@ import did.parser.ParserException;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.driver.Driver;
+import uniresolver.driver.http.HttpDriver;
 import uniresolver.result.ResolveResult;
 
 public class LocalUniResolver implements UniResolver {
@@ -26,6 +37,8 @@ public class LocalUniResolver implements UniResolver {
 	private static Logger log = LoggerFactory.getLogger(LocalUniResolver.class);
 
 	private static final LocalUniResolver DEFAULT_RESOLVER;
+
+	private static final Gson gson = new Gson();
 
 	private Map<String, Driver> drivers = new HashMap<String, Driver> ();
 
@@ -41,6 +54,61 @@ public class LocalUniResolver implements UniResolver {
 	public static LocalUniResolver getDefault() {
 
 		return DEFAULT_RESOLVER;
+	}
+
+	public static LocalUniResolver fromConfig(String filePath) throws FileNotFoundException, IOException {
+
+		Map<String, Driver> drivers = new HashMap<String, Driver> ();
+
+		try (Reader reader = new FileReader(new File(filePath))) {
+
+			JsonObject jsonObjectRoot  = gson.fromJson(reader, JsonObject.class);
+			JsonArray jsonArrayDrivers = jsonObjectRoot.getAsJsonArray("drivers");
+
+			int i = 0;
+
+			for (Iterator<JsonElement> jsonElementsDrivers = jsonArrayDrivers.iterator(); jsonElementsDrivers.hasNext(); ) {
+
+				i++;
+
+				JsonObject jsonObjectDriver = (JsonObject) jsonElementsDrivers.next();
+
+				String name = jsonObjectDriver.has("name") ? jsonObjectDriver.get("name").getAsString() : null;
+				String pattern = jsonObjectDriver.has("pattern") ? jsonObjectDriver.get("pattern").getAsString() : null;
+				String image = jsonObjectDriver.has("image") ? jsonObjectDriver.get("image").getAsString() : null;
+				String url = jsonObjectDriver.has("url") ? jsonObjectDriver.get("url").getAsString() : null;
+
+				if (name == null) name = "driver-" + i;
+				if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
+				if (image == null && url == null) throw new IllegalArgumentException("Missing 'image' and 'url' entry in driver configuration (need either one).");
+
+				String httpDriverUri = null;
+
+				if (url != null) {
+
+					httpDriverUri = url;
+				} else {
+
+					httpDriverUri = image.substring(image.indexOf("/") + 1);
+					if (httpDriverUri.contains(":")) httpDriverUri = httpDriverUri.substring(0, httpDriverUri.indexOf(":"));
+					httpDriverUri = "http://" + httpDriverUri + ":8080/";
+				}
+
+				if (! httpDriverUri.endsWith("/")) httpDriverUri += "/";
+
+				HttpDriver driver = new HttpDriver();
+				driver.setPattern(pattern);
+				driver.setResolveUri(httpDriverUri + "1.0/identifiers/$1");
+				driver.setPropertiesUri(httpDriverUri + "1.0/properties");
+
+				drivers.put(name, driver);
+			}
+		}
+
+		LocalUniResolver localUniResolver = new LocalUniResolver();
+		localUniResolver.setDrivers(drivers);
+
+		return localUniResolver;
 	}
 
 	@Override
