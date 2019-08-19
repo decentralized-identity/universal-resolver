@@ -145,7 +145,7 @@ public class DidBtcrDriver implements Driver {
 		ChainAndTxid initialChainAndTxid;
 		ChainAndTxid chainAndTxid;
 		DidBtcrData btcrData = null;
-		List<ChainAndTxid> spentInChainAndTxids = new ArrayList<ChainAndTxid> ();
+		List<DidBtcrData> spentInChainAndTxids = new ArrayList<DidBtcrData> ();
 
 		try {
 
@@ -166,7 +166,7 @@ public class DidBtcrDriver implements Driver {
 			while (true) {
 
 				btcrData = this.getBitcoinConnection().getDidBtcrData(chainAndTxid);
-				if (btcrData == null) break;
+				if (btcrData == null) throw new ResolutionException("No BTCR data found in transaction: " + chainAndTxid);
 
 				// check if we need to follow the tip
 
@@ -175,7 +175,7 @@ public class DidBtcrDriver implements Driver {
 					break;
 				} else {
 
-					spentInChainAndTxids.add(btcrData.getSpentInChainAndTxid());
+					spentInChainAndTxids.add(btcrData);
 					chainAndTxid = btcrData.getSpentInChainAndTxid();
 					chainAndLocationData = this.getBitcoinConnection().lookupChainAndLocationData(chainAndTxid);
 				}
@@ -220,20 +220,29 @@ public class DidBtcrDriver implements Driver {
 
 		// DID DOCUMENT publicKeys
 
-		int keyNum = 0;
 		List<PublicKey> publicKeys = new ArrayList<PublicKey> ();
 		List<Authentication> authentications = new ArrayList<Authentication> ();
 
-		if (btcrData != null) {
+		List<String> inputScriptPubKeys = new ArrayList<String> ();
 
-			String keyId = id + "#key-" + (++keyNum);
+		for (DidBtcrData spentInChainAndTxid : spentInChainAndTxids) inputScriptPubKeys.add(spentInChainAndTxid.getInputScriptPubKey());
+		inputScriptPubKeys.add(btcrData.getInputScriptPubKey());
 
-			PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, btcrData.getInputScriptPubKey(), null);
+		int keyNum = 0;
+
+		for (String inputScriptPubKey : inputScriptPubKeys) {
+
+			String keyId = id + "#key-" + (keyNum++);
+
+			PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, inputScriptPubKey, null);
 			publicKeys.add(publicKey);
-
-			Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
-			authentications.add(authentication);
 		}
+
+		PublicKey publicKey = PublicKey.build("#satoshi", DIDDOCUMENT_PUBLICKEY_TYPES, null, null, inputScriptPubKeys.get(inputScriptPubKeys.size() - 1), null);
+		publicKeys.add(publicKey);
+
+		Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, "#satoshi");
+		authentications.add(authentication);
 
 		if (didDocumentContinuation != null) {
 
