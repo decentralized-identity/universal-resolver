@@ -241,7 +241,7 @@ public class DidBtcrDriver implements Driver {
 			publicKeys.add(publicKey);
 		}
 
-		PublicKey publicKey = PublicKey.build("#satoshi", DIDDOCUMENT_PUBLICKEY_TYPES, null, null, inputScriptPubKeys.get(inputScriptPubKeys.size() - 1), null);
+		PublicKey publicKey = PublicKey.build(id + "#satoshi", DIDDOCUMENT_PUBLICKEY_TYPES, null, null, inputScriptPubKeys.get(inputScriptPubKeys.size() - 1), null);
 		publicKeys.add(publicKey);
 
 		Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, "#satoshi");
