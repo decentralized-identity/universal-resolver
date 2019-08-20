@@ -41,7 +41,8 @@ public class DidBtcrDriver implements Driver {
 
 	private static Logger log = LoggerFactory.getLogger(DidBtcrDriver.class);
 
-	public static final Pattern DID_BTCR_PATTERN = Pattern.compile("^did:btcr:(\\S*)$");
+	public static final Pattern DID_BTCR_PATTERN_METHOD = Pattern.compile("^did:btcr:(.*)$");
+	public static final Pattern DID_BTCR_PATTERN_METHOD_SPECIFIC = Pattern.compile("^[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-(?:[a-z0-9]{3}|[a-z0-9]{4}-[a-z0-9]{2})$");
 
 	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "EcdsaSecp256k1VerificationKey2019" };
 	public static final String[] DIDDOCUMENT_AUTHENTICATION_TYPES = new String[] { "EcdsaSecp256k1SignatureAuthentication2019" };
@@ -129,14 +130,16 @@ public class DidBtcrDriver implements Driver {
 
 		// parse identifier
 
-		Matcher matcher = DID_BTCR_PATTERN.matcher(identifier);
+		Matcher matcher = DID_BTCR_PATTERN_METHOD.matcher(identifier);
 		if (! matcher.matches()) return null;
 
-		String targetDid = matcher.group(1);
+		String methodSpecificIdentifier = matcher.group(1);
+		matcher = DID_BTCR_PATTERN_METHOD_SPECIFIC.matcher(methodSpecificIdentifier);
+		if (! matcher.matches()) throw new ResolutionException("DID does not match 4-4-4-3 or 4-4-4-4-2 pattern.");
 
 		// determine txref
 
-		String txref = targetDid;
+		String txref = methodSpecificIdentifier;
 
 		// retrieve btcr data
 
