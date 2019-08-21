@@ -23,6 +23,7 @@ import com.github.jsonldjava.utils.JsonUtils;
 
 import did.Authentication;
 import did.DIDDocument;
+import did.JsonLdObject;
 import did.PublicKey;
 import did.Service;
 import info.weboftrust.btctxlookup.ChainAndLocationData;
@@ -249,8 +250,17 @@ public class DidBtcrDriver implements Driver {
 
 		if (didDocumentContinuation != null) {
 
-			if (didDocumentContinuation.getPublicKeys() != null) publicKeys.addAll(didDocumentContinuation.getPublicKeys());
-			if (didDocumentContinuation.getAuthentications() != null) authentications.addAll(didDocumentContinuation.getAuthentications());
+			if (didDocumentContinuation.getPublicKeys() != null) for (PublicKey didDocumentContinuationPublicKey : didDocumentContinuation.getPublicKeys()) {
+
+				if (containsById(publicKeys, didDocumentContinuationPublicKey)) continue;
+				publicKeys.add(didDocumentContinuationPublicKey);
+			}
+
+			if (didDocumentContinuation.getAuthentications() != null) for (Authentication didDocumentContinuationAuthentication : didDocumentContinuation.getAuthentications()) {
+
+				if (containsById(publicKeys, didDocumentContinuationAuthentication)) continue;
+				authentications.add(didDocumentContinuationAuthentication);
+			}
 		}
 
 		// DID DOCUMENT services
@@ -306,6 +316,20 @@ public class DidBtcrDriver implements Driver {
 	public Map<String, Object> properties() {
 
 		return this.getProperties();
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	public boolean containsById(List<? extends JsonLdObject> jsonLdObjectList, JsonLdObject containsJsonLdObject) {
+
+		for (JsonLdObject jsonLdObject : jsonLdObjectList) {
+
+			if (jsonLdObject.getId() != null && jsonLdObject.getId().equals(containsJsonLdObject.getId())) return true;
+		}
+
+		return false;
 	}
 
 	/*
