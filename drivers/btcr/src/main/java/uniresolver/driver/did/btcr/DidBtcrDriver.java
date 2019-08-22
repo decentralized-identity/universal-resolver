@@ -19,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jsonldjava.core.JsonLdConsts;
 import com.github.jsonldjava.utils.JsonUtils;
 
 import did.Authentication;
@@ -205,8 +206,18 @@ public class DidBtcrDriver implements Driver {
 
 				HttpEntity httpEntity = httpResponse.getEntity();
 
-				Map<String, Object> jsonLdObject = (LinkedHashMap<String, Object>) JsonUtils.fromString(EntityUtils.toString(httpEntity));
-				if (jsonLdObject.containsKey("didDocument")) jsonLdObject = (LinkedHashMap<String, Object>) jsonLdObject.get("didDocument");
+				Map<String, Object> jsonLdObject = (Map<String, Object>) JsonUtils.fromString(EntityUtils.toString(httpEntity));
+
+				if (jsonLdObject.containsKey("didDocument")) {
+
+					Map<String, Object> outerJsonLdObject = jsonLdObject;
+					jsonLdObject = (Map<String, Object>) outerJsonLdObject.get("didDocument");
+
+					if ((! jsonLdObject.containsKey(JsonLdConsts.CONTEXT)) && outerJsonLdObject.containsKey(JsonLdConsts.CONTEXT)) {
+
+						jsonLdObject.put(JsonLdConsts.CONTEXT, outerJsonLdObject.get(JsonLdConsts.CONTEXT));
+					}
+				}
 
 				didDocumentContinuation = DIDDocument.fromJson(jsonLdObject);
 				EntityUtils.consume(httpEntity);
@@ -216,6 +227,15 @@ public class DidBtcrDriver implements Driver {
 			}
 
 			if (log.isInfoEnabled()) log.info("Retrieved DID DOCUMENT CONTINUATION for " + txref + " (" + btcrData.getContinuationUri() + "): " + didDocumentContinuation);
+		}
+
+		// DID DOCUMENT context
+
+		Object context = null;
+
+		if (didDocumentContinuation != null) {
+
+			context = didDocumentContinuation.getContexts();
 		}
 
 		// DID DOCUMENT id
@@ -277,9 +297,9 @@ public class DidBtcrDriver implements Driver {
 
 		// create DID DOCUMENT
 
-		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, services);
+		DIDDocument didDocument = DIDDocument.build(context, id, publicKeys, authentications, services);
 
-		// revoked?
+		// deactivated?
 
 		if ((! spentInChainAndTxids.isEmpty()) && didDocumentContinuation == null) {
 
