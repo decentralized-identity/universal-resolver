@@ -19,10 +19,12 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jsonldjava.core.JsonLdConsts;
 import com.github.jsonldjava.utils.JsonUtils;
 
 import did.Authentication;
 import did.DIDDocument;
+import did.JsonLdObject;
 import did.PublicKey;
 import did.Service;
 import info.weboftrust.btctxlookup.ChainAndLocationData;
@@ -41,7 +43,8 @@ public class DidBtcrDriver implements Driver {
 
 	private static Logger log = LoggerFactory.getLogger(DidBtcrDriver.class);
 
-	public static final Pattern DID_BTCR_PATTERN = Pattern.compile("^did:btcr:(\\S*)$");
+	public static final Pattern DID_BTCR_PATTERN_METHOD = Pattern.compile("^did:btcr:(.*)$");
+	public static final Pattern DID_BTCR_PATTERN_METHOD_SPECIFIC = Pattern.compile("^[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-(?:[a-z0-9]{3}|[a-z0-9]{4}-[a-z0-9]{2})$");
 
 	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "EcdsaSecp256k1VerificationKey2019" };
 	public static final String[] DIDDOCUMENT_AUTHENTICATION_TYPES = new String[] { "EcdsaSecp256k1SignatureAuthentication2019" };
@@ -129,14 +132,16 @@ public class DidBtcrDriver implements Driver {
 
 		// parse identifier
 
-		Matcher matcher = DID_BTCR_PATTERN.matcher(identifier);
+		Matcher matcher = DID_BTCR_PATTERN_METHOD.matcher(identifier);
 		if (! matcher.matches()) return null;
 
-		String targetDid = matcher.group(1);
+		String methodSpecificIdentifier = matcher.group(1);
+		matcher = DID_BTCR_PATTERN_METHOD_SPECIFIC.matcher(methodSpecificIdentifier);
+		if (! matcher.matches()) throw new ResolutionException("DID does not match 4-4-4-3 or 4-4-4-4-2 pattern.");
 
 		// determine txref
 
-		String txref = targetDid;
+		String txref = methodSpecificIdentifier;
 
 		// retrieve btcr data
 
@@ -145,7 +150,7 @@ public class DidBtcrDriver implements Driver {
 		ChainAndTxid initialChainAndTxid;
 		ChainAndTxid chainAndTxid;
 		DidBtcrData btcrData = null;
-		List<ChainAndTxid> spentInChainAndTxids = new ArrayList<ChainAndTxid> ();
+		List<DidBtcrData> spentInChainAndTxids = new ArrayList<DidBtcrData> ();
 
 		try {
 
@@ -166,7 +171,7 @@ public class DidBtcrDriver implements Driver {
 			while (true) {
 
 				btcrData = this.getBitcoinConnection().getDidBtcrData(chainAndTxid);
-				if (btcrData == null) break;
+				if (btcrData == null) throw new ResolutionException("No BTCR data found in transaction: " + chainAndTxid);
 
 				// check if we need to follow the tip
 
@@ -175,7 +180,7 @@ public class DidBtcrDriver implements Driver {
 					break;
 				} else {
 
-					spentInChainAndTxids.add(btcrData.getSpentInChainAndTxid());
+					spentInChainAndTxids.add(btcrData);
 					chainAndTxid = btcrData.getSpentInChainAndTxid();
 					chainAndLocationData = this.getBitcoinConnection().lookupChainAndLocationData(chainAndTxid);
 				}
@@ -201,8 +206,18 @@ public class DidBtcrDriver implements Driver {
 
 				HttpEntity httpEntity = httpResponse.getEntity();
 
-				Map<String, Object> jsonLdObject = (LinkedHashMap<String, Object>) JsonUtils.fromString(EntityUtils.toString(httpEntity));
-				if (jsonLdObject.containsKey("didDocument")) jsonLdObject = (LinkedHashMap<String, Object>) jsonLdObject.get("didDocument");
+				Map<String, Object> jsonLdObject = (Map<String, Object>) JsonUtils.fromString(EntityUtils.toString(httpEntity));
+
+				if (jsonLdObject.containsKey("didDocument")) {
+
+					Map<String, Object> outerJsonLdObject = jsonLdObject;
+					jsonLdObject = (Map<String, Object>) outerJsonLdObject.get("didDocument");
+
+					if ((! jsonLdObject.containsKey(JsonLdConsts.CONTEXT)) && outerJsonLdObject.containsKey(JsonLdConsts.CONTEXT)) {
+
+						jsonLdObject.put(JsonLdConsts.CONTEXT, outerJsonLdObject.get(JsonLdConsts.CONTEXT));
+					}
+				}
 
 				didDocumentContinuation = DIDDocument.fromJson(jsonLdObject);
 				EntityUtils.consume(httpEntity);
@@ -214,31 +229,58 @@ public class DidBtcrDriver implements Driver {
 			if (log.isInfoEnabled()) log.info("Retrieved DID DOCUMENT CONTINUATION for " + txref + " (" + btcrData.getContinuationUri() + "): " + didDocumentContinuation);
 		}
 
+		// DID DOCUMENT context
+
+		Object context = null;
+
+		if (didDocumentContinuation != null) {
+
+			context = didDocumentContinuation.getContexts();
+		}
+
 		// DID DOCUMENT id
 
 		String id = identifier;
 
 		// DID DOCUMENT publicKeys
 
-		int keyNum = 0;
 		List<PublicKey> publicKeys = new ArrayList<PublicKey> ();
 		List<Authentication> authentications = new ArrayList<Authentication> ();
 
-		if (btcrData != null) {
+		List<String> inputScriptPubKeys = new ArrayList<String> ();
 
-			String keyId = id + "#key-" + (++keyNum);
+		for (DidBtcrData spentInChainAndTxid : spentInChainAndTxids) inputScriptPubKeys.add(spentInChainAndTxid.getInputScriptPubKey());
+		inputScriptPubKeys.add(btcrData.getInputScriptPubKey());
 
-			PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, btcrData.getInputScriptPubKey(), null);
+		int keyNum = 0;
+
+		for (String inputScriptPubKey : inputScriptPubKeys) {
+
+			String keyId = id + "#key-" + (keyNum++);
+
+			PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, inputScriptPubKey, null);
 			publicKeys.add(publicKey);
-
-			Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
-			authentications.add(authentication);
 		}
+
+		PublicKey publicKey = PublicKey.build(id + "#satoshi", DIDDOCUMENT_PUBLICKEY_TYPES, null, null, inputScriptPubKeys.get(inputScriptPubKeys.size() - 1), null);
+		publicKeys.add(publicKey);
+
+		Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, "#satoshi");
+		authentications.add(authentication);
 
 		if (didDocumentContinuation != null) {
 
-			if (didDocumentContinuation.getPublicKeys() != null) publicKeys.addAll(didDocumentContinuation.getPublicKeys());
-			if (didDocumentContinuation.getAuthentications() != null) authentications.addAll(didDocumentContinuation.getAuthentications());
+			if (didDocumentContinuation.getPublicKeys() != null) for (PublicKey didDocumentContinuationPublicKey : didDocumentContinuation.getPublicKeys()) {
+
+				if (containsById(publicKeys, didDocumentContinuationPublicKey)) continue;
+				publicKeys.add(didDocumentContinuationPublicKey);
+			}
+
+			if (didDocumentContinuation.getAuthentications() != null) for (Authentication didDocumentContinuationAuthentication : didDocumentContinuation.getAuthentications()) {
+
+				if (containsById(publicKeys, didDocumentContinuationAuthentication)) continue;
+				authentications.add(didDocumentContinuationAuthentication);
+			}
 		}
 
 		// DID DOCUMENT services
@@ -255,9 +297,9 @@ public class DidBtcrDriver implements Driver {
 
 		// create DID DOCUMENT
 
-		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, services);
+		DIDDocument didDocument = DIDDocument.build(context, id, publicKeys, authentications, services);
 
-		// revoked?
+		// deactivated?
 
 		if ((! spentInChainAndTxids.isEmpty()) && didDocumentContinuation == null) {
 
@@ -294,6 +336,20 @@ public class DidBtcrDriver implements Driver {
 	public Map<String, Object> properties() {
 
 		return this.getProperties();
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	public boolean containsById(List<? extends JsonLdObject> jsonLdObjectList, JsonLdObject containsJsonLdObject) {
+
+		for (JsonLdObject jsonLdObject : jsonLdObjectList) {
+
+			if (jsonLdObject.getId() != null && jsonLdObject.getId().equals(containsJsonLdObject.getId())) return true;
+		}
+
+		return false;
 	}
 
 	/*
