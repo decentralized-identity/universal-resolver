@@ -53,11 +53,13 @@ services:
     image: hacera/hacera-did-driver:latest
     ports:
       - "8089:8080"
-  driver-did-sid:
-    image: driver-did-sid:latest
+  driver-did-neoid:
+    image: swisscomblockchainag/seraph-id-did-driver:latest
     ports:
       - "8090:8080"
   uni-resolver-web:
-    image: universalresolver/uni-resolver-web:latest
+    build:
+        context: resolver/java
+        dockerfile: docker/Dockerfile-uni-resolver-web
     ports:
       - "8080:8080"
