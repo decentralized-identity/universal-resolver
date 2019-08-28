@@ -58,8 +58,6 @@ services:
     ports:
       - "8090:8080"
   uni-resolver-web:
-    build:
-        context: resolver/java
-        dockerfile: docker/Dockerfile-uni-resolver-web
+    image: universalresolver/uni-resolver-web:latest
     ports:
       - "8080:8080"
