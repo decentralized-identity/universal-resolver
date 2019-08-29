@@ -53,6 +53,10 @@ services:
     image: hacera/hacera-did-driver:latest
     ports:
       - "8089:8080"
+  driver-did-neoid:
+    image: swisscomblockchainag/seraph-id-did-driver:latest
+    ports:
+      - "8090:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:

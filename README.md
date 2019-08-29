@@ -28,7 +28,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET  http://localhost:8080/1.0/identifiers/did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0
 	curl -X GET http://localhost:8080/1.0/identifiers/did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E
 	curl -X GET http://localhost:8080/1.0/identifiers/did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de
-	
+	curl -X GET http://localhost:8080/1.0/identifiers/did:neoid:priv:b4eeeb80d20bfb38b23001d0659ce0c1d96be0aa
+
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
@@ -55,6 +56,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | did-ipid |  | [0.11](https://w3c-ccg.github.io/did-spec/) | [0.1](https://github.com/jonnycrunch/ipid) |
 | [did-jolo](https://github.com/jolocom/jolocom-did-driver) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | [0.1](https://github.com/jolocom/jolocom-did-driver/blob/master/jolocom-did-method-specification.md) | [jolocomgmbh/jolocom-did-driver](https://hub.docker.com/r/jolocomgmbh/jolocom-did-driver) |
 | [did-hacera](https://github.com/hacera/hacera-did-driver) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) | [hacera/hacera-did-driver](https://hub.docker.com/r/hacera/hacera-did-driver) |
+| [did-seraphid](https://github.com/swisscom-blockchain/seraph-id-did-driver) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) |  [swisscomblockchainag/seraph-id-did-driver](https://hub.docker.com/r/swisscomblockchainag/seraph-id-did-driver) |
 
 ## More Information
 
