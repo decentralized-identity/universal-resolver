@@ -19,6 +19,7 @@
 				<entry key="dns-did"><ref bean="DnsDriver" /></entry>
 				<entry key="did-jolo"><ref bean="DidJoloDriver" /></entry>
 				<entry key="did-hacera"><ref bean="DidHaceraDriver" /></entry>
+				<entry key="did-elem"><ref bean="DidElemDriver" /></entry>
 				<entry key="did-neoid"><ref bean="DidSeraphIDDriver" /></entry>
 			</util:map>
 		</property>
@@ -94,7 +95,12 @@
 		<property name="pattern" value="^(did:hcr:.+)$" />
 	</bean>
 
-	<bean id="DidSeraphIDDriver" class="uniresolver.driver.http.HttpDriver">
+	<bean id="DidElemDriver" class="uniresolver.driver.http.HttpDriver">
+		<property name="resolveUri" value="https://element-did.com/api/v1/sidetree/$1" />
+		<property name="pattern" value="^did:elem:(.+)$" />
+	</bean>
+
+  <bean id="DidSeraphIDDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="http://driver-did-neoid:8080/1.0/identifiers/$1" />
 		<property name="pattern" value="^(did:neoid:.+)$" />
 	</bean>

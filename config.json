@@ -77,6 +77,10 @@
 			"image": "hacera/hacera-did-driver",
 			"tag": "latest",
 			"testIdentifiers": [ "did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de" ]
+    }, {
+			"pattern": "^did:elem:(.+)$",
+			"url": "https://element-did.com/api/v1/sidetree/$1",
+			"testIdentifiers": [ "did:elem:sscP2_bGvj2z6qnSV68ja-WR8WKCLTvNoRJjYSBvDZs" ]
 		}, {
 			"pattern": "^(did:neoid:.+)$",
 			"image": "swisscomblockchainag/seraphid-did-driver",
