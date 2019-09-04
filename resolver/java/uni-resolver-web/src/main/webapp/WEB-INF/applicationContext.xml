@@ -54,12 +54,12 @@
 
 	<bean id="DidV1Driver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="https://genesis.testnet.veres.one/dids/$1" />
-		<property name="pattern" value="^(did:v1:nym:.+)$" />
+		<property name="pattern" value="^(did:v1:test:nym:.+)$" />
 	</bean>
 
 	<bean id="DidV1TestnetDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="https://genesis.bee.veres.one/dids/$1" />
-		<property name="pattern" value="^(did:v1:test:nym:.+)$" />
+		<property name="pattern" value="^(did:v1:bee:nym:.+)$" />
 	</bean>
 
 	<bean id="DidIpidDriver" class="uniresolver.driver.http.HttpDriver">
