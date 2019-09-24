@@ -56,7 +56,7 @@ public class LocalUniResolver implements UniResolver {
 		return DEFAULT_RESOLVER;
 	}
 
-	public static LocalUniResolver fromConfig(String filePath) throws FileNotFoundException, IOException {
+	public static LocalUniResolver fromConfigFile(String filePath) throws FileNotFoundException, IOException {
 
 		Map<String, Driver> drivers = new HashMap<String, Driver> ();
 
@@ -76,6 +76,7 @@ public class LocalUniResolver implements UniResolver {
 				String name = jsonObjectDriver.has("name") ? jsonObjectDriver.get("name").getAsString() : null;
 				String pattern = jsonObjectDriver.has("pattern") ? jsonObjectDriver.get("pattern").getAsString() : null;
 				String image = jsonObjectDriver.has("image") ? jsonObjectDriver.get("image").getAsString() : null;
+				String imagePort = jsonObjectDriver.has("imagePort") ? jsonObjectDriver.get("imagePort").getAsString() : null;
 				String url = jsonObjectDriver.has("url") ? jsonObjectDriver.get("url").getAsString() : null;
 
 				if (name == null) name = "driver-" + i;
@@ -91,7 +92,7 @@ public class LocalUniResolver implements UniResolver {
 
 					httpDriverUri = image.substring(image.indexOf("/") + 1);
 					if (httpDriverUri.contains(":")) httpDriverUri = httpDriverUri.substring(0, httpDriverUri.indexOf(":"));
-					httpDriverUri = "http://" + httpDriverUri + ":8080/";
+					httpDriverUri = "http://" + httpDriverUri + ":" + (imagePort != null ? imagePort : "8080" ) + "/";
 				}
 
 				if (! httpDriverUri.endsWith("/")) httpDriverUri += "/";
@@ -102,6 +103,8 @@ public class LocalUniResolver implements UniResolver {
 				driver.setPropertiesUri(httpDriverUri + "1.0/properties");
 
 				drivers.put(name, driver);
+
+				if (log.isInfoEnabled()) log.info("Added driver '" + pattern + "' at " + httpDriverUri);
 			}
 		}
 

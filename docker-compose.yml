@@ -17,10 +17,10 @@ services:
       uniresolver_driver_did_sov_walletName: ${uniresolver_driver_did_sov_walletName}
     ports:
       - "8082:8080"
-  driver-did-uport:
+  uni-resolver-driver-did-uport:
     image: uport/uni-resolver-driver-did-uport:latest
     ports:
-      - "8083:8080"
+      - "8083:8081"
   driver-did-stack:
     image: universalresolver/driver-did-stack:latest
     ports:
