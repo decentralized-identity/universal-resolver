@@ -45,11 +45,11 @@ services:
       uniresolver_driver_dns_dnsServers: ${uniresolver_driver_dns_dnsServers}
     ports:
       - "8087:8080"
-  driver-did-jolo:
+  jolocom-did-driver:
     image: jolocomgmbh/jolocom-did-driver:latest
     ports:
       - "8088:8080"
-  driver-did-hacera:
+  hacera-did-driver:
     image: hacera/hacera-did-driver:latest
     ports:
       - "8089:8080"
