@@ -58,6 +58,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-hacera](https://github.com/hacera/hacera-did-driver) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) | [hacera/hacera-did-driver](https://hub.docker.com/r/hacera/hacera-did-driver) |
 | [did-elem](https://github.com/decentralized-identity/element) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) | |
 | [did-seraphid](https://github.com/swisscom-blockchain/seraph-id-did-driver) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) |  [swisscomblockchainag/seraph-id-did-driver](https://hub.docker.com/r/swisscomblockchainag/seraph-id-did-driver) |
+| [did-github](https://github.com/decentralized-identity/github-did) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) | |
 
 ## More Information
 
