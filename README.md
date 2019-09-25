@@ -30,6 +30,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de
 	curl -X GET http://localhost:8080/1.0/identifiers/did:neoid:priv:b4eeeb80d20bfb38b23001d0659ce0c1d96be0aa
 	curl -X GET http://localhost:8080/1.0/identifiers/did:elem:did:elem:-53k-sZFvElLHIiCM-XYydGgFV8aRy_VWAeePUVuCOM
+	curl -X GET http://localhost:8080/1.0/identifiers/did:elem:did:github:gjgd
 
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
