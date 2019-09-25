@@ -83,28 +83,25 @@ public class LocalUniResolver implements UniResolver {
 				if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
 				if (image == null && url == null) throw new IllegalArgumentException("Missing 'image' and 'url' entry in driver configuration (need either one).");
 
-				String httpDriverUri = null;
+				HttpDriver driver = new HttpDriver();
+				driver.setPattern(pattern);
 
 				if (url != null) {
 
-					httpDriverUri = url;
+					driver.setResolveUri(url);
 				} else {
 
-					httpDriverUri = image.substring(image.indexOf("/") + 1);
+					String httpDriverUri = image.substring(image.indexOf("/") + 1);
 					if (httpDriverUri.contains(":")) httpDriverUri = httpDriverUri.substring(0, httpDriverUri.indexOf(":"));
 					httpDriverUri = "http://" + httpDriverUri + ":" + (imagePort != null ? imagePort : "8080" ) + "/";
+
+					driver.setResolveUri(httpDriverUri + "1.0/identifiers/$1");
+					driver.setPropertiesUri(httpDriverUri + "1.0/properties");
 				}
-
-				if (! httpDriverUri.endsWith("/")) httpDriverUri += "/";
-
-				HttpDriver driver = new HttpDriver();
-				driver.setPattern(pattern);
-				driver.setResolveUri(httpDriverUri + "1.0/identifiers/$1");
-				driver.setPropertiesUri(httpDriverUri + "1.0/properties");
 
 				drivers.put(name, driver);
 
-				if (log.isInfoEnabled()) log.info("Added driver '" + pattern + "' at " + httpDriverUri);
+				if (log.isInfoEnabled()) log.info("Added driver '" + pattern + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
 			}
 		}
 
