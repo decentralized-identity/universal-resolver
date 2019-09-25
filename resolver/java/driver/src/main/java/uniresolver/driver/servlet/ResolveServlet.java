@@ -37,8 +37,13 @@ public class ResolveServlet extends AbstractServlet implements Servlet {
 		String servletPath = request.getServletPath();
 		String requestPath = request.getRequestURI();
 
+		if (log.isDebugEnabled()) log.debug("contextPath: " + contextPath + ", servletPath: " + servletPath + ", requestPath: " + requestPath);
+
 		String identifier = requestPath.substring(contextPath.length() + servletPath.length());
+		if (log.isDebugEnabled()) log.debug("processing identifier (1): " + identifier);
+
 		if (identifier.startsWith("/")) identifier = identifier.substring(1);
+		if (log.isDebugEnabled()) log.debug("processing identifier (2): " + identifier);
 
 		try {
 
