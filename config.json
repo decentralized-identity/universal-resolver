@@ -88,6 +88,10 @@
 			"url": "https://element-did.com/api/v1/sidetree/$1",
 			"testIdentifiers": [ "did:elem:sscP2_bGvj2z6qnSV68ja-WR8WKCLTvNoRJjYSBvDZs" ]
 		}, {
+			"pattern": "^did:github:(.+)$",
+			"url": "https://github-did.com/api/v1/did/$1",
+			"testIdentifiers": [ "did:github:gjgd" ]
+		}, {
 			"pattern": "^(did:neoid:.+)$",
 			"image": "swisscomblockchainag/seraph-id-did-driver",
 			"tag": "latest",
