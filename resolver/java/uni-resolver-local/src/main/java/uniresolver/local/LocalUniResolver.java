@@ -77,9 +77,10 @@ public class LocalUniResolver implements UniResolver {
 				String pattern = jsonObjectDriver.has("pattern") ? jsonObjectDriver.get("pattern").getAsString() : null;
 				String image = jsonObjectDriver.has("image") ? jsonObjectDriver.get("image").getAsString() : null;
 				String imagePort = jsonObjectDriver.has("imagePort") ? jsonObjectDriver.get("imagePort").getAsString() : null;
+				String imageProperties = jsonObjectDriver.has("imageProperties") ? jsonObjectDriver.get("imageProperties").getAsString() : null;
 				String url = jsonObjectDriver.has("url") ? jsonObjectDriver.get("url").getAsString() : null;
 
-				if (name == null) name = "driver-" + i;
+				if (name == null) name = "driver-" + i + (image != null ? ("-" + image) : "");
 				if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
 				if (image == null && url == null) throw new IllegalArgumentException("Missing 'image' and 'url' entry in driver configuration (need either one).");
 
@@ -96,7 +97,11 @@ public class LocalUniResolver implements UniResolver {
 					httpDriverUri = "http://" + httpDriverUri + ":" + (imagePort != null ? imagePort : "8080" ) + "/";
 
 					driver.setResolveUri(httpDriverUri + "1.0/identifiers/$1");
-					driver.setPropertiesUri(httpDriverUri + "1.0/properties");
+
+					if ("true".equals(imageProperties)) {
+
+						driver.setPropertiesUri(httpDriverUri + "1.0/properties");
+					}
 				}
 
 				drivers.put(name, driver);

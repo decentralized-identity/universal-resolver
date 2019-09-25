@@ -3,6 +3,7 @@
 		{
 			"pattern": "^(did:btcr:.+)$",
 			"image": "universalresolver/driver-did-btcr",
+			"imageProperties": "true",
 			"tag": "latest",
 			"testIdentifiers": [ "did:btcr:xz35-jznz-q6mr-7q6", "did:btcr:xkrn-xz7q-q0mx-4cl", "did:btcr:x705-jznz-qwvq-0uw" ],
 			"env": {
@@ -13,6 +14,7 @@
 		}, {
 			"pattern": "^(did:sov:(?:(\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$",
 			"image": "universalresolver/driver-did-sov",
+			"imageProperties": "true",
 			"tag": "latest",
 			"testIdentifiers": [ "did:sov:WRfXPg8dantKVubE3HX8pw" ],
 			"env": {
@@ -24,6 +26,7 @@
 		}, {
 			"pattern": "^(did:erc725:.+)$",
 			"image": "universalresolver/driver-did-erc725",
+			"imageProperties": "true",
 			"tag": "latest",
 			"testIdentifiers": [ "did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E" ],
 			"env": {
@@ -52,6 +55,7 @@
 		}, {
 			"pattern": "^(did:stack:.+)$",
 			"image": "universalresolver/driver-did-stack",
+			"imageProperties": "true",
 			"tag": "latest",
 			"testIdentifiers": [ "did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0" ]
 		}, {
@@ -63,6 +67,7 @@
 		}, {
 			"pattern": "^((?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*(?:[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9]))$",
 			"image": "universalresolver/driver-dns",
+			"imageProperties": "true",
 			"tag": "latest",
 			"testIdentifiers": [ "ssi.labs.nic.at" ],
 			"env": {
