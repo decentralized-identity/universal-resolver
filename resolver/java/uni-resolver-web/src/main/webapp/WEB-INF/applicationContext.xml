@@ -49,7 +49,7 @@
 
 	<bean id="DidUportDriver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="http://driver-did-uport:8081/1.0/identifiers/$1" />
-		<property name="pattern" value="^(did:uport:.+)$|^(did:muport:.+)$|^(did:eth:.+)$|^(did:ethr:.+)$" />
+		<property name="pattern" value="^(did:web:.+)$|^(did:ethr:.+)$|^(did:nacl:.+)$" />
 	</bean>
 
 	<bean id="DidV1Driver" class="uniresolver.driver.http.HttpDriver">
