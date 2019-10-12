@@ -1,14 +1,13 @@
 package uniresolver.examples;
 import did.DIDDocument;
 import uniresolver.client.ClientUniResolver;
-import uniresolver.result.ResolveResult;
 
 public class TestClientUniResolver {
 
 	public static void main(String[] args) throws Exception {
 
 		ClientUniResolver uniResolver = new ClientUniResolver();
-		uniResolver.setResolveUri("https://uniresolver.danubetech.com/1.0/identifiers/");
+		uniResolver.setResolveUri("https://uniresolver.io/1.0/identifiers/");
 
 		DIDDocument didDocument1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw").getDidDocument();
 		System.out.println(didDocument1.toJson());
