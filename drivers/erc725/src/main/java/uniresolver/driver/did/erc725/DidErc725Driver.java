@@ -21,9 +21,9 @@ import did.Service;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
 import uniresolver.driver.did.erc725.ethereumconnection.EthereumConnection;
-import uniresolver.driver.did.erc725.ethereumconnection.EthereumConnection.ERC725Keys;
 import uniresolver.driver.did.erc725.ethereumconnection.HybridEthereumConnection;
 import uniresolver.driver.did.erc725.ethereumconnection.JsonRPCEthereumConnection;
+import uniresolver.driver.did.erc725.ethereumconnection.result.ERC725Keys;
 import uniresolver.result.ResolveResult;
 
 public class DidErc725Driver implements Driver {
@@ -37,7 +37,7 @@ public class DidErc725Driver implements Driver {
 
 	private Map<String, Object> properties;
 
-	private EthereumConnection ethereumConnection;
+	private Map<String, EthereumConnection> ethereumConnections;
 
 	public DidErc725Driver(Map<String, Object> properties) {
 
@@ -57,25 +57,13 @@ public class DidErc725Driver implements Driver {
 
 		try {
 
-			String env_ethereumConnection = System.getenv("uniresolver_driver_did_erc725_ethereumConnection");
-			String env_rpcUrlMainnet = System.getenv("uniresolver_driver_did_erc725_rpcUrlMainnet");
-			String env_rpcUrlRopsten = System.getenv("uniresolver_driver_did_erc725_rpcUrlRopsten");
-			String env_rpcUrlRinkeby = System.getenv("uniresolver_driver_did_erc725_rpcUrlRinkeby");
-			String env_rpcUrlKovan = System.getenv("uniresolver_driver_did_erc725_rpcUrlKovan");
-			String env_etherscanApiMainnet = System.getenv("uniresolver_driver_did_erc725_etherscanApiMainnet");
-			String env_etherscanApiRopsten = System.getenv("uniresolver_driver_did_erc725_etherscanApiRopsten");
-			String env_etherscanApiRinkeby = System.getenv("uniresolver_driver_did_erc725_etherscanApiRinkeby");
-			String env_etherscanApiKovan = System.getenv("uniresolver_driver_did_erc725_etherscanApiKovan");
+			String env_ethereumConnections = System.getenv("uniresolver_versiontracker_did_jolo_ethereumConnections");
+			String env_rpcUrls = System.getenv("uniresolver_versiontracker_did_jolo_rpcUrls");
+			String env_etherscanApis = System.getenv("uniresolver_versiontracker_did_jolo_etherscanApis");
 
-			if (env_ethereumConnection != null) properties.put("ethereumConnection", env_ethereumConnection);
-			if (env_rpcUrlMainnet != null) properties.put("rpcUrlMainnet", env_rpcUrlMainnet);
-			if (env_rpcUrlRopsten != null) properties.put("rpcUrlRopsten", env_rpcUrlRopsten);
-			if (env_rpcUrlRinkeby != null) properties.put("rpcUrlRinkeby", env_rpcUrlRinkeby);
-			if (env_rpcUrlKovan != null) properties.put("rpcUrlKovan", env_rpcUrlKovan);
-			if (env_etherscanApiMainnet != null) properties.put("etherscanApiMainnet", env_etherscanApiMainnet);
-			if (env_etherscanApiRopsten != null) properties.put("etherscanApiRopsten", env_etherscanApiRopsten);
-			if (env_etherscanApiRinkeby != null) properties.put("etherscanApiRinkeby", env_etherscanApiRinkeby);
-			if (env_etherscanApiKovan != null) properties.put("etherscanApiKovan", env_etherscanApiKovan);
+			if (env_ethereumConnections != null) properties.put("ethereumConnections", env_ethereumConnections);
+			if (env_rpcUrls != null) properties.put("rpcUrls", env_rpcUrls);
+			if (env_etherscanApis != null) properties.put("etherscanApis", env_etherscanApis);
 		} catch (Exception ex) {
 
 			throw new IllegalArgumentException(ex.getMessage(), ex);
@@ -90,42 +78,71 @@ public class DidErc725Driver implements Driver {
 
 		try {
 
-			String prop_ethereumConnection = (String) this.getProperties().get("ethereumConnection");
+			// parse ethereumConnections
 
-			if ("jsonrpc".equals(prop_ethereumConnection)) {
+			String prop_ethereumConnections = (String) this.getProperties().get("ethereumConnections");
 
-				this.setEthereumConnection(new JsonRPCEthereumConnection());
+			String[] ethereumConnectionStrings = prop_ethereumConnections.split(";");
+			Map<String, String> ethereumConnectionStringMap = new HashMap<String, String> ();
+			for (int i=0; i<ethereumConnectionStrings.length; i+=2) ethereumConnectionStringMap.put(ethereumConnectionStrings[i], ethereumConnectionStrings[i+1]);
 
-				String prop_rpcUrlMainnet = (String) this.getProperties().get("rpcUrlMainnet");
-				String prop_rpcUrlRopsten = (String) this.getProperties().get("rpcUrlRopsten");
-				String prop_rpcUrlRinkeby = (String) this.getProperties().get("rpcUrlRinkeby");
-				String prop_rpcUrlKovan = (String) this.getProperties().get("rpcUrlKovan");
+			if (log.isInfoEnabled()) log.info("ethereumConnections: " + ethereumConnectionStringMap);
 
-				if (prop_rpcUrlMainnet != null) ((JsonRPCEthereumConnection) this.getEthereumConnection()).setRpcUrlMainnet(prop_rpcUrlMainnet);
-				if (prop_rpcUrlRopsten != null) ((JsonRPCEthereumConnection) this.getEthereumConnection()).setRpcUrlRopsten(prop_rpcUrlRopsten);
-				if (prop_rpcUrlRinkeby != null) ((JsonRPCEthereumConnection) this.getEthereumConnection()).setRpcUrlRinkeby(prop_rpcUrlRinkeby);
-				if (prop_rpcUrlKovan != null) ((JsonRPCEthereumConnection) this.getEthereumConnection()).setRpcUrlKovan(prop_rpcUrlKovan);
-			} else if ("hybrid".equals(prop_ethereumConnection)) {
+			// parse rpcUrls
 
-				this.setEthereumConnection(new HybridEthereumConnection());
+			String prop_rpcUrls = (String) this.getProperties().get("rpcUrls");
 
-				String prop_rpcUrlMainnet = (String) this.getProperties().get("rpcUrlMainnet");
-				String prop_rpcUrlRopsten = (String) this.getProperties().get("rpcUrlRopsten");
-				String prop_rpcUrlRinkeby = (String) this.getProperties().get("rpcUrlRinkeby");
-				String prop_rpcUrlKovan = (String) this.getProperties().get("rpcUrlKovan");
-				String prop_etherscanApiMainnet = (String) this.getProperties().get("etherscanApiMainnet");
-				String prop_etherscanApiRopsten = (String) this.getProperties().get("etherscanApiRopsten");
-				String prop_etherscanApiRinkeby = (String) this.getProperties().get("etherscanApiRinkeby");
-				String prop_etherscanApiKovan = (String) this.getProperties().get("etherscanApiKovan");
+			String[] rpcUrlStrings = prop_rpcUrls.split(";");
+			Map<String, String> rpcUrlStringMap = new HashMap<String, String> ();
+			for (int i=0; i<rpcUrlStrings.length; i+=2) rpcUrlStringMap.put(rpcUrlStrings[i], rpcUrlStrings[i+1]);
 
-				if (prop_rpcUrlMainnet != null) ((HybridEthereumConnection) this.getEthereumConnection()).setRpcUrlMainnet(prop_rpcUrlMainnet);
-				if (prop_rpcUrlRopsten != null) ((HybridEthereumConnection) this.getEthereumConnection()).setRpcUrlRopsten(prop_rpcUrlRopsten);
-				if (prop_rpcUrlRinkeby != null) ((HybridEthereumConnection) this.getEthereumConnection()).setRpcUrlRinkeby(prop_rpcUrlRinkeby);
-				if (prop_rpcUrlKovan != null) ((HybridEthereumConnection) this.getEthereumConnection()).setRpcUrlKovan(prop_rpcUrlKovan);
-				if (prop_etherscanApiMainnet != null) ((HybridEthereumConnection) this.getEthereumConnection()).setEtherscanApiMainnet(prop_etherscanApiMainnet);
-				if (prop_etherscanApiRopsten != null) ((HybridEthereumConnection) this.getEthereumConnection()).setEtherscanApiRopsten(prop_etherscanApiRopsten);
-				if (prop_etherscanApiRinkeby != null) ((HybridEthereumConnection) this.getEthereumConnection()).setEtherscanApiRinkeby(prop_etherscanApiRinkeby);
-				if (prop_etherscanApiKovan != null) ((HybridEthereumConnection) this.getEthereumConnection()).setEtherscanApiKovan(prop_etherscanApiKovan);
+			if (log.isInfoEnabled()) log.info("rpcUrls: " + rpcUrlStringMap);
+
+			// parse etherscanApis
+
+			String prop_etherscanApis = (String) this.getProperties().get("etherscanApis");
+
+			String[] etherscanApiStrings = prop_etherscanApis.split(";");
+			Map<String, String> etherscanApiStringMap = new HashMap<String, String> ();
+			for (int i=0; i<etherscanApiStrings.length; i+=2) etherscanApiStringMap.put(etherscanApiStrings[i], etherscanApiStrings[i+1]);
+
+			if (log.isInfoEnabled()) log.info("etherscanApis: " + etherscanApiStringMap);
+
+			// loop ethereumConnections
+
+			Map<String, EthereumConnection> ethereumConnections = new HashMap<String, EthereumConnection> ();
+			this.setEthereumConnections(ethereumConnections);
+
+			for (Map.Entry<String, String> ethereumConnectionString : ethereumConnectionStringMap.entrySet()) {
+
+				EthereumConnection ethereumConnection;
+
+				if ("jsonrpc".equals(ethereumConnectionString.getValue())) {
+
+					String rpcUrl = rpcUrlStringMap.get(ethereumConnectionString.getKey());
+
+					if (rpcUrl == null && log.isWarnEnabled()) log.warn("No rpcUrl for " + ethereumConnectionString.getKey());
+
+					ethereumConnection = new JsonRPCEthereumConnection();
+					if (rpcUrl != null) ((JsonRPCEthereumConnection) ethereumConnection).setRpcUrl(rpcUrl);
+				} else if ("hybrid".equals(ethereumConnectionString.getValue())) {
+
+					String rpcUrl = rpcUrlStringMap.get(ethereumConnectionString.getKey());
+					String etherscanApi = etherscanApiStringMap.get(ethereumConnectionString.getKey());
+
+					if (rpcUrl == null && log.isWarnEnabled()) log.warn("No rpcUrl for " + ethereumConnectionString.getKey());
+					if (etherscanApi == null && log.isWarnEnabled()) log.warn("No etherscanApi for " + ethereumConnectionString.getKey());
+
+					ethereumConnection = new HybridEthereumConnection();
+					if (rpcUrl != null) ((HybridEthereumConnection) ethereumConnection).setRpcUrl(rpcUrl);
+					if (etherscanApi != null) ((HybridEthereumConnection) ethereumConnection).setEtherscanApi(etherscanApi);
+				} else {
+
+					if (log.isWarnEnabled()) log.warn("Invalid ethereumConnection: " + ethereumConnectionString.getKey() + ". Ignoring.");
+					continue;
+				}
+
+				ethereumConnections.put(ethereumConnectionString.getKey(), ethereumConnection);
 			}
 		} catch (Exception ex) {
 
@@ -144,13 +161,18 @@ public class DidErc725Driver implements Driver {
 		String network = matcher.groupCount() == 2 ? matcher.group(1) : null;
 		String address = matcher.groupCount() == 2 ? matcher.group(2) : matcher.group(1);
 
+		// find ethereum connection
+
+		final EthereumConnection ethereumConnection = this.getEthereumConnections().get(network);
+		if (ethereumConnection == null) throw new ResolutionException("No ethereum connection for network: " + network);
+
 		// retrieve keys
 
 		ERC725Keys keys;
 
 		try {
 
-			keys = this.getEthereumConnection().getKeys(network, address);
+			keys = ethereumConnection.getKeys(address);
 		} catch (IOException ex) {
 
 			throw new ResolutionException("Cannot retrieve keys for address " + address + " on network " + network + ": "+ ex.getMessage(), ex);
@@ -248,13 +270,13 @@ public class DidErc725Driver implements Driver {
 		this.configureFromProperties();
 	}
 
-	public EthereumConnection getEthereumConnection() {
+	public Map<String, EthereumConnection> getEthereumConnections() {
 
-		return this.ethereumConnection;
+		return this.ethereumConnections;
 	}
 
-	public void setEthereumConnection(EthereumConnection ethereumConnection) {
+	public void setEthereumConnections(Map<String, EthereumConnection> ethereumConnections) {
 
-		this.ethereumConnection = ethereumConnection;
+		this.ethereumConnections = ethereumConnections;
 	}
 }

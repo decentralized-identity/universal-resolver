@@ -10,15 +10,9 @@ RUN cd /opt/driver-did-erc725 && mvn clean install package -N -DskipTests
 
 # variables
 
-ENV uniresolver_driver_did_erc725_ethereumConnection=hybrid
-ENV uniresolver_driver_did_erc725_rpcUrlMainnet=https://mainnet.infura.io/v3/fd9e225bc1234f49b48b295c611078eb
-ENV uniresolver_driver_did_erc725_rpcUrlRopsten=https://ropsten.infura.io/v3/fd9e225bc1234f49b48b295c611078eb
-ENV uniresolver_driver_did_erc725_rpcUrlRinkeby=https://rinkeby.infura.io/v3/fd9e225bc1234f49b48b295c611078eb
-ENV uniresolver_driver_did_erc725_rpcUrlKovan=https://kovan.infura.io/v3/fd9e225bc1234f49b48b295c611078eb
-ENV uniresolver_driver_did_erc725_etherscanApiMainnet=http://api.etherscan.io/api
-ENV uniresolver_driver_did_erc725_etherscanApiRopsten=http://api-ropsten.etherscan.io/api
-ENV uniresolver_driver_did_erc725_etherscanApiRinkeby=http://api-rinkeby.etherscan.io/api
-ENV uniresolver_driver_did_erc725_etherscanApiKovan=http://api-kovan.etherscan.io/api
+ENV uniresolver_driver_did_erc725_ethereumConnections=mainnet;hybrid;ropsten;hybrid;rinkeby;hybrid;kovan;hybrid
+ENV uniresolver_driver_did_erc725_rpcUrls=mainnet;https://mainnet.infura.io/v3/fd9e225bc1234f49b48b295c611078eb;ropsten;https://ropsten.infura.io/v3/fd9e225bc1234f49b48b295c611078eb;rinkeby;https://rinkeby.infura.io/v3/fd9e225bc1234f49b48b295c611078eb;kovan;https://kovan.infura.io/v3/fd9e225bc1234f49b48b295c611078eb
+ENV uniresolver_driver_did_erc725_etherscanApis=mainnet;http://api.etherscan.io/api;ropsten;http://api-ropsten.etherscan.io/api;rinkeby;http://api-rinkeby.etherscan.io/api;kovan;http://api-kovan.etherscan.io/api
 
 # done
 

@@ -35,54 +35,37 @@ import okhttp3.Authenticator;
 import okhttp3.OkHttpClient;
 import okhttp3.Route;
 import okhttp3.logging.HttpLoggingInterceptor;
-import uniresolver.driver.did.erc725.ERC725Contract;
+import uniresolver.driver.did.erc725.contract.ERC725Contract;
 
 public class JsonRPCEthereumConnection extends AbstractEthereumConnection implements EthereumConnection {
 
 	private static Logger log = LoggerFactory.getLogger(JsonRPCEthereumConnection.class);
 
-	private static final JsonRPCEthereumConnection instance = new JsonRPCEthereumConnection();
-
-	private Web3j ethereumWeb3jMainnet;
-	private Web3j ethereumWeb3jRopsten;
-	private Web3j ethereumWeb3jRinkeby;
-	private Web3j ethereumWeb3jKovan;
+	private Web3j web3j;
 	private Credentials credentials;
 
-	public JsonRPCEthereumConnection(Web3j ethereumWeb3jMainnet, Web3j ethereumWeb3jRopsten, Web3j ethereumWeb3jRinkeby, Web3j ethereumWeb3jKovan) {
+	public JsonRPCEthereumConnection(Web3j web4j) {
 
-		this.ethereumWeb3jMainnet = ethereumWeb3jMainnet;
-		this.ethereumWeb3jRopsten = ethereumWeb3jRopsten;
-		this.ethereumWeb3jRinkeby = ethereumWeb3jRinkeby;
-		this.ethereumWeb3jKovan = ethereumWeb3jKovan;
+		this.web3j = web4j;
 		this.credentials = createCredentials();
 	}
 
-	public JsonRPCEthereumConnection(String ethereumRpcUrlMainnet, String usernameMainnet, String passwordMainnet, String ethereumRpcUrlRopsten, String usernameRopsten, String passwordRopsten, String ethereumRpcUrlRinkeby, String usernameRinkeby, String passwordRinkeby, String ethereumRpcUrlKovan, String usernameKovan, String passwordKovan) {
+	public JsonRPCEthereumConnection(String rpcUrl, String username, String password) {
 
-		this(createWeb3j(ethereumRpcUrlMainnet, usernameMainnet, passwordMainnet), createWeb3j(ethereumRpcUrlRopsten, usernameRopsten, passwordRopsten), createWeb3j(ethereumRpcUrlRinkeby, usernameRinkeby, passwordRinkeby), createWeb3j(ethereumRpcUrlKovan, usernameKovan, passwordKovan));
+		this(createWeb3j(rpcUrl, username, password));
 	}
 
 	public JsonRPCEthereumConnection() {
 
-		this((Web3j) null, (Web3j) null, (Web3j) null, (Web3j) null);
+		this((Web3j) null);
 	}
 
-	public static JsonRPCEthereumConnection get() {
-
-		return instance;
-	}
-
-	public Map<BigInteger, Map<String, byte[]>> getKeysByType(String network, String address) throws IOException {
-
-		// determine network
-
-		Web3j web3j = this.getWeb3j(network);
-		if (web3j == null) throw new IOException("No connection for network '" + network + "'");
+	@Override
+	public Map<BigInteger, Map<String, byte[]>> getKeysByType(String address) throws IOException {
 
 		// load ERC725 contract
 
-		ERC725Contract erc725Contract = ERC725Contract.load("0x" + address, web3j, this.getCredentials(), null, null);
+		ERC725Contract erc725Contract = ERC725Contract.load("0x" + address, this.getWeb3j(), this.getCredentials(), null, null);
 
 		// get keys
 
@@ -98,10 +81,10 @@ public class JsonRPCEthereumConnection extends AbstractEthereumConnection implem
 			List<String> claimAddresses = addressesToStrings((List<Address>) erc725Contract.getKeysByType(EthereumConnection.KEY_TYPE_CLAIM).send());
 			List<String> encryptionAddresses = addressesToStrings((List<Address>) erc725Contract.getKeysByType(EthereumConnection.KEY_TYPE_ENCRYPTION).send());
 
-			managementPublicKeys = this.getPublicKeysByAddresses(network, managementAddresses);
-			actionPublicKeys = this.getPublicKeysByAddresses(network, actionAddresses);
-			claimPublicKeys = this.getPublicKeysByAddresses(network, claimAddresses);
-			encryptionPublicKeys = this.getPublicKeysByAddresses(network, encryptionAddresses);
+			managementPublicKeys = this.getPublicKeysByAddresses(managementAddresses);
+			actionPublicKeys = this.getPublicKeysByAddresses(actionAddresses);
+			claimPublicKeys = this.getPublicKeysByAddresses(claimAddresses);
+			encryptionPublicKeys = this.getPublicKeysByAddresses(encryptionAddresses);
 		} catch (Exception ex) {
 
 			throw new IOException("Cannot look up keys: " + ex.getMessage(), ex);
@@ -120,17 +103,12 @@ public class JsonRPCEthereumConnection extends AbstractEthereumConnection implem
 	}
 
 	@Override
-	public Map<String, String> getTransactionHashesByAddresses(String network, List<String> addresses) throws IOException {
-
-		// determine network
-
-		Web3j web3j = this.getWeb3j(network);
-		if (web3j == null) throw new IOException("No connection for network '" + network + "'");
+	public Map<String, String> getTransactionHashesByAddresses(List<String> addresses) throws IOException {
 
 		// find transaction hashes
 
 		EthFilter filter = new EthFilter(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST, addresses);
-		List<LogResult> logResults = web3j.ethGetLogs(filter).send().getLogs();
+		List<LogResult> logResults = this.getWeb3j().ethGetLogs(filter).send().getLogs();
 
 		Map<String, String> transactionHashesByAddresses = new HashMap<String, String> ();
 
@@ -149,12 +127,7 @@ public class JsonRPCEthereumConnection extends AbstractEthereumConnection implem
 	}
 
 	@Override
-	public Map<String, byte[]> getPublicKeysByAddresses(String network, Map<String, String> transactionHashesByAddress) throws IOException, DecoderException, SignatureException {
-
-		// determine network
-
-		Web3j web3j = this.getWeb3j(network);
-		if (web3j == null) throw new IOException("No connection for network '" + network + "'");
+	public Map<String, byte[]> getPublicKeysByAddresses(Map<String, String> transactionHashesByAddress) throws IOException, DecoderException, SignatureException {
 
 		// find keys
 
@@ -165,7 +138,7 @@ public class JsonRPCEthereumConnection extends AbstractEthereumConnection implem
 			String address = transactionHashByAddress.getKey();
 			String transactionHash = transactionHashByAddress.getValue();
 
-			Transaction transaction = web3j.ethGetTransactionByHash(transactionHash).send().getTransaction().get();
+			Transaction transaction = this.getWeb3j().ethGetTransactionByHash(transactionHash).send().getTransaction().get();
 
 			if (transaction == null) {
 
@@ -186,18 +159,6 @@ public class JsonRPCEthereumConnection extends AbstractEthereumConnection implem
 		// done
 
 		return keysByAddress;
-	}
-
-	private Web3j getWeb3j(String network) {
-
-		Web3j web3j = null;
-
-		if (network == null || NETWORK_MAINNET.equals(network)) web3j = this.ethereumWeb3jMainnet;
-		else if (NETWORK_ROPSTEN.equals(network)) web3j = this.ethereumWeb3jRopsten;
-		else if (NETWORK_RINKEBY.equals(network)) web3j = this.ethereumWeb3jRinkeby;
-		else if (NETWORK_KOVAN.equals(network)) web3j = this.ethereumWeb3jKovan;
-
-		return web3j;
 	}
 
 	/*
@@ -274,64 +235,19 @@ public class JsonRPCEthereumConnection extends AbstractEthereumConnection implem
 	 * Getters and setters
 	 */
 
-	public Web3j getEthereumWeb3jMainnet() {
+	public Web3j getWeb3j() {
 
-		return this.ethereumWeb3jMainnet;
+		return this.web3j;
 	}
 
-	public void setEthereumWeb3jMainnet(Web3j ethereumWeb3jMainnet) {
+	public void setWeb3j(Web3j web3j) {
 
-		this.ethereumWeb3jMainnet = ethereumWeb3jMainnet;
+		this.web3j = web3j;
 	}
 
-	public void setRpcUrlMainnet(String rpcUrlMainnet) {
+	public void setRpcUrl(String rpcUrl) {
 
-		this.setEthereumWeb3jMainnet(Web3j.build(new HttpService(rpcUrlMainnet)));
-	}
-
-	public Web3j getEthereumWeb3jRopsten() {
-
-		return this.ethereumWeb3jRopsten;
-	}
-
-	public void setEthereumWeb3jRopsten(Web3j ethereumWeb3jRopsten) {
-
-		this.ethereumWeb3jRopsten = ethereumWeb3jRopsten;
-	}
-
-	public void setRpcUrlRopsten(String rpcUrlRopsten) {
-
-		this.setEthereumWeb3jRopsten(Web3j.build(new HttpService(rpcUrlRopsten)));
-	}
-
-	public Web3j getEthereumWeb3jRinkeby() {
-
-		return this.ethereumWeb3jRinkeby;
-	}
-
-	public void setEthereumWeb3jRinkeby(Web3j ethereumWeb3jRinkeby) {
-
-		this.ethereumWeb3jRinkeby = ethereumWeb3jRinkeby;
-	}
-
-	public void setRpcUrlRinkeby(String rpcUrlRinkeby) {
-
-		this.setEthereumWeb3jRinkeby(Web3j.build(new HttpService(rpcUrlRinkeby)));
-	}
-
-	public Web3j getEthereumWeb3jKovan() {
-
-		return this.ethereumWeb3jKovan;
-	}
-
-	public void setEthereumWeb3jKovan(Web3j ethereumWeb3jKovan) {
-
-		this.ethereumWeb3jKovan = ethereumWeb3jKovan;
-	}
-
-	public void setRpcUrlKovan(String ethereumRpcUrlKovan) {
-
-		this.setEthereumWeb3jKovan(Web3j.build(new HttpService(ethereumRpcUrlKovan)));
+		this.setWeb3j(Web3j.build(new HttpService(rpcUrl)));
 	}
 
 	public Credentials getCredentials() {

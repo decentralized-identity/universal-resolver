@@ -26,31 +26,25 @@ public class HybridEthereumConnection extends JsonRPCEthereumConnection implemen
 
 	private static final HybridEthereumConnection instance = new HybridEthereumConnection();
 
-	private String etherscanApiMainnet;
-	private String etherscanApiRopsten;
-	private String etherscanApiRinkeby;
-	private String etherscanApiKovan;
+	private String etherscanApi;
 	private HttpClient httpClient;
 
-	public HybridEthereumConnection(Web3j ethereumWeb3jMainnet, Web3j ethereumWeb3jRopsten, Web3j ethereumWeb3jRinkeby, Web3j ethereumWeb3jKovan, String etherscanApiMainnet, String etherscanApiRopsten, String etherscanApiRinkeby, String etherscanApiKovan) {
+	public HybridEthereumConnection(Web3j web3j, String etherscanApi) {
 
-		super(ethereumWeb3jMainnet, ethereumWeb3jRopsten, ethereumWeb3jRinkeby, ethereumWeb3jKovan);
+		super(web3j);
 
-		this.etherscanApiMainnet = etherscanApiMainnet;
-		this.etherscanApiRopsten = etherscanApiRopsten;
-		this.etherscanApiRinkeby = etherscanApiRinkeby;
-		this.etherscanApiKovan = etherscanApiKovan;
+		this.etherscanApi = etherscanApi;
 		this.httpClient = HttpClients.createDefault();
 	}
 
-	public HybridEthereumConnection(Web3j ethereumWeb3jMainnet, Web3j ethereumWeb3jRopsten, Web3j ethereumWeb3jRinkeby, Web3j ethereumWeb3jKovan) {
+	public HybridEthereumConnection(Web3j web3j, Web3j ethereumWeb3jRopsten, Web3j ethereumWeb3jRinkeby, Web3j ethereumWeb3jKovan) {
 
-		this(ethereumWeb3jMainnet, ethereumWeb3jRopsten, ethereumWeb3jRinkeby, ethereumWeb3jKovan, null, null, null, null);
+		this(web3j, null);
 	}
 
 	public HybridEthereumConnection() {
 
-		this(null, null, null, null, null, null, null, null);
+		this(null, null);
 	}
 
 	public static HybridEthereumConnection get() {
@@ -59,12 +53,7 @@ public class HybridEthereumConnection extends JsonRPCEthereumConnection implemen
 	}
 
 	@Override
-	public Map<String, String> getTransactionHashesByAddresses(String network, List<String> addresses) throws IOException {
-
-		// determine network
-
-		String api = this.getApi(network);
-		if (api == null) throw new IOException("No API for network '" + network + "'");
+	public Map<String, String> getTransactionHashesByAddresses(List<String> addresses) throws IOException {
 
 		// find transaction hashes
 
@@ -74,7 +63,7 @@ public class HybridEthereumConnection extends JsonRPCEthereumConnection implemen
 
 			// prepare HTTP request
 
-			String uriString = api;
+			String uriString = this.getEtherscanApi();
 			uriString += "?module=account&action=txlist&address=";
 			uriString += address;
 
@@ -138,60 +127,18 @@ public class HybridEthereumConnection extends JsonRPCEthereumConnection implemen
 		return transactionHashesByAddresses;
 	}
 
-	private String getApi(String network) {
-
-		String api = null;
-
-		if (network == null || NETWORK_MAINNET.equals(network)) api = this.etherscanApiMainnet;
-		else if (NETWORK_ROPSTEN.equals(network)) api = this.etherscanApiRopsten;
-		else if (NETWORK_RINKEBY.equals(network)) api = this.etherscanApiRinkeby;
-		else if (NETWORK_KOVAN.equals(network)) api = this.etherscanApiKovan;
-
-		return api;
-	}
-
 	/*
 	 * Getters and setters
 	 */
 
-	public String getEtherscanApiMainnet() {
+	public String getEtherscanApi() {
 
-		return this.etherscanApiMainnet;
+		return this.etherscanApi;
 	}
 
-	public void setEtherscanApiMainnet(String etherscanApiMainnet) {
+	public void setEtherscanApi(String etherscanApi) {
 
-		this.etherscanApiMainnet = etherscanApiMainnet;
-	}
-
-	public String getEtherscanApiRopsten() {
-
-		return this.etherscanApiRopsten;
-	}
-
-	public void setEtherscanApiRopsten(String etherscanApiRopsten) {
-
-		this.etherscanApiRopsten = etherscanApiRopsten;
-	}
-
-	public String getEtherscanApiRinkeby() {
-
-		return this.etherscanApiRinkeby;
-	}
-
-	public void setEtherscanApiRinkeby(String etherscanApiRinkeby) {
-
-		this.etherscanApiRinkeby = etherscanApiRinkeby;
-	}
-
-	public String getEtherscanApiKovan() {
-
-		return this.etherscanApiKovan;
-	}
-
-	public void setEtherscanApiKovan(String etherscanApiKovan) {
-
-		this.etherscanApiKovan = etherscanApiKovan;
+		this.etherscanApi = etherscanApi;
 	}
 
 	public HttpClient getHttpClient() {

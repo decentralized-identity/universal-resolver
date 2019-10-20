@@ -1,4 +1,4 @@
-package uniresolver.driver.did.erc725;
+package uniresolver.driver.did.erc725.contract;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
