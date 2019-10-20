@@ -165,6 +165,8 @@ public class DidBtcrDriver implements Driver {
 				throw new ResolutionException("Extended txref form not allowed if txoIndex == 0. You probably want to use " + correctDid + " instead.");
 			}
 
+			// lookup txid
+
 			chainAndTxid = this.getBitcoinConnection().lookupChainAndTxid(chainAndLocationData);
 
 			initialChainAndTxid = chainAndTxid;

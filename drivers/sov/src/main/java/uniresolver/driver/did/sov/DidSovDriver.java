@@ -49,9 +49,9 @@ public class DidSovDriver implements Driver {
 	public static final String[] DIDDOCUMENT_PUBLICKEY_TYPES = new String[] { "Ed25519VerificationKey2018" };
 	public static final String[] DIDDOCUMENT_AUTHENTICATION_TYPES = new String[] { "Ed25519SignatureAuthentication2018" };
 
-	private Map<String, Object> properties;
-
 	private static final Gson gson = new Gson();
+
+	private Map<String, Object> properties;
 
 	private String libIndyPath;
 	private String poolConfigs;
@@ -126,7 +126,7 @@ public class DidSovDriver implements Driver {
 
 		synchronized (this) {
 
-			if (this.getPoolMap() == null || this.getWallet() == null || this.getSubmitterDid() == null) this.openIndy();
+			if (this.getPoolMap() == null || this.getPoolVersionMap() == null || this.getWallet() == null || this.getSubmitterDid() == null) this.openIndy();
 		}
 
 		// parse identifier
@@ -138,12 +138,15 @@ public class DidSovDriver implements Driver {
 		String targetDid = matcher.group(2);
 		if (network == null || network.trim().isEmpty()) network = "_";
 
-		Integer poolVersion = this.getPoolVersionMap().get(network);
+		// find pool version
+
+		final Integer poolVersion = this.getPoolVersionMap().get(network);
+		if (poolVersion == null) throw new ResolutionException("No pool version for network: " + network);
 
 		// find pool
 
-		Pool pool = this.getPoolMap().get(network);
-		if (pool == null) throw new ResolutionException("Unknown network: " + network);
+		final Pool pool = this.getPoolMap().get(network);
+		if (pool == null) throw new ResolutionException("No pool for network: " + network);
 
 		// send GET_NYM request
 
@@ -286,37 +289,23 @@ public class DidSovDriver implements Driver {
 
 		// parse pool configs
 
-		String[] poolConfigs = this.getPoolConfigs().split(";");
-		Map<String, String> poolConfigMap = new HashMap<String, String> ();
+		String[] poolConfigStrings = this.getPoolConfigs().split(";");
+		Map<String, String> poolConfigStringMap = new HashMap<String, String> ();
+		for (int i=0; i<poolConfigStrings.length; i+=2) poolConfigStringMap.put(poolConfigStrings[i], poolConfigStrings[i+1]);
 
-		for (int i=0; i<poolConfigs.length; i+=2) {
-
-			String poolConfigName = poolConfigs[i];
-			String poolConfigFile = poolConfigs[i+1];
-
-			poolConfigMap.put(poolConfigName, poolConfigFile);
-		}
-
-		if (log.isInfoEnabled()) log.info("Pool config map: " + poolConfigMap);
+		if (log.isInfoEnabled()) log.info("Pool config map: " + poolConfigStringMap);
 
 		// parse pool versions
 
-		String[] poolVersions = this.getPoolVersions().split(";");
+		String[] poolVersionStrings = this.getPoolVersions().split(";");
 		this.poolVersionMap = new HashMap<String, Integer> ();
-
-		for (int i=0; i<poolVersions.length; i+=2) {
-
-			String poolConfigName = poolVersions[i];
-			Integer poolConfigVersion = Integer.parseInt(poolVersions[i+1]);
-
-			this.poolVersionMap.put(poolConfigName, poolConfigVersion);
-		}
+		for (int i=0; i<poolVersionStrings.length; i+=2) this.poolVersionMap.put(poolVersionStrings[i], Integer.parseInt(poolVersionStrings[i+1]));
 
 		if (log.isInfoEnabled()) log.info("Pool version map: " + this.poolVersionMap);
 
 		// create pool configs
 
-		for (Map.Entry<String, String> poolConfig : poolConfigMap.entrySet()) {
+		for (Map.Entry<String, String> poolConfig : poolConfigStringMap.entrySet()) {
 
 			String poolConfigName = poolConfig.getKey();
 			String poolConfigFile = poolConfig.getValue();
@@ -393,7 +382,7 @@ public class DidSovDriver implements Driver {
 
 		this.poolMap = new HashMap<String, Pool> ();
 
-		for (String poolConfigName : poolConfigMap.keySet()) {
+		for (String poolConfigName : poolConfigStringMap.keySet()) {
 
 			try {
 

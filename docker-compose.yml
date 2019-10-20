@@ -28,15 +28,9 @@ services:
   driver-did-erc725:
     image: universalresolver/driver-did-erc725:latest
     environment:
-      uniresolver_driver_did_erc725_ethereumConnection: ${uniresolver_driver_did_erc725_ethereumConnection}
-      uniresolver_driver_did_erc725_rpcUrlMainnet: ${uniresolver_driver_did_erc725_rpcUrlMainnet}
-      uniresolver_driver_did_erc725_rpcUrlRopsten: ${uniresolver_driver_did_erc725_rpcUrlRopsten}
-      uniresolver_driver_did_erc725_rpcUrlRinkeby: ${uniresolver_driver_did_erc725_rpcUrlRinkeby}
-      uniresolver_driver_did_erc725_rpcUrlKovan: ${uniresolver_driver_did_erc725_rpcUrlKovan}
-      uniresolver_driver_did_erc725_etherscanApiMainnet: ${uniresolver_driver_did_erc725_etherscanApiMainnet}
-      uniresolver_driver_did_erc725_etherscanApiRopsten: ${uniresolver_driver_did_erc725_etherscanApiRopsten}
-      uniresolver_driver_did_erc725_etherscanApiRinkeby: ${uniresolver_driver_did_erc725_etherscanApiRinkeby}
-      uniresolver_driver_did_erc725_etherscanApiKovan: ${uniresolver_driver_did_erc725_etherscanApiKovan}
+      uniresolver_driver_did_erc725_ethereumConnections: ${uniresolver_driver_did_erc725_ethereumConnections}
+      uniresolver_driver_did_erc725_rpcUrls: ${uniresolver_driver_did_erc725_rpcUrls}
+      uniresolver_driver_did_erc725_etherscanApis: ${uniresolver_driver_did_erc725_etherscanApis}
     ports:
       - "8085:8080"
   driver-dns:
