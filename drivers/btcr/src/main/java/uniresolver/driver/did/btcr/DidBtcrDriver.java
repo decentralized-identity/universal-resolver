@@ -94,6 +94,8 @@ public class DidBtcrDriver implements Driver {
 
 		try {
 
+			// parse bitcoinConnection
+
 			String prop_bitcoinConnection = (String) this.getProperties().get("bitcoinConnection");
 
 			if ("bitcoind".equals(prop_bitcoinConnection)) {
