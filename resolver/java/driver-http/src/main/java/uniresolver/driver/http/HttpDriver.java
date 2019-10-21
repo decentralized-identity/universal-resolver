@@ -174,8 +174,15 @@ public class HttpDriver implements Driver {
 
 		// remote properties
 
-		Map<String, Object> remoteProperties = this.remoteProperties();
-		if (remoteProperties != null) properties.putAll(remoteProperties);
+		try {
+
+			Map<String, Object> remoteProperties = this.remoteProperties();
+			if (remoteProperties != null) properties.putAll(remoteProperties);
+		} catch (Exception ex) {
+
+			if (log.isWarnEnabled()) log.warn("Cannot retrieve remote properties: " + ex.getMessage(), ex);
+			properties.put("remotePropertiesException", ex.getMessage());
+		}
 
 		// done
 

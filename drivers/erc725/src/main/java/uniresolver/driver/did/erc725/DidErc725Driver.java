@@ -57,9 +57,9 @@ public class DidErc725Driver implements Driver {
 
 		try {
 
-			String env_ethereumConnections = System.getenv("uniresolver_versiontracker_did_jolo_ethereumConnections");
-			String env_rpcUrls = System.getenv("uniresolver_versiontracker_did_jolo_rpcUrls");
-			String env_etherscanApis = System.getenv("uniresolver_versiontracker_did_jolo_etherscanApis");
+			String env_ethereumConnections = System.getenv("uniresolver_driver_did_erc725_ethereumConnections");
+			String env_rpcUrls = System.getenv("uniresolver_driver_did_erc725_rpcUrls");
+			String env_etherscanApis = System.getenv("uniresolver_driver_did_erc725_etherscanApis");
 
 			if (env_ethereumConnections != null) properties.put("ethereumConnections", env_ethereumConnections);
 			if (env_rpcUrls != null) properties.put("rpcUrls", env_rpcUrls);

@@ -45,7 +45,7 @@ public class PropertiesServlet extends AbstractServlet implements Servlet {
 
 		try {
 
-			properties = InitServlet.getDriver().properties();
+			properties = InitServlet.getDriver() == null ? null : InitServlet.getDriver().properties();
 			propertiesString = properties == null ? null : objectMapper.writeValueAsString(properties);
 		} catch (Exception ex) {
 
