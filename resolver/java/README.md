@@ -14,7 +14,7 @@ First, build https://github.com/decentralized-identity/did-common-java
 
 Then run:
 
-	mvn clean install -pl !examples
+	mvn clean install -pl '!examples'
 
 ## Local Resolver
 
