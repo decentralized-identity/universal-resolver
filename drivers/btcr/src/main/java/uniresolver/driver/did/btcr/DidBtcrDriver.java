@@ -119,10 +119,16 @@ public class DidBtcrDriver implements Driver {
 			} else if ("bitcoinj".equals(prop_bitcoinConnection)) {
 
 				this.setBitcoinConnection(new BitcoinjSPVBitcoinConnection());
-			} else  if ("blockcypherapi".equals(prop_bitcoinConnection)) {
+			} else if ("blockcypherapi".equals(prop_bitcoinConnection)) {
 
 				this.setBitcoinConnection(new BlockcypherAPIBitcoinConnection());
+			} else {
+
+				throw new IllegalArgumentException("Invalid bitcoinConnection: " + prop_bitcoinConnection);
 			}
+		} catch (IllegalArgumentException ex) {
+
+			throw ex;
 		} catch (Exception ex) {
 
 			throw new IllegalArgumentException(ex.getMessage(), ex);
