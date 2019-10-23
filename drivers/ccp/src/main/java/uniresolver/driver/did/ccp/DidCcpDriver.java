@@ -86,6 +86,7 @@ public class DidCcpDriver implements Driver {
 		}
 
 		// DDO id
+		String id = identifier;
 
 		// DDO publicKeys
 		List<PublicKey> publicKeys = new ArrayList<>();
@@ -124,7 +125,7 @@ public class DidCcpDriver implements Driver {
 		}
 
 		// create DDO
-		DIDDocument didDocument = DIDDocument.build(identifier, publicKeys, authentications, services);
+		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, services);
 
 		// create Method METADATA
 		Map<String, Object> methodMetadata = new LinkedHashMap<>();
