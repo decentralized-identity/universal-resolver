@@ -46,4 +46,6 @@ The driver returns the following metadata in addition to a DID document:
 * `created`: The DID create time.
 * `updated`: The DID document last update time.
 
+## Maintainer
 
+- Hongbin Mao [@hello2mao](https://github.com/hello2mao)
