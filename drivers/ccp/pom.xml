@@ -1,0 +1,111 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>uni-resolver-driver-did-ccp</artifactId>
+	<packaging>${packaging.type}</packaging>
+	<name>uni-resolver-driver-did-ccp</name>
+
+	<parent>
+		<groupId>decentralized-identity</groupId>
+		<artifactId>uni-resolver</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+
+	<profiles>
+
+		<profile>
+
+			<id>default</id>
+			<activation><activeByDefault>true</activeByDefault></activation>
+			<properties><packaging.type>jar</packaging.type></properties>
+
+		</profile>
+
+		<profile>
+
+			<id>war</id>
+			<properties><packaging.type>war</packaging.type></properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>3.2.2</version>
+					</plugin>
+					<plugin>
+						<groupId>org.eclipse.jetty</groupId>
+						<artifactId>jetty-maven-plugin</artifactId>
+						<version>9.4.18.v20190429</version>
+						<configuration>
+							<jettyConfig>
+								${basedir}/src/test/resources/jetty.xml
+							</jettyConfig>
+							<jettyEnvXml>
+								${basedir}/src/test/resources/jetty-env.xml
+							</jettyEnvXml>
+							<contextPath>/</contextPath>
+							<useTestClasspath>true</useTestClasspath>
+							<systemProperties>
+								<systemProperty>
+									<name>jetty.port</name>
+									<value>8080</value>
+								</systemProperty>
+								<systemProperty>
+									<name>slf4j</name>
+									<value>true</value>
+								</systemProperty>
+								<systemProperty>
+									<name>log4j.configuration</name>
+									<value>file:${basedir}/src/test/resources/log4j.properties</value>
+								</systemProperty>
+							</systemProperties>
+							<webApp>
+								<webInfIncludeJarPattern>^$</webInfIncludeJarPattern>
+								<containerIncludeJarPattern>^$</containerIncludeJarPattern>
+							</webApp>
+						</configuration>
+						<dependencies>
+							<dependency>
+								<groupId>org.slf4j</groupId>
+								<artifactId>slf4j-api</artifactId>
+								<version>1.7.25</version>
+								<scope>compile</scope>
+							</dependency>
+							<dependency>
+								<groupId>org.slf4j</groupId>
+								<artifactId>jcl-over-slf4j</artifactId>
+								<version>1.7.25</version>
+								<scope>compile</scope>
+							</dependency>
+							<dependency>
+								<groupId>org.slf4j</groupId>
+								<artifactId>slf4j-log4j12</artifactId>
+								<version>1.7.25</version>
+								<scope>compile</scope>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>decentralized-identity</groupId>
+			<artifactId>uni-resolver-driver</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20171018</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+</project>

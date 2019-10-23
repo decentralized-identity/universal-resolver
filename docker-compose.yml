@@ -51,6 +51,10 @@ services:
     image: swisscomblockchainag/seraph-id-did-driver:latest
     ports:
       - "8090:8080"
+  driver-did-ccp:
+    image: hello2mao/driver-did-ccp:latest
+    ports:
+      - "8091:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
