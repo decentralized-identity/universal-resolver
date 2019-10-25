@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+<Configure id="JettyWebAppContext" class="org.eclipse.jetty.maven.plugin.JettyWebAppContext">
+	<Call name="setAttribute">
+		<Arg>org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern</Arg>
+		<Arg>^$</Arg>
+	</Call>
+</Configure>

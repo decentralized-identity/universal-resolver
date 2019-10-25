@@ -51,6 +51,13 @@ services:
     image: swisscomblockchainag/seraph-id-did-driver:latest
     ports:
       - "8090:8080"
+  driver-did-work:
+    image: didwork/work-did-driver:latest
+    environment:
+      uniresolver_driver_did_work_apikey: ${uniresolver_driver_did_work_apikey}
+      uniresolver_driver_did_work_domain: ${uniresolver_driver_did_work_domain}
+    ports:
+      - "8091:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:

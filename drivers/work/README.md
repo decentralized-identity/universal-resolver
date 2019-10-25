@@ -1,0 +1,39 @@
+![DIF Logo](https://raw.githubusercontent.com/decentralized-identity/decentralized-identity.github.io/master/images/logo-small.png)
+
+# Universal Resolver Driver: did:work
+
+This is a [Universal Resolver](https://github.com/decentralized-identity/universal-resolver/) driver for **did:work** identifiers.
+
+## Specifications
+
+* [Decentralized Identifiers](https://w3c-ccg.github.io/did-spec/)
+* [work DID Method Specification](https://todo.com)
+
+## Example DIDs
+
+```
+did:work:2UUHQCd4psvkPLZGnWY33L
+
+```
+
+## Build and Run (Docker)
+```
+docker build -f ./docker/Dockerfile . -t didwork/work-did-driver
+docker run -p 8080:8080 didwork/work-did-driver
+curl -X GET http://localhost:8080/1.0/identifiers/did:work:2UUHQCd4psvkPLZGnWY33L
+
+```
+
+## Build (native Java)
+
+ 1. First, build https://github.com/decentralized-identity/universal-resolver/tree/master/resolver/java
+ 1. Then, `mvn clean install`
+
+## Driver Environment Variables
+
+Do we need env variables?
+
+
+## Driver Metadata
+
+Do we need metadata?

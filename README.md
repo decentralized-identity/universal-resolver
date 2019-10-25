@@ -33,6 +33,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:neoid:priv:b4eeeb80d20bfb38b23001d0659ce0c1d96be0aa
 	curl -X GET http://localhost:8080/1.0/identifiers/did:elem:-53k-sZFvElLHIiCM-XYydGgFV8aRy_VWAeePUVuCOM
 	curl -X GET http://localhost:8080/1.0/identifiers/did:github:gjgd
+	curl -X GET http://localhost:8080/1.0/identifiers/did:work:2UUHQCd4psvkPLZGnWY33L
 
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
@@ -63,6 +64,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-elem](https://github.com/decentralized-identity/element) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) | |
 | [did-seraphid](https://github.com/swisscom-blockchain/seraph-id-did-driver) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) |  [swisscomblockchainag/seraph-id-did-driver](https://hub.docker.com/r/swisscomblockchainag/seraph-id-did-driver) |
 | [did-github](https://github.com/decentralized-identity/github-did) | 0.1 | [0.11](https://w3c-ccg.github.io/did-spec/) | (missing) | |
+| [did-work](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers/work/) | 0.1  | [0.13](https://w3c-ccg.github.io/did-spec/) | [1.0](https://workday.github.io/work-did-method-spec/) | [didwork/work-did-driver](https://hub.docker.com/r/didwork/work-did-driver)|
 
 ## More Information
 
