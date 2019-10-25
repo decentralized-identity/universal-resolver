@@ -31,9 +31,6 @@ curl -X GET http://localhost:8080/1.0/identifiers/did:work:2UUHQCd4psvkPLZGnWY33
 
 ## Driver Environment Variables
 
-Do we need env variables?
+`uniresolver_driver_did_work_apikey` an API Key to allow throttling
+`uniresolver_driver_did_work_domain` the URI to call into the Workday Credentials platform
 
-
-## Driver Metadata
-
-Do we need metadata?
