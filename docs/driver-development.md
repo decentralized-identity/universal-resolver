@@ -60,3 +60,33 @@ As with contributing a driver, there are a few documentation requirements that s
   * config.json (update driver version)
   * docker-compose.yml (update driver version)
   * README.md (update driver version, DID spec version, DID Resolution spec version, Docker Hub link)
+
+## How to test a driver locally with the Universal Resolver
+
+Once your driver is implemented and published as a docker container on dockerhub, you may want to test that it is running properly within the universal resolver.
+
+To do so, follow these steps:
+
+- clone the universal resolver (this) repository:
+
+  ```bash
+  git clone https://github.com/decentralized-identity/universal-resolver
+  cd universal-resolver/
+  ```
+
+- make the required changes mentioned above ("How to contribute a driver") to the `.env`, `config.json` and `docker-compose.yml` files.
+- build uni-resolver-web locally:
+
+  ```bash
+  cd resolver/java && docker build -f ./docker/Dockerfile-uni-resolver-web . -t universalresolver/uni-resolver-web && cd ../..
+  ```
+
+- run the uni-resolver-web locally:
+
+  ```bash
+  docker-compose -f docker-compose.yml pull
+  docker-compose -f docker-compose.yml up
+  ```
+
+You can now resolve DID Documents via `curl` commands as documented in the [Quick Start](https://github.com/decentralized-identity/universal-resolver#quick-start) notes.
+
