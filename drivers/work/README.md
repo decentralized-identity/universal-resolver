@@ -7,7 +7,7 @@ This is a [Universal Resolver](https://github.com/decentralized-identity/univers
 ## Specifications
 
 * [Decentralized Identifiers](https://w3c-ccg.github.io/did-spec/)
-* [work DID Method Specification](https://todo.com)
+* [work DID Method Specification](https://workday.github.io/work-did-method-spec/)
 
 ## Example DIDs
 
