@@ -70,7 +70,7 @@ public class DidSovDriver implements Driver {
 
 	public DidSovDriver() {
 
-		this.setProperties(getPropertiesFromEnvironment());
+		this(getPropertiesFromEnvironment());
 	}
 
 	private static Map<String, Object> getPropertiesFromEnvironment() {

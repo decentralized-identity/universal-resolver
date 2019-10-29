@@ -46,7 +46,7 @@ public class DidErc725Driver implements Driver {
 
 	public DidErc725Driver() {
 
-		this.setProperties(getPropertiesFromEnvironment());
+		this(getPropertiesFromEnvironment());
 	}
 
 	private static Map<String, Object> getPropertiesFromEnvironment() {

@@ -62,7 +62,7 @@ public class DidBtcrDriver implements Driver {
 
 	public DidBtcrDriver() {
 
-		this.setProperties(getPropertiesFromEnvironment());
+		this(getPropertiesFromEnvironment());
 	}
 
 	private static Map<String, Object> getPropertiesFromEnvironment() {

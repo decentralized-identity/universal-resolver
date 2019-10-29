@@ -40,7 +40,7 @@ public class DnsDriver implements Driver {
 
 	public DnsDriver() {
 
-		this.setProperties(getPropertiesFromEnvironment());
+		this(getPropertiesFromEnvironment());
 	}
 
 	private static Map<String, Object> getPropertiesFromEnvironment() {
