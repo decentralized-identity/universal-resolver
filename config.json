@@ -95,6 +95,15 @@
 			"image": "hello2mao/driver-did-ccp",
 			"tag": "latest",
 			"testIdentifiers": ["did:ccp:ceNobbK6Me9F5zwyE3MKY88QZLw", "did:ccp:3CzQLF3qfFVQ1CjGVzVRZaFXrjAd"]
+		}, {
+			"pattern": "^(did:work:.+)$",
+			"image": "didwork/work-did-driver",
+			"tag": "latest",
+			"testIdentifiers" : [ "did:work:2UUHQCd4psvkPLZGnWY33L" ],
+			"env": {
+				"uniresolver_driver_did_work_apikey": "sxVQUoDE015VhAs5ep4b57DFA5vT3zqvf1Dm1sGe",
+				"uniresolver_driver_did_work_domain": "https://credentials.id.workday.com"
+			}
 		}
 	]
 }

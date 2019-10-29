@@ -53,6 +53,11 @@ services:
       - "8090:8080"
   driver-did-ccp:
     image: hello2mao/driver-did-ccp:latest
+  driver-did-work:
+    image: didwork/work-did-driver:latest
+    environment:
+      uniresolver_driver_did_work_apikey: ${uniresolver_driver_did_work_apikey}
+      uniresolver_driver_did_work_domain: ${uniresolver_driver_did_work_domain}
     ports:
       - "8091:8080"
   uni-resolver-web:
