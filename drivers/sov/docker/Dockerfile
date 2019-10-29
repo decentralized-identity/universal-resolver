@@ -12,12 +12,6 @@ RUN apt-get -y update && \
     apt-get install -y libindy=1.12.0 && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN cd /opt/ && \
-    git clone https://github.com/hyperledger/indy-sdk.git && \
-    cd indy-sdk && \
-    git checkout v1.12.0 && \
-    cd /opt/indy-sdk/wrappers/java/ && mvn clean install -DskipTests
-
 # build driver-did-sov
 
 ADD . /opt/driver-did-sov
