@@ -204,9 +204,9 @@ public class DidSovDriver implements Driver {
 		JsonElement jsonGetAttrData = jsonGetAttrResult == null ? null : jsonGetAttrResult.get("data");
 		JsonObject jsonGetAttrDataContent = (jsonGetAttrData == null || jsonGetAttrData instanceof JsonNull) ? null : gson.fromJson(jsonGetAttrData.getAsString(), JsonObject.class);
 
-		// DID DOCUMENT id
+		// DID DOCUMENT did
 
-		String id = identifier;
+		String did = identifier;
 
 		// DID DOCUMENT publicKeys
 
@@ -218,7 +218,7 @@ public class DidSovDriver implements Driver {
 		List<PublicKey> publicKeys;
 		List<Authentication> authentications;
 
-		String keyId = id + "#key-" + (++keyNum);
+		String keyId = did + "#key-" + (++keyNum);
 
 		PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, verkey, null, null);
 		publicKeys = Collections.singletonList(publicKey);
@@ -247,7 +247,7 @@ public class DidSovDriver implements Driver {
 
 		// create DID DOCUMENT
 
-		DIDDocument didDocument = DIDDocument.build(id, publicKeys, authentications, services);
+		DIDDocument didDocument = DIDDocument.build(did, publicKeys, authentications, services);
 
 		// create DRIVER METADATA
 

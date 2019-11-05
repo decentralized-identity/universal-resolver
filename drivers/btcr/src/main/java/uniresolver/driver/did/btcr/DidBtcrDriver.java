@@ -151,7 +151,7 @@ public class DidBtcrDriver implements Driver {
 
 		String txref = methodSpecificIdentifier;
 
-		// retrieve btcr data
+		// retrieve BTCR data
 
 		ChainAndLocationData initialChainAndLocationData;
 		ChainAndLocationData chainAndLocationData;
@@ -161,6 +161,8 @@ public class DidBtcrDriver implements Driver {
 		List<DidBtcrData> spentInChainAndTxids = new ArrayList<DidBtcrData> ();
 
 		try {
+
+			// decode txref
 
 			chainAndLocationData = ChainAndLocationData.txrefDecode(txref);
 
@@ -174,6 +176,8 @@ public class DidBtcrDriver implements Driver {
 			// lookup txid
 
 			chainAndTxid = this.getBitcoinConnection().lookupChainAndTxid(chainAndLocationData);
+
+			// loop
 
 			initialChainAndTxid = chainAndTxid;
 			initialChainAndLocationData = chainAndLocationData;
@@ -200,7 +204,7 @@ public class DidBtcrDriver implements Driver {
 			throw new ResolutionException("Cannot retrieve BTCR data for " + txref + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " ("+ chainAndTxid + " on chain " + chainAndLocationData.getChain() + "): " + btcrData);
+		if (log.isInfoEnabled()) log.info("Retrieved BTCR data for " + txref + " (" + chainAndTxid + " on chain " + chainAndLocationData.getChain() + "): " + btcrData);
 
 		// retrieve DID DOCUMENT CONTINUATION
 
@@ -248,9 +252,9 @@ public class DidBtcrDriver implements Driver {
 			context = didDocumentContinuation.getContexts();
 		}
 
-		// DID DOCUMENT id
+		// DID DOCUMENT did
 
-		String id = identifier;
+		String did = identifier;
 
 		// DID DOCUMENT publicKeys
 
@@ -266,13 +270,13 @@ public class DidBtcrDriver implements Driver {
 
 		for (String inputScriptPubKey : inputScriptPubKeys) {
 
-			String keyId = id + "#key-" + (keyNum++);
+			String keyId = did + "#key-" + (keyNum++);
 
 			PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, null, inputScriptPubKey, null);
 			publicKeys.add(publicKey);
 		}
 
-		PublicKey publicKey = PublicKey.build(id + "#satoshi", DIDDOCUMENT_PUBLICKEY_TYPES, null, null, inputScriptPubKeys.get(inputScriptPubKeys.size() - 1), null);
+		PublicKey publicKey = PublicKey.build(did + "#satoshi", DIDDOCUMENT_PUBLICKEY_TYPES, null, null, inputScriptPubKeys.get(inputScriptPubKeys.size() - 1), null);
 		publicKeys.add(publicKey);
 
 		Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, "#satoshi");
@@ -307,7 +311,7 @@ public class DidBtcrDriver implements Driver {
 
 		// create DID DOCUMENT
 
-		DIDDocument didDocument = DIDDocument.build(context, id, publicKeys, authentications, services);
+		DIDDocument didDocument = DIDDocument.build(context, did, publicKeys, authentications, services);
 
 		// deactivated?
 
