@@ -1,4 +1,7 @@
-version: "2"
+version: "3.5"
+networks:
+  default:
+    name: universal-resolver
 services:
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
