@@ -27,22 +27,17 @@ public class RedirectExtension extends AbstractExtension implements Extension {
 			String resolveIdentifier = (String) resolveResult.getMethodMetadata().get("redirect");
 			if (log.isDebugEnabled()) log.debug("Resolving identifier: " + resolveIdentifier);
 
-			ResolveResult driverResolveResult = localUniResolver.resolveWithDrivers(resolveIdentifier);
+			ResolveResult previousResolveResult = ResolveResult.build(resolveResult);
+			resolveResult.reset();
+			resolveResult.getResolverMetadata().put("previous", previousResolveResult);
 
-			if (driverResolveResult != null) {
+			ResolveResult driverResolveResult = ResolveResult.build();
+			localUniResolver.resolveWithDrivers(resolveIdentifier, driverResolveResult);
 
-				ResolveResult previousResolveResult = ResolveResult.build(resolveResult.getDidDocument(), resolveResult.getResolverMetadata(), resolveResult.getMethodMetadata());
-				resolveResult.getResolverMetadata().clear();
-				resolveResult.getResolverMetadata().put("previous", previousResolveResult);
+			resolveResult.setDidDocument(driverResolveResult.getDidDocument());
+			resolveResult.setMethodMetadata(driverResolveResult.getMethodMetadata());
 
-				resolveResult.setDidDocument(driverResolveResult.getDidDocument());
-				resolveResult.setMethodMetadata(driverResolveResult.getMethodMetadata());
-
-				resolveResult.getResolverMetadata().putAll(driverResolveResult.getResolverMetadata());
-			} else {
-
-				break;
-			}
+			resolveResult.getResolverMetadata().putAll(driverResolveResult.getResolverMetadata());
 		}
 
 		return ExtensionStatus.DEFAULT;

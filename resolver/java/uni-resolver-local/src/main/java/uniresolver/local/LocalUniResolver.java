@@ -61,6 +61,7 @@ public class LocalUniResolver implements UniResolver {
 
 				JsonObject jsonObjectDriver = (JsonObject) jsonElementsDrivers.next();
 
+				String id = jsonObjectDriver.has("id") ? jsonObjectDriver.get("id").getAsString() : null;
 				String pattern = jsonObjectDriver.has("pattern") ? jsonObjectDriver.get("pattern").getAsString() : null;
 				String image = jsonObjectDriver.has("image") ? jsonObjectDriver.get("image").getAsString() : null;
 				String imagePort = jsonObjectDriver.has("imagePort") ? jsonObjectDriver.get("imagePort").getAsString() : null;
@@ -90,13 +91,16 @@ public class LocalUniResolver implements UniResolver {
 					}
 				}
 
-				String name = "driver";
-				if (image != null) name += "-" + image;
-				if (image == null || drivers.containsKey(name)) name += "-" + Integer.toString(i);
+				if (id == null) {
 
-				drivers.put(name, driver);
+					id = "driver";
+					if (image != null) id += "-" + image;
+					if (image == null || drivers.containsKey(id)) id += "-" + Integer.toString(i);
+				}
 
-				if (log.isInfoEnabled()) log.info("Added driver '" + name + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
+				drivers.put(id, driver);
+
+				if (log.isInfoEnabled()) log.info("Added driver '" + id + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
 			}
 		}
 
@@ -161,18 +165,13 @@ public class LocalUniResolver implements UniResolver {
 			String resolveIdentifier = didUrl != null ? didUrl.getDid().getDidString() : identifier;
 			if (log.isDebugEnabled()) log.debug("Resolving identifier: " + resolveIdentifier);
 
-			ResolveResult driverResolveResult = this.resolveWithDrivers(resolveIdentifier);
+			ResolveResult driverResolveResult = ResolveResult.build();
+			this.resolveWithDrivers(resolveIdentifier, driverResolveResult);
 
-			if (driverResolveResult != null) {
+			resolveResult.setDidDocument(driverResolveResult.getDidDocument());
+			resolveResult.setMethodMetadata(driverResolveResult.getMethodMetadata());
 
-				resolveResult.setDidDocument(driverResolveResult.getDidDocument());
-				resolveResult.setMethodMetadata(driverResolveResult.getMethodMetadata());
-
-				resolveResult.getResolverMetadata().putAll(driverResolveResult.getResolverMetadata());
-			} else {
-
-				return null;
-			}
+			resolveResult.getResolverMetadata().putAll(driverResolveResult.getResolverMetadata());
 		}
 
 		// execute extensions (after)
@@ -219,9 +218,10 @@ public class LocalUniResolver implements UniResolver {
 		return properties;
 	}
 
-	public ResolveResult resolveWithDrivers(String resolveIdentifier) throws ResolutionException {
+	public void resolveWithDrivers(String resolveIdentifier, ResolveResult resolveResult) throws ResolutionException {
 
 		ResolveResult driverResolveResult = null;
+		String usedDriverId = null;
 
 		for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
 
@@ -230,20 +230,25 @@ public class LocalUniResolver implements UniResolver {
 
 			if (driverResolveResult != null) {
 
-				if (log.isDebugEnabled()) log.debug("Resolved " + resolveIdentifier + " with driver " + driver.getKey());
+				usedDriverId = driver.getKey();
 
-				driverResolveResult.getResolverMetadata().put("resolved", resolveIdentifier);
-				driverResolveResult.getResolverMetadata().put("driverId", driver.getKey());
+				resolveResult.setDidDocument(driverResolveResult.getDidDocument());
+				resolveResult.setMethodMetadata(driverResolveResult.getMethodMetadata());
+
 				break;
 			}
 		}
 
-		if (driverResolveResult == null) {
+		if (usedDriverId != null) {
+
+			resolveResult.getResolverMetadata().put("driverId", usedDriverId);
+			if (log.isDebugEnabled()) log.debug("Resolved " + resolveIdentifier + " with driver " + usedDriverId);
+		} else {
 
 			if (log.isDebugEnabled()) log.debug("No result with " + this.getDrivers().size() + " drivers.");
 		}
 
-		return driverResolveResult;
+		resolveResult.getResolverMetadata().put("identifier", resolveIdentifier);
 	}
 
 	/*

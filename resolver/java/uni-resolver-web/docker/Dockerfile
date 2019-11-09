@@ -16,15 +16,14 @@ RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -DrepoUrl=htt
 # build uni-resolver-web
 
 ADD ./resolver/java/ /opt/uni-resolver-java
-ADD ./config.json /opt/uni-resolver-java/
+ADD ./config.json /opt/uni-resolver-java/uni-resolver-web/
 
-RUN cd /opt/uni-resolver-java && mvn clean && \
-    cd /opt/uni-resolver-java && mvn install -N -DskipTests && \
-    cd /opt/uni-resolver-java/uni-resolver-core && mvn install -N -DskipTests && \
-    cd /opt/uni-resolver-java/driver && mvn install -N -DskipTests && \
-    cd /opt/uni-resolver-java/driver-http && mvn install -N -DskipTests && \
-    cd /opt/uni-resolver-java/uni-resolver-local && mvn install -N -DskipTests && \
-    cd /opt/uni-resolver-java/uni-resolver-web && mvn install -N -DskipTests
+RUN cd /opt/uni-resolver-java && mvn clean install -N -DskipTests && mvn clean && \
+    cd /opt/uni-resolver-java/uni-resolver-core && mvn clean install -N -DskipTests && mvn clean && \
+    cd /opt/uni-resolver-java/driver && mvn clean install -N -DskipTests && mvn clean && \
+    cd /opt/uni-resolver-java/driver-http && mvn clean install -N -DskipTests && mvn clean && \
+    cd /opt/uni-resolver-java/uni-resolver-local && mvn clean install -N -DskipTests && mvn clean && \
+    cd /opt/uni-resolver-java/uni-resolver-web && mvn clean install package -N -DskipTests
 
 # done
 

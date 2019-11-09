@@ -74,9 +74,9 @@ public class ResolveServlet extends WebUniResolver {
 
 		// no resolve result?
 
-		if (resolveResultString == null) {
+		if (resolveResult == null || resolveResult.getDidDocument() == null) {
 
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No resolve result for " + identifier + ".");
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, resolveResultString);
 			return;
 		}
 

@@ -33,10 +33,6 @@ public class ResolveResult {
 	@JsonProperty
 	private Map<String, Object> methodMetadata;
 
-	private ResolveResult() {
-
-	}
-
 	private ResolveResult(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
 		this.didDocument = didDocument;
@@ -47,6 +43,11 @@ public class ResolveResult {
 	/*
 	 * Factory methods
 	 */
+
+	public static ResolveResult build(ResolveResult resolveResult) {
+
+		return new ResolveResult(resolveResult.getDidDocument(), resolveResult.getResolverMetadata(), resolveResult.getMethodMetadata());
+	}
 
 	public static ResolveResult build(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
@@ -60,7 +61,14 @@ public class ResolveResult {
 
 	public static ResolveResult build() {
 
-		return new ResolveResult(DIDDocument.build(new HashMap<String, Object> ()), new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolveResult(null, new HashMap<String, Object> (), new HashMap<String, Object> ());
+	}
+
+	public void reset() {
+
+		this.setDidDocument((DIDDocument) null);
+		this.setResolverMetadata(new HashMap<String, Object> ());
+		this.setMethodMetadata(new HashMap<String, Object> ());
 	}
 
 	/*
@@ -125,5 +133,21 @@ public class ResolveResult {
 	public final void setMethodMetadata(Map<String, Object> methodMetadata) {
 
 		this.methodMetadata = methodMetadata;
+	}
+
+	/*
+	 * Object methods
+	 */
+
+	@Override
+	public String toString() {
+
+		try {
+
+			return this.toJson();
+		} catch (JsonProcessingException ex) {
+
+			return ex.getMessage();
+		}
 	}
 }

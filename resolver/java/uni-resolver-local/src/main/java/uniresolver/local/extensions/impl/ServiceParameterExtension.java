@@ -1,12 +1,17 @@
 package uniresolver.local.extensions.impl;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import did.DIDDocument;
 import did.DIDURL;
+import did.PublicKey;
+import did.Service;
+import did.parser.ParserException;
 import uniresolver.ResolutionException;
 import uniresolver.local.LocalUniResolver;
 import uniresolver.local.extensions.ExtensionStatus;
@@ -40,7 +45,7 @@ public class ServiceParameterExtension extends AbstractParameterExtension implem
 
 		if (selectServiceName != null || selectServiceType != null) {
 
-			selectedServices = resolveResult.getDidDocument().selectServices(selectServiceName, selectServiceType).keySet().toArray(new Integer[0]);
+			selectedServices = selectServices(resolveResult.getDidDocument(), selectServiceName, selectServiceType).keySet().toArray(new Integer[0]);
 
 			if (log.isDebugEnabled()) log.debug("Selected services: " + Arrays.asList(selectedServices));
 		}
@@ -52,7 +57,7 @@ public class ServiceParameterExtension extends AbstractParameterExtension implem
 
 		if (selectKeyName != null || selectKeyType != null) {
 
-			selectedKeys = resolveResult.getDidDocument().selectKeys(selectKeyName, selectKeyType).keySet().toArray(new Integer[0]);
+			selectedKeys = selectKeys(resolveResult.getDidDocument(), selectKeyName, selectKeyType).keySet().toArray(new Integer[0]);
 
 			if (log.isDebugEnabled()) log.debug("Selected keys: " + Arrays.asList(selectedKeys));
 		}
@@ -61,5 +66,71 @@ public class ServiceParameterExtension extends AbstractParameterExtension implem
 		if (selectedKeys != null) resolveResult.getResolverMetadata().put("selectedKeys", selectedKeys);
 
 		return ExtensionStatus.DEFAULT;
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	public static Map<Integer, Service> selectServices(DIDDocument didDocument, String selectServiceName, String selectServiceType) {
+
+		int i = -1;
+		Map<Integer, Service> selectedServices = new HashMap<Integer, Service> ();
+		if (didDocument.getServices() == null) return selectedServices;
+
+		for (Service service : didDocument.getServices()) {
+
+			i++;
+
+			if (selectServiceName != null && service.getId() != null) {
+
+				DIDURL serviceDidUrl;
+				try { serviceDidUrl = DIDURL.fromString(service.getId()); } catch (ParserException ex) { serviceDidUrl = null; }
+				String serviceName = serviceDidUrl == null ? null : serviceDidUrl.getFragment();
+
+				if (serviceName == null) continue;
+				if (! serviceName.equals(selectServiceName)) continue;
+			}
+
+			if (selectServiceType != null & service.getTypes() != null) {
+
+				if (! Arrays.asList(service.getTypes()).contains(selectServiceType)) continue;
+			}
+
+			selectedServices.put(Integer.valueOf(i), service);
+		}
+
+		return selectedServices;
+	}
+
+	public static Map<Integer, PublicKey> selectKeys(DIDDocument didDocument, String selectKeyName, String selectKeyType) {
+
+		int i = -1;
+		Map<Integer, PublicKey> selectedKeys = new HashMap<Integer, PublicKey> ();
+		if (didDocument.getPublicKeys() == null) return selectedKeys;
+
+		for (PublicKey publicKey : didDocument.getPublicKeys()) {
+
+			i++;
+
+			if (selectKeyName != null && publicKey.getId() != null) {
+
+				DIDURL publicKeyDidUrl;
+				try { publicKeyDidUrl = DIDURL.fromString(publicKey.getId()); } catch (ParserException ex) { publicKeyDidUrl = null; }
+				String publicKeyName = publicKeyDidUrl == null ? null : publicKeyDidUrl.getFragment();
+
+				if (publicKeyName == null) continue;
+				if (! publicKeyName.equals(selectKeyName)) continue;
+			}
+
+			if (selectKeyType != null && publicKey.getTypes() != null) {
+
+				if (! Arrays.asList(publicKey.getTypes()).contains(selectKeyType)) continue;
+			}
+
+			selectedKeys.put(Integer.valueOf(i), publicKey);
+		}
+
+		return selectedKeys;
 	}
 }
