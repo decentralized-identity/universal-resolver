@@ -129,7 +129,7 @@ public class DnsDriver implements Driver {
 
 		// create RESOLVE RESULT
 
-		ResolveResult resolveResult = ResolveResult.build(did, null, null, methodMetadata);
+		ResolveResult resolveResult = ResolveResult.build(null, null, methodMetadata);
 
 		// done
 

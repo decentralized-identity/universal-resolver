@@ -9,7 +9,7 @@ public class TestLocalUniResolver {
 
 	public static void main(String[] args) throws Exception {
 
-		LocalUniResolver uniResolver = LocalUniResolver.getDefault();
+		LocalUniResolver uniResolver = new LocalUniResolver();
 		uniResolver.getDrivers().put("btcr", new DidBtcrDriver());
 		uniResolver.getDrivers().put("sov", new DidSovDriver());
 		uniResolver.getDriver(DidSovDriver.class).setLibIndyPath("./sovrin/lib/");

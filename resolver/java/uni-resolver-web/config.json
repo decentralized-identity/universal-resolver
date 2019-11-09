@@ -5,35 +5,19 @@
 			"image": "universalresolver/driver-did-btcr",
 			"imageProperties": "true",
 			"tag": "latest",
-			"testIdentifiers": [ "did:btcr:xz35-jznz-q6mr-7q6", "did:btcr:xkrn-xz7q-q0mx-4cl", "did:btcr:x705-jznz-qwvq-0uw" ],
-			"env": {
-				"uniresolver_driver_did_btcr_bitcoinConnection": "blockcypherapi",
-				"uniresolver_driver_did_btcr_rpcUrlMainnet": "http://user:pass@localhost:8332/",
-				"uniresolver_driver_did_btcr_rpcUrlTestnet": "http://user:pass@localhost:18332/"
-			}
+			"testIdentifiers": [ "did:btcr:xz35-jznz-q6mr-7q6", "did:btcr:xkrn-xz7q-q0mx-4cl", "did:btcr:x705-jznz-qwvq-0uw" ]
 		}, {
 			"pattern": "^(did:sov:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$",
 			"image": "universalresolver/driver-did-sov",
 			"imageProperties": "true",
 			"tag": "latest",
-			"testIdentifiers": [ "did:sov:WRfXPg8dantKVubE3HX8pw" ],
-			"env": {
-				"uniresolver_driver_did_sov_libIndyPath": "",
-				"uniresolver_driver_did_sov_poolConfigs": "_;./sovrin/mainnet.txn;staging;./sovrin/stagingnet.txn;builder;./sovrin/buildernet.txn;danube;./sovrin/danube.txn",
-				"uniresolver_driver_did_sov_poolVersions": "_;2;staging;2;builder;2;danube;2",
-				"uniresolver_driver_did_sov_walletName": "default"
-			}
+			"testIdentifiers": [ "did:sov:WRfXPg8dantKVubE3HX8pw" ]
 		}, {
 			"pattern": "^(did:erc725:.+)$",
 			"image": "universalresolver/driver-did-erc725",
 			"imageProperties": "true",
 			"tag": "latest",
-			"testIdentifiers": [ "did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E" ],
-			"env": {
-				"uniresolver_driver_did_erc725_ethereumConnections": "mainnet;hybrid;ropsten;hybrid;rinkeby;hybrid;kovan;hybrid",
-				"uniresolver_driver_did_erc725_rpcUrls": "mainnet;https://mainnet.infura.io/v3/fd9e225bc1234f49b48b295c611078eb;ropsten;https://ropsten.infura.io/v3/fd9e225bc1234f49b48b295c611078eb;rinkeby;https://rinkeby.infura.io/v3/fd9e225bc1234f49b48b295c611078eb;kovan;https://kovan.infura.io/v3/fd9e225bc1234f49b48b295c611078eb",
-				"uniresolver_driver_did_erc725_etherscanApis": "mainnet;http://api.etherscan.io/api;ropsten;http://api-ropsten.etherscan.io/api;rinkeby;http://api-rinkeby.etherscan.io/api;kovan;http://api-kovan.etherscan.io/api"
-			}
+			"testIdentifiers": [ "did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E" ]
 		}, {
 			"pattern": "^(did:v1:nym:.+)$",
 			"url": "https://genesis.testnet.veres.one/dids/$1",
@@ -63,10 +47,7 @@
 			"image": "universalresolver/driver-dns",
 			"imageProperties": "true",
 			"tag": "latest",
-			"testIdentifiers": [ "ssi.labs.nic.at" ],
-			"env": {
-				"uniresolver_driver_dns_dnsServers": ""
-			}
+			"testIdentifiers": [ "ssi.labs.nic.at" ]
 		}, {
 			"pattern": "^(did:jolo:.+)$",
 			"image": "jolocomgmbh/jolocom-did-driver",
@@ -99,11 +80,7 @@
 			"pattern": "^(did:work:.+)$",
 			"image": "didwork/work-did-driver",
 			"tag": "latest",
-			"testIdentifiers" : [ "did:work:2UUHQCd4psvkPLZGnWY33L" ],
-			"env": {
-				"uniresolver_driver_did_work_apikey": "sxVQUoDE015VhAs5ep4b57DFA5vT3zqvf1Dm1sGe",
-				"uniresolver_driver_did_work_domain": "https://credentials.id.workday.com"
-			}
+			"testIdentifiers" : [ "did:work:2UUHQCd4psvkPLZGnWY33L" ]
 		}
 	]
 }

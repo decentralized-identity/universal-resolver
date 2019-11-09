@@ -11,7 +11,6 @@
 				<entry key="did-btcr"><ref bean="DidBtcrDriver" /></entry>
 				<entry key="did-sov"><ref bean="DidSovDriver" /></entry>
 				<entry key="did-v1"><ref bean="DidV1Driver" /></entry>
-				<entry key="did-work"><ref bean="DidWorkDriver" /></entry>
 			</util:map>
 		</property>
 	</bean>
@@ -41,12 +40,6 @@
 	<bean id="DidV1Driver" class="uniresolver.driver.http.HttpDriver">
 		<property name="resolveUri" value="https://genesis.testnet.veres.one/dids/$1" />
 		<property name="pattern" value="^(did:v1:nym:.+)$" />
-	</bean>
-
-	<bean id="DidWorkDriver" class="uniresolver.driver.http.HttpDriver">
-		<property name="resolveUri" value="http://work-did-driver:8080/1.0/identifiers/$1" />
-		<property name="propertiesUri" value="http://work-did-driver:8080/1.0/properties" />
-		<property name="pattern" value="^(did:work:.+)$" />
 	</bean>
 
 </beans>

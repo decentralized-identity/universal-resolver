@@ -17,15 +17,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import did.DIDDocument;
 
-@JsonPropertyOrder({ "redirect", "didDocument", "resolverMetadata", "methodMetadata" })
+@JsonPropertyOrder({ "didDocument", "resolverMetadata", "methodMetadata" })
 public class ResolveResult {
 
 	public static final String MIME_TYPE = "application/json";
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
-
-	@JsonProperty
-	private String redirect;
 
 	@JsonProperty
 	private DIDDocument didDocument;
@@ -40,9 +37,8 @@ public class ResolveResult {
 
 	}
 
-	private ResolveResult(String redirect, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
+	private ResolveResult(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
-		this.redirect = redirect;
 		this.didDocument = didDocument;
 		this.resolverMetadata = resolverMetadata;
 		this.methodMetadata = methodMetadata;
@@ -52,24 +48,19 @@ public class ResolveResult {
 	 * Factory methods
 	 */
 
-	public static ResolveResult build(String redirect, DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
-
-		return new ResolveResult(redirect, didDocument, resolverMetadata, methodMetadata);
-	}
-
 	public static ResolveResult build(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
-		return new ResolveResult(null, didDocument, resolverMetadata, methodMetadata);
+		return new ResolveResult(didDocument, resolverMetadata, methodMetadata);
 	}
 
 	public static ResolveResult build(DIDDocument didDocument) {
 
-		return new ResolveResult(null, didDocument, new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolveResult(didDocument, new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
 	public static ResolveResult build() {
 
-		return new ResolveResult(null, DIDDocument.build(new HashMap<String, Object> ()), new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolveResult(DIDDocument.build(new HashMap<String, Object> ()), new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
 	/*
@@ -94,18 +85,6 @@ public class ResolveResult {
 	/*
 	 * Getters and setters
 	 */
-
-	@JsonGetter
-	public final String getRedirect() {
-
-		return this.redirect;
-	}
-
-	@JsonSetter
-	public final void setRedirect(String redirect) {
-
-		this.redirect = redirect;
-	}
 
 	@JsonRawValue
 	public final DIDDocument getDidDocument() {
