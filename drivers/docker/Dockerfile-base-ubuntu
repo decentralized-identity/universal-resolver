@@ -22,7 +22,7 @@ RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -DrepoUrl=htt
 
 # build driver
 
-ADD . /opt/uni-resolver-java
+ADD ./resolver/java/ /opt/uni-resolver-java
 
 RUN cd /opt/uni-resolver-java && mvn clean install -N -DskipTests && \
     cd /opt/uni-resolver-java/uni-resolver-core && mvn install -N -DskipTests && \

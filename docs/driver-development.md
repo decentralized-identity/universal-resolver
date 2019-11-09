@@ -78,7 +78,7 @@ To do so, follow these steps:
 - build uni-resolver-web locally:
 
   ```bash
-  cd resolver/java && docker build -f ./docker/Dockerfile-uni-resolver-web . -t universalresolver/uni-resolver-web && cd ../..
+  docker build -f ./resolver/java/uni-resolver-web/docker/Dockerfile . -t universalresolver/uni-resolver-web
   ```
 
 - run the uni-resolver-web locally:
