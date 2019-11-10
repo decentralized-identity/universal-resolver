@@ -233,7 +233,7 @@ public class DidBtcrDriver implements Driver {
 					}
 				}
 
-				didDocumentContinuation = DIDDocument.fromJson(jsonLdObject);
+				didDocumentContinuation = DIDDocument.build(jsonLdObject);
 				EntityUtils.consume(httpEntity);
 			} catch (IOException ex) {
 

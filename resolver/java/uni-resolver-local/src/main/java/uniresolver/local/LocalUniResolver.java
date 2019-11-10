@@ -21,6 +21,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import did.DIDDocument;
 import did.DIDURL;
 import did.parser.ParserException;
 import uniresolver.ResolutionException;
@@ -227,6 +228,11 @@ public class LocalUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Attemping to resolve " + resolveIdentifier + " with driver " + driver.getValue().getClass());
 			driverResolveResult = driver.getValue().resolve(resolveIdentifier);
+
+			if (driverResolveResult != null && driverResolveResult.getDidDocument() != null && driverResolveResult.getDidDocument().getJsonLdObject().isEmpty()) {
+
+				driverResolveResult.setDidDocument((DIDDocument) null);
+			}
 
 			if (driverResolveResult != null) {
 
