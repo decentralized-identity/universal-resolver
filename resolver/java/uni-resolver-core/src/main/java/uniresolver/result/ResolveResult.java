@@ -5,6 +5,7 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -44,9 +45,10 @@ public class ResolveResult {
 	 * Factory methods
 	 */
 
-	public static ResolveResult build(ResolveResult resolveResult) {
+	@JsonCreator
+	public static ResolveResult build() {
 
-		return new ResolveResult(resolveResult.getDidDocument(), resolveResult.getResolverMetadata(), resolveResult.getMethodMetadata());
+		return new ResolveResult(null, new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
 	public static ResolveResult build(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
@@ -59,9 +61,9 @@ public class ResolveResult {
 		return new ResolveResult(didDocument, new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
-	public static ResolveResult build() {
+	public ResolveResult copy() {
 
-		return new ResolveResult(null, new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolveResult(this.getDidDocument(), this.getResolverMetadata(), this.getMethodMetadata());
 	}
 
 	public void reset() {

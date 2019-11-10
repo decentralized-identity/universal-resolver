@@ -36,6 +36,7 @@ import did.Authentication;
 import did.DIDDocument;
 import did.PublicKey;
 import did.Service;
+import io.leonard.Base58;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
 import uniresolver.result.ResolveResult;
@@ -211,8 +212,9 @@ public class DidSovDriver implements Driver {
 		// DID DOCUMENT publicKeys
 
 		JsonPrimitive jsonGetNymVerkey = jsonGetNymDataContent == null ? null : jsonGetNymDataContent.getAsJsonPrimitive("verkey");
-
 		String verkey = jsonGetNymVerkey == null ? null : jsonGetNymVerkey.getAsString();
+
+		String expandedVerkey = expandVerkey(did, verkey);
 
 		int keyNum = 0;
 		List<PublicKey> publicKeys;
@@ -220,7 +222,7 @@ public class DidSovDriver implements Driver {
 
 		String keyId = did + "#key-" + (++keyNum);
 
-		PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, verkey, null, null);
+		PublicKey publicKey = PublicKey.build(keyId, DIDDOCUMENT_PUBLICKEY_TYPES, null, expandedVerkey, null, null);
 		publicKeys = Collections.singletonList(publicKey);
 
 		Authentication authentication = Authentication.build(null, DIDDOCUMENT_AUTHENTICATION_TYPES, keyId);
@@ -400,6 +402,27 @@ public class DidSovDriver implements Driver {
 		}
 
 		if (log.isInfoEnabled()) log.info("Opened " + this.poolMap.size() + " pools: " + this.poolMap.keySet());
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	private static String expandVerkey(String did, String verkey) {
+
+		if (verkey == null || ! did.startsWith("did:sov:") || ! verkey.startsWith("~")) return verkey;
+
+		byte[] didBytes = Base58.decode(did.substring(did.lastIndexOf(":") + 1));
+		byte[] verkeyBytes = Base58.decode(verkey.substring(1));
+
+		byte[] didVerkeyBytes = new byte[didBytes.length+verkeyBytes.length];
+		System.arraycopy(didBytes, 0, didVerkeyBytes, 0, 16);
+		System.arraycopy(verkeyBytes, 0, didVerkeyBytes, 16, 16);
+
+		String didVerkey = Base58.encode(didVerkeyBytes);
+		if (log.isInfoEnabled()) log.info("Expanded " + did + " and " + verkey + " to " + didVerkey);
+
+		return didVerkey;
 	}
 
 	/*

@@ -27,7 +27,7 @@ public class RedirectExtension extends AbstractExtension implements Extension {
 			String resolveIdentifier = (String) resolveResult.getMethodMetadata().get("redirect");
 			if (log.isDebugEnabled()) log.debug("Resolving identifier: " + resolveIdentifier);
 
-			ResolveResult previousResolveResult = ResolveResult.build(resolveResult);
+			ResolveResult previousResolveResult = resolveResult.copy();
 			resolveResult.reset();
 			resolveResult.getResolverMetadata().put("previous", previousResolveResult);
 

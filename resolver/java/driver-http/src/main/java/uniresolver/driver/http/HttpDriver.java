@@ -143,6 +143,7 @@ public class HttpDriver implements Driver {
 				resolveResult = ResolveResult.fromJson(httpBody);
 			} catch (Exception ex) {
 
+				if (log.isWarnEnabled()) log.warn("No RESOLVE RESULT. Maybe DID DOCUMENT: " + httpBody + " (" + ex.getMessage());
 				resolveResult = ResolveResult.build(DIDDocument.fromJson(httpBody));
 			}
 		} catch (IOException ex) {
