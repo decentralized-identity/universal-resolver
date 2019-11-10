@@ -1,4 +1,4 @@
-![DIF Logo](https://raw.githubusercontent.com/peacekeeper/universal-resolver/master/docs/logo-dif.png)
+![DIF Logo](https://raw.githubusercontent.com/decentralized-identity/universal-resolver/master/docs/logo-dif.png)
 
 # Universal Resolver
 
