@@ -6,6 +6,7 @@ MAINTAINER Markus Sabadello <markus@danubetech.com>
 # build driver-did-erc725
 
 ADD . /opt/driver-did-erc725
+
 RUN cd /opt/driver-did-erc725 && mvn clean install package -N -DskipTests
 
 # variables

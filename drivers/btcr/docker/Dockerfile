@@ -17,6 +17,7 @@ RUN cd /opt/ && git clone https://github.com/WebOfTrustInfo/btc-tx-lookup-java.g
 # build driver-did-btcr
 
 ADD . /opt/driver-did-btcr
+
 RUN cd /opt/driver-did-btcr && mvn clean install package -N -DskipTests
 
 # variables

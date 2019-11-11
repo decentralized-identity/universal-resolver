@@ -6,6 +6,7 @@ MAINTAINER Markus Sabadello <markus@danubetech.com>
 # build driver-did-stack
 
 ADD . /opt/driver-did-stack
+
 RUN cd /opt/driver-did-stack && mvn clean install package -N -DskipTests
 
 # done
