@@ -104,6 +104,14 @@
 				"uniresolver_driver_did_work_apikey": "sxVQUoDE015VhAs5ep4b57DFA5vT3zqvf1Dm1sGe",
 				"uniresolver_driver_did_work_domain": "https://credentials.id.workday.com"
 			}
+		}, {
+			"pattern": "^(did:kilt:.+)$",
+			"image": "kiltprotocol/kilt-did-driver",
+			"tag": "latest",
+			"testIdentifiers" : [ "did:kilt:5CtPYoDuQQFLe1JU5F8KHLXkKaWxLkKH1dBAfHrUU8SoxASr" ],
+			"env": {
+				"uniresolver_driver_kilt_did_node": "wss://full-nodes.kilt.io:9944"
+			}
 		}
 	]
 }
