@@ -242,7 +242,7 @@ public class DidErc725Driver implements Driver {
 
 		// create RESOLVE RESULT
 
-		ResolveResult resolveResult = ResolveResult.build(didDocument, null, methodMetadata);
+		ResolveResult resolveResult = ResolveResult.build(didDocument, null, DIDDocument.MIME_TYPE, null, methodMetadata);
 
 		// done
 

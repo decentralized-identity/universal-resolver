@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import did.DIDDocument;
 import uniresolver.result.ResolveResult;
 import uniresolver.web.WebUniResolver;
 
@@ -57,12 +58,10 @@ public class ResolveServlet extends WebUniResolver {
 		// execute the request
 
 		ResolveResult resolveResult;
-		String resolveResultString;
 
 		try {
 
 			resolveResult = this.resolve(identifier);
-			resolveResultString = resolveResult == null ? null : resolveResult.toJson();
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolve problem for " + identifier + ": " + ex.getMessage(), ex);
@@ -70,18 +69,30 @@ public class ResolveServlet extends WebUniResolver {
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("Resolve result for " + identifier + ": " + resolveResultString);
+		if (log.isInfoEnabled()) log.info("Resolve result for " + identifier + ": " + resolveResult.toJson());
 
 		// no resolve result?
 
-		if (resolveResult == null || resolveResult.getDidDocument() == null) {
+		if (resolveResult == null || (resolveResult.getDidDocument() == null && resolveResult.getContent() == null)) {
 
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, resolveResultString);
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, resolveResult.toJson());
 			return;
 		}
 
 		// write resolve result
 
-		WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, MIME_TYPE, resolveResultString);
+		if (request.getHeader("Accept").contains(DIDDocument.MIME_TYPE) && resolveResult.getDidDocument() != null) {
+
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, DIDDocument.MIME_TYPE, resolveResult.getDidDocument().toJson());
+			return;
+		} else if (resolveResult.getContent() != null) {
+
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, resolveResult.getContentType(), resolveResult.getContent());
+			return;
+		} else {
+
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, ResolveResult.MIME_TYPE, resolveResult.toJson());
+			return;
+		}
 	}
 }

@@ -17,7 +17,6 @@ import org.xbill.DNS.Resolver;
 import org.xbill.DNS.Type;
 import org.xbill.DNS.URIRecord;
 
-import did.DIDDocument;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
 import uniresolver.result.ResolveResult;
@@ -130,7 +129,7 @@ public class DnsDriver implements Driver {
 
 		// create RESOLVE RESULT
 
-		ResolveResult resolveResult = ResolveResult.build((DIDDocument) null, null, methodMetadata);
+		ResolveResult resolveResult = ResolveResult.build(null, null, null, null, methodMetadata);
 
 		// done
 

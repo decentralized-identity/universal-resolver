@@ -1,6 +1,7 @@
 package uniresolver.web;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	 * Helper methods
 	 */
 
-	protected static void sendResponse(HttpServletResponse response, int status, String contentType, String body) throws IOException {
+	protected static void sendResponse(HttpServletResponse response, int status, String contentType, Object body) throws IOException {
 
 		response.setStatus(status);
 
@@ -74,12 +75,24 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
 
-		if (body != null) {
+		if (body instanceof String) {
 
-			PrintWriter writer = response.getWriter();
-			writer.write(body);
-			writer.flush();
-			writer.close();
+			PrintWriter printWriter = response.getWriter();
+			printWriter.write((String) body);
+			printWriter.flush();
+			printWriter.close();
+		} else if (body instanceof byte[]) {
+
+			OutputStream outputStream = response.getOutputStream();
+			outputStream.write((byte[]) body);
+			outputStream.flush();
+			outputStream.close();
+		} else {
+
+			PrintWriter printWriter = response.getWriter();
+			printWriter.write(body.toString());
+			printWriter.flush();
+			printWriter.close();
 		}
 	}
 
