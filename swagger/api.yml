@@ -1,0 +1,42 @@
+openapi: 3.0.0
+servers:
+# Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/universal-resolver/universal-resolver/1.0.0
+  - url: /1.0/
+info:
+  description: Universal Resolver
+  version: "1.0.0"
+  title: Universal Resolver
+  contact:
+    email: markus@danubetech.com
+paths:
+  /identifiers/{identifier}:
+    get:
+      summary: Resolve a DID or other identifier.
+      operationId: resolve
+      parameters:
+        - in: path
+          required: true
+          name: identifier
+          schema:
+            type: string
+          description: A DID or other identifier to be resolved.
+        - in: header
+          required: false
+          name: Accept
+          schema:
+            type: string
+          example: application/did+ld+json
+      responses:
+        '200':
+          description: successfully resolved!
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The Resolution Result or DID document.
+        '400':
+          description: invalid input!
+        '500':
+          description: error!
