@@ -65,7 +65,7 @@ services:
       uniresolver_driver_did_work_domain: ${uniresolver_driver_did_work_domain}
     ports:
       - "8092:8080"
-  ont-did-driver:
+  ontid-driver:
     image: ontio/ontid-driver:latest
     ports:
       - "8093:8080"
