@@ -35,7 +35,11 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:github:gjgd
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ccp:ceNobbK6Me9F5zwyE3MKY88QZLw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:work:2UUHQCd4psvkPLZGnWY33L
+<<<<<<< HEAD
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ont:AN5g6gz9EoQ3sCNu7514GEghZurrktCMiH
+=======
+	curl -X GET http://localhost:8080/1.0/identifiers/did:kilt:5CtPYoDuQQFLe1JU5F8KHLXkKaWxLkKH1dBAfHrUU8SoxASr
+>>>>>>> KILTprotocol/add-kilt-did-driver
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
@@ -68,6 +72,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-ccp](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers/ccp/) | 0.1-SNAPSHOT | [0.11](https://w3c-ccg.github.io/did-spec/) | [0.1](https://did.baidu.com/did-spec/) | [hello2mao/driver-did-ccp](https://hub.docker.com/r/hello2mao/driver-did-ccp/)
 | [did-work](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers/work/) | 0.1  | [0.13](https://w3c-ccg.github.io/did-spec/) | [1.0](https://workday.github.io/work-did-method-spec/) | [didwork/work-did-driver](https://hub.docker.com/r/didwork/work-did-driver)|
 | [did-ont](https://github.com/ontio/ontid-driver) | 0.1 | [1.0](https://w3c.github.io/did-core/) | [1.0](https://github.com/ontio/ontology-DID/blob/master/docs/en/DID-ONT-method.md) |  [ontio/ontid-driver](https://hub.docker.com/r/ontio/ontid-driver) | 
+| [did-kilt](https://github.com/KILTprotocol/kilt-did-driver) | 0.1 | [0.13](https://w3c-ccg.github.io/did-spec/) | [1.0](https://github.com/KILTprotocol/kilt-did-driver/blob/master/DID%20Method%20Specification.md) | [kiltprotocol/kilt-did-driver](https://hub.docker.com/r/kiltprotocol/kilt-did-driver)|
 
 ## More Information
 

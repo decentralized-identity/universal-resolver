@@ -69,6 +69,12 @@ services:
     image: ontio/ontid-driver:latest
     ports:
       - "8093:8080"
+  kilt-did-driver:
+    image: kiltprotocol/kilt-did-driver:latest
+    environment:
+      uniresolver_driver_kilt_did_node: ${uniresolver_driver_kilt_did_node}
+    ports:
+      - "8092:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
