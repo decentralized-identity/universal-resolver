@@ -60,9 +60,9 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-seraphid](https://github.com/swisscom-blockchain/seraph-id-did-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | (missing) |  [swisscomblockchainag/seraph-id-did-driver](https://hub.docker.com/r/swisscomblockchainag/seraph-id-did-driver) |
 | [did-github](https://github.com/decentralized-identity/github-did) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | (missing) | |
 | [did-ccp](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers/ccp/) | 0.1-SNAPSHOT | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://did.baidu.com/did-spec/) | [hello2mao/driver-did-ccp](https://hub.docker.com/r/hello2mao/driver-did-ccp/)
-| [did-work](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers/work/) | 0.1  | [0.13](https://w3c-ccg.github.io/did-spec/) | [1.0](https://workday.github.io/work-did-method-spec/) | [didwork/work-did-driver](https://hub.docker.com/r/didwork/work-did-driver)|
-| [did-ont](https://github.com/ontio/ontid-driver) | 0.1 | [1.0](https://w3c.github.io/did-core/) | [1.0](https://github.com/ontio/ontology-DID/blob/master/docs/en/DID-ONT-method.md) |  [ontio/ontid-driver](https://hub.docker.com/r/ontio/ontid-driver) | 
-| [did-kilt](https://github.com/KILTprotocol/kilt-did-driver) | 0.1 | [0.13](https://w3c-ccg.github.io/did-spec/) | [1.0](https://github.com/KILTprotocol/kilt-did-driver/blob/master/DID%20Method%20Specification.md) | [kiltprotocol/kilt-did-driver](https://hub.docker.com/r/kiltprotocol/kilt-did-driver)|
+| [did-work](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers/work/) | 0.1  | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://workday.github.io/work-did-method-spec/) | [didwork/work-did-driver](https://hub.docker.com/r/didwork/work-did-driver)|
+| [did-ont](https://github.com/ontio/ontid-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://github.com/ontio/ontology-DID/blob/master/docs/en/DID-ONT-method.md) |  [ontio/ontid-driver](https://hub.docker.com/r/ontio/ontid-driver) |
+| [did-kilt](https://github.com/KILTprotocol/kilt-did-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://github.com/KILTprotocol/kilt-did-driver/blob/master/DID%20Method%20Specification.md) | [kiltprotocol/kilt-did-driver](https://hub.docker.com/r/kiltprotocol/kilt-did-driver)|
 
 ## More Information
 
