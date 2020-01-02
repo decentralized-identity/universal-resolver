@@ -6,7 +6,7 @@ This is a [Universal Resolver](https://github.com/decentralized-identity/univers
 
 ## Specifications
 
-* [Decentralized Identifiers](https://w3c-ccg.github.io/did-spec/)
+* [Decentralized Identifiers](https://w3c.github.io/did-core/)
 * Blockstack DID Method Specification (missing)
 
 ## Example DIDs

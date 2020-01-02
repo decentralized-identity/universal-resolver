@@ -1,3 +1,5 @@
+# Universal Resolver — Continuous Integration and Delivery
+
 This section describes the building-blocks and ideas of the implemented CI/CD pipeline. In case of issues or requests in the scope of CI/CD, please directly consult the maintainers of the repository.
 
 ## Intro

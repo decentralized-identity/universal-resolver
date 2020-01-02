@@ -1,3 +1,5 @@
+# Universal Resolver — Creating Releases
+
 This guide explains the release process of the universal resolver.
 
 ## Version Number

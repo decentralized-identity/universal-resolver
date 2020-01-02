@@ -1,4 +1,4 @@
-# Universal Resolver - Design Goals
+# Universal Resolver — Design Goals
 
 The main design objectives of the UR are:
  

@@ -11,7 +11,7 @@ More info:
 
 ## Specifications
 
-* [Decentralized Identifiers](https://w3c-ccg.github.io/did-spec/)
+* [Decentralized Identifiers](https://w3c.github.io/did-core/)
 * [Baidu Cloud DID Method Specification](https://did.baidu.com/did-spec/)
 
 ## Example DIDs

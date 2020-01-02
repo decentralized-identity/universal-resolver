@@ -1,3 +1,5 @@
+# Universal Resolver — Driver Development
+
 ## Introduction
 
 The Universal Resolver's main function is wrapping an API around a number of colocated Docker containers running DID-method-specific resolvers. As such, the resolver supports all open-source drivers which have been contributed to-date. The Universal Resolver is meant to support additional DID methods as they are developed by members of various communities. The contribution for a new DID method consists of a Docker image which exposes an HTTP GET interface for resolving DIDs. Although drivers can be implemented in whichever language and architecture the contributor prefers, drivers that are contributed will share a few common characteristics.

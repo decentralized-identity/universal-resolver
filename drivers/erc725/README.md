@@ -6,7 +6,7 @@ This is a [Universal Resolver](https://github.com/decentralized-identity/univers
 
 ## Specifications
 
-* [Decentralized Identifiers](https://w3c-ccg.github.io/did-spec/)
+* [Decentralized Identifiers](https://w3c.github.io/did-core/)
 * [ERC725 DID Method Specification](https://github.com/WebOfTrustInfo/rebooting-the-web-of-trust-spring2018/blob/master/topics-and-advance-readings/DID-Method-erc725.md)
 
 ## Example DIDs

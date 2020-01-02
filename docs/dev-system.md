@@ -1,4 +1,4 @@
-# Development System of the Universal Resolver
+# Universal Resolver — Development System
 
 The dev-system or the sandbox installation, which runs the latest code-base of the Universal Resolver project, is hosted at:
 

@@ -1,4 +1,4 @@
-## Troubleshooting
+# Universal Resolver — Troubleshooting
 
 If docker-compose complains about wrong versions then you probably have a too old docker-compose version.
 

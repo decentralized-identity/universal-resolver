@@ -1,3 +1,5 @@
+# Universal Resolver — Branching Strategy
+
 The goals for our branching strategy are:
 * The master-branch should be deployable at any time. This implies a stable build and the assurance that the core-functionality is provided at any time when cloning the master.
 * The master-branch should stay active. As collaboratively working with multiple developers, we encourage merging the code as frequently as possible. This will potentially disclose issues at an early stage and facilitate the repair. Furthermore, it makes clear that the master-branch is the preferred choice that newcomers want to clone.
