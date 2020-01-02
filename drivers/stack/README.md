@@ -1,4 +1,4 @@
-![DIF Logo](https://raw.githubusercontent.com/decentralized-identity/decentralized-identity.github.io/master/images/logo-small.png)
+![DIF Logo](https://raw.githubusercontent.com/decentralized-identity/universal-resolver/master/docs/logo-dif.png)
 
 # Universal Resolver Driver: did:stack
 
@@ -7,7 +7,7 @@ This is a [Universal Resolver](https://github.com/decentralized-identity/univers
 ## Specifications
 
 * [Decentralized Identifiers](https://w3c.github.io/did-core/)
-* Blockstack DID Method Specification (missing)
+* DID Method Specification (missing)
 
 ## Example DIDs
 
