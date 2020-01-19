@@ -111,7 +111,7 @@ public class HttpDriver implements Driver {
 		}
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", ResolveResult.MIME_TYPE);
+		httpGet.addHeader("Accept", MIME_TYPES);
 
 		// execute HTTP request
 
