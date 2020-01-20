@@ -64,7 +64,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-work](https://github.com/decentralized-identity/uni-resolver-driver-did-work/) | 0.1  | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://workday.github.io/work-did-method-spec/) | [didwork/work-did-driver](https://hub.docker.com/r/didwork/work-did-driver)|
 | [did-ont](https://github.com/ontio/ontid-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://github.com/ontio/ontology-DID/blob/master/docs/en/DID-ONT-method.md) |  [ontio/ontid-driver](https://hub.docker.com/r/ontio/ontid-driver) |
 | [did-kilt](https://github.com/KILTprotocol/kilt-did-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://github.com/KILTprotocol/kilt-did-driver/blob/master/DID%20Method%20Specification.md) | [kiltprotocol/kilt-did-driver](https://hub.docker.com/r/kiltprotocol/kilt-did-driver)|
-| [did-evan](https://github.com/evannetwork/did-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | NA |
+| [did-evan](https://github.com/evannetwork/did-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | [evannetwork/evan-did-driver](https://hub.docker.com/r/evannetwork/evan-did-driver) |
 
 ## More Information
 
