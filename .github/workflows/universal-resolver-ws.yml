@@ -1,0 +1,22 @@
+name: CI/CD Workflow for universal-resolver
+
+on:
+  push:
+    branches:
+      - cicd
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Docker Build and Push
+      uses: philpotisk/github-action-docker-build-push@master
+      env:
+        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        DOCKER_FILE: docker/Dockerfile
+        CONTAINER_TAG: universalresolver/uni-resolver-web:cicd
