@@ -75,6 +75,10 @@ services:
       uniresolver_driver_kilt_did_node: ${uniresolver_driver_kilt_did_node}
     ports:
       - "8094:8080"
+  evan-did-driver:
+    image: evannetwork/evan-did-driver:latest
+    ports:
+      - "8095:8080"      
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
