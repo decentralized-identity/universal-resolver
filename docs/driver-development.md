@@ -42,14 +42,16 @@ Make sure you include the following in your PR:
   * .env
     * list environment variables (if any) with default values
   * config.json
+    * add entry for driver with example identifiers  
   * docker-compose.yml
+    * add entry for driver with docker image name and increment port number
   * README.md (insert a line to the driver table)
     * driver name (e.g. `did-btcr`), with link to driver source code
     * driver version (e.g. `0.1`)
     * DID spec version that the driver conforms to, with link to DID spec
+    * DID method spec version (e.g. BTCR), with link to DID method spec (or mark "missing")
     * Docker image name (e.g. `universalresolver/driver-did-btcr`) with link to Docker image at Docker Hub
     * {optional} DID resolution spec version that the driver conforms to, with link to DID resolution spec
-    * {optional} DID method spec version (e.g. BTCR), with link to DID method spec
 
 ## How to update a driver
 
@@ -59,9 +61,9 @@ As with contributing a driver, there are a few documentation requirements that s
 
 - increment new Docker image version
 - edit files in the Universal Resolver root directory:
-  * config.json (update driver version)
-  * docker-compose.yml (update driver version)
-  * README.md (update driver version, DID spec version, DID Resolution spec version, Docker Hub link)
+  * config.json (update driver image version, example identifiers)
+  * docker-compose.yml (update driver image version)
+  * README.md (update driver version number, DID spec version, DID method spec version, DID Resolution spec version, Docker Hub link)
 
 ## How to test a driver locally with the Universal Resolver
 
