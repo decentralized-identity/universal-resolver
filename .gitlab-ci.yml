@@ -1,33 +1,25 @@
-image: docker:git
- 
+image: docker:latest
+
 services:
-- docker:dind
- 
-variables:
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_DRIVER: overlay2
-  REGISTRY: registry.gitlab.com
-  TAG_ROOT: $REGISTRY/universalresolver
- 
+  - docker:dind
+
 before_script:
-  - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-stages:
-  - build and stage
- 
-job 1:
-  stage: build and stage
+  - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+
+build-master:
+  stage: build
   script:
-   - cd resolver/java/
-   - docker build -f ./docker/Dockerfile-base-alpine . -t $TAG_ROOT/base-alpine:$CI_COMMIT_SHA
-   - docker build -f ./docker/Dockerfile-base-ubuntu . -t $TAG_ROOT/base-ubuntu:$CI_COMMIT_SHA
-   - docker build -f ./docker/Dockerfile-uni-resolver-web . -t $TAG_ROOT/uni-resolver-web:$CI_COMMIT_SHA
-   - cd ../..
-   - cd drivers/
-   - cd sov && docker build -f ./docker/Dockerfile . -t $TAG_ROOT/driver-did-sov && cd ..
-   - cd btcr && docker build -f ./docker/Dockerfile . -t $TAG_ROOT/driver-did-btcr && cd ..
-   - cd erc725 && docker build -f ./docker/Dockerfile . -t $TAG_ROOT/driver-did-erc725 && cd ..
-   - cd stack && docker build -f ./docker/Dockerfile . -t $TAG_ROOT/driver-did-stack && cd ..
-   - cd dom && docker build -f ./docker/Dockerfile . -t $TAG_ROOT/driver-did-dom && cd ..
-   - cd dns && docker build -f ./docker/Dockerfile . -t $TAG_ROOT/driver-did-dns && cd ..
-   - cd ccp && docker build -f ./docker/Dockerfile . -t $TAG_ROOT/driver-did-ccp && cd ..
-   - cd ..
+    - cd resolver/java/uni-resolver-web/
+    - docker build -f ./docker/Dockerfile --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master
+
+build:
+  stage: build
+  script:
+    - cd resolver/java/uni-resolver-web/
+    - docker build -f ./docker/Dockerfile --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+  except:
+    - master
