@@ -53,6 +53,24 @@ Make sure you include the following in your PR:
     * Docker image name (e.g. `universalresolver/driver-did-btcr`) with link to Docker image at Docker Hub
     * {optional} DID resolution spec version that the driver conforms to, with link to DID resolution spec
 
+## HTTP(S) Binding
+
+The HTTP(S) Binding for DID Resolvers requires a known HTTP(S) URL called the DID Resolver HTTP(S) endpoint.
+
+Using this binding, the DID Resolution function (see § 3. Resolving a DID) and/or DID URL Dereferencing function (see § 4. Dereferencing a DID URL) can be executed as follows:
+
+- Construct a request HTTP(S) URL by appending the input DID or input DID URL to the DID Resolver HTTP(S) endpoint.
+- Execute an HTTP GET request on the request HTTP(S) URL
+- If the input DID does not exist (i.e. the DID Resolution function returns a null result):
+  * The HTTP response status code MUST be 4
+- If the input DID exists and the result is (part of) a DID Document:
+  * The HTTP response status code MUST be 200.
+  * The HTTP response MUST contain a Content-Type header. The value of this header MUST be application/did+ld+json.
+  * The HTTP response body MUST contain the resolved DID Document or other output resources that is the reult of the DID Resolution or DID URL Dereferencing function.
+- If the input DID exists and the result is a service endpoint URL:
+  * The HTTP response status code MUST be 303.
+  * The HTTP response MUST contain an Location header. The value of this header MUST be the output service endpoint URL.
+
 ## How to update a driver
 
 As DID methods are developed and matured, the Universal Resolver should maintain its DID drivers with new changes. Contributors should keep their drivers up-to-date as changes happen to the DID method, DID spec, and DID Resolution spec. Contributors may only wish to direct users to the latest driver, or they may have a `stable` version, a `developer` version, etc. The driver version specified in the README.md file should be reflected in a Docker Hub image with a tag that matches the driver version. As always, the Docker image should be tested as a standalone container as well as a container cluster with `docker-compose`.
@@ -94,3 +112,18 @@ To do so, follow these steps:
 
 You can now resolve DID Documents via `curl` commands as documented in the [Quick Start](https://github.com/decentralized-identity/universal-resolver#quick-start) notes.
 
+## How to test a driver HTTPS end point  with the Universal Resolver
+
+Given did:
+
+```bash
+did:sov:WRfXPg8dantKVubE3HX8pw
+```
+Then the request HTTP(S) URL is:
+```bash
+https://uniresolver.io/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
+```
+The HTTP(S) Binding can be invoked as follows:
+```bash
+curl -X GET https://uniresolver.io/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
+```
