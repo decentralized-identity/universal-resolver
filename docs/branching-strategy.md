@@ -10,7 +10,16 @@ The following recipe shortly describes the typical steps that developers need to
 
 ![](https://hackernoon.com/hn-images/1*iHPPa72N11sBI_JSDEGxEA.png)
 
-1. ***Create a branch***: When implementing a new feature, some improvement or a bugfix, a new branch should be created of the master-branch. In order to preserve an organized git-repo, the new branches should go under: `topic/<your-branch-name>` , whereas the name of the branch should reflect the intention of the branch itself. Use the GitHub-issue name as part of the branch-name, if there is a corresponding issue available.
+1. ***Create a branch***: When implementing a new feature, some improvement or a bugfix, a new branch should be created of the master-branch. In order to preserve an organized git-repo, we agreed on follwing prefixes for branches:  
+
+    - feature-\<branch-name\> -> adding/changeing functionality, whereas the branch-name should reflect the intention
+    - bugfix-\<GitHub-issue\> -> fixing Github-issues
+    - refactor-\<branch-name\> -> cleanup, maintanance, improving code quality, adding Unit tests  
+    - ci-\<branch-name\> -> anything related to continous integration  
+    - docs-\<branch-name\> -> updating/extending documentation  
+    
+    Feature branches are the most inclusive, which can contain refactoring and documentation.
+    Always use the GitHub-issue name as part of the branch-name, if there is a corresponding issue available.  
 
 2. ***Commit some code***: Add your changes to the new branch and commit regularly with a descriptive commit-message. This builds up a transparent history of work and makes a roll back of changes easier.
 3. ***Open a Pull Request (PR)***: Once your changes are complete (or you want some feedback at an early stage of development) open a PR against the master-branch. A PR initiates a discussion with the maintainer, which will review your code at this point. Furthermore, the [[CI/CD process|Continuous-Integration-and-Delivery]] will be kicked off and your code will be deployed to the dev-system. 
