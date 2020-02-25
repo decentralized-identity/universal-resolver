@@ -16,7 +16,8 @@ The following recipe shortly describes the typical steps that developers need to
     - bugfix-\<GitHub-issue\> -> fixing Github-issues
     - refactor-\<branch-name\> -> cleanup, maintanance, improving code quality, adding Unit tests  
     - ci-\<branch-name\> -> anything related to continous integration  
-    - docs-\<branch-name\> -> updating/extending documentation  
+    - docs-\<branch-name\> -> updating/extending documentation, no code changes allowed  
+    - release-\<version-to-be-released\> -> release of a new major version  
     
     Feature branches are the most inclusive, which can contain refactoring and documentation.
     Always use the GitHub-issue name as part of the branch-name, if there is a corresponding issue available.  
