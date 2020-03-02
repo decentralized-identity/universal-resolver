@@ -96,4 +96,4 @@ You can now resolve DID Documents via `curl` commands as documented in the [Quic
 
 ## HTTP(S) Binding.
 
-The detailed guide lines for HTTP(S) can be found [here](https://w3c-ccg.github.io/did-resolution/#bindings-https)
+The detailed guide lines for HTTP(S) binding can be found [here](https://w3c-ccg.github.io/did-resolution/#bindings-https)
