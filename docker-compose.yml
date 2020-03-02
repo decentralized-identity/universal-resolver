@@ -70,7 +70,7 @@ services:
     ports:
       - "8093:8080"
   kilt-did-driver:
-    image: kiltprotocol/kilt-did-driver:latest
+    image: kiltprotocol/kilt-did-driver:1.0.1
     environment:
       uniresolver_driver_kilt_did_node: ${uniresolver_driver_kilt_did_node}
     ports:
