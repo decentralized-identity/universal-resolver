@@ -77,8 +77,8 @@ First you need to add the following to to your "~/.m2/settings.xml". Here OWNER 
   <servers>
     <server>
       <id>github</id>
-      <username>azuzi</username>
-      <password>97fc66008d7cbe49bfbd507487f16c7394bcef85</password>
+      <username> OWNER </username>
+      <password> TOKEN </password>
     </server>
   </servers>
 ~~~
