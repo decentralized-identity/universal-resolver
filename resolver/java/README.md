@@ -2,89 +2,16 @@
 
 This is a Java implementation of a Universal Resolver. See [universal-resolver](https://github.com/decentralized-identity/universal-resolver/) for a general introduction to Universal Resolvers and drivers.
 
+## Configuration
+For downloading the dependencies of this project a Personal Access Token for GitHub must be configured according to [Creating a personal access token for the command line](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line) in file [resolver/java/settings.xml](https://github.com/decentralized-identity/universal-resolver/blob/master/resolver/java/settings.xml).
+
 ## Build (native Java)
 
-First you need to add the following to to your "~/.m2/settings.xml". Here OWNER should be be developer's GitHub user name and TOKEN must be GitHub personal access token . For more information [follow](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line).
 ~~~
-  <profiles>
-    <profile>
-      <id>github</id>
-      <repositories>
-        <repository>
-          <id>github</id>
-          <name>GitHub WebOfTrustInfo ld-signatures-java</name>
-          <url>https://maven.pkg.github.com/WebOfTrustInfo/ld-signatures-java</url>
-        </repository>
-        <repository>
-          <id>github</id>
-          <name>GitHub danubetech verifiable-credentials-java</name>
-          <url>https://maven.pkg.github.com/danubetech/verifiable-credentials-java</url>
-        </repository>
-        <repository>
-          <id>github</id>
-          <name>GitHub danubetech key-formats-java</name>
-          <url>https://maven.pkg.github.com/danubetech/key-formats-java</url>
-        </repository>
-        <repository>
-          <id>github</id>
-          <name>GitHub tomasbjerre git-changelog-maven-plugin</name>
-          <url>https://maven.pkg.github.com/tomasbjerre/git-changelog-maven-plugin</url>
-        </repository> 
-	<repository>
-          <id>github</id>
-          <name>GitHub decentralized-identity did-common-java</name>
-          <url>https://maven.pkg.github.com/decentralized-identity/did-common-java</url>
-        </repository>
-        <repository>
-          <id>github</id>
-          <name>GitHub decentralized-identity universal-resolver</name>
-          <url>https://maven.pkg.github.com/decentralized-identity/universal-resolver</url>
-        </repository>
-        <repository>
-          <id>github</id>
-          <name>GitHub decentralized-identity uni-resolver-driver-did-sov</name>
-          <url>https://maven.pkg.github.com/decentralized-identity/uni-resolver-driver-did-sov</url>
-        </repository>
-        <repository>
-          <id>github</id>
-          <name>GitHub decentralized-identity uni-resolver-driver-did-btcr</name>
-          <url>https://maven.pkg.github.com/decentralized-identity/uni-resolver-driver-did-btcr</url>
-        </repository>
-        <repository>
-          <id>github</id>
-          <name>GitHub decentralized-identity uni-resolver-driver-did-work</name>
-          <url>https://maven.pkg.github.com/decentralized-identity/uni-resolver-driver-did-work</url>
-        </repository>
-        <repository>
-          <id>github</id>
-          <name>GitHub decentralized-identity uni-resolver-driver-did-stack</name>
-          <url>https://maven.pkg.github.com/decentralized-identity/uni-resolver-driver-did-stack</url>
-        </repository>
-	<repository>
-          <id>github</id>
-          <name>GitHub decentralized-identity did-common-java</name>
-          <url>https://maven.pkg.github.com/decentralized-identity/did-common-java</url>
-        </repository>
-	<repository>
-          <id>github</id>
-          <name>GitHub WebOfTrustInfo btc-tx-lookup-java</name>
-          <url>https://maven.pkg.github.com/WebOfTrustInfo/btc-tx-lookup-java</url>
-        </repository>
-      </repositories>
-    </profile>
-  </profiles>
 
-  <servers>
-    <server>
-      <id>github</id>
-      <username> OWNER </username>
-      <password> TOKEN </password>
-    </server>
-  </servers>
-~~~
 Then run:
-
-	mvn clean install
+  cd resolver/java
+	mvn --settings settings.xml clean install
 
 ## Local Resolver
 
