@@ -3,7 +3,7 @@
 This is a Java implementation of a Universal Resolver. See [universal-resolver](https://github.com/decentralized-identity/universal-resolver/) for a general introduction to Universal Resolvers and drivers.
 
 ## Configuration
-For downloading the dependencies of this project a Personal Access Token for GitHub must be configured in file [resolver/java/settings.xml](https://github.com/decentralized-identity/universal-resolver/blob/master/resolver/java/settings.xml) according to [Creating a personal access token for the command line](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line).
+For downloading the dependencies of this project a Personal Access Token for GitHub must be configured in file [resolver/java/settings.xml](https://github.com/decentralized-identity/universal-resolver/blob/master/resolver/java/settings.xml), according to [Creating a personal access token for the command line](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Only the scope **read:packages** is required.
 
 ## Build (native Java)
 

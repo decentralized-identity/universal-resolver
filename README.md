@@ -10,7 +10,10 @@ See https://uniresolver.io/ for a publicly hosted instance of a Universal Resolv
 
 ## Quick Start
 
-You can deploy the Universal Resolver on your local machine by cloning this Github repository, and using `docker-compose` to build and run the Universal Resolver as well as its drivers:
+You can deploy the Universal Resolver on your local machine by cloning this Github repository, and using `docker-compose` to build and run the Universal Resolver as well as its drivers.
+
+Before running docker-compose, please place a valid Personal Access Token for GitHub in file [resolver/java/settings.xml](https://github.com/decentralized-identity/universal-resolver/blob/master/resolver/java/settings.xml), as explained here [Creating a personal access token for the command line](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Only the scope **read:packages** is required.
+
 
 	git clone https://github.com/decentralized-identity/universal-resolver
 	cd universal-resolver/
