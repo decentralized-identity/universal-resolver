@@ -37,11 +37,23 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0" ]
 		}, {
-			"pattern": "^(did:web:.+)$|^(did:ethr:.+)$|^(did:nacl:.+)$",
+			"pattern": "^(did:web:.+)$",
 			"image": "uport/uni-resolver-driver-did-uport",
 			"imagePort": "8081",
 			"tag": "latest",
-			"testIdentifiers": [ "did:web:uport.me", "did:ethr:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736", "did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI" ]
+			"testIdentifiers": [ "did:web:did.or13.io" ]
+		}, {
+			"pattern": "^(did:ethr:.+)$",
+			"image": "uport/uni-resolver-driver-did-uport",
+			"imagePort": "8081",
+			"tag": "latest",
+			"testIdentifiers": [ "did:ethr:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736" ]
+		}, {
+			"pattern": "^(did:nacl:.+)$",
+			"image": "uport/uni-resolver-driver-did-uport",
+			"imagePort": "8081",
+			"tag": "latest",
+			"testIdentifiers": [ "did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI" ]
 		}, {
 			"pattern": "^((?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*(?:[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9]))$",
 			"image": "universalresolver/driver-dns",
