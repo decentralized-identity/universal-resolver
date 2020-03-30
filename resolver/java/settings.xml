@@ -16,14 +16,23 @@
           <name>GitHub decentralized-identity Apache Maven Packages</name>
           <url>https://maven.pkg.github.com/decentralized-identity/did-common-java</url>
         </repository>
+      	<repository>
+          <id>github-btcLookup</id>
+          <name>GitHub WebOfTrustInfo btc-tx-lookup-java</name>
+          <url>https://maven.pkg.github.com/WebOfTrustInfo/btc-tx-lookup-java</url>
+        </repository>
       </repositories>
     </profile>
   </profiles>
-
   <servers>
+<!-- Personal access token with permission: read:packages -->
     <server>
-      <!-- Personal access token with permission: read:packages -->
       <id>github</id>
+      <username>OWNER</username>
+      <password>TOKEN</password>
+    </server>
+    <server>
+      <id>github-btcLookup</id>
       <username>OWNER</username>
       <password>TOKEN</password>
     </server>
