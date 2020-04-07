@@ -12,29 +12,19 @@
       <id>github</id>
       <repositories>
         <repository>
-          <id>github</id>
-          <name>GitHub decentralized-identity Apache Maven Packages</name>
+          <id>github-did-common-java</id>
+          <name>GitHub decentralized-identity/did-common-java</name>
           <url>https://maven.pkg.github.com/decentralized-identity/did-common-java</url>
-        </repository>
-      	<repository>
-          <id>github-btcLookup</id>
-          <name>GitHub WebOfTrustInfo btc-tx-lookup-java</name>
-          <url>https://maven.pkg.github.com/WebOfTrustInfo/btc-tx-lookup-java</url>
         </repository>
       </repositories>
     </profile>
   </profiles>
   <servers>
-<!-- Personal access token with permission: read:packages -->
+<!-- personal access token with permission: read:packages -->
     <server>
-      <id>github</id>
-      <username>OWNER</username>
-      <password>TOKEN</password>
-    </server>
-    <server>
-      <id>github-btcLookup</id>
-      <username>OWNER</username>
-      <password>TOKEN</password>
+      <id>github-did-common-java</id>
+      <username>${env.GITHUB_READ_PACKAGES_OWNER}</username>
+      <password>${env.GITHUB_READ_PACKAGES_TOKEN}</password>
     </server>
   </servers>
 </settings>
