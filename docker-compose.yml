@@ -78,7 +78,15 @@ services:
   evan-did-driver:
     image: evannetwork/evan-did-driver:latest
     ports:
-      - "8095:8080"      
+      - "8095:8080"  
+  uni-resolver-driver-did-echo:
+    image: echoprotocol/uni-resolver-driver-did-echo:latest
+    environment:
+      uniresolver_driver_did_echo_mainnet_rpc_url: ${uniresolver_driver_did_echo_mainnet_rpc_url}
+      uniresolver_driver_did_echo_testnet_rpc_url: ${uniresolver_driver_did_echo_testnet_rpc_url}
+      uniresolver_driver_did_echo_devnet_rpc_url: ${uniresolver_driver_did_echo_devnet_rpc_url}
+    ports:
+      - "8096:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
