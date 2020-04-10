@@ -24,7 +24,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
-	curl -X GET http://localhost:8080/1.0/identifiers/did:v1:test:nym:3AEJTDMSxDDQpyUftjuoeZ2Bazp4Bswj1ce7FJGybCUu
+	curl -X GET http://localhost:8080/1.0/identifiers/did:v1:test:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR
+	curl -X GET http://localhost:8080/1.0/identifiers/did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ipid:QmYA7p467t4BGgBL4NmyHtsXMoPrYH9b3kSG6dbgFYskJm
 	curl -X GET http://localhost:8080/1.0/identifiers/did:web:uport.me
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ethr:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736
@@ -56,7 +57,8 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-stack](https://github.com/decentralized-identity/uni-resolver-driver-did-stack/) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | (missing) | [universalresolver/driver-did-stack](https://hub.docker.com/r/universalresolver/driver-did-stack/)
 | [did-dom](https://github.com/decentralized-identity/uni-resolver-driver-did-dom/) | 0.1-SNAPSHOT | [1.0 WD](https://w3c.github.io/did-core/) | (missing) | [universalresolver/driver-did-dom](https://hub.docker.com/r/universalresolver/driver-did-dom/)
 | [did-uport](https://github.com/uport-project/uport-did-driver) | 1.3.1 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://docs.google.com/document/d/1vS6UBUDwxYR8tLTNo4HUhGe2qb9Q95QLiJTt9NkwZ8M/) | [uport/uni-resolver-driver-did-uport](https://hub.docker.com/r/uport/uni-resolver-driver-did-uport/)
-| did-v1 |  | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://w3c-ccg.github.io/did-method-v1/) |
+| [did-v1](https://github.com/veres-one/uni-resolver-did-v1-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://w3c-ccg.github.io/did-method-v1/) |
+| [did-key](https://github.com/veres-one/uni-resolver-did-v1-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.7](https://w3c-ccg.github.io/did-method-key/) |
 | did-ipid |  | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/jonnycrunch/ipid) |
 | [did-jolo](https://github.com/jolocom/jolo-did-method/tree/master/jolocom-did-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/jolocom/jolocom-did-driver/blob/master/jolocom-did-method-specification.md) | [jolocomgmbh/jolocom-did-driver](https://hub.docker.com/r/jolocomgmbh/jolocom-did-driver) |
 | [did-hacera](https://github.com/hacera/hacera-did-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | (missing) | [hacera/hacera-did-driver](https://hub.docker.com/r/hacera/hacera-did-driver) |
