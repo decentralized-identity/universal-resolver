@@ -204,3 +204,10 @@ services:
       LEDGIS_LIT_CODE: ${LEDGIS_LIT_CODE}
     ports:
       - "8119:8080"
+  uni-resolver-driver-did-example:
+    image: exampleorg/uni-resolver-driver-did-example:1.0.0
+    environment:
+      uniresolver_driver_did_example_exampleSetting: ${uniresolver_driver_did_example_exampleSetting}
+    ports:
+      - "8120:8080"
+
