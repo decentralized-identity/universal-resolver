@@ -211,6 +211,11 @@
           "pattern": "^(did:lit:(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$",
           "url": "http://driver-did-lit:8080/",
           "testIdentifiers": [ "did:lit:AEZ87t1bi5bRxmVh3ksMUi" ]
-        }
+        },
+		{
+			"pattern": "^(did:example:.+)$",
+			"url": "http://uni-resolver-driver-did-example:8080/",
+			"testIdentifiers": [ "did:example:0000000000123456", "did:example:0000000000456789" ]
+		}
 	]
 }
