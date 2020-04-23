@@ -25,7 +25,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
 	curl -X GET http://localhost:8080/1.0/identifiers/did:v1:test:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR
-	curl -X GET http://localhost:8080/1.0/identifiers/did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH
+	curl -X GET http://localhost:8080/1.0/identifiers/did:key:z6Mkfriq1MqLBoPWecGoDLjguo1sB9brj6wT3qZ5BxkKpuP6
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ipid:QmYA7p467t4BGgBL4NmyHtsXMoPrYH9b3kSG6dbgFYskJm
 	curl -X GET http://localhost:8080/1.0/identifiers/did:web:uport.me
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ethr:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736
@@ -72,6 +72,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-kilt](https://github.com/KILTprotocol/kilt-did-driver) | 1.0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://github.com/KILTprotocol/kilt-did-driver/blob/master/DID%20Method%20Specification.md) | [kiltprotocol/kilt-did-driver](https://hub.docker.com/r/kiltprotocol/kilt-did-driver)|
 | [did-evan](https://github.com/evannetwork/did-driver) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | [evannetwork/evan-did-driver](https://hub.docker.com/r/evannetwork/evan-did-driver) |
 | [did-echo](https://github.com/echoprotocol/uni-resolver-driver-did-echo) | 0.0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://github.com/echoprotocol/uni-resolver-driver-did-echo/blob/master/echo_did_specifications.md) | [echoprotocol/uni-resolver-driver-did-echo](https://hub.docker.com/r/echoprotocol/uni-resolver-driver-did-echo) |
+| [did-key](https://github.com/decentralized-identity/uni-resolver-driver-did-key) | 1.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.7](https://w3c-ccg.github.io/did-method-key/) | [universalresolver/driver-did-key](https://hub.docker.com/r/universalresolver/driver-did-key) |
 
 ## More Information
 

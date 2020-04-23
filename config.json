@@ -99,10 +99,6 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:ont:AN5g6gz9EoQ3sCNu7514GEghZurrktCMiH" ]
 		}, {
-			"pattern": "^(did:key:.+)$",
-			"url": "https://did-key.web.app/api/dids/$1",
-			"testIdentifiers": [ "did:key:z6MksQ35B5bwZDQq4QKuhQW2Sv6dcqwg4PqcSFf67pdgrtjB" ]
-		}, {
 			"pattern": "^(did:kilt:.+)$",
 			"image": "kiltprotocol/kilt-did-driver",
 			"tag": "1.0.1",
@@ -117,6 +113,11 @@
 			"image": "echoprotocol/uni-resolver-driver-did-echo",
 			"tag": "latest",
 			"testIdentifiers": [ "did:echo:1.1.25.0" ]
+		}, {
+			"pattern": "^(did:key:.+)$",
+			"image": "universalresolver/driver-did-key",
+			"tag": "latest",
+			"testIdentifiers": [ "did:key:z6Mkfriq1MqLBoPWecGoDLjguo1sB9brj6wT3qZ5BxkKpuP6", "did:key:z6MksQ35B5bwZDQq4QKuhQW2Sv6dcqwg4PqcSFf67pdgrtjB", "did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH" ]
 		}
 	]
 }
