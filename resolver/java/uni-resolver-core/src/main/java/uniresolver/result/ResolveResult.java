@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import did.DIDDocument;
 
-@JsonPropertyOrder({ "didDocument", "resolverMetadata", "methodMetadata" })
+@JsonPropertyOrder({ "didDocument", "content", "contentType", "resolverMetadata", "methodMetadata" })
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class ResolveResult {
 
@@ -56,7 +56,7 @@ public class ResolveResult {
 	 */
 
 	@JsonCreator
-	public static ResolveResult build(@JsonProperty(value="didDocument", required=true) DIDDocument didDocument, @JsonProperty(value="content", required=false) Object content, @JsonProperty(value="contentType", required=false) String contentType, @JsonProperty(value="resolverMetadata", required=true) Map<String, Object> resolverMetadata, @JsonProperty(value="methodMetadata", required=true) Map<String, Object> methodMetadata) {
+	public static ResolveResult build(@JsonProperty(value="didDocument", required=true) DIDDocument didDocument, @JsonProperty(value="content", required=false) Object content, @JsonProperty(value="contentType", required=false) String contentType, @JsonProperty(value="resolverMetadata", required=false) Map<String, Object> resolverMetadata, @JsonProperty(value="methodMetadata", required=false) Map<String, Object> methodMetadata) {
 
 		return new ResolveResult(didDocument, content, contentType, resolverMetadata, methodMetadata);
 	}
