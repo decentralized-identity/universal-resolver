@@ -114,6 +114,12 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:echo:1.1.25.0" ]
 		}, {
+			"pattern": "^(did:factom:.+)$",
+			"image": "sphereon/driver-did-factom",
+			"tag": "latest",
+			"imageProperties": "true",
+			"testIdentifiers": [ "did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764" ]
+		}, {
 			"pattern": "^(did:key:.+)$",
 			"image": "universalresolver/driver-did-key",
 			"tag": "latest",
