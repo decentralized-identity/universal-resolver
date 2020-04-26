@@ -8,7 +8,7 @@ Your driver will be invoked via an HTTP GET call to:
 
 `http://<your-image>:8080/1.0/identifiers/<your-did>`
 
-Your driver will receive an `Accept` header with the value `application/json+ld`, and it should return either a valid [DID Document](https://w3c-ccg.github.io/did-resolution/#output-diddocument) or a [DID Resolution Result](https://w3c-ccg.github.io/did-resolution/#output-didresolutionresult) in the HTTP body.
+Your driver will receive an `Accept` header with the value `application/ld+json`, and it should return either a valid [DID Document](https://w3c-ccg.github.io/did-resolution/#output-diddocument) or a [DID Resolution Result](https://w3c-ccg.github.io/did-resolution/#output-didresolutionresult) in the HTTP body.
 
 ### API Definition
 
