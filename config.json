@@ -20,11 +20,15 @@
 			"testIdentifiers": [ "did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E" ]
 		}, {
 			"pattern": "^(did:v1:nym:.+)$",
-			"url": "https://genesis.testnet.veres.one/dids/$1",
-			"testIdentifiers": [ ]
+			"image": "veresone/uni-resolver-did-v1-driver",
+			"imageProperties": "true",
+			"tag": "latest",
+			"testIdentifiers": [ "did:v1:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR" ]
 		}, {
 			"pattern": "^(did:v1:test:nym:.+)$",
-			"url": "https://frankfurt.capybara.veres.one/dids/$1",
+			"image": "veresone/uni-resolver-did-v1-driver",
+			"imageProperties": "true",
+			"tag": "latest",
 			"testIdentifiers": [ "did:v1:test:nym:z6MkgF4uJbLMoUin2uKaBf4Jb1F7SHzuALE8Ldq8FPPpHE9t", "did:v1:test:nym:z6MkmWLiAt5FtfwgFJwMDGS1GiFn1KpUXsd7bn1v2hLyXvud" ]
 		}, {
 			"pattern": "^did:ipid:(.+)$",

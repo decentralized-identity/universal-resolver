@@ -78,7 +78,7 @@ services:
   evan-did-driver:
     image: evannetwork/evan-did-driver:latest
     ports:
-      - "8095:8080"  
+      - "8095:8080"
   uni-resolver-driver-did-echo:
     image: echoprotocol/uni-resolver-driver-did-echo:latest
     environment:
@@ -103,3 +103,7 @@ services:
     image: universalresolver/uni-resolver-web:latest
     ports:
       - "8080:8080"
+  uni-resolver-did-v1-driver:
+    image: veresone/uni-resolver-did-v1-driver:latest
+      ports:
+        - "8100:8080"
