@@ -99,11 +99,12 @@ services:
     image: docknetwork/dock-did-driver:latest
     ports:
       - "8099:8080"
+  uni-resolver-did-v1-driver:
+    image: veresone/uni-resolver-did-v1-driver:latest
+    ports:
+      - "8100:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
       - "8080:8080"
-  uni-resolver-did-v1-driver:
-    image: veresone/uni-resolver-did-v1-driver:latest
-      ports:
-        - "8100:8080"
+
