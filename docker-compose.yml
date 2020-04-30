@@ -99,6 +99,10 @@ services:
     image: docknetwork/dock-did-driver:latest
     ports:
       - "8099:8080"
+  driver-did-abt:
+    image: arcblock/driver-did-abt
+    ports:
+      - "8100:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
