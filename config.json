@@ -138,6 +138,10 @@
 			"image": "arcblock/driver-did-abt",
 			"tag": "latest",
 			"testIdentifiers": [ "did:abt:z11MVbRGLFt6RXaHzX7Xj7rmHfeiyFkJiiRE" ]
+		},{
+			"pattern": "^(did:trustbloc:.+)$",
+			"url": "http://driver-did-trustbloc:8102/resolveDID?did=$1",
+			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiCiHVdJsCySvw2JHHGnpIxege4UF0Zuu1Y6Nd5n1FIBVw" ]
 		}
 	]
 }
