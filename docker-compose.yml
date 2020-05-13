@@ -111,11 +111,11 @@ services:
     container_name: driver-did-trustbloc
     image: trustbloc/driver-did-trustbloc:0.1.3
     environment:
-      - DID_METHOD_HOST_URL=0.0.0.0:8102
-      - DID_METHOD_TLS_SYSTEMCERTPOOL=true
-      - DID_METHOD_MODE=resolver
+      DID_METHOD_HOST_URL: ${DID_METHOD_HOST_URL}
+      DID_METHOD_TLS_SYSTEMCERTPOOL: ${DID_METHOD_TLS_SYSTEMCERTPOOL}
+      DID_METHOD_MODE: ${DID_METHOD_MODE}
     ports:
-      - "8102:8102"
+      - "8102:8080"
     command: start
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
