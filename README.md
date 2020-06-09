@@ -1,6 +1,6 @@
 ![DIF Logo](https://raw.githubusercontent.com/decentralized-identity/universal-resolver/master/docs/logo-dif.png)
 
-# Universal Resolver - build 4
+# Universal Resolver
 
 A Universal Resolver is an identifier resolver that works with any decentralized identifier system, including Decentralized Identifiers (DIDs).
 
