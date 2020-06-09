@@ -13,11 +13,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Docker Build and Push
-      uses: danubetech/github-action-docker-build-push@master
-      env:
-        MAVEN_SETTINGS: ${{secrets.MAVEN_SETTINGS}}
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-        DOCKER_FILE: resolver/java/uni-resolver-web/docker/Dockerfile
-        CONTAINER_TAG: universalresolver/uni-resolver-web:latest
+    - name: Deploy to AWS
+      uses: philpotisk/universal-resolver-k8s-deployment@master
