@@ -142,6 +142,11 @@
 			"pattern": "^(did:trustbloc:.+)$",
 			"url": "http://driver-did-trustbloc:8102/resolveDID?did=$1",
 			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiCiHVdJsCySvw2JHHGnpIxege4UF0Zuu1Y6Nd5n1FIBVw" ]
+		}, {
+			"pattern": "^(did:io:.+)$",
+			"image": "iotex/uni-resolver-driver-did-io",
+			"tag": "latest",
+			"testIdentifiers": [ "did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A" ]
 		}
 	]
 }
