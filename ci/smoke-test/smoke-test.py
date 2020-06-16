@@ -6,6 +6,7 @@ import pathlib
 import asyncio
 import logging
 from aiohttp import ClientSession
+from aiohttp import ClientTimeout
 import aiofiles
 
 logging.basicConfig(
@@ -72,7 +73,7 @@ async def write_one(file, data, session):
 
 
 async def run_tests(file, test_data):
-    async with ClientSession(timeout=aiohttp.ClientTimeout(total=20.0)) as session:
+    async with ClientSession(timeout=ClientTimeout(total=20.0)) as session:
         tasks = []
         for data in test_data:
             tasks.append(
