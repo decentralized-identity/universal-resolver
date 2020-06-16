@@ -66,7 +66,7 @@ async def parse(url, session):
 async def write_one(file, data, session):
     res = await parse(url=data['url'], session=session)
     if not res:
-        return None
+        return
     async with aiofiles.open(file, "a") as f:
         await f.write(f"{data['url']}\t{res}\n")
         logger.info("Wrote results for source URL: %s", data['url'])
