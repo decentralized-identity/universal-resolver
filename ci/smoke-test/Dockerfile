@@ -12,9 +12,7 @@ LABEL "maintainer"="Philipp Potisk <philipp.potisk@danubetech.com>"
 RUN apt-get update && \
     apt-get upgrade -y
 
-COPY requirements.txt /
-COPY smoke-test.py /
-COPY test-config.json /
+COPY . /
 RUN pip install --no-cache-dir -r requirements.txt
 
 RUN chmod +x /entrypoint.sh
