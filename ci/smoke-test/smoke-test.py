@@ -67,12 +67,12 @@ async def write_one(file, data, session):
     if not res:
         return None
     async with aiofiles.open(file, "a") as f:
-        await f.write(f"{data['url']}\t{res}\n")
+        await f.write(f"{data['url']}\t{res}\n ------------------------------------------------------------ \n\n\n")
         logger.info("Wrote results for source URL: %s", data['url'])
 
 
 async def run_tests(file, test_data):
-    async with ClientSession() as session:
+    async with ClientSession(timeout=20) as session:
         tasks = []
         for data in test_data:
             tasks.append(
