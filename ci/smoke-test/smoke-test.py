@@ -64,8 +64,11 @@ async def parse(url, session):
 
 
 async def write_one(file, data, session):
-    res = await parse(url=data['url'], session=session)
-    logger.debug(res)
+    try:
+        res = await parse(url=data['url'], session=session)
+        logger.debug(res)
+    except asyncio.TimeoutError:
+        logger.info("Timeout Error")
     logger.info("----------------------------------------------------------------------")
 
 
