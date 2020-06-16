@@ -1,13 +1,9 @@
 # Smoke Test for testing the Universal Resolver after a deplyoment
 
-# Build
+## Build container with
 
-````
-docker build -t smoke-test .
-````
+    docker build -f Dockerfile -t smoke-test .
+    
+## Run container with
 
-# Usage
-
-````
-docker run -t smoke-test
-````
+    docker run -it --rm -e INGRESS_FILE=<path-to-uniresolver-ingress.yaml> -e CONFIG_FILE=<path-to-config.json> --name smoke-test smoke-test
