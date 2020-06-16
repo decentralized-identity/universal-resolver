@@ -72,7 +72,7 @@ async def write_one(file, data, session):
 
 
 async def run_tests(file, test_data):
-    async with ClientSession(timeout=20) as session:
+    async with ClientSession(timeout=aiohttp.ClientTimeout(total=20.0)) as session:
         tasks = []
         for data in test_data:
             tasks.append(
