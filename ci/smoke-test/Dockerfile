@@ -12,10 +12,11 @@ LABEL "maintainer"="Philipp Potisk <philipp.potisk@danubetech.com>"
 RUN apt-get update && \
     apt-get upgrade -y
 
-WORKDIR /usr/src/app
+# WORKDIR /usr/src/app
 
-COPY requirements.txt ./
-COPY smoke-test.py ./
+COPY requirements.txt .
+COPY smoke-test.py .
+COPY test-config.json .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
