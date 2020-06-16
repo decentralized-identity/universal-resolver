@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 import sys
-import json
-import re
 import pathlib
-import asyncio
+from time import gmtime, strftime
 import logging
+import re
+import json
+import yaml
+import getopt
+import asyncio
 from aiohttp import ClientSession
-from aiohttp import ClientTimeout
-import aiofiles
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
@@ -74,8 +75,7 @@ async def write_one(file, data, session):
 
 
 async def run_tests(file, test_data):
-    timeout = ClientTimeout(total=20)
-    async with ClientSession(timeout=timeout) as session:
+    async with ClientSession() as session:
         tasks = []
         for data in test_data:
             tasks.append(
@@ -87,13 +87,37 @@ async def run_tests(file, test_data):
 # Run tests END
 
 def main(argv):
+    ingress = '../out/uni-resolver-ingress.yaml'
+    config = './test-config.json'
+    try:
+        opts, args = getopt.getopt(argv, "hi:c:", ["ingress=", "config="])
+    except getopt.GetoptError:
+        print('./smoke-test.py -i <ingress-file> -c <uni-resolver-config>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('./smoke-test.py -i <ingress-file> -c <uni-resolver-config>')
+            sys.exit()
+        elif opt in ("-i", "--ingress"):
+            ingress = arg
+        elif opt in ("-c", "--config"):
+            config = arg
+
+    # read config
+    with open(ingress) as stream:
+        ingress = yaml.safe_load(stream)
+        host = ingress['spec']['rules'][0]['host']
+        uni_resolver_path = "http://" + host + "/1.0/identifiers/"
+
     # build test data
-    config_dict = parse_json_to_dict('./test-config.json')
-    test_data = create_test_data(config_dict["drivers"], 'https://uniresolver.io/1.0/identifiers/')
+    config_dict = parse_json_to_dict(config)
+    test_data = create_test_data(config_dict["drivers"], uni_resolver_path)
 
     # run tests
     here = pathlib.Path(__file__).parent
-    out_path = here.joinpath("error.json")
+    timestr = strftime("%d-%m-%Y_%H-%M-%S-UTC", gmtime())
+    filename = "result-" + timestr + ".json"
+    out_path = here.joinpath(filename)
 
     asyncio.run(run_tests(file=out_path, test_data=test_data))
 
