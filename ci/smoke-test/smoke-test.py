@@ -86,7 +86,7 @@ async def run_tests(file, test_data):
 def main(argv):
     # build test data
     config_dict = parse_json_to_dict('./test-config.json')
-    test_data = create_test_data(config_dict["drivers"], 'http://uniresolver.com/1.0/identifiers/')
+    test_data = create_test_data(config_dict["drivers"], 'https://uniresolver.io/1.0/identifiers/')
 
     # run tests
     here = pathlib.Path(__file__).parent
