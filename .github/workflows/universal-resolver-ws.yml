@@ -21,3 +21,5 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}      
     - name: Smoke Test
       uses:  ./ci/smoke-test
+      env:
+        HOST: ${{secrets.HOST}}

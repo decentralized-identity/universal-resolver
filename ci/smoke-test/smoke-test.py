@@ -88,30 +88,38 @@ async def run_tests(file, test_data):
 
 def main(argv):
     ingress = '../out/uni-resolver-ingress.yaml'
-    config = './test-config.json'
+    is_ingress_given = False
+    config = './config.json'
+    help_cmd = './smoke-test.py -h <uni-resolver-host> -c <uni-resolver-config> -i <ingress-file>'
+    full_uni_resolver_path = ''
+    path = '/1.0/identifiers/'
     try:
-        opts, args = getopt.getopt(argv, "hi:c:", ["ingress=", "config="])
+        opts, args = getopt.getopt(argv, "h:c:i:", ["host=", "config=", "ingress="])
     except getopt.GetoptError:
-        print('./smoke-test.py -i <ingress-file> -c <uni-resolver-config>')
+        print(help_cmd)
         sys.exit(2)
     for opt, arg in opts:
-        if opt == '-h':
-            print('./smoke-test.py -i <ingress-file> -c <uni-resolver-config>')
+        if opt == '--help':
+            print(help_cmd)
             sys.exit()
-        elif opt in ("-i", "--ingress"):
-            ingress = arg
+        elif opt in ("-h", "--host"):
+            full_uni_resolver_path = arg + path
         elif opt in ("-c", "--config"):
             config = arg
+        elif opt in ("-i", "--ingress"):
+            ingress = arg
 
     # read config
-    with open(ingress) as stream:
-        ingress = yaml.safe_load(stream)
-        host = ingress['spec']['rules'][0]['host']
-        uni_resolver_path = "http://" + host + "/1.0/identifiers/"
+    if is_ingress_given:
+        with open(ingress) as stream:
+            ingress = yaml.safe_load(stream)
+            host = ingress['spec']['rules'][0]['host']
+            full_uni_resolver_path = "http://" + host + path
 
     # build test data
+    print('Creating Testdata with path: ' + full_uni_resolver_path)
     config_dict = parse_json_to_dict(config)
-    test_data = create_test_data(config_dict["drivers"], uni_resolver_path)
+    test_data = create_test_data(config_dict["drivers"], full_uni_resolver_path)
 
     # run tests
     here = pathlib.Path(__file__).parent

@@ -11,5 +11,5 @@ ls -al /
 python --version
 
 cd ci/smoke-test
-python ./smoke-test.py
+python ./smoke-test.py --host "${HOST}"
 
