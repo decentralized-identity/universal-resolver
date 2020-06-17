@@ -21,8 +21,8 @@ logging.getLogger("chardet.charsetprober").disabled = True
 
 
 # Create Test Data START
-def parse_json_to_dict(path):
-    with open(path) as file:
+def parse_json_to_dict(config_file):
+    with open(config_file) as file:
         raw_config = json.load(file)
         return raw_config
 
@@ -31,14 +31,14 @@ def extract_did_method(did):
     return re.findall("(?<=:)(.*?)(?=:)", did)[0]
 
 
-def create_test_data(drivers_config, host):
+def create_test_data(drivers_config, full_path):
     test_data = []
     for driver in drivers_config:
         did: str = driver["testIdentifiers"][0]
         if did.startswith("did:"):
             driver_test_data = {
                 "method": extract_did_method(driver["testIdentifiers"][0]),
-                "url": host + driver["testIdentifiers"][0]
+                "url": full_path + driver["testIdentifiers"][0]
             }
             test_data.append(driver_test_data)
 
@@ -88,10 +88,10 @@ async def run_tests(file, test_data):
 
 def main(argv):
     github_action_workspace = '/github/workspace'
-    ingress = github_action_workspace + '/out/uni-resolver-ingress.yaml'
-    config = github_action_workspace + '/config.json'
+    ingress_file = github_action_workspace + '/out/uni-resolver-ingress.yaml'
+    config_file = github_action_workspace + '/config.json'
     help_cmd = './smoke-test.py -h <uni-resolver-host> -c <uni-resolver-config> -i <ingress-file>'
-    full_uni_resolver_path = ''
+    uni_resolver_host = ''
     path = '/1.0/identifiers/'
     try:
         opts, args = getopt.getopt(argv, "h:c:i:", ["host=", "config=", "ingress="])
@@ -103,23 +103,25 @@ def main(argv):
             print(help_cmd)
             sys.exit()
         elif opt in ("-h", "--host"):
-            full_uni_resolver_path = arg + path
+            uni_resolver_host = arg
         elif opt in ("-c", "--config"):
-            config = arg
+            config_file = arg
         elif opt in ("-i", "--ingress"):
-            ingress = arg
+            ingress_file = arg
 
     # read config
-    if not full_uni_resolver_path:
-        with open(ingress) as stream:
-            ingress = yaml.safe_load(stream)
-            host = ingress['spec']['rules'][0]['host']
-            full_uni_resolver_path = "http://" + host + path
+    if not uni_resolver_host:
+        print('Reading Host from ' + ingress_file)
+        with open(ingress_file) as stream:
+            ingress_file = yaml.safe_load(stream)
+            host = ingress_file['spec']['rules'][0]['host']
+            print('Found host in ingress file: ' + host)
+            uni_resolver_host = "http://" + host
 
     # build test data
-    print('Creating Testdata with path: ' + full_uni_resolver_path)
-    config_dict = parse_json_to_dict(config)
-    test_data = create_test_data(config_dict["drivers"], full_uni_resolver_path)
+    print('Creating Testdata with path: ' + uni_resolver_host)
+    config_dict = parse_json_to_dict(config_file=config_file)
+    test_data = create_test_data(drivers_config=config_dict["drivers"], full_path=uni_resolver_host + path)
 
     # run tests
     here = pathlib.Path(__file__).parent
