@@ -22,4 +22,4 @@ jobs:
     - name: Smoke Test
       uses:  ./ci/smoke-test
       env:
-        HOST: ${{secrets.HOST}}
+        HOST: http://uniresolver.com
