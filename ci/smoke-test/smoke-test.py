@@ -87,9 +87,10 @@ async def run_tests(file, test_data):
 # Run tests END
 
 def main(argv):
-    ingress = '../out/uni-resolver-ingress.yaml'
+    github_action_workspace = '/github/workspace'
+    ingress = github_action_workspace + '/out/uni-resolver-ingress.yaml'
     is_ingress_given = False
-    config = '/github/workspace/config.json'
+    config = github_action_workspace + '/config.json'
     help_cmd = './smoke-test.py -h <uni-resolver-host> -c <uni-resolver-config> -i <ingress-file>'
     full_uni_resolver_path = ''
     path = '/1.0/identifiers/'
