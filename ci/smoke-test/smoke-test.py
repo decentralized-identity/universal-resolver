@@ -89,7 +89,6 @@ async def run_tests(file, test_data):
 def main(argv):
     github_action_workspace = '/github/workspace'
     ingress = github_action_workspace + '/out/uni-resolver-ingress.yaml'
-    is_ingress_given = False
     config = github_action_workspace + '/config.json'
     help_cmd = './smoke-test.py -h <uni-resolver-host> -c <uni-resolver-config> -i <ingress-file>'
     full_uni_resolver_path = ''
@@ -111,7 +110,7 @@ def main(argv):
             ingress = arg
 
     # read config
-    if is_ingress_given:
+    if not full_uni_resolver_path:
         with open(ingress) as stream:
             ingress = yaml.safe_load(stream)
             host = ingress['spec']['rules'][0]['host']
