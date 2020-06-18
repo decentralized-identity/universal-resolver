@@ -56,7 +56,12 @@ async def fetch_html(url: str, session: ClientSession) -> str:
         print(html)
         return html
     else:
-        return "Success"
+        html = await resp.text()
+        response = json.loads(html)
+        if response['didDocument'] == 'null':
+            return "ERROR: Did not valid"
+        else:
+            return "Success"
 
 
 async def parse(url, session):
