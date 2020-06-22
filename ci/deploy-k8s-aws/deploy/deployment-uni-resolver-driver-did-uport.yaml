@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "uni-resolver-driver-did-uport"
+  namespace: "uni-resolver"
+  labels:
+    app: "uni-resolver-driver-did-uport"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "uni-resolver-driver-did-uport"
+  template:
+    metadata:
+      labels:
+        app: "uni-resolver-driver-did-uport"
+    spec:
+      containers:
+      - name: "uni-resolver-driver-did-uport"
+        image: uport/uni-resolver-driver-did-uport:1.3.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "uni-resolver-driver-did-uport"
+  namespace: "uni-resolver"
+spec:
+  type: NodePort
+  selector:
+    app: "uni-resolver-driver-did-uport"
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
