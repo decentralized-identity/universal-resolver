@@ -26,6 +26,10 @@ jobs:
       env:
         KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG_DATA}}
         AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-        AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}      
+        AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+    - name: Sleep for 60 seconds
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '60s'     
     - name: Smoke Test
       uses:  ./ci/smoke-test
