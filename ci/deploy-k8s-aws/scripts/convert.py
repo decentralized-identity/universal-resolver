@@ -7,18 +7,18 @@ import yaml
 import subprocess
 
 # CONSTANTS you may need to change:
-DEFAULT_DOMAIN_NAME = 'uniresolver.com'
+DEFAULT_DOMAIN_NAME = 'dev.uniresolver.io'
 UNIVERSAL_RESOLVER_FRONTEND_TAG = "universalresolver/uni-resolver-frontend:latest;"
 
 
 def initDeploymentDir(outputdir):
-  if os.path.exists(outputdir + '/' + 'deploy.sh'):
-    os.remove(outputdir + '/' +'deploy.sh')
-  if not os.path.exists(outputdir):
-    os.makedirs(outputdir)
-  fout = open(outputdir + '/' + 'deploy.sh', "a+")
-  fout.write('kubectl delete all --all -n uni-resolver\n')
-  fout.close()
+#  if os.path.exists(outputdir + '/' + 'deploy.sh'):
+#    os.remove(outputdir + '/' +'deploy.sh')
+#  if not os.path.exists(outputdir):
+#    os.makedirs(outputdir)
+#  fout = open(outputdir + '/' + 'deploy.sh', "a+")
+#  fout.write('kubectl delete all --all -n uni-resolver\n')
+#  fout.close()
   subprocess.call(['chmod', "a+x", outputdir + '/' + 'deploy.sh'])
 
 def addDeployment(containerName, deploymentFile, outputdir):
@@ -42,13 +42,15 @@ def generateDeploymentSpecs(containterTags, outputdir):
         deploymentFile = "deployment-%s.yaml" % containerName
         if (containterTag == UNIVERSAL_RESOLVER_FRONTEND_TAG.replace(';','')):
           containerPort = '80'
-        fout = open(outputdir + '/' + deploymentFile, "wt")
-        print('Writing file: ' + outputdir + '/' + deploymentFile + ' for containter: ' + containterTag)
-        for line in fin:
-            fout.write(line.replace('{{containerName}}', containerName).replace('{{containterTag}}', containterTag).replace('{{containerPort}}', containerPort))
-        addDeployment(containerName, deploymentFile, outputdir)
+        f = outputdir + '/' + deploymentFile
+        if (os.path.isfile(f) == False):
+          fout = open(outputdir + '/' + deploymentFile, "wt")
+          print('Writing file: ' + outputdir + '/' + deploymentFile + ' for containter: ' + containterTag)
+          for line in fin:
+              fout.write(line.replace('{{containerName}}', containerName).replace('{{containterTag}}', containterTag).replace('{{containerPort}}', containerPort))
+          #addDeployment(containerName, deploymentFile, outputdir)
+          fout.close()
         fin.close()
-        fout.close()
 
 def findInDir(key, dictionary):
     for k, v in dictionary.items():
@@ -122,7 +124,7 @@ def generateIngress(containterTags, outputdir):
 
 def main(argv):
    compose = 'docker-compose.yml'
-   outputdir = './out'
+   outputdir = './deploy'
    try:
       opts, args = getopt.getopt(argv,"hi:o:",["compose=","outputdir="])
    except getopt.GetoptError:
@@ -145,7 +147,7 @@ def main(argv):
    containerTags = getContainerTags(compose)
    print("Container tags: " + containerTags)
 
-   generateIngress(containerTags, outputdir)
+   #generateIngress(containerTags, outputdir)
 
    # we need also a spec for the frontend
    containerTags += UNIVERSAL_RESOLVER_FRONTEND_TAG

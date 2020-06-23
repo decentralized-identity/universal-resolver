@@ -1,0 +1,173 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "uni-resolver-web"
+  namespace: "uni-resolver"
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+  labels:
+    app: "uni-resolver-web"
+spec:
+  rules:
+    - host: dev.uniresolver.io
+      http:
+        paths:
+          - path: /1.0/*
+            backend:
+              serviceName: "uni-resolver-web"
+              servicePort: 8080    
+    - host: dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "uni-resolver-frontend"
+              servicePort: 80
+    - host: btcr.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "driver-did-btcr"
+              servicePort: 8080
+    - host: sov.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "driver-did-sov"
+              servicePort: 8080
+    - host: uport.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "uni-resolver-driver-did-uport"
+              servicePort: 8081
+    - host: trustbloc.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "driver-did-trustbloc"
+              servicePort: 8102
+    - host: echo.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "uni-resolver-driver-did-echo"
+              servicePort: 8080
+    - host: stack.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "driver-did-stack"
+              servicePort: 8080
+    - host: erc725.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "driver-did-erc725"
+              servicePort: 8080
+    - host: dns.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "driver-dns"
+              servicePort: 8080
+    - host: jolocom.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "jolocom-did-driver"
+              servicePort: 8080
+    - host: hacera.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "hacera-did-driver"
+              servicePort: 8080
+    - host: seraphid.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "seraph-id-did-driver"
+              servicePort: 8080
+    - host: ccp.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "driver-did-ccp"
+              servicePort: 8080
+    - host: work.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "work-did-driver"
+              servicePort: 8080
+    - host: ontid.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "ontid-driver"
+              servicePort: 8080
+    - host: kilt.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "kilt-did-driver"
+              servicePort: 8080
+    - host: evan.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "evan-did-driver"
+              servicePort: 8080
+    - host: factom.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "driver-did-factom"
+              servicePort: 8080
+    - host: key.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "driver-did-key"
+              servicePort: 8080
+    - host: dock.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "dock-did-driver"
+              servicePort: 8080
+    - host: v1.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "uni-resolver-did-v1-driver"
+              servicePort: 8080
+    - host: abt.dev.uniresolver.io
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "driver-did-abt"
+              servicePort: 8080
