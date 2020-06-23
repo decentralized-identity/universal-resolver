@@ -1,0 +1,17 @@
+name: CI/CD workflow for building Universal Resolver
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Docker Build and Push
+      uses: ./ci/docker-build-push
+      env:
+        MAVEN_SETTINGS: ${{secrets.MAVEN_SETTINGS}}
+        DOCKER_FILE: resolver/java/uni-resolver-web/docker/Dockerfile
+        CONTAINER_TAG: universalresolver/uni-resolver-web:latest
