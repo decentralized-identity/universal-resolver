@@ -34,3 +34,12 @@ The second step takes the image and deploys it (create or update) to the configu
     * (c) Deploy to Kubernetes
     * (d) Runs a test-container
 3. Manual and automated feedback
+
+## Open Issues regarding CI/CD
+
+* Use httpS for the dev-environment at http://dev.uniresolver.io
+* Make all drivers accessible via sub-domains eg. elem.dev.uniresolver.io
+* Bundle new release for resolver.identity.foundation (only working drivers)
+* Render Smoke Test results as HTML-page and host it via gh-pages
+* Update documentation
+
