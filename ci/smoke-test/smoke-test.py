@@ -7,7 +7,6 @@ import asyncio
 import logging
 from aiohttp import ClientSession
 from aiohttp import ClientTimeout
-import aiofiles
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
@@ -55,7 +54,6 @@ async def fetch_html(url: str, session: ClientSession) -> str:
         print(html)
         return html
     else:
-        return "Success"
         html = await resp.text()
         response = json.loads(html)
         if response['didDocument'] == 'null':
