@@ -13,7 +13,7 @@ echo "Root folder"
 ls -al /
 
 echo "#### Ingress file ####"
-less /github/workspace/deploy/uni-resolver-ingress.yaml
+cat /github/workspace/deploy/uni-resolver-ingress.yaml
 
 python --version
 
