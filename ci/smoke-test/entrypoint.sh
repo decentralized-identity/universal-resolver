@@ -10,6 +10,5 @@ ls -al /
 
 python --version
 
-cd ci/smoke-test
-python ./smoke-test.py
+python ./ci/smoke-test.py
 
