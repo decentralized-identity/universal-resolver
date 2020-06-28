@@ -12,6 +12,9 @@ ls -al deploy
 echo "Root folder"
 ls -al /
 
+echo "#### Ingress file ####"
+less /github/workspace/deploy/uni-resolver-ingress.yaml
+
 python --version
 
 cd ci/smoke-test
