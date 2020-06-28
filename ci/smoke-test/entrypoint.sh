@@ -2,13 +2,18 @@
 
 echo "Smoketest for the Universal Resolver"
 
-ls -al 
-
+echo "Current folder"
 pwd
+ls -al
 
+echo "Deployment folder"
+ls -al deploy
+
+echo "Root folder"
 ls -al /
 
 python --version
 
-python ./ci/smoke-test.py
+cd ci/smoke-test
+python ./smoke-test.py
 

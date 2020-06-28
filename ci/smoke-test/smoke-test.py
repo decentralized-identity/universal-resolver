@@ -92,7 +92,7 @@ async def run_tests(file, test_data):
 
 def main(argv):
     # build test data
-    config_dict = parse_json_to_dict('./test-config.json')
+    config_dict = parse_json_to_dict('./github/workspace/config.json')
     test_data = create_test_data(config_dict["drivers"], 'http://dev.uniresolver.io/1.0/identifiers/')
 
     # run tests
