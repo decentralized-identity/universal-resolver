@@ -29,6 +29,8 @@ jobs:
       with:
         time: '60s'
     - name: Smoke Test
-      uses:  BernhardFuchs/universal-resolver-k8s-deployment-smoke-tests@master
+      uses: BernhardFuchs/universal-resolver-k8s-deployment-smoke-tests@master
       with:
         host: http://uniresolver.com
+    - name: Aggregate Test Results
+      uses: BernhardFuchs/test-results-aggregator@master
