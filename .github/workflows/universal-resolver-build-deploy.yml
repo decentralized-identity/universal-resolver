@@ -27,7 +27,7 @@ jobs:
     - name: Sleep for 60 seconds
       uses: jakejarvis/wait-action@master
       with:
-        time: '60s'
+        time: '120s'
     - name: Smoke Test
       uses: BernhardFuchs/universal-resolver-k8s-deployment-smoke-tests@master
       with:
