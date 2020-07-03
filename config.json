@@ -142,6 +142,11 @@
 			"pattern": "^(did:trustbloc:.+)$",
 			"url": "http://driver-did-trustbloc:8102/resolveDID?did=$1",
 			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiCiHVdJsCySvw2JHHGnpIxege4UF0Zuu1Y6Nd5n1FIBVw" ]
+		},{
+			"pattern": "^(did:sirius:.+)$",
+			"image": "proximax/tsjs-did-sirius-id-driver",
+			"tag": "latest",
+			"testIdentifiers": [ "did:sirius:2VhYrbauc2cCx9ZpCp5wrDtK7HKf7jrsvgoKBD4KgK" ]
 		}
 	]
 }
