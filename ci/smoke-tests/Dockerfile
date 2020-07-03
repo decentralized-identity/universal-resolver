@@ -5,15 +5,20 @@ LABEL "com.github.actions.description"="Smoke Test for testing the Universal Res
 LABEL "com.github.actions.icon"="mic"
 LABEL "com.github.actions.color"="blue"
 LABEL "version"="1.0.0"
-LABEL "repository"="https://github.com/decentralized-identity/universal-resolver"
+LABEL "repository"="https://github.com/BernhardFuchs/universal-resolver-k8s-deployment-smoke-tests"
 LABEL "homepage"="https://uniresolver.io"
-LABEL "maintainer"="Philipp Potisk <philipp.potisk@danubetech.com>"
+LABEL "maintainer"="Bernhard Fuchs <bernhard.fuchs@danubetech.com>"
 
 RUN apt-get update && \
     apt-get upgrade -y
 
-COPY . /
+WORKDIR /smoke-tests/
+
+COPY app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY app/smoke-test.py .
+
+COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

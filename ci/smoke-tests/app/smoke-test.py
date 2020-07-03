@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 import sys
-import pathlib
 from time import gmtime, strftime
 import logging
 import re
 import json
-import yaml
 import getopt
 import asyncio
 from aiohttp import ClientSession
@@ -48,78 +46,83 @@ def create_test_data(drivers_config, host):
 # Create Test Data END
 
 # Run tests START
-async def fetch_html(url: str, session: ClientSession) -> str:
+async def fetch_html(url: str, session: ClientSession):
     resp = await session.request(method="GET", url=url)
+    html = await resp.text()
     logger.info("Got response [%s] for URL: %s", resp.status, url)
-    if resp.status != 200:
-        html = await resp.text()
-        print(html)
-        return html
-    else:
-        return "Success"
+    logger.info("With body:\n %s", html)
+    return {"status": resp.status, "body": html}
 
 
-async def parse(url, session):
-    result = await fetch_html(url=url, session=session)
-    return result
-
-
-async def write_one(file, data, session):
+async def write_one(results, data, session):
     url = data['url']
     try:
-        res = await parse(url, session=session)
-        logger.debug(res)
+        res = await fetch_html(url=url, session=session)
+        results.update({url: res})
     except asyncio.TimeoutError:
-        logger.info("Timeout Error for %s", url)
-    logger.info("----------------------------------------------------------------------")
+        results.update({
+            url: {
+                "status": 504,
+                "body": "Gateway Timeout error"
+            }
+        })
+        logger.info("Gateway Timeout error for %s", url)
+    print("\n-----------------------------------------------------------------------------------------------\n")
 
 
-async def run_tests(file, test_data):
+async def run_tests(test_data):
     async with ClientSession() as session:
         tasks = []
+        results = {}
         for data in test_data:
             tasks.append(
-                write_one(file=file, data=data, session=session)
+                write_one(results, data=data, session=session)
             )
         await asyncio.gather(*tasks)
+        return results
 
 
 # Run tests END
 
 def main(argv):
-    ingress = '/github/workspace/deploy/uni-resolver-ingress.yaml'
+    help_text = './smoke-test.py -i <ingress-file> -c <uni-resolver-config> -o <out-folder>'
+    host = 'https://dev.uniresolver.io'
     config = '/github/workspace/config.json'
+    out_folder = './'
     try:
-        opts, args = getopt.getopt(argv, "hi:c:", ["ingress=", "config="])
+        opts, args = getopt.getopt(argv, "h:c:o", ["host=", "config=", "out="])
     except getopt.GetoptError:
-        print('./smoke-test.py -i <ingress-file> -c <uni-resolver-config>')
+        print(help_text)
         sys.exit(2)
     for opt, arg in opts:
-        if opt == '-h':
-            print('./smoke-test.py -i <ingress-file> -c <uni-resolver-config>')
+        if opt == '--help':
+            print(help_text)
             sys.exit()
-        elif opt in ("-i", "--ingress"):
-            ingress = arg
+        elif opt in ("-h", "--host"):
+            host = arg
         elif opt in ("-c", "--config"):
             config = arg
+        elif opt in ("-o", "--out"):
+            print("ARG:" + arg)
+            out_folder = arg + '/'
 
-    # read config
-    with open(ingress) as stream:
-        ingress = yaml.safe_load(stream)
-        host = ingress['spec']['rules'][0]['host']
-        uni_resolver_path = "http://" + host + "/1.0/identifiers/"
+    uni_resolver_path = host + "/1.0/identifiers/"
+    print('Resolving for: ' + uni_resolver_path)
 
     # build test data
     config_dict = parse_json_to_dict(config)
     test_data = create_test_data(config_dict["drivers"], uni_resolver_path)
 
     # run tests
-    here = pathlib.Path(__file__).parent
-    timestr = strftime("%d-%m-%Y_%H-%M-%S-UTC", gmtime())
-    filename = "result-" + timestr + ".json"
-    out_path = here.joinpath(filename)
+    results = asyncio.run(run_tests(test_data=test_data))
 
-    asyncio.run(run_tests(file=out_path, test_data=test_data))
+    timestr = strftime("%d-%m-%Y_%H-%M-%S-UTC", gmtime())
+    filename = "smoke-tests-result-" + timestr + ".json"
+    print('Out folder: ' + out_folder)
+    out_path = out_folder + filename
+    print('Writing to path: ' + out_path)
+    with open(out_path, "a") as f:
+        f.write(json.dumps(results, indent=4, sort_keys=True))
 
 
 if __name__ == "__main__":
