@@ -142,6 +142,12 @@
 			"pattern": "^(did:trustbloc:.+)$",
 			"url": "http://driver-did-trustbloc:8102/resolveDID?did=$1",
 			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiCiHVdJsCySvw2JHHGnpIxege4UF0Zuu1Y6Nd5n1FIBVw" ]
+		},
+		{
+			"pattern": "^(did:trust:.+)$",
+			"image": "bjwswang/driver-did-trust",
+			"tag": "latest",
+			"testIdentifiers": [ "did:trust:cert.EiCd1SYQYXVGCb2Cs2wu3d-UBZNm0xb7kY5koZ84tp5z6Q","did:trust:brand.EiDB7APXWffjpqDeW30OtM5s44mckQ5j1n01YHZTuvqo8w" ]
 		}
 	]
 }

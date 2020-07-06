@@ -117,6 +117,11 @@ services:
     ports:
       - "8102:8080"
     command: start
+  driver-did-trust:
+    container_name: driver-did-trust
+    image: bjwswang/driver-did-trust:latest
+    ports:
+      - "8104:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
