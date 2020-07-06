@@ -142,6 +142,12 @@
 			"pattern": "^(did:trustbloc:.+)$",
 			"url": "http://driver-did-trustbloc:8102/resolveDID?did=$1",
 			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiCiHVdJsCySvw2JHHGnpIxege4UF0Zuu1Y6Nd5n1FIBVw" ]
+		},{
+			"pattern": "^(did:mpg:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
+			"image": "mpgshankr/driver-did-mpg",
+			"imageProperties": "true",
+			"tag": "latest",
+			"testIdentifiers": [ "did:mpg:7PGGnRdvKKFftSXU3Jw75Vk5npfg" ]
 		}
 	]
 }
