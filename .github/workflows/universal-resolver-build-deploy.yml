@@ -2,6 +2,8 @@ name: Build/Deploy workflow
 
 on:
   push:
+    paths-ignore:
+      - 'docs/**'
     branches:
       - master
 
