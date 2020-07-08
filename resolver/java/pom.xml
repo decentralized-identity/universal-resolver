@@ -33,11 +33,26 @@
 		<system>GitHub Issues</system>
 	</issueManagement>
 
+	<repositories>
+		<repository>
+			<id>danubtech-maven-snapshots</id>
+			<url>https://repo.danubetech.com/repository/maven-snapshots/</url>
+		</repository>
+		<repository>
+			<id>danubtech-maven-releases</id>
+			<url>https://repo.danubetech.com/repository/maven-releases/</url>
+		</repository>
+	</repositories>
+
 	<distributionManagement>
-		<site>
-			<id>github-project-site</id>
-			<url>scm:git:ssh://git@github.com/decentralized-identity/uni-resolver.git:gh-pages</url>
-		</site>
+		<snapshotRepository>
+			<id>danubetech-maven-snapshots</id>
+			<url>https://repo.danubetech.com/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>danubetech-maven-releases</id>
+			<url>https://repo.danubetech.com/repository/maven-releases/</url>
+		</repository>
 	</distributionManagement>
 
 	<scm>
@@ -210,7 +225,7 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.13.1</version>
+			<version>2.13.2</version>
 		</dependency>
 
 	</dependencies>
