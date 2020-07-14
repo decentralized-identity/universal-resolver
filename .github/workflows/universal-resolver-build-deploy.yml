@@ -2,6 +2,8 @@ name: Build/Deploy workflow
 
 on:
   push:
+    paths-ignore:
+      - 'docs/**'
     branches:
       - master
 
@@ -27,6 +29,8 @@ jobs:
     - name: Sleep for 60 seconds
       uses: jakejarvis/wait-action@master
       with:
-        time: '60s'     
+        time: '120s'
     - name: Smoke Test
-      uses:  ./ci/smoke-test
+      uses: ./ci/smoke-tests
+      with:
+        host: http://dev.uniresolver.io
