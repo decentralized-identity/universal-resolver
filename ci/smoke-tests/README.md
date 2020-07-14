@@ -40,4 +40,4 @@ Example can be seen in the [uni-resolver workflow configuration](https://github.
     
 ### Run container with
 
-    docker run -it --rm -e INGRESS_FILE=<path-to-uniresolver-ingress.yaml> -e CONFIG_FILE=<path-to-config.json> --name smoke-test smoke-test
+    docker run -it --rm -e HOST=<host-where-resolver-is-deployed> -e CONFIG_FILE=<path-to-config.json> --name smoke-test smoke-test

@@ -5,7 +5,7 @@ LABEL "com.github.actions.description"="Smoke Test for testing the Universal Res
 LABEL "com.github.actions.icon"="mic"
 LABEL "com.github.actions.color"="blue"
 LABEL "version"="1.0.0"
-LABEL "repository"="https://github.com/BernhardFuchs/universal-resolver-k8s-deployment-smoke-tests"
+LABEL "repository"="https://github.com/decentralized-identity/universal-resolver-k8s-deployment-smoke-tests"
 LABEL "homepage"="https://uniresolver.io"
 LABEL "maintainer"="Bernhard Fuchs <bernhard.fuchs@danubetech.com>"
 
