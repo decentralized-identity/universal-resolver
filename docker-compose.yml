@@ -125,6 +125,10 @@ services:
     image: mpgshankr/driver-did-mpg:latest
     ports:
       - "8103:8080"
+  uni-resolver-driver-did-io:
+    image: iotex/uni-resolver-driver-did-io:latest
+    ports:
+      - "8104:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
