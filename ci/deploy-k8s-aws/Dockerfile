@@ -19,7 +19,7 @@ RUN apt-get update -y && \
     apt-get -y clean && apt-get -y autoclean && apt-get -y autoremove && \
     pip install setuptools awscli
 
-COPY app-specs ./app-specs
-COPY scripts/. ./
-RUN chmod +x ./entrypoint.sh
+COPY app-specs /app-specs
+COPY scripts/. /
+RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
