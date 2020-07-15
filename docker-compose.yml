@@ -121,6 +121,10 @@ services:
     image: proximax/tsjs-did-sirius-id-driver:latest
     ports:
       - "8105:8080"
+  driver-did-mpg:
+    image: mpgshankr/driver-did-mpg:latest
+    ports:
+      - "8103:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:

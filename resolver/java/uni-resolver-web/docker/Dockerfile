@@ -10,10 +10,6 @@ USER root
 RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -DrepoUrl=https://repo.maven.apache.org/maven2 -Dartifact=org.eclipse.jetty:jetty-maven-plugin:9.4.18.v20190429
 RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -DrepoUrl=https://repo.maven.apache.org/maven2 -Dartifact=org.apache.maven.plugins:maven-war-plugin:3.2.2
 
-ARG GITHUB_READ_PACKAGES_OWNER
-ARG GITHUB_READ_PACKAGES_TOKEN
-ADD ./resolver/java/settings.xml /root/.m2/
-
 # build uni-resolver-web
 
 ADD ./resolver/java/ /opt/uni-resolver-java

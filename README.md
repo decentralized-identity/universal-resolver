@@ -12,9 +12,6 @@ See https://uniresolver.io/ for a publicly hosted instance of a Universal Resolv
 
 You can deploy the Universal Resolver on your local machine by cloning this Github repository, and using `docker-compose` to build and run the Universal Resolver as well as its drivers.
 
-Before running docker-compose, please place a valid Personal Access Token for GitHub in file [resolver/java/settings.xml](https://github.com/decentralized-identity/universal-resolver/blob/master/resolver/java/settings.xml), as explained here [Creating a personal access token for the command line](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Only the scope **read:packages** is required.
-
-
 	git clone https://github.com/decentralized-identity/universal-resolver
 	cd universal-resolver/
 	docker-compose -f docker-compose.yml pull
@@ -48,6 +45,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:abt:z116ygT18P67xBp3scBtZLU6xVoDy268bgnY
 	curl -X GET http://localhost:8080/1.0/identifiers/did:trustbloc:testnet.trustbloc.dev:EiCiHVdJsCySvw2JHHGnpIxege4UF0Zuu1Y6Nd5n1FIBVw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sirius:2VhYrbauc2cCx9ZpCp5wrDtK7HKf7jrsvgoKBD4KgK
+	curl -X GET http://localhost:8080/1.0/identifiers/did:mpg:7PGGnRdvKKFftSXU3Jw75Vk5npfg
+
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
