@@ -127,9 +127,9 @@ def generate_ingress(container_tags, outputdir):
 
 
 def copy_app_deployment_specs(outputdir):
-    copy('./app-specs/deployment-uni-resolver-frontend.yaml', outputdir + '/deployment-uni-resolver-frontend.yaml')
+    copy('/app-specs/deployment-uni-resolver-frontend.yaml', outputdir + '/deployment-uni-resolver-frontend.yaml')
     add_deployment('deployment-uni-resolver-frontend.yaml', outputdir)
-    copy('./app-specs/deployment-uni-resolver-web.yaml', outputdir + '/deployment-uni-resolver-web.yaml')
+    copy('/app-specs/deployment-uni-resolver-web.yaml', outputdir + '/deployment-uni-resolver-web.yaml')
     add_deployment('deployment-uni-resolver-web.yaml', outputdir)
 
 
