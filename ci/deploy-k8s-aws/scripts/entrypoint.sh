@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Kubernetes Deployment of the Universal Resolver"
+echo "#### Kubernetes Deployment of the Universal Resolver"
 
 set -e
 
