@@ -21,5 +21,5 @@ RUN apt-get update -y && \
 
 COPY app-specs ./app-specs
 COPY scripts/. ./
-RUN chmod +x /entrypoint.sh
+RUN chmod +x ./entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
