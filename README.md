@@ -44,7 +44,9 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dock:5FXqofpV7dsuki925U1dSzDvBuQbaci5yWTQGVWRQ7bdQP5p
 	curl -X GET http://localhost:8080/1.0/identifiers/did:abt:z116ygT18P67xBp3scBtZLU6xVoDy268bgnY
 	curl -X GET http://localhost:8080/1.0/identifiers/did:trustbloc:testnet.trustbloc.dev:EiCiHVdJsCySvw2JHHGnpIxege4UF0Zuu1Y6Nd5n1FIBVw
+	curl -X GET http://localhost:8080/1.0/identifiers/did:sirius:2VhYrbauc2cCx9ZpCp5wrDtK7HKf7jrsvgoKBD4KgK
 	curl -X GET http://localhost:8080/1.0/identifiers/did:mpg:7PGGnRdvKKFftSXU3Jw75Vk5npfg
+
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
@@ -79,7 +81,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-key](https://github.com/decentralized-identity/uni-resolver-driver-did-key) | 1.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.7](https://w3c-ccg.github.io/did-method-key/) | [universalresolver/driver-did-key](https://hub.docker.com/r/universalresolver/driver-did-key) |
 | [did-dock](https://github.com/docknetwork/dock-did-driver) | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/docknetwork/dock-did-driver/blob/master/Dock%20DID%20method%20specification.md) | [docknetwork/dock-did-driver](https://hub.docker.com/r/docknetwork/dock-did-driver) |
 | [did-trustbloc](https://github.com/trustbloc/trustbloc-did-method) | 0.1.3 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/trustbloc/trustbloc-did-method/blob/v0.1.3/docs/spec/trustbloc-did-method.md) | [trustbloc/driver-did-trustbloc](https://github.com/trustbloc/trustbloc-did-method/packages/212043)
-
+| [did-sirius](https://gitlab.com/proximax-enterprise/siriusid/tsjs-did-sirius-id-driver) | 0.0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.2](https://gitlab.com/proximax-enterprise/siriusid/sirius-id-specs/-/blob/master/docs/did-method-spec.md) | [proximax-enterprise/tsjs-did-sirius-id-driver](https://hub.docker.com/r/proximax/tsjs-did-sirius-id-driver)
 ## More Information
 
  * [Driver Development](/docs/driver-development.md)

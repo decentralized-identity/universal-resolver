@@ -143,6 +143,11 @@
 			"url": "http://driver-did-trustbloc:8102/resolveDID?did=$1",
 			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiCiHVdJsCySvw2JHHGnpIxege4UF0Zuu1Y6Nd5n1FIBVw" ]
 		},{
+			"pattern": "^(did:sirius:.+)$",
+			"image": "proximax/tsjs-did-sirius-id-driver",
+			"tag": "latest",
+			"testIdentifiers": [ "did:sirius:2VhYrbauc2cCx9ZpCp5wrDtK7HKf7jrsvgoKBD4KgK" ]
+    },{
 			"pattern": "^(did:mpg:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
 			"image": "mpgshankr/driver-did-mpg",
 			"imageProperties": "true",
