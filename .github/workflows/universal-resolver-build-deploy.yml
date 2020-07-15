@@ -26,7 +26,7 @@ jobs:
         KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG_DATA}}
         AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
         AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-    - name: Sleep for 60 seconds
+    - name: Sleep for 120 seconds
       uses: jakejarvis/wait-action@master
       with:
         time: '120s'
