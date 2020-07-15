@@ -126,24 +126,24 @@ def generate_ingress(container_tags, outputdir):
     fout.close()
 
 
-def copy_app_deployment_specs():
-    copy('./app-specs/deployment-uni-resolver-frontend.yaml', './out/deployment-uni-resolver-frontend.yaml')
-    add_deployment('deployment-uni-resolver-frontend.yaml', './out')
-    copy('./app-specs/deployment-uni-resolver-web.yaml', './out/deployment-uni-resolver-web.yaml')
-    add_deployment('deployment-uni-resolver-web.yaml', './out')
+def copy_app_deployment_specs(outputdir):
+    copy('./app-specs/deployment-uni-resolver-frontend.yaml', outputdir + '/deployment-uni-resolver-frontend.yaml')
+    add_deployment('deployment-uni-resolver-frontend.yaml', outputdir)
+    copy('./app-specs/deployment-uni-resolver-web.yaml', outputdir + '/deployment-uni-resolver-web.yaml')
+    add_deployment('deployment-uni-resolver-web.yaml', outputdir)
 
 
 def main(argv):
     compose = 'docker-compose.yml'
-    outputdir = './out'
+    outputdir = './deploy'
     try:
         opts, args = getopt.getopt(argv, "hi:o:", ["compose=", "outputdir="])
     except getopt.GetoptError:
-        print('./convert.py -i <inputfile> -o <outputdir>')
+        print('./prepare-deployment.py -i <inputfile> -o <outputdir>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('./convert.py -i <inputfile> -o <outputdir>')
+            print('./prepare-deployment.py -i <inputfile> -o <outputdir>')
             sys.exit()
         elif opt in ("-i", "--compose"):
             compose = arg
@@ -164,7 +164,7 @@ def main(argv):
     generate_deployment_specs(container_tags, outputdir)
 
     # copy app deployment specs
-    copy_app_deployment_specs()
+    copy_app_deployment_specs(outputdir)
 
     # copy namespace files
     copy('./namespace-setup.yaml', './deploy/namespace-setup.yaml')
