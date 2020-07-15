@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: "{{containerName}}"
-        image: {{containterTag}}
+        image: {{containerTag}}
         imagePullPolicy: Always
         ports:
         - containerPort: {{containerPort}}
