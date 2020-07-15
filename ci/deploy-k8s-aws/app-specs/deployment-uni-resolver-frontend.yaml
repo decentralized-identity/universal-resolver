@@ -4,8 +4,8 @@ metadata:
   name: uni-resolver-frontend
   namespace: uni-resolver
   labels:
-    app: uni-resolver-frontend
-    type: driver
+    app: uni-resolver
+    type: frontend
 spec:
   replicas: 1
   selector:
@@ -18,16 +18,21 @@ spec:
     spec:
       containers:
       - name: uni-resolver-frontend
-        image: universalresolver/uni-resolver-frontend:latest
+        image: universalresolver/uni-resolver-frontend
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+        env:
+          - name: BACKEND_URL
+            valueFrom:
+              configMapKeyRef:
+                name: uni-resolver-frontend
+                key: backend_url
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: uni-resolver-frontend
-  namespace: uni-resolver
 spec:
   type: NodePort
   selector:
@@ -36,3 +41,10 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: uni-resolver-frontend
+data:
+  backend_url: http://dev.uniresolver.io/
