@@ -15,7 +15,7 @@ public class TestLocalUniResolver {
 		uniResolver.getDriver(DidSovDriver.class).setLibIndyPath("./sovrin/lib/");
 		uniResolver.getDriver(DidSovDriver.class).setPoolConfigs("_;./sovrin/mainnet.txn;staging;./sovrin/stagingnet.txn;builder;./sovrin/buildernet.txn;danube;./sovrin/danube.txn");
 		uniResolver.getDriver(DidSovDriver.class).setPoolVersions("_;2;staging;2;builder;2;danube;2");
-		uniResolver.getDriver(DidBtcrDriver.class).setBitcoinConnection(BlockcypherAPIBitcoinConnection.get());
+		uniResolver.getDriver(DidBtcrDriver.class).setBitcoinConnectionTestnet(BlockcypherAPIBitcoinConnection.get());
 
 		ResolveResult ResolveResult1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw");
 		System.out.println(ResolveResult1.toJson());
