@@ -130,6 +130,10 @@ services:
     image: bjwswang/driver-did-trust:latest
     ports:
       - "8106:8080"
+  uni-resolver-driver-did-io:
+    image: iotex/uni-resolver-driver-did-io:latest
+    ports:
+      - "8104:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
