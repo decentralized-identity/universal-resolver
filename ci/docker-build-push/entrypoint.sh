@@ -13,7 +13,6 @@ echo "- GITHUB_REF: ${GITHUB_REF}";
 echo "- GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}";
 echo "- GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}";
 echo "- GITHUB_ACTOR: ${GITHUB_ACTOR}";
-echo "- MAVEN_SETTINGS: ${MAVEN_SETTINGS}";
 
 if [[ -z "$GITHUB_EVENT_NAME" ]]; then
   echo "Set the GITHUB_EVENT_NAME env variable."
@@ -46,15 +45,6 @@ ls -al
 if [ -n "${BUILD_PATH}" ]
 then
    cd ${BUILD_PATH}
-fi
-
-if [ -n "${MAVEN_SETTINGS}" ]
-then
-   echo "Generating Maven settings.xml file"
-   echo "$MAVEN_SETTINGS" | base64 -d > settings.xml
-   # this directory is needed for the universal resolver
-   mkdir -p ./resolver/java/
-   echo "$MAVEN_SETTINGS" | base64 -d > ./resolver/java/settings.xml
 fi
 
 ls -al
