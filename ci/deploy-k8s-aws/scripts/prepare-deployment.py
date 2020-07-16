@@ -128,7 +128,9 @@ def generate_ingress(container_tags, outputdir):
 
 
 def copy_app_deployment_specs(outputdir):
-    print('#### Current working path' + pathlib.Path().absolute())
+    print('#### Current working path')
+    working_path = pathlib.Path().absolute()
+    print(working_path)
     copy('/app-specs/deployment-uni-resolver-frontend.yaml', outputdir + '/deployment-uni-resolver-frontend.yaml')
     add_deployment('deployment-uni-resolver-frontend.yaml', outputdir)
     copy('/app-specs/deployment-uni-resolver-web.yaml', outputdir + '/deployment-uni-resolver-web.yaml')
@@ -136,7 +138,9 @@ def copy_app_deployment_specs(outputdir):
 
 
 def main(argv):
-    print('#### Current script path' + pathlib.Path(__file__).parent.absolute())
+    print('#### Current script path')
+    absolute_path = pathlib.Path(__file__).parent.absolute()
+    print(absolute_path)
 
     compose = 'docker-compose.yml'
     outputdir = './deploy'
