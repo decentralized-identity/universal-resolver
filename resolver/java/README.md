@@ -7,7 +7,7 @@ This is a Java implementation of a Universal Resolver. See [universal-resolver](
 Maven build:
 
 	cd resolver/java
-	mvn --settings settings.xml clean install
+	mvn clean install
 
 ## Local Resolver
 

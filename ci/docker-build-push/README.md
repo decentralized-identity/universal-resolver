@@ -7,7 +7,6 @@ GitHub Action for building and publishing a Docker container to Docker Hub.
 
 - `DOCKER_USERNAME` - *Required* Name of Docker Hub user which has **Write access**
 - `DOCKER_PASSWORD` - *Required* Password of the Docker Hub user
-- `MAVEN_SETTINGS` - *Optional* Base64 encoded Maven settings file
 
 Setup secrets in your GitHub project at "Settings > Secrets"
 

@@ -15,7 +15,6 @@ jobs:
     - name: Docker Build and Push
       uses: ./ci/docker-build-push
       env:
-        MAVEN_SETTINGS: ${{secrets.MAVEN_SETTINGS}}
         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
         DOCKER_FILE: resolver/java/uni-resolver-web/docker/Dockerfile
