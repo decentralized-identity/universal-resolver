@@ -19,6 +19,11 @@ ls -al .
 python --version
 python prepare-deployment.py
 
+echo "Deployment Folder"
 cd deploy
-ls -al
+ls -al .
+
+echo "### Deploying following Specs:"
+cat deploy.sh
+
 ./deploy.sh
