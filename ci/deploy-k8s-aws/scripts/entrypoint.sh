@@ -1,30 +1,29 @@
 #!/bin/sh
 
-echo "Kubernetes Deployment of the Universal Resolver"
+echo "#### Kubernetes Deployment of the Universal Resolver ####"
 
 set -e
 
-pwd
+echo "Root folder"
+ls -al /
+
 ls -al
 echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
 export KUBECONFIG=/tmp/config
 
-#kubectl version --client --short
+cp /prepare-deployment.py /k8s-template.yaml -r /app-specs -r /namespace . 2>/dev/null || :
 
-#kubectl get all --all-namespaces
-
-cp /convert.py /k8s-template.yaml . 2>/dev/null || :
-cp -r /deploy .
-
+echo "Current workspace Folder"
+pwd
+ls -al .
 python --version
+python prepare-deployment.py
 
-python convert.py
-
+echo "Deployment Folder"
 cd deploy
-ls -al
+ls -al .
+
+echo "### Deploying following Specs:"
+cat deploy.sh
+
 ./deploy.sh
-
-#kubectl apply -f uni-resolver-ingress.yaml
-
-#kubectl get all --all-namespaces
-

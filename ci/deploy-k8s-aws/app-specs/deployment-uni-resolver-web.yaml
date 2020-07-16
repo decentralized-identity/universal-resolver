@@ -1,23 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{containerName}}
+  name: uni-resolver-web
   namespace: uni-resolver
   labels:
-    app: {{containerName}}
+    app: uni-resolver
+    type: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{containerName}}
+      app: uni-resolver-web
   template:
     metadata:
       labels:
-        app: {{containerName}}
+        app: uni-resolver-web
     spec:
       containers:
-      - name: {{containerName}}
-        image: {{containerTag}}
+      - name: uni-resolver-web
+        image: universalresolver/uni-resolver-web
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -25,12 +26,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{containerName}}
-  namespace: uni-resolver
+  name: uni-resolver-web
 spec:
   type: NodePort
   selector:
-    app: {{containerName}}
+    app: uni-resolver-web
   ports:
     - protocol: TCP
       port: 8080

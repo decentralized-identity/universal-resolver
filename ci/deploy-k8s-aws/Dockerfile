@@ -1,7 +1,7 @@
 FROM python:3.8.0-slim
 
 LABEL "name"="Deployment of the Universal Resolver to a Kubernetes Cluster"
-LABEL "maintainer"="Phil <philipp.potisk@danubetech.com>"
+LABEL "maintainer"="Bernhard Fuchs <bernhard.fuchs@danubetech.com>"
 LABEL "version"="1.0.0"
 
 LABEL "com.github.actions.name"="GitHub Action for deploying the Universal Resolver"
@@ -19,7 +19,8 @@ RUN apt-get update -y && \
     apt-get -y clean && apt-get -y autoclean && apt-get -y autoremove && \
     pip install setuptools awscli
 
-COPY deploy/ /deploy/
-COPY scripts/* /
+COPY app-specs /app-specs
+COPY namespace /namespace
+COPY scripts /
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
