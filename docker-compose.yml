@@ -125,6 +125,11 @@ services:
     image: mpgshankr/driver-did-mpg:latest
     ports:
       - "8103:8080"
+  driver-did-trust:
+    container_name: driver-did-trust
+    image: bjwswang/driver-did-trust:latest
+    ports:
+      - "8106:8080"
   uni-resolver-driver-did-io:
     image: iotex/uni-resolver-driver-did-io:latest
     ports:
