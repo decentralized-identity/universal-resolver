@@ -5,12 +5,22 @@
 	<artifactId>uni-resolver-examples</artifactId>
 	<packaging>jar</packaging>
 	<name>uni-resolver-examples</name>
-
 	<parent>
 		<groupId>decentralized-identity</groupId>
 		<artifactId>uni-resolver</artifactId>
 		<version>0.2-SNAPSHOT</version>
 	</parent>
+
+	<repositories>
+		<repository>
+			<id>danubtech-maven-snapshots</id>
+			<url>https://repo.danubetech.com/repository/maven-snapshots/</url>
+		</repository>
+		<repository>
+			<id>danubtech-maven-releases</id>
+			<url>https://repo.danubetech.com/repository/maven-releases/</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -27,26 +37,14 @@
 		</dependency>
 		<dependency>
 			<groupId>decentralized-identity</groupId>
-			<artifactId>uni-resolver-driver-did-work</artifactId>
-			<version>0.1.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>decentralized-identity</groupId>
-			<artifactId>uni-resolver-driver-did-stack</artifactId>
-			<version>0.1.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>decentralized-identity</groupId>
 			<artifactId>uni-resolver-driver-did-sov</artifactId>
-			<version>0.1.0</version>
+			<version>0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>decentralized-identity</groupId>
 			<artifactId>uni-resolver-driver-did-btcr</artifactId>
-			<version>0.1.0</version>
+			<version>0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
