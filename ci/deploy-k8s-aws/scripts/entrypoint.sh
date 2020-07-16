@@ -13,7 +13,7 @@ ls -al
 echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
 export KUBECONFIG=/tmp/config
 
-cp /prepare-deployment.py /k8s-template.yaml .
+cp /prepare-deployment.py /k8s-template.yaml /app-specs/. .
 
 ls -al .
 python --version
