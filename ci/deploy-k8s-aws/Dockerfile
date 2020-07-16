@@ -20,6 +20,7 @@ RUN apt-get update -y && \
     pip install setuptools awscli
 
 COPY app-specs /app-specs
-COPY scripts/. /
+COPY namespace /namespace
+COPY scripts /
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
