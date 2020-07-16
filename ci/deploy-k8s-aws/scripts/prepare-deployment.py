@@ -21,6 +21,7 @@ def init_deployment_dir(outputdir):
     fout = open(outputdir + '/' + 'deploy.sh', "a+")
     fout.write('kubectl delete all --all -n uni-resolver\n')
     fout.write('./namespace-setup.sh\n')
+    fout.write('kubectl apply -n uni-resolver -f uni-resolver-ingress.yaml\n')
     fout.close()
     subprocess.call(['chmod', "a+x", outputdir + '/' + 'deploy.sh'])
 
@@ -128,7 +129,7 @@ def generate_ingress(container_tags, outputdir):
 
 
 def copy_app_deployment_specs(outputdir):
-    print('#### Current working path')
+    print('#### Current python working path')
     working_path = pathlib.Path().absolute()
     print(working_path)
     copy('/app-specs/deployment-uni-resolver-frontend.yaml', outputdir + '/deployment-uni-resolver-frontend.yaml')
@@ -138,7 +139,7 @@ def copy_app_deployment_specs(outputdir):
 
 
 def main(argv):
-    print('#### Current script path')
+    print('#### Current python script path')
     absolute_path = pathlib.Path(__file__).parent.absolute()
     print(absolute_path)
 
