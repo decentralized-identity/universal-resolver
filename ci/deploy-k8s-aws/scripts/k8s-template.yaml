@@ -20,7 +20,7 @@ spec:
         image: {{containerTag}}
         imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+        - containerPort: {{containerPort}}
 ---
 apiVersion: v1
 kind: Service
@@ -33,5 +33,5 @@ spec:
     app: {{containerName}}
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: {{containerPort}}
+      targetPort: {{containerPort}}

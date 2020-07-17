@@ -115,7 +115,7 @@ services:
       DID_METHOD_TLS_SYSTEMCERTPOOL: ${DID_METHOD_TLS_SYSTEMCERTPOOL}
       DID_METHOD_MODE: ${DID_METHOD_MODE}
     ports:
-      - "8102:8080"
+      - "8102:8102"
     command: start
   tsjs-did-sirius-id-driver:
     image: proximax/tsjs-did-sirius-id-driver:latest
