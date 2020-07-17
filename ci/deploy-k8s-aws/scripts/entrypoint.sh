@@ -7,7 +7,6 @@ set -e
 echo "## Root folder ##"
 ls -al /
 
-ls -al
 echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
 export KUBECONFIG=/tmp/config
 

@@ -22,5 +22,6 @@ RUN apt-get update -y && \
 COPY app-specs /github/workspace/app-specs
 COPY namespace /github/workspace/namespace
 COPY scripts /github/workspace
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+
+RUN chmod +x /github/workspace/entrypoint.sh
+ENTRYPOINT ["/github/workspace/entrypoint.sh"]
