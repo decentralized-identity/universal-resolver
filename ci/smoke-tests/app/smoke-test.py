@@ -8,6 +8,9 @@ import getopt
 import asyncio
 from aiohttp import ClientSession
 
+
+WRITE_SUCCESS: bool = True
+
 logging.basicConfig(
     format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
     level=logging.DEBUG,
@@ -58,7 +61,8 @@ async def write_one(results, data, session):
     url = data['url']
     try:
         res = await fetch_html(url=url, session=session)
-        results.update({url: res})
+        if WRITE_SUCCESS | res['status'] != 200:
+            results.update({url: res})
     except asyncio.TimeoutError:
         results.update({
             url: {
@@ -90,7 +94,7 @@ def main(argv):
     config = '/github/workspace/config.json'
     out_folder = './'
     try:
-        opts, args = getopt.getopt(argv, "h:c:o", ["host=", "config=", "out="])
+        opts, args = getopt.getopt(argv, "h:c:o:w", ["host=", "config=", "out=", "write200="])
     except getopt.GetoptError:
         print(help_text)
         sys.exit(2)
@@ -105,6 +109,10 @@ def main(argv):
         elif opt in ("-o", "--out"):
             print("ARG:" + arg)
             out_folder = arg + '/'
+        elif opt in ("-w", "--write200"):
+            global WRITE_SUCCESS
+            if arg.lower() == 'false':
+                WRITE_SUCCESS = False
 
     uni_resolver_path = host + "/1.0/identifiers/"
     print('Resolving for: ' + uni_resolver_path)
