@@ -10,13 +10,16 @@ ls -al /
 echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
 export KUBECONFIG=/tmp/config
 
-cp /prepare-deployment.py /k8s-template.yaml -r /app-specs -r /namespace . 2>/dev/null || :
+cp /prepare-deployment.py /add_config.py /k8s-template.yaml -r /app-specs -r /namespace . 2>/dev/null || :
 
 echo "Current workspace Folder"
 pwd
 ls -al .
 python --version
 python prepare-deployment.py
+
+echo "Add config script"
+python add_config.py
 
 echo "## Deployment Folder ##"
 cd deploy
