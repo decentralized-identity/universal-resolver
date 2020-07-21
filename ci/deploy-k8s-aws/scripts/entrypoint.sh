@@ -19,7 +19,7 @@ python --version
 python prepare-deployment.py
 
 echo "Driver config script"
-python driver_config.py
+python driver-config.py
 
 echo "## Deployment Folder ##"
 cd deploy
