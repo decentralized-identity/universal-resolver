@@ -39,17 +39,22 @@ def get_container_name_version(container_tag):
     return container_name_version.split(':')
 
 
-def generate_deployment_specs(container_tags, outputdir):
-    for container_tag in container_tags.split(';'):
-        if container_tag == '':
-            return
+def get_container_port(ports):
+    port = ports[0].split(':')
+    return port[1]
+
+
+def generate_deployment_specs(containers, outputdir):
+    for container in containers:
+        container_tag = containers[container]['image']
         container_name, container_version = get_container_name_version(container_tag)
+        container_port = get_container_port(containers[container]['ports'])
         fin = open("k8s-template.yaml", "rt")
         deployment_file = "deployment-%s.yaml" % container_name
         fout = open(outputdir + '/' + deployment_file, "wt")
         print('Writing file: ' + outputdir + '/' + deployment_file + ' for container: ' + container_tag)
         for line in fin:
-            fout.write(line.replace('{{containerName}}', container_name).replace('{{containerTag}}', container_tag))
+            fout.write(line.replace('{{containerName}}', container_name).replace('{{containerTag}}', container_tag).replace('{{containerPort}}', container_port))
         add_deployment(deployment_file, outputdir)
         fin.close()
         fout.close()
@@ -64,19 +69,23 @@ def find_in_dir(key, dictionary):
                 yield result
 
 
-def get_container_tags(fileName):
-    with open(fileName, 'r') as file:
-        yaml_str = file.read()
-        data = yaml.safe_load(yaml_str)
+def load_containers(file_name):
+    with open(file_name, 'r') as file:
+        full_config = yaml.full_load(file)
 
+    print(full_config)
+    return full_config['services']
+
+
+def get_container_tags(containers):
     container_tags = ''
-    for x in find_in_dir("image", data):
+    for x in find_in_dir("image", containers):
         container_tags += x + ';'
 
     return container_tags
 
 
-def generate_ingress(container_tags, outputdir):
+def generate_ingress(containers, outputdir):
     global DEFAULT_DOMAIN_NAME
     print("Generating uni-resolver-ingress.yaml")
     fout = open(outputdir + '/uni-resolver-ingress.yaml', "wt")
@@ -107,9 +116,11 @@ def generate_ingress(container_tags, outputdir):
     fout.write('              serviceName: "uni-resolver-frontend"\n')
     fout.write('              servicePort: 8080\n')
 
-    for container_tag in container_tags.split(';'):
-        if container_tag == '':
-            return
+    for container in containers:
+        print(container)
+        print(containers[container]['ports'])
+        container_tag = containers[container]['image']
+        container_port = get_container_port(containers[container]['ports'])
         container_name, container_version = get_container_name_version(container_tag)
         if container_name == 'uni-resolver-web':  # this is the default-name, hosted at: DEFAULT_DOMAIN_NAME
             continue
@@ -122,8 +133,8 @@ def generate_ingress(container_tags, outputdir):
         fout.write('        paths:\n')
         fout.write('          - path: /*\n')
         fout.write('            backend:\n')
-        fout.write('              serviceName: "' + container_name + '"\n')
-        fout.write('              servicePort: 8080\n')
+        fout.write('              serviceName: ' + container_name + '\n')
+        fout.write('              servicePort: ' + container_port + '\n')
 
     fout.close()
 
@@ -164,13 +175,14 @@ def main(argv):
 
     init_deployment_dir(outputdir)
 
-    container_tags = get_container_tags(compose)
-    print("Container tags: " + container_tags)
+    containers = load_containers(compose)
+    print("Containers:")
+    print(containers)
 
-    generate_ingress(container_tags, outputdir)
+    generate_ingress(containers, outputdir)
 
     # generate driver specs
-    generate_deployment_specs(container_tags, outputdir)
+    generate_deployment_specs(containers, outputdir)
 
     # copy app deployment specs
     copy_app_deployment_specs(outputdir)

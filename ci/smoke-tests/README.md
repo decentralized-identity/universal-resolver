@@ -4,7 +4,7 @@ This tool can be used as a standalone script for testing an existing deployment 
 
 ## Run smoke-test script manually
 
-    python smoke-test.py --host <host-where-resolver-is-deployed> --config <path-to-uni-resolver-config> --out <path-to-result-file>
+    python smoke-test.py --host <host-where-resolver-is-deployed> --config <path-to-uni-resolver-config> --out <path-to-result-file> --write200 false
     
 The script needs Python 3 and dependencies listed in the `requirements.txt`.   
 
@@ -19,6 +19,7 @@ Default values:
     host: https://dev.uniresolver.io
     config: /github/workspace/config.json
     out: ./
+    write200: True
    
  
 ## Use action in github workflow
@@ -30,6 +31,7 @@ Default values:
         config: <path-to-uniresolver-config>
         out folder: <path-where-results-file-should-be-created>
         debug: <true/false>
+        write200: <true/false>
         
 Example can be seen in the [uni-resolver workflow configuration](https://github.com/decentralized-identity/universal-resolver/blob/master/.github/workflows/universal-resolver-build-deploy.yml)
 
