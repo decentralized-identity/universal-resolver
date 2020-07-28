@@ -13,12 +13,6 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:sov:WRfXPg8dantKVubE3HX8pw" ]
 		}, {
-			"pattern": "^(did:erc725:.+)$",
-			"image": "universalresolver/driver-did-erc725",
-			"imageProperties": "true",
-			"tag": "latest",
-			"testIdentifiers": [ "did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E" ]
-		}, {
 			"pattern": "^(did:v1:nym:.+)$",
 			"image": "veresone/uni-resolver-did-v1-driver",
 			"imageProperties": "true",
@@ -31,21 +25,11 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:v1:test:nym:z6MkgF4uJbLMoUin2uKaBf4Jb1F7SHzuALE8Ldq8FPPpHE9t", "did:v1:test:nym:z6MkmWLiAt5FtfwgFJwMDGS1GiFn1KpUXsd7bn1v2hLyXvud" ]
 		}, {
-			"pattern": "^did:ipid:(.+)$",
-			"url": "https://ipfs.io/ipns/$1",
-			"testIdentifiers": [ "did:ipid:QmYA7p467t4BGgBL4NmyHtsXMoPrYH9b3kSG6dbgFYskJm" ]
-		}, {
 			"pattern": "^(did:stack:.+)$",
 			"image": "universalresolver/driver-did-stack",
 			"imageProperties": "true",
 			"tag": "latest",
 			"testIdentifiers": [ "did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0" ]
-		}, {
-			"pattern": "^(did:web:.+)$",
-			"image": "uport/uni-resolver-driver-did-uport",
-			"imagePort": "8081",
-			"tag": "latest",
-			"testIdentifiers": [ "did:web:did.or13.io" ]
 		}, {
 			"pattern": "^(did:ethr:.+)$",
 			"image": "uport/uni-resolver-driver-did-uport",
@@ -82,11 +66,6 @@
 			"pattern": "^(did:github:.+)$",
 			"url": "https://github-did.com/api/v1/did/$1",
 			"testIdentifiers": [ "did:github:gjgd" ]
-		}, {
-			"pattern": "^(did:neoid:.+)$",
-			"image": "swisscomblockchainag/seraph-id-did-driver",
-			"tag": "latest",
-			"testIdentifiers" : [ "did:neoid:priv:b4eeeb80d20bfb38b23001d0659ce0c1d96be0aa" ]
 		}, {
 			"pattern": "^(did:ccp:.+)$",
 			"image": "hello2mao/driver-did-ccp",

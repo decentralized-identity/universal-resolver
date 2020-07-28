@@ -15,3 +15,13 @@ uni-resolver-driver-did-echo:
       value: http://testnet.echo-dev.io
     - name: uniresolver_driver_did_echo_devnet_rpc_url
       value: http://127.0.0.1:8090/rpc
+driver-did-btcr:
+  env:
+    - name: uniresolver_driver_did_btcr_bitcoinConnection
+      value: btcd
+    - name: uniresolver_driver_did_btcr_rpcUrlTestnet
+      value:
+    - name: uniresolver_driver_did_btcr_rpcCertMainnet
+      value:
+    - name: uniresolver_driver_did_btcr_rpcCertTestnet
+      value:
