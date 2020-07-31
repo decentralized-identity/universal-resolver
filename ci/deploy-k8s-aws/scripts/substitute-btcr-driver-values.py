@@ -1,3 +1,4 @@
+import os
 import sys
 import getopt
 
@@ -36,4 +37,4 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-    print('substitute-btcr-driver-values.py script finished')
+    print('%s script finished' % os.path.basename(__file__))
