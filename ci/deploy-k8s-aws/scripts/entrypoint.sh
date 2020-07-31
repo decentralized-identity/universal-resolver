@@ -22,7 +22,7 @@ echo "Driver config script"
 python driver-config.py
 
 echo "Apply did-btcr secrets"
-python substitute-btcr-driver-values.py --url "$INPUT_RPC_URL_TESTNET" --cert "$INPUT_RPC_CERT_TESTNET"
+python substitute-btcr-driver-values.py --url "$RPC_URL_TESTNET" --cert "$RPC_CERT_TESTNET"
 
 echo "## Deployment Folder ##"
 cd deploy
