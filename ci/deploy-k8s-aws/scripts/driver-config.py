@@ -37,4 +37,4 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-    print('Script finished')
+    print('driver-config.py script finished')
