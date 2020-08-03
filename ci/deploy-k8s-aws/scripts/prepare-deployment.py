@@ -198,4 +198,4 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-    print('TODO manually: change uni-resolver-frontend ingress port to 80!!')
+    print('%s script done' % os.path.basename(__file__))
