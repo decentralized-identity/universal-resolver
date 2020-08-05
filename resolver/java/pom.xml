@@ -58,6 +58,7 @@
 	</properties>
 
 	<build>
+
 		<resources>
 			<resource>
 				<directory>${project.basedir}/src/main/resources/</directory>
@@ -77,6 +78,7 @@
 				</includes>
 			</resource>
 		</resources>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -125,6 +127,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -179,9 +182,11 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+
 	</build>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
