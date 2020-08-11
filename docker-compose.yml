@@ -134,6 +134,11 @@ services:
     image: iotex/uni-resolver-driver-did-io:latest
     ports:
       - "8104:8080"
+  bba-did-driver:
+    container_name: bba-did-driver
+    image: blobaa/bba-did-driver:0.2.0
+    ports:
+      - "8107:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
