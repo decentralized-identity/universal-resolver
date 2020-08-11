@@ -134,6 +134,10 @@ services:
     image: iotex/uni-resolver-driver-did-io:latest
     ports:
       - "8104:8080"
+  driver-did-bid:
+    image: teleinfo/driver-did-bid:1.0.0
+    ports:
+      - "8108:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
