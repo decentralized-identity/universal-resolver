@@ -9,37 +9,23 @@
 	<parent>
 		<groupId>decentralized-identity</groupId>
 		<artifactId>uni-resolver</artifactId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0.3-SNAPSHOT</version>
 	</parent>
-
-	<repositories>
-		<repository>
-			<id>danubetech-maven-snapshots</id>
-			<url>https://repo.danubetech.com/repository/maven-snapshots/</url>
-		</repository>
-		<repository>
-			<id>danubetech-maven-releases</id>
-			<url>https://repo.danubetech.com/repository/maven-releases/</url>
-		</repository>
-	</repositories>
 
 	<dependencies>
 		<dependency>
 			<groupId>decentralized-identity</groupId>
 			<artifactId>did-common-java</artifactId>
-			<version>0.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.10.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.10.1</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

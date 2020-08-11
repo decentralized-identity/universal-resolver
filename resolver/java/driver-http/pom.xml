@@ -9,31 +9,18 @@
 	<parent>
 		<groupId>decentralized-identity</groupId>
 		<artifactId>uni-resolver</artifactId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0.3-SNAPSHOT</version>
 	</parent>
-
-	<repositories>
-		<repository>
-			<id>danubetech-maven-snapshots</id>
-			<url>https://repo.danubetech.com/repository/maven-snapshots/</url>
-		</repository>
-		<repository>
-			<id>danubetech-maven-releases</id>
-			<url>https://repo.danubetech.com/repository/maven-releases/</url>
-		</repository>
-	</repositories>
 
 	<dependencies>
 		<dependency>
 			<groupId>decentralized-identity</groupId>
 			<artifactId>uni-resolver-driver</artifactId>
-			<version>0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.5.3</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

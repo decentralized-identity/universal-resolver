@@ -25,6 +25,8 @@ jobs:
         KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG_DATA}}
         AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
         AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        RPC_URL_TESTNET: ${{secrets.RPC_URL_TESTNET}}
+        RPC_CERT_TESTNET: ${{secrets.RPC_CERT_TESTNET}}
     - name: Sleep for 120 seconds
       uses: jakejarvis/wait-action@master
       with:
@@ -32,4 +34,4 @@ jobs:
     - name: Smoke Test
       uses: ./ci/smoke-tests
       with:
-        host: http://dev.uniresolver.io
+        host: https://dev.uniresolver.io

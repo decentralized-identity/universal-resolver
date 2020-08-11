@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import os
 import sys
 import yaml
 
@@ -37,4 +38,4 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-    print('Script finished')
+    print('%s script finished' % os.path.basename(__file__))

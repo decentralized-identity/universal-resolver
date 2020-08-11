@@ -106,7 +106,7 @@
 			"pattern": "^(did:kilt:.+)$",
 			"image": "kiltprotocol/kilt-did-driver",
 			"tag": "1.0.1",
-			"testIdentifiers" : [ "did:kilt:5GFs8gCumJcZDDWof5ETFqDFEsNwCsVJUj2bX7y4xBLxN5qT" ]
+			"testIdentifiers" : [ "did:kilt:5CqJa4Ct7oMeMESzehTiN9fwYdGLd7tqeirRMpGDh2XxYYyx" ]
 		}, {
 			"pattern": "^(did:evan:.+)$",
 			"image": "evannetwork/evan-did-driver",
@@ -163,7 +163,14 @@
 			"image": "iotex/uni-resolver-driver-did-io",
 			"tag": "latest",
 			"testIdentifiers": [ "did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A" ]
-		},{
+        },
+        {
+            "pattern": "^(did:bba:.+)$",
+            "image": "blobaa/bba-did-driver",
+            "tag": "latest",
+            "testIdentifiers": [ "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf", "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044" ]
+        },
+		{
 			"pattern": "^(did:cy:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
 			"image": "chainyard/driver-did-cy",
 			"imageProperties": "true",

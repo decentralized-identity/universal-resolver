@@ -70,7 +70,7 @@ services:
     ports:
       - "8093:8080"
   kilt-did-driver:
-    image: kiltprotocol/kilt-did-driver:1.0.1
+    image: kiltprotocol/kilt-did-driver:1.2.1
     environment:
       uniresolver_driver_kilt_did_node: ${uniresolver_driver_kilt_did_node}
     ports:
@@ -134,10 +134,15 @@ services:
     image: iotex/uni-resolver-driver-did-io:latest
     ports:
       - "8104:8080"
+  bba-did-driver:
+    container_name: bba-did-driver
+    image: blobaa/bba-did-driver:0.2.0
+    ports:
+      - "8107:8080"
   driver-did-cy:
     image: chainyard/driver-did-cy:latest
     ports:
-      - "8107:8080"
+      - "8108:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
