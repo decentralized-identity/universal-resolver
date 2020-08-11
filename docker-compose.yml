@@ -139,6 +139,10 @@ services:
     image: blobaa/bba-did-driver:0.2.0
     ports:
       - "8107:8080"
+  driver-did-cy:
+    image: chainyard/driver-did-cy:latest
+    ports:
+      - "8108:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
