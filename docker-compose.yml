@@ -143,6 +143,10 @@ services:
     image: chainyard/driver-did-cy:latest
     ports:
       - "8108:8080"
+  driver-did-bid:
+    image: teleinfo/driver-did-bid:1.0.0
+    ports:
+      - "8109:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
