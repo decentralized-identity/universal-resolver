@@ -145,6 +145,10 @@ services:
     image: chainyard/driver-did-cy:latest
     ports:
       - "8108:8080"
+  schema-registry-did-resolver:
+    image: 51nodes/schema-registry-did-resolver
+    ports:
+      - "8109:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
