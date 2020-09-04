@@ -149,6 +149,10 @@ services:
     image: teleinfo/driver-did-bid:1.0.0
     ports:
       - "8109:8080"
+  schema-registry-did-resolver:
+    image: 51nodes/schema-registry-did-resolver
+    ports:
+      - "8110:8080"
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
