@@ -1,4 +1,4 @@
-name: Build/Deploy workflow
+name: AWS Kubernetes deployment
 
 on:
   push:
@@ -35,3 +35,11 @@ jobs:
       uses: ./ci/smoke-tests
       with:
         host: https://dev.uniresolver.io
+    - name: Slack notification
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        fields: repo,commit,action,eventName,ref,workflow # selectable (default: repo,message)
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+      if: failure() # Send message only on failure
