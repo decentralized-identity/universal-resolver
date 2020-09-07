@@ -32,7 +32,7 @@ def add_deployment(deployment_file, outputdir):
     fout.close()
 
 
-def get_container_name(container_tag):
+def get_container_name_version(container_tag):
     if container_tag.find('/') < 0:
         return
     user, container_name_version = container_tag.split('/')
@@ -47,7 +47,7 @@ def get_container_port(ports):
 def generate_deployment_specs(containers, outputdir):
     for container in containers:
         container_tag = containers[container]['image']
-        container_name = get_container_name(container_tag)
+        container_name, container_version = get_container_name_version(container_tag)
         container_port = get_container_port(containers[container]['ports'])
         fin = open("k8s-template.yaml", "rt")
         deployment_file = "deployment-%s.yaml" % container_name
