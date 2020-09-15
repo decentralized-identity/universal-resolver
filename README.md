@@ -53,6 +53,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:cy:2nnn7H7RJLLhFPoGyzxPCLzuhrzJ
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bid:6cc796b8d6e2fbebc9b3cf9e
 	curl -X GET http://localhost:8080/1.0/identifiers/did:schema:public-ipfs:xsd:QmUQAxKQ5sbWWrcBZzwkThktfUGZvuPQyTrqMzb3mZnLE5
+    curl -X GET http://localhost:8080/1.0/identifiers/did:ace:0xf81c16a78b257c10fddf87ed4324d433317169a005ddf36a3a1ba937ba9788e3
+    curl -X GET http://localhost:8080/1.0/identifiers/ethtodid/0xff6deC1Be66F88505029ac76B5c47555709195A1
 
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
@@ -96,6 +98,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-cy] | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) |  | [](chainyard/driver-did-cy:latest)
 | [did-bid](https://github.com/teleinfo-bif/bid-resolver) | 1.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0.1](https://github.com/teleinfo-bif/bid/tree/master/doc/en) | [teleinfo/driver-did-bid](https://hub.docker.com/repository/docker/teleinfo/driver-did-bid)
 | [did-schema](https://github.com/51nodes/schema-registry-did-resolver) | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/51nodes/schema-registry-did-method) | [51nodes/schema-registry-did-resolver](https://hub.docker.com/repository/docker/51nodes/schema-registry-did-resolver)
+| [did-ace](https://github.com/aceblockID/aceblock-did-resolver)| 1.0 | [1.0 WD](https://w3c.github.io/did-core/) |(missing) | [aceblock/ace-did-driver](https://hub.docker.com/repository/docker/aceblock/ace-did-driver) |
 
 ## More Information
 

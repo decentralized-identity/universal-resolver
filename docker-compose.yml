@@ -157,3 +157,10 @@ services:
     image: universalresolver/uni-resolver-web:latest
     ports:
       - "8080:8080"
+  ace-did-driver:
+    container_name: ace-did-driver
+    image: aceblock/ace-did-driver:latest
+    enviroment:
+      UNIRESOLVER_DRIVER_DID_ACE: ${UNIRESOLVER_DRIVER_DID_ACE}
+    ports:
+      - "8085:8080"
