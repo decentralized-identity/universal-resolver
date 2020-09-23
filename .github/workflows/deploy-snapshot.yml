@@ -18,7 +18,7 @@ jobs:
         uses: danubetech/github-action-maven-deploy@master
         with:
           server_id: danubetech-maven-snapshots
-          path_to_pom: /github/workspace/resolver/java/uni-resolver-web
+          path_to_pom: /github/workspace/resolver/java
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
