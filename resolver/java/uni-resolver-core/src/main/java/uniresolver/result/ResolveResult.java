@@ -23,7 +23,7 @@ import did.DIDDocument;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class ResolveResult {
 
-	public static final String MIME_TYPE = "application/ld+json;profile=\"https://w3c-ccg.github.io/did-resolution/\"";
+	public static final String MIME_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
