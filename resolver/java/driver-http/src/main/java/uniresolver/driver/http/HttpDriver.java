@@ -27,7 +27,7 @@ import uniresolver.result.ResolveResult;
 
 public class HttpDriver implements Driver {
 
-	public static final String MIME_TYPES = ResolveResult.MIME_TYPE + "," + DIDDocument.MIME_TYPE + "," + "application/ld+json";
+	public static final String MIME_TYPES = ResolveResult.MIME_TYPE + "," + DIDDocument.MIME_TYPE_JSON_LD + "," + "application/ld+json";
 
 	private static Logger log = LoggerFactory.getLogger(HttpDriver.class);
 

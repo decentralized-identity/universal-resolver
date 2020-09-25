@@ -63,17 +63,17 @@ public class ResolveResult {
 
 	public static ResolveResult build(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
 
-		return new ResolveResult(didDocument, null, DIDDocument.MIME_TYPE, resolverMetadata, methodMetadata);
+		return new ResolveResult(didDocument, null, null, resolverMetadata, methodMetadata);
 	}
 
 	public static ResolveResult build(DIDDocument didDocument) {
 
-		return new ResolveResult(didDocument, null, DIDDocument.MIME_TYPE, new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolveResult(didDocument, null, null, new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
 	public static ResolveResult build(Map<String, Object> didDocument) {
 
-		return new ResolveResult(DIDDocument.build(didDocument), null, DIDDocument.MIME_TYPE, new HashMap<String, Object> (), new HashMap<String, Object> ());
+		return new ResolveResult(DIDDocument.build(didDocument), null, null, new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
 	public static ResolveResult build() {
