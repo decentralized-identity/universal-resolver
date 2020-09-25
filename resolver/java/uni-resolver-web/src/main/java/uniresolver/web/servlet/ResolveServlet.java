@@ -83,7 +83,8 @@ public class ResolveServlet extends WebUniResolver {
 
 		// write resolve result
 
-		if (request.getHeader("Accept").contains(DIDDocument.MIME_TYPE) && resolveResult.getDidDocument() != null) {
+		String acceptHeader = request.getHeader("Accept");
+		if ((acceptHeader == null || acceptHeader.contains(DIDDocument.MIME_TYPE)) && resolveResult.getDidDocument() != null) {
 
 			WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, DIDDocument.MIME_TYPE, resolveResultString);
 			return;
