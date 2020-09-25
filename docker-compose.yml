@@ -150,7 +150,7 @@ services:
     ports:
       - "8109:8080"
   schema-registry-did-resolver:
-    image: 51nodes/schema-registry-did-resolver
+    image: 51nodes/schema-registry-did-resolver:0.1.1
     ports:
       - "8110:8080"
   uni-resolver-web:
