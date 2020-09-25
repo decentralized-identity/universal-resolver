@@ -19,7 +19,7 @@ public class PropertiesServlet extends WebUniResolver {
 
 	private static final long serialVersionUID = 3865183054854163102L;
 
-	protected static Logger log = LoggerFactory.getLogger(WebUniResolver.class);
+	protected static Logger log = LoggerFactory.getLogger(PropertiesServlet.class);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 

@@ -32,11 +32,11 @@ def add_deployment(deployment_file, outputdir):
     fout.close()
 
 
-def get_container_name_version(container_tag):
+def get_container_name(container_tag):
     if container_tag.find('/') < 0:
         return
     user, container_name_version = container_tag.split('/')
-    return container_name_version.split(':')
+    return container_name_version.split(':')[0]
 
 
 def get_container_port(ports):
@@ -47,7 +47,7 @@ def get_container_port(ports):
 def generate_deployment_specs(containers, outputdir):
     for container in containers:
         container_tag = containers[container]['image']
-        container_name, container_version = get_container_name_version(container_tag)
+        container_name = get_container_name(container_tag)
         container_port = get_container_port(containers[container]['ports'])
         fin = open("k8s-template.yaml", "rt")
         deployment_file = "deployment-%s.yaml" % container_name
@@ -125,7 +125,7 @@ def generate_ingress(containers, outputdir):
         print(containers[container]['ports'])
         container_tag = containers[container]['image']
         container_port = get_container_port(containers[container]['ports'])
-        container_name, container_version = get_container_name_version(container_tag)
+        container_name = get_container_name(container_tag)
         if container_name == 'uni-resolver-web':  # this is the default-name, hosted at: DEFAULT_DOMAIN_NAME
             continue
         sub_domain_name = container_name.replace('did', '').replace('driver', '').replace('uni-resolver', '').replace('-',

@@ -45,7 +45,7 @@
 			"image": "uport/uni-resolver-driver-did-uport",
 			"imagePort": "8081",
 			"tag": "latest",
-			"testIdentifiers": [ "did:web:did.or13.io" ]
+			"testIdentifiers": [ "did:web:data-vault.eu:u:zi4xgcHtYo7fh_KAURaO1beG2v6WN9ImVnQ30CBDEJjLrw" ]
 		}, {
 			"pattern": "^(did:ethr:.+)$",
 			"image": "uport/uni-resolver-driver-did-uport",
@@ -177,6 +177,12 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:cy:7PGGnRdvKKFftSXU3Jw75Vk5npfg" ]
 		},
+		{ 
+	  		"pattern": "^(did:bid:)([0-9a-f]{24})", 
+	  		"image": "teleinfo/driver-did-bid", 
+	  		"tag": "1.0.0", 
+	  		"testIdentifiers": [ "did:bid:6cc796b8d6e2fbebc9b3cf9e" ] 
+	  	}, 
 		{
 			"pattern": "^(did:schema:.+)$",
 			"image": "51nodes/schema-registry-did-resolver",

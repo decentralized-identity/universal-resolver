@@ -18,7 +18,7 @@ public class ResolveServlet extends WebUniResolver {
 
 	private static final long serialVersionUID = 1579362184113490816L;
 
-	protected static Logger log = LoggerFactory.getLogger(WebUniResolver.class);
+	protected static Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
 	public static final String MIME_TYPE = "application/json";
 
@@ -58,10 +58,12 @@ public class ResolveServlet extends WebUniResolver {
 		// execute the request
 
 		ResolveResult resolveResult;
+		String resolveResultString;
 
 		try {
 
 			resolveResult = this.resolve(identifier);
+			resolveResultString = resolveResult == null ? null : resolveResult.toJson();
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolve problem for " + identifier + ": " + ex.getMessage(), ex);
@@ -69,13 +71,13 @@ public class ResolveServlet extends WebUniResolver {
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("Resolve result for " + identifier + ": " + resolveResult.toJson());
+		if (log.isInfoEnabled()) log.info("Resolve result for " + identifier + ": " + resolveResultString);
 
 		// no resolve result?
 
-		if (resolveResult == null || (resolveResult.getDidDocument() == null && resolveResult.getContent() == null)) {
+		if (resolveResultString == null || (resolveResult.getDidDocument() == null && resolveResult.getContent() == null)) {
 
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, resolveResult.toJson());
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No resolve result for " + identifier + ": " + resolveResultString);
 			return;
 		}
 
@@ -83,7 +85,7 @@ public class ResolveServlet extends WebUniResolver {
 
 		if (request.getHeader("Accept").contains(DIDDocument.MIME_TYPE) && resolveResult.getDidDocument() != null) {
 
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, DIDDocument.MIME_TYPE, resolveResult.getDidDocument().toJson());
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, DIDDocument.MIME_TYPE, resolveResultString);
 			return;
 		} else if (resolveResult.getContent() != null) {
 
