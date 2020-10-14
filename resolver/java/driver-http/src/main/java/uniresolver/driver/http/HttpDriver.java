@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import foundation.identity.did.DIDDocument;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -20,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import did.DIDDocument;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
 import uniresolver.result.ResolveResult;

@@ -8,10 +8,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import foundation.identity.did.DIDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import did.DIDDocument;
 import org.springframework.http.MediaType;
 import uniresolver.result.ResolveResult;
 import uniresolver.web.WebUniResolver;

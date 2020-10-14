@@ -1,25 +1,18 @@
 package uniresolver.result;
 
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import foundation.identity.did.DIDDocument;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import did.DIDDocument;
-
-@JsonPropertyOrder({ "didDocument", "content", "contentType", "resolverMetadata", "methodMetadata" })
+@JsonPropertyOrder({ "didDocument", "content", "contentType", "didResolutionMetadata", "didDocumentMetadata" })
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class ResolveResult {
 
@@ -37,18 +30,18 @@ public class ResolveResult {
 	private String contentType;
 
 	@JsonProperty
-	private Map<String, Object> resolverMetadata;
+	private Map<String, Object> didResolutionMetadata;
 
 	@JsonProperty
-	private Map<String, Object> methodMetadata;
+	private Map<String, Object> didDocumentMetadata;
 
-	private ResolveResult(DIDDocument didDocument, Object content, String contentType, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
+	private ResolveResult(DIDDocument didDocument, Object content, String contentType, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {
 
 		this.didDocument = didDocument;
 		this.content = content;
 		this.contentType = contentType;
-		this.resolverMetadata = resolverMetadata;
-		this.methodMetadata = methodMetadata;
+		this.didResolutionMetadata = didResolutionMetadata;
+		this.didDocumentMetadata = didDocumentMetadata;
 	}
 
 	/*
@@ -71,11 +64,6 @@ public class ResolveResult {
 		return new ResolveResult(didDocument, null, null, new HashMap<String, Object> (), new HashMap<String, Object> ());
 	}
 
-	public static ResolveResult build(Map<String, Object> didDocument) {
-
-		return new ResolveResult(DIDDocument.build(didDocument), null, null, new HashMap<String, Object> (), new HashMap<String, Object> ());
-	}
-
 	public static ResolveResult build() {
 
 		return new ResolveResult(null, null, null, new HashMap<String, Object> (), new HashMap<String, Object> ());
@@ -83,7 +71,7 @@ public class ResolveResult {
 
 	public ResolveResult copy() {
 
-		return new ResolveResult(this.getDidDocument(), this.getContent(), this.getContentType(), this.getResolverMetadata(), this.getMethodMetadata());
+		return new ResolveResult(this.getDidDocument(), this.getContent(), this.getContentType(), this.getDidResolutionMetadata(), this.getDidDocumentMetadata());
 	}
 
 	public void reset() {
@@ -91,8 +79,8 @@ public class ResolveResult {
 		this.setDidDocument(null);
 		this.setContent(null);
 		this.setContentType(null);
-		this.setResolverMetadata(new HashMap<String, Object> ());
-		this.setMethodMetadata(new HashMap<String, Object> ());
+		this.setDidResolutionMetadata(new HashMap<String, Object> ());
+		this.setDidDocumentMetadata(new HashMap<String, Object> ());
 	}
 
 	/*
@@ -155,27 +143,27 @@ public class ResolveResult {
 	}
 
 	@JsonGetter
-	public final Map<String, Object> getResolverMetadata() {
+	public final Map<String, Object> getDidResolutionMetadata() {
 
-		return this.resolverMetadata;
+		return this.didResolutionMetadata;
 	}
 
 	@JsonSetter
-	public final void setResolverMetadata(Map<String, Object> resolverMetadata) {
+	public final void setDidResolutionMetadata(Map<String, Object> didResolutionMetadata) {
 
-		this.resolverMetadata = resolverMetadata;
+		this.didResolutionMetadata = didResolutionMetadata;
 	}
 
 	@JsonGetter
-	public final Map<String, Object> getMethodMetadata() {
+	public final Map<String, Object> getDidDocumentMetadata() {
 
-		return this.methodMetadata;
+		return this.didDocumentMetadata;
 	}
 
 	@JsonSetter
-	public final void setMethodMetadata(Map<String, Object> methodMetadata) {
+	public final void setDidDocumentMetadata(Map<String, Object> didDocumentMetadata) {
 
-		this.methodMetadata = methodMetadata;
+		this.didDocumentMetadata = didDocumentMetadata;
 	}
 
 	/*

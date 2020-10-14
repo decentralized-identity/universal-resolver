@@ -2,7 +2,7 @@ package uniresolver.local.extensions;
 
 import java.util.Map;
 
-import did.DIDURL;
+import foundation.identity.did.DIDURL;
 import uniresolver.ResolutionException;
 import uniresolver.local.LocalUniResolver;
 import uniresolver.result.ResolveResult;
