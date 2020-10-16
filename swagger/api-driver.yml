@@ -49,7 +49,7 @@ paths:
                 description: The DID document (JSON representation).
                 example: {
   "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
-  "publicKey": [
+  "verificationMethod": [
     {
       "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
       "type": "Ed25519VerificationKey2018",
@@ -62,9 +62,9 @@ paths:
                 type: object
                 description: The DID document (JSON-LD representation).
                 example: {
-  "@context": "https://www.w3.org/2019/did/v1",
+  "@context": "https://www.w3.org/ns/did/v1",
   "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
-  "publicKey": [
+  "verificationMethod": [
     {
       "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
       "type": "Ed25519VerificationKey2018",
@@ -89,9 +89,9 @@ components:
         didDocument:
           type: object
           example: {
-  "@context": "https://www.w3.org/2019/did/v1",
+  "@context": "https://www.w3.org/ns/did/v1",
   "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
-  "publicKey": [
+  "verificationMethod": [
     {
       "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
       "type": "Ed25519VerificationKey2018",
@@ -99,7 +99,7 @@ components:
     }
   ]
 }
-        resolverMetadata:
+        didResolutionMetadata:
           type: object
-        methodMetadata:
+        didDocumentMetadata:
           type: object
