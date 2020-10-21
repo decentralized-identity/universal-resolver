@@ -98,7 +98,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-cy] | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) |  | [](chainyard/driver-did-cy:latest)
 | [did-bid](https://github.com/teleinfo-bif/bid-resolver) | 1.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0.1](https://github.com/teleinfo-bif/bid/tree/master/doc/en) | [teleinfo/driver-did-bid](https://hub.docker.com/repository/docker/teleinfo/driver-did-bid)
 | [did-schema](https://github.com/51nodes/schema-registry-did-resolver) | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/51nodes/schema-registry-did-method) | [51nodes/schema-registry-did-resolver](https://hub.docker.com/repository/docker/51nodes/schema-registry-did-resolver)
-| [did-ace](https://github.com/aceblockID/aceblock-did-resolver)| 1.0 | [1.0 WD](https://w3c.github.io/did-core/) |(missing) | [aceblock/ace-did-driver](https://hub.docker.com/repository/docker/aceblock/ace-did-driver) |
+| [did-ace](https://github.com/aceblockID/aceblock-did-resolver)| 1.0 | [1.0 WD](https://w3c.github.io/did-core/) |(missing) | [aceblock/ace-did-driver](https://hub.docker.com/r/aceblock/ace-did-driver) |
 
 ## More Information
 
