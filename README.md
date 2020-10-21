@@ -102,7 +102,6 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
  * [Driver Development](/docs/driver-development.md)
  * [Continuous Integration and Delivery](/docs/continuous-integration-and-delivery.md)
  * [Development System](/docs/dev-system.md)
- * [Creating Releases](/docs/creating-releases.md)
  * [Branching Strategy](/docs/branching-strategy.md)
  * [Design Goals](/docs/design-goals.md)
  * [Troubleshooting](/docs/troubleshooting.md)
