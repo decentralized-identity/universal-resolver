@@ -54,7 +54,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bid:6cc796b8d6e2fbebc9b3cf9e
 	curl -X GET http://localhost:8080/1.0/identifiers/did:schema:public-ipfs:xsd:QmUQAxKQ5sbWWrcBZzwkThktfUGZvuPQyTrqMzb3mZnLE5
     curl -X GET http://localhost:8080/1.0/identifiers/did:ace:0xf81c16a78b257c10fddf87ed4324d433317169a005ddf36a3a1ba937ba9788e3
-    curl -X GET http://localhost:8080/1.0/identifiers/ethtodid/0xff6deC1Be66F88505029ac76B5c47555709195A1
 
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
