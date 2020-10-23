@@ -3,7 +3,7 @@ name: Build release version
 on:
   push:
     branches:
-      - release-0.2.x
+      - release-0.3.x
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,4 +16,4 @@ jobs:
           DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
           DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
           DOCKER_FILE: resolver/java/uni-resolver-web/docker/Dockerfile
-          CONTAINER_TAG: universalresolver/uni-resolver-web:0.2.0
+          CONTAINER_TAG: universalresolver/uni-resolver-web:0.3.0
