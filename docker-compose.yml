@@ -3,6 +3,10 @@ networks:
   default:
     name: universal-resolver
 services:
+  uni-resolver-web:
+    image: universalresolver/uni-resolver-web:latest
+    ports:
+      - "8080:8080"
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
     environment:
@@ -153,7 +157,7 @@ services:
     image: 51nodes/schema-registry-did-resolver:0.1.1
     ports:
       - "8110:8080"
-  uni-resolver-web:
-    image: universalresolver/uni-resolver-web:latest
+  driver-did-ion:
+    image: identityfoundation/driver-did-ion:v0.8.1
     ports:
-      - "8080:8080"
+      - "8111:8080"
