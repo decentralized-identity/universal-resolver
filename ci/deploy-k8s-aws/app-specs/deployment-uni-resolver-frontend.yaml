@@ -41,10 +41,3 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: uni-resolver-frontend
-data:
-  backend_url: https://dev.uniresolver.io
