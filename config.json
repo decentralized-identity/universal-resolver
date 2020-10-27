@@ -45,7 +45,7 @@
 			"image": "uport/uni-resolver-driver-did-uport",
 			"imagePort": "8081",
 			"tag": "latest",
-			"testIdentifiers": [ "did:web:data-vault.eu:u:zi4xgcHtYo7fh_KAURaO1beG2v6WN9ImVnQ30CBDEJjLrw" ]
+			"testIdentifiers": [ "did:web:did.actor:alice" ]
 		}, {
 			"pattern": "^(did:ethr:.+)$",
 			"image": "uport/uni-resolver-driver-did-uport",
@@ -163,31 +163,32 @@
 			"image": "iotex/uni-resolver-driver-did-io",
 			"tag": "latest",
 			"testIdentifiers": [ "did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A" ]
-        },
-        {
+        }, {
             "pattern": "^(did:bba:.+)$",
             "image": "blobaa/bba-did-driver",
             "tag": "latest",
             "testIdentifiers": [ "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf", "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044" ]
-        },
-		{
+        }, {
 			"pattern": "^(did:cy:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
 			"image": "chainyard/driver-did-cy",
 			"imageProperties": "true",
 			"tag": "latest",
 			"testIdentifiers": [ "did:cy:7PGGnRdvKKFftSXU3Jw75Vk5npfg" ]
-		},
-		{ 
+		}, { 
 	  		"pattern": "^(did:bid:)([0-9a-f]{24})", 
 	  		"image": "teleinfo/driver-did-bid", 
 	  		"tag": "1.0.0", 
 	  		"testIdentifiers": [ "did:bid:6cc796b8d6e2fbebc9b3cf9e" ] 
-	  	}, 
-		{
+	  	}, {
 			"pattern": "^(did:schema:.+)$",
 			"image": "51nodes/schema-registry-did-resolver",
 			"tag": "0.1.1",
 			"testIdentifiers": [ "did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J", "did:schema:evan-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J" ]
-		}
+		}, {
+			"pattern": "^(did:ion:.+)$",
+			"image": "identityfoundation/driver-did-ion",
+			"tag": "v0.8.1",
+			"testIdentifiers": [ "did:ion:EiC5-1uBg-YC2DvQRbI6eihDvk7DOYaQ08OB0I3jCe9Ydg:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljX2tleXMiOlt7ImlkIjoiYW55U2lnbmluZ0tleUlkIiwiandrIjp7ImNydiI6InNlY3AyNTZrMSIsImt0eSI6IkVDIiwieCI6ImFHc01HMHU5Rlg2STU0cGVJS3FZb2tqblFQR2hMVVlUT1FOYzNuT3ZFMVEiLCJ5IjoiZmppbHFoZVdRWWtITkU3MHNoTVJ5TURyWnA4RUdDZkVfYUwzaC15Sm1RQSJ9LCJwdXJwb3NlIjpbImF1dGgiLCJnZW5lcmFsIl0sInR5cGUiOiJFY2RzYVNlY3AyNTZrMVZlcmlmaWNhdGlvbktleTIwMTkifV0sInNlcnZpY2VfZW5kcG9pbnRzIjpbeyJlbmRwb2ludCI6Imh0dHA6Ly9hbnkuZW5kcG9pbnQiLCJpZCI6ImFueVNlcnZpY2VFbmRwb2ludElkIiwidHlwZSI6ImFueVR5cGUifV19fV0sInVwZGF0ZV9jb21taXRtZW50IjoiRWlERkM2RE9Ed0JNeG5kX19oMTFSeDRObjFlOHpubFlPUjJhLVBqeUNva2NGZyJ9LCJzdWZmaXhfZGF0YSI6eyJkZWx0YV9oYXNoIjoiRWlBbExNMC1qem1DWi1FcElVZ0laQ2piWk5yMDFfVVBMbnd5MHdfT3I0Rks0dyIsInJlY292ZXJ5X2NvbW1pdG1lbnQiOiJFaUJDNGhTMVVHeVNnTmYzbWFMdnNKRUpxX05aQUlKa0pndTNKMTJMeGNESE93In19" ]
+		}	
 	]
 }
