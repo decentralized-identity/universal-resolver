@@ -44,7 +44,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dock:5FXqofpV7dsuki925U1dSzDvBuQbaci5yWTQGVWRQ7bdQP5p
 	curl -X GET http://localhost:8080/1.0/identifiers/did:abt:z116ygT18P67xBp3scBtZLU6xVoDy268bgnY
-	curl -X GET http://localhost:8080/1.0/identifiers/did:trustbloc:testnet.trustbloc.dev:EiCiHVdJsCySvw2JHHGnpIxege4UF0Zuu1Y6Nd5n1FIBVw
+	curl -X GET http://localhost:8080/1.0/identifiers/did:trustbloc:testnet.trustbloc.dev:EiBh6SP9nw2W-1Z9Y9KB0-GZ8hvtYxFgE5oeSVbTmbpXmw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sirius:2VhYrbauc2cCx9ZpCp5wrDtK7HKf7jrsvgoKBD4KgK
 	curl -X GET http://localhost:8080/1.0/identifiers/did:mpg:7PGGnRdvKKFftSXU3Jw75Vk5npfg
 	curl -X GET http://localhost:8080/1.0/identifiers/did:trust:cert.EiBJ6qjVXgJ-A8xnaUiu4rtLDgeobQYgRWjMV49aCak4HQ
@@ -53,7 +53,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:cy:2nnn7H7RJLLhFPoGyzxPCLzuhrzJ
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bid:6cc796b8d6e2fbebc9b3cf9e
 	curl -X GET http://localhost:8080/1.0/identifiers/did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J
-
+	curl -X GET http://localhost:8080/1.0/identifiers/did:ion:EiC5-1uBg-YC2DvQRbI6eihDvk7DOYaQ08OB0I3jCe9Ydg:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljX2tleXMiOlt7ImlkIjoiYW55U2lnbmluZ0tleUlkIiwiandrIjp7ImNydiI6InNlY3AyNTZrMSIsImt0eSI6IkVDIiwieCI6ImFHc01HMHU5Rlg2STU0cGVJS3FZb2tqblFQR2hMVVlUT1FOYzNuT3ZFMVEiLCJ5IjoiZmppbHFoZVdRWWtITkU3MHNoTVJ5TURyWnA4RUdDZkVfYUwzaC15Sm1RQSJ9LCJwdXJwb3NlIjpbImF1dGgiLCJnZW5lcmFsIl0sInR5cGUiOiJFY2RzYVNlY3AyNTZrMVZlcmlmaWNhdGlvbktleTIwMTkifV0sInNlcnZpY2VfZW5kcG9pbnRzIjpbeyJlbmRwb2ludCI6Imh0dHA6Ly9hbnkuZW5kcG9pbnQiLCJpZCI6ImFueVNlcnZpY2VFbmRwb2ludElkIiwidHlwZSI6ImFueVR5cGUifV19fV0sInVwZGF0ZV9jb21taXRtZW50IjoiRWlERkM2RE9Ed0JNeG5kX19oMTFSeDRObjFlOHpubFlPUjJhLVBqeUNva2NGZyJ9LCJzdWZmaXhfZGF0YSI6eyJkZWx0YV9oYXNoIjoiRWlBbExNMC1qem1DWi1FcElVZ0laQ2piWk5yMDFfVVBMbnd5MHdfT3I0Rks0dyIsInJlY292ZXJ5X2NvbW1pdG1lbnQiOiJFaUJDNGhTMVVHeVNnTmYzbWFMdnNKRUpxX05aQUlKa0pndTNKMTJMeGNESE93In19
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
@@ -88,14 +88,15 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-factom](https://github.com/Sphereon-Opensource/driver-did-factom) | 0.1-SNAPSHOT | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://github.com/bi-foundation/FIS/blob/feature/DID/FIS/DID.md) | [sphereon/driver-did-factom](https://hub.docker.com/r/sphereon/driver-did-factom) |
 | [did-key](https://github.com/decentralized-identity/uni-resolver-driver-did-key) | 1.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.7](https://w3c-ccg.github.io/did-method-key/) | [universalresolver/driver-did-key](https://hub.docker.com/r/universalresolver/driver-did-key) |
 | [did-dock](https://github.com/docknetwork/dock-did-driver) | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/docknetwork/dock-did-driver/blob/master/Dock%20DID%20method%20specification.md) | [docknetwork/dock-did-driver](https://hub.docker.com/r/docknetwork/dock-did-driver) |
-| [did-trustbloc](https://github.com/trustbloc/trustbloc-did-method) | 0.1.3 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/trustbloc/trustbloc-did-method/blob/v0.1.3/docs/spec/trustbloc-did-method.md) | [trustbloc/driver-did-trustbloc](https://github.com/trustbloc/trustbloc-did-method/packages/212043)
+| [did-trustbloc](https://github.com/trustbloc/trustbloc-did-method) | 0.1.4 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/trustbloc/trustbloc-did-method/blob/v0.1.4/docs/spec/trustbloc-did-method.md) | [trustbloc/driver-did-trustbloc](https://github.com/trustbloc/trustbloc-did-method/packages/212043)
 | [did-sirius](https://gitlab.com/proximax-enterprise/siriusid/tsjs-did-sirius-id-driver) | 0.0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.2](https://gitlab.com/proximax-enterprise/siriusid/sirius-id-specs/-/blob/master/docs/did-method-spec.md) | [proximax-enterprise/tsjs-did-sirius-id-driver](https://hub.docker.com/r/proximax/tsjs-did-sirius-id-driver)
 | [did-trust](https://github.com/bjwswang/uni-resolver-driver-did-trust) | 0.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](http://did.360.cn/doc/) | [bjwswang/driver-did-trust](https://hub.docker.com/repository/docker/bjwswang/driver-did-trust)
 | [did-io](https://github.com/iotexproject/uni-resolver-driver-did-io) | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) | (missing) | [iotex/uni-resolver-driver-did-io](iotex/uni-resolver-driver-did-io:latest)
 | [did-bba](https://github.com/blobaa/bba-did-driver) | 0.2.0 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0](https://github.com/blobaa/bba-did-method-specification/blob/master/docs/markdown/spec.md) | [blobaa/bba-did-driver](https://hub.docker.com/repository/docker/blobaa/bba-did-driver)
 | [did-cy] | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) |  | [](chainyard/driver-did-cy:latest)
 | [did-bid](https://github.com/teleinfo-bif/bid-resolver) | 1.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0.1](https://github.com/teleinfo-bif/bid/tree/master/doc/en) | [teleinfo/driver-did-bid](https://hub.docker.com/repository/docker/teleinfo/driver-did-bid)
-| [did-schema](https://github.com/51nodes/schema-registry-did-resolver) | 0.1.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/51nodes/schema-registry-did-method) | [51nodes/schema-registry-did-resolver](https://hub.docker.com/repository/docker/51nodes/schema-registry-did-resolver)
+| [did-schema](https://github.com/51nodes/schema-registry-did-resolver) | 0.1.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/51nodes/schema-registry-did-method) | [51nodes/schema-registry-did-resolver](https://hub.docker.com/repository/docker/51nodes/schema-registry-did-resolver)  
+| [did-ion](https://github.com/decentralized-identity/uni-resolver-driver-did-ion) | 0.8.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/decentralized-identity/ion) | [identityfoundation/driver-did-ion](https://hub.docker.com/r/identityfoundation/driver-did-ion)
 
 ## More Information
 
