@@ -160,7 +160,7 @@ services:
   ace-did-driver:
     container_name: ace-did-driver
     image: aceblock/ace-did-driver:latest
-    enviroment:
+    environment:
       UNIRESOLVER_DRIVER_DID_ACE: ${UNIRESOLVER_DRIVER_DID_ACE}
     ports:
       - "8111:8111"
