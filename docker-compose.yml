@@ -168,3 +168,8 @@ services:
       UNIRESOLVER_DRIVER_DID_ACE: ${UNIRESOLVER_DRIVER_DID_ACE}
     ports:
       - "8112:8080"
+  gataca-did-resolver-driver:
+    container_name: gataca-did-resolver-driver
+    image: gatacaid/universal-resolver-driver:1.0.0
+    ports:
+      - "8113:8080"
