@@ -13,12 +13,6 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:sov:WRfXPg8dantKVubE3HX8pw" ]
 		}, {
-			"pattern": "^(did:erc725:.+)$",
-			"image": "universalresolver/driver-did-erc725",
-			"imageProperties": "true",
-			"tag": "latest",
-			"testIdentifiers": [ "did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E" ]
-		}, {
 			"pattern": "^(did:v1:nym:.+)$",
 			"image": "veresone/uni-resolver-did-v1-driver",
 			"imageProperties": "true",
@@ -30,10 +24,6 @@
 			"imageProperties": "true",
 			"tag": "latest",
 			"testIdentifiers": [ "did:v1:test:nym:z6MkgF4uJbLMoUin2uKaBf4Jb1F7SHzuALE8Ldq8FPPpHE9t", "did:v1:test:nym:z6MkmWLiAt5FtfwgFJwMDGS1GiFn1KpUXsd7bn1v2hLyXvud" ]
-		}, {
-			"pattern": "^did:ipid:(.+)$",
-			"url": "https://ipfs.io/ipns/$1",
-			"testIdentifiers": [ "did:ipid:QmYA7p467t4BGgBL4NmyHtsXMoPrYH9b3kSG6dbgFYskJm" ]
 		}, {
 			"pattern": "^(did:stack:.+)$",
 			"image": "universalresolver/driver-did-stack",
@@ -65,11 +55,6 @@
 			"tag": "latest",
 			"testIdentifiers": [ "ssi.labs.nic.at" ]
 		}, {
-			"pattern": "^(did:jolo:.+)$",
-			"image": "jolocomgmbh/jolocom-did-driver",
-			"tag": "latest",
-			"testIdentifiers": [ "did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21" ]
-		}, {
 			"pattern": "^(did:hcr:.+)$",
 			"image": "hacera/hacera-did-driver",
 			"tag": "latest",
@@ -82,11 +67,6 @@
 			"pattern": "^(did:github:.+)$",
 			"url": "https://github-did.com/api/v1/did/$1",
 			"testIdentifiers": [ "did:github:gjgd" ]
-		}, {
-			"pattern": "^(did:neoid:.+)$",
-			"image": "swisscomblockchainag/seraph-id-did-driver",
-			"tag": "latest",
-			"testIdentifiers" : [ "did:neoid:priv:b4eeeb80d20bfb38b23001d0659ce0c1d96be0aa" ]
 		}, {
 			"pattern": "^(did:ccp:.+)$",
 			"image": "hello2mao/driver-did-ccp",
@@ -113,11 +93,6 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734" ]
 		}, {
-			"pattern": "^(did:echo:.+)$",
-			"image": "echoprotocol/uni-resolver-driver-did-echo",
-			"tag": "latest",
-			"testIdentifiers": [ "did:echo:1.1.25.0" ]
-		}, {
 			"pattern": "^(did:factom:.+)$",
 			"image": "sphereon/driver-did-factom",
 			"tag": "latest",
@@ -129,11 +104,6 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:key:z6Mkfriq1MqLBoPWecGoDLjguo1sB9brj6wT3qZ5BxkKpuP6", "did:key:z6MksQ35B5bwZDQq4QKuhQW2Sv6dcqwg4PqcSFf67pdgrtjB", "did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH" ]
 		}, {
-			"pattern": "^(did:dock:[a-zA-Z0-9]+)$",
-			"image": "docknetwork/dock-did-driver",
-			"tag": "latest",
-			"testIdentifiers": [ "did:dock:5FXqofpV7dsuki925U1dSzDvBuQbaci5yWTQGVWRQ7bdQP5p" ]
-		}, {
 			"pattern": "^(did:abt:.+)$",
 			"image": "arcblock/driver-did-abt",
 			"tag": "latest",
@@ -143,11 +113,6 @@
 			"url": "http://driver-did-trustbloc:8102/resolveDID?did=$1",
 			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiBh6SP9nw2W-1Z9Y9KB0-GZ8hvtYxFgE5oeSVbTmbpXmw" ]
 		},{
-			"pattern": "^(did:sirius:.+)$",
-			"image": "proximax/tsjs-did-sirius-id-driver",
-			"tag": "latest",
-			"testIdentifiers": [ "did:sirius:2VhYrbauc2cCx9ZpCp5wrDtK7HKf7jrsvgoKBD4KgK" ]
-    	},{
 			"pattern": "^(did:mpg:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
 			"image": "mpgshankr/driver-did-mpg",
 			"imageProperties": "true",
@@ -169,17 +134,6 @@
             "tag": "latest",
             "testIdentifiers": [ "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf", "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044" ]
         }, {
-			"pattern": "^(did:cy:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
-			"image": "chainyard/driver-did-cy",
-			"imageProperties": "true",
-			"tag": "latest",
-			"testIdentifiers": [ "did:cy:7PGGnRdvKKFftSXU3Jw75Vk5npfg" ]
-		}, {
-	  		"pattern": "^(did:bid:)([0-9a-f]{24})",
-	  		"image": "teleinfo/driver-did-bid",
-	  		"tag": "1.0.0",
-	  		"testIdentifiers": [ "did:bid:6cc796b8d6e2fbebc9b3cf9e" ]
-	  	}, {
 			"pattern": "^(did:schema:.+)$",
 			"image": "51nodes/schema-registry-did-resolver",
 			"tag": "0.1.1",
