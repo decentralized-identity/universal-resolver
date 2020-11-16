@@ -161,3 +161,15 @@ services:
     image: identityfoundation/driver-did-ion:v0.8.1
     ports:
       - "8111:8080"
+  ace-did-driver:
+    container_name: ace-did-driver
+    image: aceblock/ace-did-driver:latest
+    environment:
+      UNIRESOLVER_DRIVER_DID_ACE: ${UNIRESOLVER_DRIVER_DID_ACE}
+    ports:
+      - "8112:8080"
+  gataca-did-resolver-driver:
+    container_name: gataca-did-resolver-driver
+    image: gatacaid/universal-resolver-driver:1.0.0
+    ports:
+      - "8113:8080"
