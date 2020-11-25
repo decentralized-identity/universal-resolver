@@ -1,23 +1,9 @@
 # Dockerfile for universalresolver/uni-resolver-web
 
-FROM maven:3-jdk-8
+FROM maven:3-jdk-11
 MAINTAINER Markus Sabadello <markus@danubetech.com>
 
 USER root
-
-# install dependencies
-
-RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -DrepoUrl=https://repo.maven.apache.org/maven2 -Dartifact=org.eclipse.jetty:jetty-maven-plugin:9.4.18.v20190429
-RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -DrepoUrl=https://repo.maven.apache.org/maven2 -Dartifact=org.apache.maven.plugins:maven-war-plugin:3.2.2
-
-ARG GITHUB_READ_PACKAGES_OWNER
-ARG GITHUB_READ_PACKAGES_TOKEN
-ADD ./resolver/java/settings.xml /root/.m2/
-
-# build dependencies
-
-RUN cd /opt/ && git clone https://github.com/decentralized-identity/did-common-java.git && \
-    cd /opt/did-common-java/ && mvn clean install -DskipTests
 
 # build uni-resolver-web
 

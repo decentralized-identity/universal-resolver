@@ -3,12 +3,18 @@ networks:
   default:
     name: universal-resolver
 services:
+  uni-resolver-web:
+    image: universalresolver/uni-resolver-web:latest
+    ports:
+      - "8080:8080"
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
     environment:
       uniresolver_driver_did_btcr_bitcoinConnection: ${uniresolver_driver_did_btcr_bitcoinConnection}
       uniresolver_driver_did_btcr_rpcUrlMainnet: ${uniresolver_driver_did_btcr_rpcUrlMainnet}
       uniresolver_driver_did_btcr_rpcUrlTestnet: ${uniresolver_driver_did_btcr_rpcUrlTestnet}
+      uniresolver_driver_did_btcr_rpcCertMainnet: ${uniresolver_driver_did_btcr_rpcCertMainnet}
+      uniresolver_driver_did_btcr_rpcCertTestnet: ${uniresolver_driver_did_btcr_rpcCertTestnet}
     ports:
       - "8081:8080"
   driver-did-sov:
@@ -21,7 +27,7 @@ services:
     ports:
       - "8082:8080"
   uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:1.3.1
+    image: uport/uni-resolver-driver-did-uport:1.4.0
     ports:
       - "8083:8081"
   driver-did-stack:
@@ -55,7 +61,7 @@ services:
     ports:
       - "8090:8080"
   driver-did-ccp:
-    image: hello2mao/driver-did-ccp:latest
+    image: universalresolver/driver-did-ccp:latest
     ports:
       - "8091:8080"
   work-did-driver:
@@ -70,7 +76,7 @@ services:
     ports:
       - "8093:8080"
   kilt-did-driver:
-    image: kiltprotocol/kilt-did-driver:1.0.1
+    image: kiltprotocol/kilt-did-driver:1.2.1
     environment:
       uniresolver_driver_kilt_did_node: ${uniresolver_driver_kilt_did_node}
     ports:
@@ -78,7 +84,7 @@ services:
   evan-did-driver:
     image: evannetwork/evan-did-driver:latest
     ports:
-      - "8095:8080"  
+      - "8095:8080"
   uni-resolver-driver-did-echo:
     image: echoprotocol/uni-resolver-driver-did-echo:latest
     environment:
@@ -87,7 +93,83 @@ services:
       uniresolver_driver_did_echo_devnet_rpc_url: ${uniresolver_driver_did_echo_devnet_rpc_url}
     ports:
       - "8096:8080"
-  uni-resolver-web:
-    image: universalresolver/uni-resolver-web:latest
+  driver-did-factom:
+    image: sphereon/driver-did-factom:latest
     ports:
-      - "8080:8080"
+      - "8097:8080"
+  driver-did-key:
+    image: universalresolver/driver-did-key:latest
+    ports:
+      - "8098:8080"
+  dock-did-driver:
+    image: docknetwork/dock-did-driver:latest
+    ports:
+      - "8099:8080"
+  uni-resolver-did-v1-driver:
+    image: veresone/uni-resolver-did-v1-driver:latest
+    ports:
+      - "8100:8080"
+  driver-did-abt:
+    image: arcblock/driver-did-abt:latest
+    ports:
+      - "8101:8080"
+  driver-did-trustbloc:
+    container_name: driver-did-trustbloc
+    image: trustbloc/driver-did-trustbloc:0.1.4
+    environment:
+      DID_METHOD_HOST_URL: ${DID_METHOD_HOST_URL}
+      DID_METHOD_TLS_SYSTEMCERTPOOL: ${DID_METHOD_TLS_SYSTEMCERTPOOL}
+      DID_METHOD_MODE: ${DID_METHOD_MODE}
+    ports:
+      - "8102:8102"
+    command: start
+  tsjs-did-sirius-id-driver:
+    image: proximax/tsjs-did-sirius-id-driver:latest
+    ports:
+      - "8105:8080"
+  driver-did-mpg:
+    image: mpgshankr/driver-did-mpg:latest
+    ports:
+      - "8103:8080"
+  driver-did-trust:
+    container_name: driver-did-trust
+    image: bjwswang/driver-did-trust:latest
+    ports:
+      - "8106:8080"
+  uni-resolver-driver-did-io:
+    image: iotex/uni-resolver-driver-did-io:latest
+    ports:
+      - "8104:8080"
+  bba-did-driver:
+    container_name: bba-did-driver
+    image: blobaa/bba-did-driver:0.2.0
+    ports:
+      - "8107:8080"
+  driver-did-cy:
+    image: chainyard/driver-did-cy:latest
+    ports:
+      - "8108:8080"
+  driver-did-bid:
+    image: teleinfo/driver-did-bid:1.0.0
+    ports:
+      - "8109:8080"
+  schema-registry-did-resolver:
+    image: 51nodes/schema-registry-did-resolver:0.1.1
+    ports:
+      - "8110:8080"
+  driver-did-ion:
+    image: identityfoundation/driver-did-ion:v0.8.1
+    ports:
+      - "8111:8080"
+  ace-did-driver:
+    container_name: ace-did-driver
+    image: aceblock/ace-did-driver:latest
+    environment:
+      UNIRESOLVER_DRIVER_DID_ACE: ${UNIRESOLVER_DRIVER_DID_ACE}
+    ports:
+      - "8112:8080"
+  gataca-did-resolver-driver:
+    container_name: gataca-did-resolver-driver
+    image: gatacaid/universal-resolver-driver:1.0.0
+    ports:
+      - "8113:8080"

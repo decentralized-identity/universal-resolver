@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import foundation.identity.did.DIDDocument;
+import foundation.identity.did.DIDURL;
+import foundation.identity.did.parser.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,9 +24,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import did.DIDDocument;
-import did.DIDURL;
-import did.parser.ParserException;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.driver.Driver;
@@ -140,9 +140,9 @@ public class LocalUniResolver implements UniResolver {
 		try {
 
 			didUrl = DIDURL.fromString(identifier);
-			resolveResult.getResolverMetadata().put("didUrl", didUrl.toJsonObject());
+			resolveResult.getDidResolutionMetadata().put("didUrl", didUrl);
 
-			log.debug("Identifier " + identifier + " is a valid DID URL: " + didUrl.getDid());
+			log.debug("Identifier " + identifier + " is a valid DID URL: " + didUrl);
 		} catch (IllegalArgumentException | ParserException ex) {
 
 			log.debug("Identifier " + identifier + " is not a valid DID URL: " + ex.getMessage());
@@ -170,9 +170,9 @@ public class LocalUniResolver implements UniResolver {
 			this.resolveWithDrivers(resolveIdentifier, driverResolveResult);
 
 			resolveResult.setDidDocument(driverResolveResult.getDidDocument());
-			resolveResult.setMethodMetadata(driverResolveResult.getMethodMetadata());
+			resolveResult.setDidDocumentMetadata(driverResolveResult.getDidDocumentMetadata());
 
-			resolveResult.getResolverMetadata().putAll(driverResolveResult.getResolverMetadata());
+			resolveResult.getDidResolutionMetadata().putAll(driverResolveResult.getDidResolutionMetadata());
 		}
 
 		// execute extensions (after)
@@ -190,7 +190,7 @@ public class LocalUniResolver implements UniResolver {
 
 		long stop = System.currentTimeMillis();
 
-		resolveResult.getResolverMetadata().put("duration", Long.valueOf(stop - start));
+		resolveResult.getDidResolutionMetadata().put("duration", Long.valueOf(stop - start));
 
 		// done
 
@@ -229,7 +229,7 @@ public class LocalUniResolver implements UniResolver {
 			if (log.isDebugEnabled()) log.debug("Attemping to resolve " + resolveIdentifier + " with driver " + driver.getValue().getClass());
 			driverResolveResult = driver.getValue().resolve(resolveIdentifier);
 
-			if (driverResolveResult != null && driverResolveResult.getDidDocument() != null && driverResolveResult.getDidDocument().getJsonLdObject().isEmpty()) {
+			if (driverResolveResult != null && driverResolveResult.getDidDocument() != null && driverResolveResult.getDidDocument().getJsonObject().isEmpty()) {
 
 				driverResolveResult.setDidDocument((DIDDocument) null);
 			}
@@ -239,7 +239,7 @@ public class LocalUniResolver implements UniResolver {
 				usedDriverId = driver.getKey();
 
 				resolveResult.setDidDocument(driverResolveResult.getDidDocument());
-				resolveResult.setMethodMetadata(driverResolveResult.getMethodMetadata());
+				resolveResult.setDidDocumentMetadata(driverResolveResult.getDidDocumentMetadata());
 
 				break;
 			}
@@ -247,14 +247,14 @@ public class LocalUniResolver implements UniResolver {
 
 		if (usedDriverId != null) {
 
-			resolveResult.getResolverMetadata().put("driverId", usedDriverId);
+			resolveResult.getDidResolutionMetadata().put("driverId", usedDriverId);
 			if (log.isDebugEnabled()) log.debug("Resolved " + resolveIdentifier + " with driver " + usedDriverId);
 		} else {
 
 			if (log.isDebugEnabled()) log.debug("No result with " + this.getDrivers().size() + " drivers.");
 		}
 
-		resolveResult.getResolverMetadata().put("identifier", resolveIdentifier);
+		resolveResult.getDidResolutionMetadata().put("identifier", resolveIdentifier);
 	}
 
 	/*

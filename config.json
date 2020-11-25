@@ -20,11 +20,15 @@
 			"testIdentifiers": [ "did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E" ]
 		}, {
 			"pattern": "^(did:v1:nym:.+)$",
-			"url": "https://genesis.testnet.veres.one/dids/$1",
-			"testIdentifiers": [ ]
+			"image": "veresone/uni-resolver-did-v1-driver",
+			"imageProperties": "true",
+			"tag": "latest",
+			"testIdentifiers": [ "did:v1:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR" ]
 		}, {
 			"pattern": "^(did:v1:test:nym:.+)$",
-			"url": "https://frankfurt.capybara.veres.one/dids/$1",
+			"image": "veresone/uni-resolver-did-v1-driver",
+			"imageProperties": "true",
+			"tag": "latest",
 			"testIdentifiers": [ "did:v1:test:nym:z6MkgF4uJbLMoUin2uKaBf4Jb1F7SHzuALE8Ldq8FPPpHE9t", "did:v1:test:nym:z6MkmWLiAt5FtfwgFJwMDGS1GiFn1KpUXsd7bn1v2hLyXvud" ]
 		}, {
 			"pattern": "^did:ipid:(.+)$",
@@ -41,7 +45,7 @@
 			"image": "uport/uni-resolver-driver-did-uport",
 			"imagePort": "8081",
 			"tag": "latest",
-			"testIdentifiers": [ "did:web:did.or13.io" ]
+			"testIdentifiers": [ "did:web:did.actor:alice" ]
 		}, {
 			"pattern": "^(did:ethr:.+)$",
 			"image": "uport/uni-resolver-driver-did-uport",
@@ -99,14 +103,10 @@
 			"tag": "latest",
 			"testIdentifiers": [ "did:ont:AN5g6gz9EoQ3sCNu7514GEghZurrktCMiH" ]
 		}, {
-			"pattern": "^(did:key:.+)$",
-			"url": "https://did-key.web.app/api/dids/$1",
-			"testIdentifiers": [ "did:key:z6MksQ35B5bwZDQq4QKuhQW2Sv6dcqwg4PqcSFf67pdgrtjB" ]
-		}, {
 			"pattern": "^(did:kilt:.+)$",
 			"image": "kiltprotocol/kilt-did-driver",
 			"tag": "1.0.1",
-			"testIdentifiers" : [ "did:kilt:5GFs8gCumJcZDDWof5ETFqDFEsNwCsVJUj2bX7y4xBLxN5qT" ]
+			"testIdentifiers" : [ "did:kilt:5CqJa4Ct7oMeMESzehTiN9fwYdGLd7tqeirRMpGDh2XxYYyx" ]
 		}, {
 			"pattern": "^(did:evan:.+)$",
 			"image": "evannetwork/evan-did-driver",
@@ -117,6 +117,90 @@
 			"image": "echoprotocol/uni-resolver-driver-did-echo",
 			"tag": "latest",
 			"testIdentifiers": [ "did:echo:1.1.25.0" ]
-		}
+		}, {
+			"pattern": "^(did:factom:.+)$",
+			"image": "sphereon/driver-did-factom",
+			"tag": "latest",
+			"imageProperties": "true",
+			"testIdentifiers": [ "did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764" ]
+		}, {
+			"pattern": "^(did:key:.+)$",
+			"image": "universalresolver/driver-did-key",
+			"tag": "latest",
+			"testIdentifiers": [ "did:key:z6Mkfriq1MqLBoPWecGoDLjguo1sB9brj6wT3qZ5BxkKpuP6", "did:key:z6MksQ35B5bwZDQq4QKuhQW2Sv6dcqwg4PqcSFf67pdgrtjB", "did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH" ]
+		}, {
+			"pattern": "^(did:dock:[a-zA-Z0-9]+)$",
+			"image": "docknetwork/dock-did-driver",
+			"tag": "latest",
+			"testIdentifiers": [ "did:dock:5FXqofpV7dsuki925U1dSzDvBuQbaci5yWTQGVWRQ7bdQP5p" ]
+		}, {
+			"pattern": "^(did:abt:.+)$",
+			"image": "arcblock/driver-did-abt",
+			"tag": "latest",
+			"testIdentifiers": [ "did:abt:z11MVbRGLFt6RXaHzX7Xj7rmHfeiyFkJiiRE" ]
+		},{
+			"pattern": "^(did:trustbloc:.+)$",
+			"url": "http://driver-did-trustbloc:8102/resolveDID?did=$1",
+			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiBh6SP9nw2W-1Z9Y9KB0-GZ8hvtYxFgE5oeSVbTmbpXmw" ]
+		},{
+			"pattern": "^(did:sirius:.+)$",
+			"image": "proximax/tsjs-did-sirius-id-driver",
+			"tag": "latest",
+			"testIdentifiers": [ "did:sirius:2VhYrbauc2cCx9ZpCp5wrDtK7HKf7jrsvgoKBD4KgK" ]
+    	},{
+			"pattern": "^(did:mpg:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
+			"image": "mpgshankr/driver-did-mpg",
+			"imageProperties": "true",
+			"tag": "latest",
+			"testIdentifiers": [ "did:mpg:7PGGnRdvKKFftSXU3Jw75Vk5npfg" ]
+		},{
+			"pattern": "^(did:trust:.+)$",
+			"image": "bjwswang/driver-did-trust",
+			"tag": "latest",
+			"testIdentifiers": [ "did:trust:cert.EiBJ6qjVXgJ-A8xnaUiu4rtLDgeobQYgRWjMV49aCak4HQ","did:trust:licence.EiAMIYqz-ZlmFMrH6GqADqZThYmgV-x38Zwcjl6WR9qGhA" ]
+		},{
+			"pattern": "^(did:io:.+)$",
+			"image": "iotex/uni-resolver-driver-did-io",
+			"tag": "latest",
+			"testIdentifiers": [ "did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A" ]
+        }, {
+            "pattern": "^(did:bba:.+)$",
+            "image": "blobaa/bba-did-driver",
+            "tag": "latest",
+            "testIdentifiers": [ "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf", "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044" ]
+        }, {
+			"pattern": "^(did:cy:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
+			"image": "chainyard/driver-did-cy",
+			"imageProperties": "true",
+			"tag": "latest",
+			"testIdentifiers": [ "did:cy:7PGGnRdvKKFftSXU3Jw75Vk5npfg" ]
+		}, {
+	  		"pattern": "^(did:bid:)([0-9a-f]{24})",
+	  		"image": "teleinfo/driver-did-bid",
+	  		"tag": "1.0.0",
+	  		"testIdentifiers": [ "did:bid:6cc796b8d6e2fbebc9b3cf9e" ]
+	  	}, {
+			"pattern": "^(did:schema:.+)$",
+			"image": "51nodes/schema-registry-did-resolver",
+			"tag": "0.1.1",
+			"testIdentifiers": [ "did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J", "did:schema:evan-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J" ]
+		}, {
+			"pattern": "^(did:ion:.+)$",
+			"image": "identityfoundation/driver-did-ion",
+			"tag": "v0.8.1",
+			"testIdentifiers": [ "did:ion:EiC5-1uBg-YC2DvQRbI6eihDvk7DOYaQ08OB0I3jCe9Ydg:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljX2tleXMiOlt7ImlkIjoiYW55U2lnbmluZ0tleUlkIiwiandrIjp7ImNydiI6InNlY3AyNTZrMSIsImt0eSI6IkVDIiwieCI6ImFHc01HMHU5Rlg2STU0cGVJS3FZb2tqblFQR2hMVVlUT1FOYzNuT3ZFMVEiLCJ5IjoiZmppbHFoZVdRWWtITkU3MHNoTVJ5TURyWnA4RUdDZkVfYUwzaC15Sm1RQSJ9LCJwdXJwb3NlIjpbImF1dGgiLCJnZW5lcmFsIl0sInR5cGUiOiJFY2RzYVNlY3AyNTZrMVZlcmlmaWNhdGlvbktleTIwMTkifV0sInNlcnZpY2VfZW5kcG9pbnRzIjpbeyJlbmRwb2ludCI6Imh0dHA6Ly9hbnkuZW5kcG9pbnQiLCJpZCI6ImFueVNlcnZpY2VFbmRwb2ludElkIiwidHlwZSI6ImFueVR5cGUifV19fV0sInVwZGF0ZV9jb21taXRtZW50IjoiRWlERkM2RE9Ed0JNeG5kX19oMTFSeDRObjFlOHpubFlPUjJhLVBqeUNva2NGZyJ9LCJzdWZmaXhfZGF0YSI6eyJkZWx0YV9oYXNoIjoiRWlBbExNMC1qem1DWi1FcElVZ0laQ2piWk5yMDFfVVBMbnd5MHdfT3I0Rks0dyIsInJlY292ZXJ5X2NvbW1pdG1lbnQiOiJFaUJDNGhTMVVHeVNnTmYzbWFMdnNKRUpxX05aQUlKa0pndTNKMTJMeGNESE93In19" ]
+		},
+		{
+		  "pattern": "^(did:ace:.+)$",
+		  "image": "aceblock/ace-did-driver",
+		  "tag": "latest",
+		  "testIdentifiers": [ "did:ace:0xf81c16a78b257c10fddf87ed4324d433317169a005ddf36a3a1ba937ba9788e3" ]
+		},
+		{
+			"pattern": "^(did:gatc:.+)$",
+			"image": "gatacaid/universal-resolver-driver",
+			"tag": "1.0.0",
+			"testIdentifiers": [ "did:gatc:2xtSori9UQZdTqzxrkp7zqKM4Kj5B4C7" ]
+		  }
 	]
 }

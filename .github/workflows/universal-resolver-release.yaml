@@ -1,0 +1,19 @@
+name: Build release version
+
+on:
+  push:
+    branches:
+      - release-0.2.x
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Docker Build and Push
+        uses: danubetech/github-action-docker-build-push@master
+        env:
+          MAVEN_SETTINGS: ${{secrets.MAVEN_SETTINGS}}
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+          DOCKER_FILE: resolver/java/uni-resolver-web/docker/Dockerfile
+          CONTAINER_TAG: universalresolver/uni-resolver-web:0.2.0

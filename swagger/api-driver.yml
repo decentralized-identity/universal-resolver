@@ -1,0 +1,105 @@
+openapi: 3.0.0
+servers:
+# Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/universal-resolver/universal-resolver-driver/1.0.0
+  - url: /1.0/
+info:
+  description: Universal Resolver Driver
+  version: "1.0.0"
+  title: Universal Resolver Driver
+  contact:
+    email: markus@danubetech.com
+paths:
+  /identifiers/{identifier}:
+    get:
+      summary: Resolve a DID or other identifier.
+      operationId: resolve
+      parameters:
+        - in: path
+          required: true
+          name: identifier
+          schema:
+            type: string
+          description: A DID or other identifier to be resolved.
+          example: did:sov:WRfXPg8dantKVubE3HX8pw
+        - in: header
+          required: false
+          name: Accept
+          schema:
+            type: string
+          description: The requested MIME type of the DID document or DID resolution result.
+          examples:
+            application/did+json:
+              value: application/json
+              description: MIME type of a DID document (JSON representation)
+            application/did+ld+json:
+              value: application/did+ld+json
+              description: MIME type of a DID document (JSON-LD representation)
+            application/ld+json;profile=\"https://w3c-ccg.github.io/did-resolution/\":
+              value: application/ld+json;profile=\"https://w3c-ccg.github.io/did-resolution/\"
+              description: MIME type of a DID resolution result
+      responses:
+        '200':
+          description: successfully resolved!
+          content:
+            application/did+json:
+              schema:
+                type: object
+                description: The DID document (JSON representation).
+                example: {
+  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
+  "verificationMethod": [
+    {
+      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
+      "type": "Ed25519VerificationKey2018",
+      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }
+  ]
+}
+            application/did+ld+json:
+              schema:
+                type: object
+                description: The DID document (JSON-LD representation).
+                example: {
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
+  "verificationMethod": [
+    {
+      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
+      "type": "Ed25519VerificationKey2018",
+      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }
+  ]
+}
+            application/ld+json;profile=\"https://w3c-ccg.github.io/did-resolution/\":
+              schema:
+                $ref: '#/components/schemas/ResolutionResult'
+        '400':
+          description: invalid input!
+        '500':
+          description: error!
+components:
+  schemas:
+    ResolutionResult:
+      description: The DID resolution result.
+      type: object
+      additionalProperties: false
+      properties:
+        didDocument:
+          type: object
+          example: {
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
+  "verificationMethod": [
+    {
+      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
+      "type": "Ed25519VerificationKey2018",
+      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }
+  ]
+}
+        didResolutionMetadata:
+          type: object
+        didDocumentMetadata:
+          type: object
