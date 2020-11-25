@@ -173,3 +173,7 @@ services:
     image: gatacaid/universal-resolver-driver:1.0.0
     ports:
       - "8113:8080"
+  driver-did-vaa:
+    image: caictdevelop/driver-did-vaa:1.0.0
+    ports:
+      - "8768:8080"
