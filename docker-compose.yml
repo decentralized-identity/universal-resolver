@@ -181,3 +181,7 @@ services:
       uniresolver_driver_did_icon_network_id: ${uniresolver_driver_did_icon_network_id}
     ports:
       - "8114:8080"
+  driver-did-vaa:
+    image: caictdevelop/driver-did-vaa:1.0.0
+    ports:
+      - "8115:8080"
