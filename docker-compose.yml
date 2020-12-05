@@ -177,3 +177,11 @@ services:
     image: caictdevelop/driver-did-vaa:1.0.0
     ports:
       - "8115:8080"
+  driver-did-icon:
+    image: amuyu/driver-did-icon:0.1.1
+    environment:
+      uniresolver_driver_did_icon_node_url: ${uniresolver_driver_did_icon_node_url}
+      uniresolver_driver_did_icon_score_addr: ${uniresolver_driver_did_icon_score_addr}
+      uniresolver_driver_did_icon_network_id: ${uniresolver_driver_did_icon_network_id}
+    ports:
+      - "8114:8080"
