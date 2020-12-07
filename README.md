@@ -103,7 +103,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-ion](https://github.com/decentralized-identity/uni-resolver-driver-did-ion) | 0.8.1 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/decentralized-identity/ion) | [identityfoundation/driver-did-ion](https://hub.docker.com/r/identityfoundation/driver-did-ion)
 | [did-ace](https://github.com/aceblockID/aceblock-did-resolver)| 1.0 | [1.0 WD](https://w3c.github.io/did-core/) |(missing) | [aceblock/ace-did-driver](https://hub.docker.com/r/aceblock/ace-did-driver)
 | [did-gatc](https://github.com/gataca-io/universal-resolver-driver) | 1.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0 WD](https://github.com/gatacaid/gataca-did-method) | [gatacaid/universal-resolver-driver](https://hub.docker.com/r/gatacaid/universal-resolver-driver)
-| [did-icon](https://github.com/amuyu/uni-resolver-driver-did-icon) | 0.1.1 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0 WD](https://github.com/icon-project/icon-DID/blob/master/docs/ICON-DID-method.md) | [amuyu/driver-did-icon](https://hub.docker.com/r/amuyu/driver-did-icon)
+| [did-icon-zzeung](https://github.com/amuyu/uni-resolver-driver-did-icon) | 0.1.2 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0 WD](https://github.com/icon-project/icon-DID/blob/master/docs/ICON-DID-method.md) | [amuyu/driver-did-icon](https://hub.docker.com/r/amuyu/driver-did-icon)
 | [did-vaa](https://github.com/caict-develop-zhangbo/uni-resolver-driver-did-vaa)|1.0.0|[1.0 WD](https://w3c.github.io/did-core/)|[1.0 WD](https://github.com/caict-develop-zhangbo/vaa-method)|[caict/driver-did-vaa](https://hub.docker.com/repository/docker/caictdevelop/driver-did-vaa)
 
 ## More Information

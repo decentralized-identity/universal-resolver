@@ -174,7 +174,7 @@ services:
     ports:
       - "8113:8080"
   driver-did-icon:
-    image: amuyu/driver-did-icon:0.1.1
+    image: amuyu/driver-did-icon:0.1.2
     environment:
       uniresolver_driver_did_icon_node_url: ${uniresolver_driver_did_icon_node_url}
       uniresolver_driver_did_icon_score_addr: ${uniresolver_driver_did_icon_score_addr}
