@@ -1,5 +1,5 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>decentralized-identity</groupId>
@@ -65,7 +65,7 @@
 
 	<properties>
 
-		<!--    Project Properties      -->
+		<!-- Project Properties -->
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -73,7 +73,7 @@
 		<github.global.server>github</github.global.server>
 		<project.build.timestamp>${maven.build.timestamp}</project.build.timestamp>
 
-		<!--    Dependency Versions     -->
+		<!-- Dependency Versions -->
 
 		<key-formats-java.version>0.1.1</key-formats-java.version>
 		<did-common-java.version>0.3-SNAPSHOT</did-common-java.version>
@@ -91,7 +91,7 @@
 		<io.leonard-base58.version>0.0.2</io.leonard-base58.version>
 		<junit.version>4.13.1</junit.version>
 
-		<!--    Plugin Versions     -->
+		<!-- Plugin Versions -->
 
 		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 		<maven-war-plugin.version>3.2.3</maven-war-plugin.version>
@@ -104,7 +104,6 @@
 	</properties>
 
 	<build>
-
 		<resources>
 			<resource>
 				<directory>${project.basedir}/src/main/resources/</directory>
@@ -124,7 +123,6 @@
 				</includes>
 			</resource>
 		</resources>
-
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -152,9 +150,6 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${maven-surefire-plugin.version}</version>
-					<configuration>
-						<workingDirectory>${basedir}/../tmp</workingDirectory>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -207,39 +202,10 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-
 	</build>
-
-	<dependencies>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>decentralized-identity</groupId>
-				<artifactId>uni-resolver-driver</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>decentralized-identity</groupId>
-				<artifactId>uni-resolver-driver-http</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>decentralized-identity</groupId>
-				<artifactId>uni-resolver-examples</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>decentralized-identity</groupId>
-				<artifactId>uni-resolver-client</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>decentralized-identity</groupId>
 				<artifactId>uni-resolver-core</artifactId>
@@ -252,7 +218,22 @@
 			</dependency>
 			<dependency>
 				<groupId>decentralized-identity</groupId>
+				<artifactId>uni-resolver-client</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>decentralized-identity</groupId>
 				<artifactId>uni-resolver-web</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>decentralized-identity</groupId>
+				<artifactId>uni-resolver-driver</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>decentralized-identity</groupId>
+				<artifactId>uni-resolver-driver-http</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 			<dependency>
@@ -347,5 +328,12 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+	</dependencies>
 
 </project>
