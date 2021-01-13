@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - release-0.2.x
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
