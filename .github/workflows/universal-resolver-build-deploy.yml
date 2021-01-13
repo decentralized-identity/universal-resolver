@@ -7,9 +7,8 @@ on:
       - 'docs/**'
       - 'README.md'
       - 'LICENSE'
-    branches:
-      - master
-      - 'test-driver-**'
+    branches: [main, 'test-driver-**', gh-workflows]
+  workflow_dispatch:
 
 jobs:
   build:
