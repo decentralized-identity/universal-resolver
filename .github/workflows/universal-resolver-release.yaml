@@ -17,5 +17,5 @@ jobs:
           MAVEN_SETTINGS: ${{secrets.MAVEN_SETTINGS}}
           DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
           DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-          DOCKER_FILE: resolver/java/uni-resolver-web/docker/Dockerfile
+          DOCKER_FILE: uni-resolver-web/docker/Dockerfile
           CONTAINER_TAG: universalresolver/uni-resolver-web:0.2.0
