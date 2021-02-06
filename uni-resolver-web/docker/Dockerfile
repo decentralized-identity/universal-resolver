@@ -5,7 +5,7 @@ MAINTAINER Markus Sabadello <markus@danubetech.com>
 
 # build uni-resolver-web
 
-ADD ./resolver/java/ /opt/universal-resolver
+ADD . /opt/universal-resolver
 ADD config.json /opt/universal-resolver/uni-resolver-web/
 RUN cd /opt/universal-resolver && mvn clean install -N -DskipTests
 RUN cd /opt/universal-resolver/uni-resolver-core && mvn clean install -N -DskipTests
