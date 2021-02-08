@@ -118,7 +118,7 @@ def generate_ingress(containers, outputdir):
     fout.write('          - path: /*\n')
     fout.write('            backend:\n')
     fout.write('              serviceName: uni-resolver-frontend\n')
-    fout.write('              servicePort: 80\n')
+    fout.write('              servicePort: 7081\n')
 
     for container in containers:
         print(container)
