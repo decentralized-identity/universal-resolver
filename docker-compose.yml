@@ -115,7 +115,7 @@ services:
       - "8101:8080"
   driver-did-trustbloc:
     container_name: driver-did-trustbloc
-    image: trustbloc/driver-did-trustbloc:0.1.4
+    image: ghcr.io/trustbloc/driver-did-trustbloc:0.1.5
     environment:
       DID_METHOD_HOST_URL: ${DID_METHOD_HOST_URL}
       DID_METHOD_TLS_SYSTEMCERTPOOL: ${DID_METHOD_TLS_SYSTEMCERTPOOL}
