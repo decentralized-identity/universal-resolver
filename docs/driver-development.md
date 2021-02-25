@@ -70,7 +70,7 @@ In order to update a driver, simply submit a new PR that increments the Docker i
 
 ## How to test a driver locally
 
-Once your driver is implemented and published as a docker container, you may want to test that it is running properly within the Universal Resolver.
+Once your driver is implemented and published as a Docker container, you may want to test that it is running properly within the Universal Resolver.
 
 To do so, follow these steps:
 
