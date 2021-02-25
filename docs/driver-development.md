@@ -40,7 +40,7 @@ https://github.com/decentralized-identity/universal-resolver/pull/100
 
 Contributing a driver to the Universal Resolver expands the functionality of the service as new DID methods are added and used by the community.
 
-In order to contribute a driver to the Universal Resolver, the driver's source code must be published. You may choose to publish it at the [Decentralized Identity Foundation](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers) or on another publicly available site. In addition, your Docker image must be published on a publicly accessible container registry with version tags to allow configuration of your driver. Ideally, the same docker image is kept up-to-date to preserve versioning history (see below in the "How to Update a Driver" section).
+In order to contribute a driver to the Universal Resolver, the driver's source code must be published. You may choose to publish it at the [Decentralized Identity Foundation](https://github.com/decentralized-identity/universal-resolver/tree/master/drivers) or on another publicly available site. In addition, your Docker image must be published on a publicly accessible container registry with version tags to allow configuration of your driver. Ideally, the same Docker image is kept up-to-date to preserve versioning history (see below in the "How to Update a Driver" section).
 
 In your PR, edit the following files in the Universal Resolver root directory:
 
