@@ -190,11 +190,11 @@ def main(argv):
     generate_deployment_specs(containers, outputdir)
 
     # copy app deployment specs
-    # copy_app_deployment_specs(outputdir)
+    copy_app_deployment_specs(outputdir)
 
     # copy namespace files
-    # copy('/namespace/namespace-setup.yaml', './deploy/namespace-setup.yaml')
-    # copy('/namespace/namespace-setup.sh', './deploy/namespace-setup.sh')
+    copy('/namespace/namespace-setup.yaml', './deploy/namespace-setup.yaml')
+    copy('/namespace/namespace-setup.sh', './deploy/namespace-setup.sh')
 
 
 if __name__ == "__main__":
