@@ -33,10 +33,8 @@ def add_deployment(deployment_file, outputdir):
 
 
 def get_container_name(container_tag):
-    if container_tag.find('/') < 0:
-        return
-    user, container_name_version = container_tag.split('/')
-    return container_name_version.split(':')[0]
+    split_list = container_tag.split('/')
+    return split_list[-1].split(':')[0]
 
 
 def get_container_port(ports):
@@ -192,11 +190,11 @@ def main(argv):
     generate_deployment_specs(containers, outputdir)
 
     # copy app deployment specs
-    copy_app_deployment_specs(outputdir)
+    # copy_app_deployment_specs(outputdir)
 
     # copy namespace files
-    copy('/namespace/namespace-setup.yaml', './deploy/namespace-setup.yaml')
-    copy('/namespace/namespace-setup.sh', './deploy/namespace-setup.sh')
+    # copy('/namespace/namespace-setup.yaml', './deploy/namespace-setup.yaml')
+    # copy('/namespace/namespace-setup.sh', './deploy/namespace-setup.sh')
 
 
 if __name__ == "__main__":
