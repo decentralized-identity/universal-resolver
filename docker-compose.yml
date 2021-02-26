@@ -189,3 +189,7 @@ services:
     image: unisot/unisot-did-driver:latest
     ports:
       - "8116:8080"
+  driver-did-solid:
+    image: identitydotcom/driver-did-solid:0.1.0
+    ports:
+      - "8117:8080"
