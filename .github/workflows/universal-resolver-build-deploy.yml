@@ -7,21 +7,22 @@ on:
       - 'docs/**'
       - 'README.md'
       - 'LICENSE'
-    branches: [main, 'test-driver-**', gh-workflows]
+    branches: [main, 'test-driver-**', 'test-identity-ci', gh-workflows]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: Dev
     steps:
     - uses: actions/checkout@master
-    - name: Docker Build and Push
-      uses: ./ci/docker-build-push
-      env:
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-        DOCKER_FILE: uni-resolver-web/docker/Dockerfile
-        CONTAINER_TAG: universalresolver/uni-resolver-web:latest
+#    - name: Docker Build and Push
+#      uses: ./ci/docker-build-push
+#      env:
+#        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+#        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+#        DOCKER_FILE: uni-resolver-web/docker/Dockerfile
+#        CONTAINER_TAG: universalresolver/uni-resolver-web:latest
     - name: Deploy to AWS
       uses: ./ci/deploy-k8s-aws
       env:

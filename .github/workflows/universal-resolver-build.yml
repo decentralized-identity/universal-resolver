@@ -14,6 +14,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: Dev
     steps:
     - uses: actions/checkout@master
     - name: Docker Build and Push
