@@ -9,7 +9,7 @@ from shutil import copy
 import pathlib
 
 # CONSTANTS you may need to change:
-DEFAULT_DOMAIN_NAME = 'dev.uniresolver.io'
+DEFAULT_DOMAIN_NAME = 'did.civic.com'
 UNIVERSAL_RESOLVER_FRONTEND_TAG = "universalresolver/uni-resolver-frontend:latest;"
 
 
@@ -89,7 +89,7 @@ def generate_ingress(containers, outputdir):
     global DEFAULT_DOMAIN_NAME
     print("Generating uni-resolver-ingress.yaml")
     fout = open(outputdir + '/uni-resolver-ingress.yaml', "wt")
-    fout.write('apiVersion: extensions/v1\n')
+    fout.write('apiVersion: networking.k8s.io/v1\n')
     fout.write('kind: Ingress\n')
     fout.write('metadata:\n')
     fout.write('  name: \"uni-resolver-web\"\n')
@@ -107,18 +107,20 @@ def generate_ingress(containers, outputdir):
     fout.write('    - host: ' + DEFAULT_DOMAIN_NAME + '\n')
     fout.write('      http:\n')
     fout.write('        paths:\n')
-    fout.write('          - path: /*\n')
-    fout.write('            backend:\n')
-    fout.write('              serviceName: ssl-redirect\n')
-    fout.write('              servicePort: use-annotation\n')
     fout.write('          - path: /1.0/*\n')
+    fout.write('            pathType: ImplementationSpecific\n')
     fout.write('            backend:\n')
-    fout.write('              serviceName: uni-resolver-web\n')
-    fout.write('              servicePort: 8080\n')
+    fout.write('              service:\n')
+    fout.write('                name: uni-resolver-web\n')
+    fout.write('                port:\n')
+    fout.write('                  number: 8080\n')
     fout.write('          - path: /*\n')
+    fout.write('            pathType: ImplementationSpecific\n')
     fout.write('            backend:\n')
-    fout.write('              serviceName: uni-resolver-frontend\n')
-    fout.write('              servicePort: 7081\n')
+    fout.write('              service:\n')
+    fout.write('                name: uni-resolver-frontend\n')
+    fout.write('                port:\n')
+    fout.write('                  number: 7081\n')
 
     for container in containers:
         print(container)
@@ -136,9 +138,12 @@ def generate_ingress(containers, outputdir):
         fout.write('      http:\n')
         fout.write('        paths:\n')
         fout.write('          - path: /*\n')
+        fout.write('            pathType: ImplementationSpecific\n')
         fout.write('            backend:\n')
-        fout.write('              serviceName: ' + container_name + '\n')
-        fout.write('              servicePort: ' + container_port + '\n')
+        fout.write('              service:\n')
+        fout.write('                name: ' + container_name + '\n')
+        fout.write('                port:\n')
+        fout.write('                  number: ' + container_port + '\n')
 
     fout.close()
 
