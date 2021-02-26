@@ -28,7 +28,7 @@ def init_deployment_dir(outputdir):
 
 def add_deployment(deployment_file, outputdir):
     fout = open(outputdir + '/' + 'deploy.sh', "a+")
-    fout.write('kubectl apply -n uni-resolver -f %s \n' % deployment_file)
+    fout.write('kubectl apply -n did -f %s \n' % deployment_file)
     fout.close()
 
 
@@ -89,17 +89,17 @@ def generate_ingress(containers, outputdir):
     global DEFAULT_DOMAIN_NAME
     print("Generating uni-resolver-ingress.yaml")
     fout = open(outputdir + '/uni-resolver-ingress.yaml', "wt")
-    fout.write('apiVersion: extensions/v1beta1\n')
+    fout.write('apiVersion: extensions/v1\n')
     fout.write('kind: Ingress\n')
     fout.write('metadata:\n')
     fout.write('  name: \"uni-resolver-web\"\n')
     fout.write('  namespace: \"did\"\n')
     fout.write('  annotations:\n')
-    fout.write('    kubernetes.io/ingress.class: alb\n')
-    fout.write('    alb.ingress.kubernetes.io/scheme: internet-facing\n')
-    fout.write('    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:332553390353:certificate/925fce37-d446-4af3-828e-f803b3746af0\n')
-    fout.write('    alb.ingress.kubernetes.io/listen-ports: \'[{"HTTP": 80}, {"HTTPS":443}]\'\n')
-    fout.write('    alb.ingress.kubernetes.io/actions.ssl-redirect: \'{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}\'\n')
+#     fout.write('    kubernetes.io/ingress.class: alb\n')
+#     fout.write('    alb.ingress.kubernetes.io/scheme: internet-facing\n')
+#     fout.write('    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:332553390353:certificate/925fce37-d446-4af3-828e-f803b3746af0\n')
+#     fout.write('    alb.ingress.kubernetes.io/listen-ports: \'[{"HTTP": 80}, {"HTTPS":443}]\'\n')
+#     fout.write('    alb.ingress.kubernetes.io/actions.ssl-redirect: \'{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}\'\n')
     fout.write('  labels:\n')
     fout.write('    app: \"uni-resolver-web\"\n')
     fout.write('spec:\n')
