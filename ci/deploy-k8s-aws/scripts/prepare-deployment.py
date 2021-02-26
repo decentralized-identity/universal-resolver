@@ -114,7 +114,7 @@ def generate_ingress(containers, outputdir):
     fout.write('                name: uni-resolver-web\n')
     fout.write('                port:\n')
     fout.write('                  number: 8080\n')
-    fout.write('          - path: /*\n')
+    fout.write('          - path: /\n')
     fout.write('            pathType: ImplementationSpecific\n')
     fout.write('            backend:\n')
     fout.write('              service:\n')
@@ -130,14 +130,11 @@ def generate_ingress(containers, outputdir):
         container_name = get_container_name(container_tag)
         if container_name == 'uni-resolver-web':  # this is the default-name, hosted at: DEFAULT_DOMAIN_NAME
             continue
-        sub_domain_name = container_name.replace('did', '').replace('driver', '').replace('uni-resolver', '').replace('-',
+        subpath = container_name.replace('did', '').replace('driver', '').replace('uni-resolver', '').replace('-',
                                                                                                                    '')
-        print('Adding domain: ' + sub_domain_name + '.' + DEFAULT_DOMAIN_NAME)
+        print('Adding path: ' + subpath)
 
-        fout.write('    - host: ' + sub_domain_name + '.' + DEFAULT_DOMAIN_NAME + '\n')
-        fout.write('      http:\n')
-        fout.write('        paths:\n')
-        fout.write('          - path: /*\n')
+        fout.write('          - path: /' + subpath + '\n')
         fout.write('            pathType: ImplementationSpecific\n')
         fout.write('            backend:\n')
         fout.write('              service:\n')
