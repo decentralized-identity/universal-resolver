@@ -10,26 +10,46 @@ on:
     branches: [main, 'test-driver-**', gh-workflows]
   workflow_dispatch:
 
+env:
+  IMAGE_NAME: universalresolver/uni-resolver-web
+  PATH_TO_DOCKERFILE: $GITHUB_WORKSPACE/uni-resolver-web/docker/Dockerfile
+  BUILD_CONTEXT: $GITHUB_WORKSPACE
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+    - name: Import Secrets
+      uses: hashicorp/vault-action@v2.1.1
+      with:
+        url: https://vault.danubetech.com
+        token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
+        tlsSkipVerify: true
+        secrets: |
+          ci/data/gh-workflows/dockerhub username | DOCKER_USERNAME ;
+          ci/data/gh-workflows/dockerhub password | DOCKER_PASSWORD ;
+          ci/data/deployments/aws-universal-resolver KUBE_CONFIG_DATA | KUBE_CONFIG_DATA ;
+          ci/data/deployments/aws-universal-resolver AWS_ACCESS_KEY_ID | AWS_ACCESS_KEY_ID ;
+          ci/data/deployments/aws-universal-resolver AWS_SECRET_ACCESS_KEY | AWS_SECRET_ACCESS_KEY ;
+          ci/data/deployments/aws-universal-resolver RPC_URL_TESTNET | RPC_URL_TESTNET ;
+          ci/data/deployments/aws-universal-resolver RPC_CERT_TESTNET | RPC_CERT_TESTNET ;
+          ci/data/gh-workflows/deployment-status slack-webhook-url | SLACK_WEBHOOK_URL
     - name: Docker Build and Push
       uses: ./ci/docker-build-push
       env:
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-        DOCKER_FILE: uni-resolver-web/docker/Dockerfile
-        CONTAINER_TAG: universalresolver/uni-resolver-web:latest
+        DOCKER_USERNAME: ${{env.DOCKER_USERNAME}}
+        DOCKER_PASSWORD: ${{env.DOCKER_PASSWORD}}
+        DOCKER_FILE: "${{ env.PATH_TO_DOCKERFILE }}"
+        CONTAINER_TAG: "${{ env.IMAGE_NAME }}"
     - name: Deploy to AWS
       uses: ./ci/deploy-k8s-aws
       env:
-        KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG_DATA}}
-        AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-        AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-        RPC_URL_TESTNET: ${{secrets.RPC_URL_TESTNET}}
-        RPC_CERT_TESTNET: ${{secrets.RPC_CERT_TESTNET}}
+        KUBE_CONFIG_DATA: ${{env.KUBE_CONFIG_DATA}}
+        AWS_ACCESS_KEY_ID: ${{env.AWS_ACCESS_KEY_ID}}
+        AWS_SECRET_ACCESS_KEY: ${{env.AWS_SECRET_ACCESS_KEY}}
+        RPC_URL_TESTNET: ${{env.RPC_URL_TESTNET}}
+        RPC_CERT_TESTNET: ${{env.RPC_CERT_TESTNET}}
     - name: Sleep for 120 seconds
       uses: jakejarvis/wait-action@master
       with:
@@ -44,5 +64,5 @@ jobs:
         status: ${{ job.status }}
         fields: repo,commit,action,eventName,ref,workflow # selectable (default: repo,message)
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }} # required
       if: failure() # Send message only on failure
