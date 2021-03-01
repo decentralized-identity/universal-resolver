@@ -58,7 +58,7 @@ In your PR, edit the following files in the Universal Resolver root directory:
   * driver version (e.g. `0.1`)
   * DID spec version that the driver conforms to, with link to DID spec
   * DID method spec version (e.g. `0.1`), with link to DID method spec (or mark "missing")
-  * Docker image name (e.g. `exampleorg/uni-resolver-driver-did-example`) with link to Docker image at docker-registry
+  * Docker image name (e.g. `exampleorg/uni-resolver-driver-did-example`) with link to hosted Docker image
 
 Your driver is expected to be well-documented, tested, and working before you submit a PR. The documentation for your driver should be clear enough to explain how to run your driver, how to troubleshoot it, and a process for updating the driver over time.
 
