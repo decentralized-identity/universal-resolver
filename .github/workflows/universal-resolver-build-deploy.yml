@@ -7,12 +7,12 @@ on:
       - 'docs/**'
       - 'README.md'
       - 'LICENSE'
-    branches: [main, 'test-driver-**', gh-workflows]
+    branches: [main, 'test-driver-**', github-workflows]
   workflow_dispatch:
 
 env:
   IMAGE_NAME: universalresolver/uni-resolver-web
-  PATH_TO_DOCKERFILE: /uni-resolver-web/docker/Dockerfile
+  PATH_TO_DOCKERFILE: uni-resolver-web/docker/Dockerfile
   BUILD_CONTEXT: $GITHUB_WORKSPACE
 
 jobs:
