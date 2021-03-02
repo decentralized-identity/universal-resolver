@@ -1,13 +1,6 @@
 name: AWS Kubernetes deployment
 
 on:
-  push:
-    paths-ignore:
-      - '.gitignore'
-      - 'docs/**'
-      - 'README.md'
-      - 'LICENSE'
-    branches: [main, 'test-driver-**', github-workflows]
   workflow_dispatch:
 
 env:
@@ -27,21 +20,12 @@ jobs:
         token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
         tlsSkipVerify: true
         secrets: |
-          ci/data/gh-workflows/dockerhub username | DOCKER_USERNAME ;
-          ci/data/gh-workflows/dockerhub password | DOCKER_PASSWORD ;
           ci/data/gh-workflows/universal-resolver-cluster kube-config-data | KUBE_CONFIG_DATA ;
           ci/data/gh-workflows/universal-resolver-cluster aws-access-key-id | AWS_ACCESS_KEY_ID ;
           ci/data/gh-workflows/universal-resolver-cluster aws-secret-access-key | AWS_SECRET_ACCESS_KEY ;
           ci/data/gh-workflows/universal-resolver-cluster rpc-url-testnet | RPC_URL_TESTNET ;
           ci/data/gh-workflows/universal-resolver-cluster rpc-cert-testnet | RPC_CERT_TESTNET ;
           ci/data/gh-workflows/deployment-status slack-webhook-url | SLACK_WEBHOOK_URL
-    - name: Docker Build and Push
-      uses: ./ci/docker-build-push
-      env:
-        DOCKER_USERNAME: ${{env.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{env.DOCKER_PASSWORD}}
-        DOCKER_FILE: "${{ env.PATH_TO_DOCKERFILE }}"
-        CONTAINER_TAG: "${{ env.IMAGE_NAME }}"
     - name: Deploy to AWS
       uses: ./ci/deploy-k8s-aws
       env:
