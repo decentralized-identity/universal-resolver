@@ -29,11 +29,11 @@ jobs:
         secrets: |
           ci/data/gh-workflows/dockerhub username | DOCKER_USERNAME ;
           ci/data/gh-workflows/dockerhub password | DOCKER_PASSWORD ;
-          ci/data/deployments/aws-universal-resolver KUBE_CONFIG_DATA | KUBE_CONFIG_DATA ;
-          ci/data/deployments/aws-universal-resolver AWS_ACCESS_KEY_ID | AWS_ACCESS_KEY_ID ;
-          ci/data/deployments/aws-universal-resolver AWS_SECRET_ACCESS_KEY | AWS_SECRET_ACCESS_KEY ;
-          ci/data/deployments/aws-universal-resolver RPC_URL_TESTNET | RPC_URL_TESTNET ;
-          ci/data/deployments/aws-universal-resolver RPC_CERT_TESTNET | RPC_CERT_TESTNET ;
+          ci/data/gh-workflows/universal-resolver-cluster kube-config-data | KUBE_CONFIG_DATA ;
+          ci/data/gh-workflows/universal-resolver-cluster aws-access-key-id | AWS_ACCESS_KEY_ID ;
+          ci/data/gh-workflows/universal-resolver-cluster aws-secret-access-key | AWS_SECRET_ACCESS_KEY ;
+          ci/data/gh-workflows/universal-resolver-cluster rpc-url-testnet | RPC_URL_TESTNET ;
+          ci/data/gh-workflows/universal-resolver-cluster rpc-cert-testnet | RPC_CERT_TESTNET ;
           ci/data/gh-workflows/deployment-status slack-webhook-url | SLACK_WEBHOOK_URL
     - name: Docker Build and Push
       uses: ./ci/docker-build-push
