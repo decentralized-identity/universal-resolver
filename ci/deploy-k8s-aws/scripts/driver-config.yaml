@@ -25,3 +25,7 @@ driver-did-btcr:
       value:
     - name: uniresolver_driver_did_btcr_rpcCertTestnet
       value: RPC_CERT_TESTNET
+driver-did-solid:
+  envFrom:
+    - secretRef:
+        name: driver-did-solid
