@@ -122,6 +122,22 @@ def generate_ingress(containers, outputdir):
     fout.write('                port:\n')
     fout.write('                  number: 7081\n')
 
+    fout.write('          - path: /registrar(/|$)(.*)\n')
+    fout.write('            pathType: ImplementationSpecific\n')
+    fout.write('            backend:\n')
+    fout.write('              service:\n')
+    fout.write('                name: uni-registrar-frontend\n')
+    fout.write('                port:\n')
+    fout.write('                  number: 8080\n')
+
+    fout.write('          - path: /registrar/()(1.0/.*)\n')
+    fout.write('            pathType: ImplementationSpecific\n')
+    fout.write('            backend:\n')
+    fout.write('              service:\n')
+    fout.write('                name: uni-registrar-web\n')
+    fout.write('                port:\n')
+    fout.write('                  number: 8080\n')
+
     for container in containers:
         print(container)
         print(containers[container]['ports'])
