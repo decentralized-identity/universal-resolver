@@ -62,17 +62,18 @@ jobs:
           secrets: |
             ci/data/gh-workflows/workflow-dispatch token | WORKFLOW_DISPATCH_TOKEN ;
             ci/data/gh-workflows/deployment-status slack-webhook-url | SLACK_WEBHOOK_URL
-      - name: Dispatch to danubetech/danubetech-uni-resolver-web
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          token: ${{ env.WORKFLOW_DISPATCH_TOKEN }}
-          repo: danubetech/danubetech-uni-resolver-web
-          workflow: Docker build/deploy image to Danubetech Nexus
       - name: Dispatch to AWS Kubernetes deployment
         uses: benc-uk/workflow-dispatch@v1
         with:
           token: ${{ env.WORKFLOW_DISPATCH_TOKEN }}
           workflow: AWS Kubernetes deployment
+      - name: Dispatch to danubetech/danubetech-uni-resolver-web
+        if: contains(github.ref, "main")
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ env.WORKFLOW_DISPATCH_TOKEN }}
+          repo: danubetech/danubetech-uni-resolver-web
+          workflow: Docker build/deploy image to Danubetech Nexus
       - name: Slack notification
         uses: 8398a7/action-slack@v3
         with:
