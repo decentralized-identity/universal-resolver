@@ -68,7 +68,7 @@ jobs:
           token: ${{ env.WORKFLOW_DISPATCH_TOKEN }}
           workflow: AWS Kubernetes deployment
       - name: Dispatch to danubetech/danubetech-uni-resolver-web
-        if: contains(github.ref, "main")
+        if: contains(github.ref, 'main')
         uses: benc-uk/workflow-dispatch@v1
         with:
           token: ${{ env.WORKFLOW_DISPATCH_TOKEN }}
