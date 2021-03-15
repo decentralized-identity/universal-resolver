@@ -141,7 +141,7 @@
 		},{
 			"pattern": "^(did:trustbloc:.+)$",
 			"url": "http://driver-did-trustbloc:8102/resolveDID?did=$1",
-			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiBh6SP9nw2W-1Z9Y9KB0-GZ8hvtYxFgE5oeSVbTmbpXmw" ]
+			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiBLTZcCj6u_XsufSuLVh2zbPEREjDcu8bnPgs0XyKkfPQ" ]
 		},{
 			"pattern": "^(did:sirius:.+)$",
 			"image": "proximax/tsjs-did-sirius-id-driver",
@@ -221,11 +221,18 @@
 			"tag": "1.0.0",
 			"testIdentifiers": [ "did:unisot:test:n1aAmTXAg4o44Z9k8YCQncEY91r3TV7WU4" ]
 		},
+		{
+			"pattern": "^(did:bitxhub:.+)$",
+			"image": "meshplus/driver-did-bitxhub",
+			"imageProperties": "true",
+			"tag": "latest",
+			"testIdentifiers": [ "did:bitxhub:appchain001:0xc7F999b83Af6DF9e67d0a37Ee7e900bF38b3D013" ]
+		},
         {
           "pattern": "^(did:solid:.+)$",
           "image": "driver-did-solid",
           "tag": "latest",
-          "testIdentifiers": [ "did:solid:FcFhBFRf6smQ48p7jFcE35uNuE9ScuUu6R2rdFtWjWhP" ]
+          "testIdentifiers": [ "did:solid:DSb8Guj9tB1jvsyqrsE3Yi44hwnzrVVQc2gcS1J1dUxy" ]
         }
 	]
 }
