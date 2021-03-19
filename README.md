@@ -112,7 +112,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-unisot](https://gitlab.com/unisot-did/unisot-did-driver)|1.0.0|[1.0 WD](https://w3c.github.io/did-core/)|[1.0.0](https://gitlab.com/unisot-did/unisot-did-method-specification)|[unisot/unisot-did-driver](https://hub.docker.com/r/unisot/unisot-did-driver)
 | [did-bitxhub](https://github.com/meshplus/driver-did-bitxhub) | 1.0.0 | [1.0.0 WD](https://w3c.github.io/did-core/) | (missing) | [meshplus/driver-did-bitxhub](https://hub.docker.com/repository/docker/meshplus/driver-did-bitxhub) |
 | [did-solid](https://github.com/identity-com/solid-did)|1.0.0|[1.0 WD](https://w3c.github.io/did-core/)|[1.0.0](https://github.com/identity-com/solid-did/)|[identitydotcom/driver-did-solid](https://hub.docker.com/r/identitydotcom/driver-did-solid)
-| [did-lit](https://github.com/ibct-dev/lit-resolver) | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0 WD](https://github.com/ibct-dev/lit-DID/blob/master/docs/did:lit-method-spec_en.md) | [emperorhan/driver-did-lit](https://hub.docker.com/r/emperorhan/driver-did-lit)
+| [did-lit](https://github.com/ibct-dev/lit-resolver) | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) | [1.0 WD](https://github.com/ibct-dev/lit-DID/blob/main/docs/did:lit-method-spec_eng_v0.1.0.md) | [ibct/driver-did-lit](https://hub.docker.com/r/ibct/driver-did-lit)
 
 ## More Information
 

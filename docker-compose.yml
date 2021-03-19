@@ -198,7 +198,7 @@ services:
     ports:
       - "8118:8080"
   driver-did-lit:
-    image: emperorhan/driver-did-lit:0.1.0
+    image: ibct/driver-did-lit:0.1.0
     environment:
       LEDGIS_LIT_ENDPOINT: ${LEDGIS_LIT_ENDPOINT}
       LEDGIS_LIT_CODE: ${LEDGIS_LIT_CODE}
