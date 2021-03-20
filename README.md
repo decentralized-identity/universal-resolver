@@ -65,6 +65,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
     	curl -X GET http://localhost:8080/1.0/identifiers/did:unisot:1EjHm7VtgsqNzCkvA8XRgGXZ1UKo1txSM4
     curl -X GET http://localhost:8080/1.0/identifiers/did:bitxhub:appchain001:0xc7F999b83Af6DF9e67d0a37Ee7e900bF38b3D013
     curl -X GET http://localhost:8080/1.0/identifiers/did:solid:DSb8Guj9tB1jvsyqrsE3Yi44hwnzrVVQc2gcS1J1dUxy
+    curl -X GET http://localhost:8080/1.0/identifiers/did:lit:AEZ87t1bi5bRxmVh3ksMUi
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
@@ -115,6 +116,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-unisot](https://gitlab.com/unisot-did/unisot-did-driver)|1.0.0|[1.0 WD](https://w3c.github.io/did-core/)|[1.0.0](https://gitlab.com/unisot-did/unisot-did-method-specification)|[unisot/unisot-did-driver](https://hub.docker.com/r/unisot/unisot-did-driver)
 | [did-bitxhub](https://github.com/meshplus/driver-did-bitxhub) | 1.0.0 | [1.0.0 WD](https://w3c.github.io/did-core/) | (missing) | [meshplus/driver-did-bitxhub](https://hub.docker.com/repository/docker/meshplus/driver-did-bitxhub) |
 | [did-solid](https://github.com/identity-com/solid-did)|1.0.0|[1.0 WD](https://w3c.github.io/did-core/)|[1.0.0](https://github.com/identity-com/solid-did/)|[identitydotcom/driver-did-solid](https://hub.docker.com/r/identitydotcom/driver-did-solid)
+| [did-lit](https://github.com/ibct-dev/lit-resolver) | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1.0](https://github.com/ibct-dev/lit-DID/blob/main/docs/did:lit-method-spec_eng_v0.1.0.md) | [ibct/driver-did-lit](https://hub.docker.com/r/ibct/driver-did-lit)
 
 ## More Information
 

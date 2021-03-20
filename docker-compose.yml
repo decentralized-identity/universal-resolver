@@ -197,3 +197,10 @@ services:
     image: identitydotcom/driver-did-solid:0.1.0
     ports:
       - "8118:8080"
+  driver-did-lit:
+    image: ibct/driver-did-lit:0.1.0
+    environment:
+      LEDGIS_LIT_ENDPOINT: ${LEDGIS_LIT_ENDPOINT}
+      LEDGIS_LIT_CODE: ${LEDGIS_LIT_CODE}
+    ports:
+      - "8119:8080"
