@@ -1,5 +1,6 @@
 package uniresolver.driver;
 
+import java.util.List;
 import java.util.Map;
 
 import uniresolver.ResolutionException;
@@ -11,4 +12,5 @@ public interface Driver {
 
 	public ResolveResult resolve(String identifier) throws ResolutionException;
 	public Map<String, Object> properties() throws ResolutionException;
+	public List<String> testIdentifiers() throws ResolutionException;
 }

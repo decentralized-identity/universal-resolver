@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -159,6 +161,18 @@ public class ClientUniResolver implements UniResolver {
 		// done
 
 		return properties;
+	}
+
+	@Override
+	public Set<String> methods() throws ResolutionException {
+
+		throw new RuntimeException("Not implemented.");
+	}
+
+	@Override
+	public Map<String, List<String>> testIdentifiers() throws ResolutionException {
+
+		throw new RuntimeException("Not implemented.");
 	}
 
 	/*

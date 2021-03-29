@@ -6,12 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import foundation.identity.did.DIDDocument;
@@ -72,12 +67,13 @@ public class LocalUniResolver implements UniResolver {
 
 				if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
 				if (url == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
-				if (testIdentifiers == null || testIdentifiers.size() < 1 || testIdentifiers.get(0).getAsString() == null) throw new IllegalArgumentException("Missing or empty 'testIdentifiers' entry in driver configuration.");
+
+				// construct HTTP driver
 
 				HttpDriver driver = new HttpDriver();
 				driver.setPattern(pattern);
 
-				if (url.contains("$1")) {
+				if (url.contains("$1") || url.contains("$2")) {
 
 					driver.setResolveUri(url);
 					driver.setPropertiesUri((URI) null);
@@ -89,8 +85,11 @@ public class LocalUniResolver implements UniResolver {
 					if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(url + "1.0/properties");
 				}
 
-				drivers.put(pattern, driver);
+				driver.setTestIdentifiers(readTestIdentifiers(testIdentifiers));
 
+				// done
+
+				drivers.put(pattern, driver);
 				if (log.isInfoEnabled()) log.info("Added driver for pattern '" + pattern + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
 			}
 		}
@@ -204,9 +203,71 @@ public class LocalUniResolver implements UniResolver {
 			properties.put(driver.getKey(), driverProperties);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Loading properties: " + properties);
+		// done
 
+		if (log.isDebugEnabled()) log.debug("Loaded properties: " + properties);
 		return properties;
+	}
+
+	@Override
+	public Set<String> methods() throws ResolutionException {
+
+		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
+
+		Set<String> methods = this.testIdentifiers().keySet();
+
+		// done
+
+		if (log.isDebugEnabled()) log.debug("Loaded methods: " + methods);
+		return methods;
+	}
+
+	@Override
+	public Map<String, List<String>> testIdentifiers() throws ResolutionException {
+
+		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
+
+		Map<String, List<String>> testIdentifiers = new HashMap<String, List<String>> ();
+
+		for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
+
+			if (log.isDebugEnabled()) log.debug("Loading test identifiers for driver " + driver.getKey() + " (" + driver.getValue().getClass().getSimpleName() + ")");
+
+			List<String> driverTestIdentifiers = driver.getValue().testIdentifiers();
+			if (driverTestIdentifiers == null) driverTestIdentifiers = Collections.emptyList();
+
+			for (String driverTestIdentifier : driverTestIdentifiers) {
+
+				String driverTestIdentifierMethod = driverTestIdentifier.substring("did:".length());
+				driverTestIdentifierMethod = driverTestIdentifierMethod.substring(0, driverTestIdentifierMethod.indexOf(':'));
+
+				List<String> methodTestIdentifiers = testIdentifiers.get(driverTestIdentifierMethod);
+
+				if (methodTestIdentifiers == null) {
+
+					methodTestIdentifiers = new ArrayList<String> ();
+					testIdentifiers.put(driverTestIdentifierMethod, methodTestIdentifiers);
+				}
+
+				methodTestIdentifiers.add(driverTestIdentifier);
+			}
+		}
+
+		// done
+
+		if (log.isDebugEnabled()) log.debug("Loaded test identifiers: " + testIdentifiers);
+		return testIdentifiers;
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	private static List<String> readTestIdentifiers(JsonArray jsonTestIdentifiers) {
+
+		List<String> testIdentifiers = new ArrayList<String> (jsonTestIdentifiers.size());
+		for (JsonElement jsonTestIdentifier : jsonTestIdentifiers) testIdentifiers.add(jsonTestIdentifier.getAsString());
+		return testIdentifiers;
 	}
 
 	public void resolveWithDrivers(String resolveIdentifier, ResolveResult resolveResult) throws ResolutionException {
@@ -216,7 +277,7 @@ public class LocalUniResolver implements UniResolver {
 
 		for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
 
-			if (log.isDebugEnabled()) log.debug("Attemping to resolve " + resolveIdentifier + " with driver " + driver.getValue().getClass());
+			if (log.isDebugEnabled()) log.debug("Attempting to resolve " + resolveIdentifier + " with driver " + driver.getValue().getClass());
 			driverResolveResult = driver.getValue().resolve(resolveIdentifier);
 
 			if (driverResolveResult != null && driverResolveResult.getDidDocument() != null && driverResolveResult.getDidDocument().getJsonObject().isEmpty()) {
