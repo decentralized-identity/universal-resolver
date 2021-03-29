@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,6 +32,8 @@ import uniresolver.driver.http.HttpDriver;
 import uniresolver.local.extensions.Extension;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.result.ResolveResult;
+
+import javax.json.Json;
 
 public class LocalUniResolver implements UniResolver {
 
@@ -62,46 +65,33 @@ public class LocalUniResolver implements UniResolver {
 
 				JsonObject jsonObjectDriver = (JsonObject) jsonElementsDrivers.next();
 
-				String id = jsonObjectDriver.has("id") ? jsonObjectDriver.get("id").getAsString() : null;
 				String pattern = jsonObjectDriver.has("pattern") ? jsonObjectDriver.get("pattern").getAsString() : null;
-				String image = jsonObjectDriver.has("image") ? jsonObjectDriver.get("image").getAsString() : null;
-				String imagePort = jsonObjectDriver.has("imagePort") ? jsonObjectDriver.get("imagePort").getAsString() : null;
-				String imageProperties = jsonObjectDriver.has("imageProperties") ? jsonObjectDriver.get("imageProperties").getAsString() : null;
 				String url = jsonObjectDriver.has("url") ? jsonObjectDriver.get("url").getAsString() : null;
+				String propertiesEndpoint = jsonObjectDriver.has("propertiesEndpoint") ? jsonObjectDriver.get("propertiesEndpoint").getAsString() : null;
+				JsonArray testIdentifiers = jsonObjectDriver.has("testIdentifiers") ? jsonObjectDriver.get("testIdentifiers").getAsJsonArray() : null;
 
 				if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
-				if (image == null && url == null) throw new IllegalArgumentException("Missing 'image' and 'url' entry in driver configuration (need either one).");
+				if (url == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
+				if (testIdentifiers == null || testIdentifiers.size() < 1 || testIdentifiers.get(0).getAsString() == null) throw new IllegalArgumentException("Missing or empty 'testIdentifiers' entry in driver configuration.");
 
 				HttpDriver driver = new HttpDriver();
 				driver.setPattern(pattern);
 
-				if (url != null) {
+				if (url.contains("$1")) {
 
 					driver.setResolveUri(url);
+					driver.setPropertiesUri((URI) null);
 				} else {
 
-					String httpDriverUri = image.substring(image.indexOf("/") + 1);
-					if (httpDriverUri.contains(":")) httpDriverUri = httpDriverUri.substring(0, httpDriverUri.indexOf(":"));
-					httpDriverUri = "http://" + httpDriverUri + ":" + (imagePort != null ? imagePort : "8080" ) + "/";
+					if (! url.endsWith("/")) url = url + "/";
 
-					driver.setResolveUri(httpDriverUri + "1.0/identifiers/$1");
-
-					if ("true".equals(imageProperties)) {
-
-						driver.setPropertiesUri(httpDriverUri + "1.0/properties");
-					}
+					driver.setResolveUri(url + "1.0/identifiers/");
+					if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(url + "1.0/properties");
 				}
 
-				if (id == null) {
+				drivers.put(pattern, driver);
 
-					id = "driver";
-					if (image != null) id += "-" + image;
-					if (image == null || drivers.containsKey(id)) id += "-" + Integer.toString(i);
-				}
-
-				drivers.put(id, driver);
-
-				if (log.isInfoEnabled()) log.info("Added driver '" + id + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
+				if (log.isInfoEnabled()) log.info("Added driver for pattern '" + pattern + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
 			}
 		}
 
