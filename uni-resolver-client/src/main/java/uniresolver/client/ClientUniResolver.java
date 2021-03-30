@@ -183,7 +183,7 @@ public class ClientUniResolver implements UniResolver {
 
 		// prepare HTTP request
 
-		String uriString = this.getPropertiesUri().toString();
+		String uriString = this.getMethodsUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
 		httpGet.addHeader("Accept", UniResolver.METHODS_MIME_TYPE);
@@ -233,7 +233,7 @@ public class ClientUniResolver implements UniResolver {
 
 		// prepare HTTP request
 
-		String uriString = this.getPropertiesUri().toString();
+		String uriString = this.getTestIdentifiersUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
 		httpGet.addHeader("Accept", UniResolver.TEST_IDENTIFIER_MIME_TYPE);
