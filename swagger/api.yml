@@ -94,6 +94,8 @@ paths:
             application/did+json:
               schema:
                 type: array
+                items:
+                  type: string
                 description: The list of supported DID methods.
                 example: ["btcr","sov","v1","key"]
   /testIdentifiers:
