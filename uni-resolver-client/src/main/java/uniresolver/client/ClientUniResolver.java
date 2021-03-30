@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -167,7 +165,7 @@ public class ClientUniResolver implements UniResolver {
 				throw new ResolutionException(httpBody);
 			}
 
-			properties = (Map<String, Map<String, Object>>) objectMapper.readValue(httpBody, Map.class);
+			properties = (Map<String, Map<String, Object>>) objectMapper.readValue(httpBody, LinkedHashMap.class);
 		} catch (IOException ex) {
 
 			throw new ResolutionException("Cannot retrieve PROPERTIES from " + uriString + ": " + ex.getMessage(), ex);
@@ -217,7 +215,7 @@ public class ClientUniResolver implements UniResolver {
 				throw new ResolutionException(httpBody);
 			}
 
-			methods = (Set<String>) objectMapper.readValue(httpBody, Set.class);
+			methods = (Set<String>) objectMapper.readValue(httpBody, LinkedHashSet.class);
 		} catch (IOException ex) {
 
 			throw new ResolutionException("Cannot retrieve METHODS from " + uriString + ": " + ex.getMessage(), ex);
@@ -267,7 +265,7 @@ public class ClientUniResolver implements UniResolver {
 				throw new ResolutionException(httpBody);
 			}
 
-			testIdentifiers = (Map<String, List<String>>) objectMapper.readValue(httpBody, Set.class);
+			testIdentifiers = (Map<String, List<String>>) objectMapper.readValue(httpBody, LinkedHashMap.class);
 		} catch (IOException ex) {
 
 			throw new ResolutionException("Cannot retrieve TEST IDENTIFIERS from " + uriString + ": " + ex.getMessage(), ex);
