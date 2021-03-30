@@ -30,15 +30,30 @@ public class ClientUniResolver implements UniResolver {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
-	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers/");
+	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers");
 	public static final URI DEFAULT_PROPERTIES_URI = URI.create("http://localhost:8080/1.0/properties");
+	public static final URI DEFAULT_METHODS_URI = URI.create("http://localhost:8080/1.0/methods");
+	public static final URI DEFAULT_TEST_IDENTIFIERS_URI = URI.create("http://localhost:8080/1.0/testIdentifiers");
 
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
 	private URI resolveUri = DEFAULT_RESOLVE_URI;
 	private URI propertiesUri = DEFAULT_PROPERTIES_URI;
+	private URI methodsUri = DEFAULT_METHODS_URI;
+	private URI testIdentifiersUri = DEFAULT_TEST_IDENTIFIERS_URI;
 
 	public ClientUniResolver() {
 
+	}
+
+	public static ClientUniResolver fromBaseUri(URI baseUri) {
+
+		ClientUniResolver clientUniResolver = new ClientUniResolver();
+		clientUniResolver.setResolveUri(baseUri.resolve("/identifiers"));
+		clientUniResolver.setPropertiesUri(baseUri.resolve("/properties"));
+		clientUniResolver.setMethodsUri(baseUri.resolve("/methods"));
+		clientUniResolver.setTestIdentifiersUri(baseUri.resolve("/testIdentifiers"));
+
+		return clientUniResolver;
 	}
 
 	@Override
@@ -146,17 +161,17 @@ public class ClientUniResolver implements UniResolver {
 
 			if (httpResponse.getStatusLine().getStatusCode() > 200) {
 
-				if (log.isWarnEnabled()) log.warn("Cannot retrieve DRIVER PROPERTIES from " + uriString + ": " + httpBody);
+				if (log.isWarnEnabled()) log.warn("Cannot retrieve PROPERTIES from " + uriString + ": " + httpBody);
 				throw new ResolutionException(httpBody);
 			}
 
 			properties = (Map<String, Map<String, Object>>) objectMapper.readValue(httpBody, Map.class);
 		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve DRIVER PROPERTIES from " + uriString + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot retrieve PROPERTIES from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved DRIVER PROPERTIES (" + uriString + "): " + properties);
+		if (log.isDebugEnabled()) log.debug("Retrieved PROPERTIES (" + uriString + "): " + properties);
 
 		// done
 
@@ -166,13 +181,101 @@ public class ClientUniResolver implements UniResolver {
 	@Override
 	public Set<String> methods() throws ResolutionException {
 
-		throw new RuntimeException("Not implemented.");
+		// prepare HTTP request
+
+		String uriString = this.getPropertiesUri().toString();
+
+		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		httpGet.addHeader("Accept", UniResolver.METHODS_MIME_TYPE);
+
+		// execute HTTP request
+
+		Set<String> methods;
+
+		if (log.isDebugEnabled()) log.debug("Request to: " + uriString);
+
+		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
+
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+
+			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
+
+			HttpEntity httpEntity = httpResponse.getEntity();
+			String httpBody = EntityUtils.toString(httpEntity);
+			EntityUtils.consume(httpEntity);
+
+			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
+
+			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+
+				if (log.isWarnEnabled()) log.warn("Cannot retrieve METHODS from " + uriString + ": " + httpBody);
+				throw new ResolutionException(httpBody);
+			}
+
+			methods = (Set<String>) objectMapper.readValue(httpBody, Set.class);
+		} catch (IOException ex) {
+
+			throw new ResolutionException("Cannot retrieve METHODS from " + uriString + ": " + ex.getMessage(), ex);
+		}
+
+		if (log.isDebugEnabled()) log.debug("Retrieved METHODS (" + uriString + "): " + methods);
+
+		// done
+
+		return methods;
 	}
 
 	@Override
 	public Map<String, List<String>> testIdentifiers() throws ResolutionException {
 
-		throw new RuntimeException("Not implemented.");
+		// prepare HTTP request
+
+		String uriString = this.getPropertiesUri().toString();
+
+		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		httpGet.addHeader("Accept", UniResolver.TEST_IDENTIFIER_MIME_TYPE);
+
+		// execute HTTP request
+
+		Map<String, List<String>> testIdentifiers;
+
+		if (log.isDebugEnabled()) log.debug("Request to: " + uriString);
+
+		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
+
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+
+			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
+
+			HttpEntity httpEntity = httpResponse.getEntity();
+			String httpBody = EntityUtils.toString(httpEntity);
+			EntityUtils.consume(httpEntity);
+
+			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
+
+			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+
+				if (log.isWarnEnabled()) log.warn("Cannot retrieve TEST IDENTIFIERS from " + uriString + ": " + httpBody);
+				throw new ResolutionException(httpBody);
+			}
+
+			testIdentifiers = (Map<String, List<String>>) objectMapper.readValue(httpBody, Set.class);
+		} catch (IOException ex) {
+
+			throw new ResolutionException("Cannot retrieve TEST IDENTIFIERS from " + uriString + ": " + ex.getMessage(), ex);
+		}
+
+		if (log.isDebugEnabled()) log.debug("Retrieved TEST IDENTIFIERS (" + uriString + "): " + testIdentifiers);
+
+		// done
+
+		return testIdentifiers;
 	}
 
 	/*
@@ -217,5 +320,25 @@ public class ClientUniResolver implements UniResolver {
 	public void setPropertiesUri(String propertiesUri) {
 
 		this.propertiesUri = URI.create(propertiesUri);
+	}
+
+	public URI getMethodsUri() {
+
+		return this.methodsUri;
+	}
+
+	public void setMethodsUri(URI methodsUri) {
+
+		this.methodsUri = methodsUri;
+	}
+
+	public URI getTestIdentifiersUri() {
+
+		return this.testIdentifiersUri;
+	}
+
+	public void setTestIdentifiersUri(URI testIdentifiersUri) {
+
+		this.testIdentifiersUri = testIdentifiersUri;
 	}
 }
