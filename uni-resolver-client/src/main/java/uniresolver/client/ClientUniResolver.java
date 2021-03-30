@@ -45,7 +45,7 @@ public class ClientUniResolver implements UniResolver {
 
 	}
 
-	public static ClientUniResolver fromBaseUri(URI baseUri) {
+	public static ClientUniResolver create(URI baseUri) {
 
 		ClientUniResolver clientUniResolver = new ClientUniResolver();
 		clientUniResolver.setResolveUri(baseUri.resolve("/identifiers"));
