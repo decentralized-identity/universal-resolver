@@ -83,6 +83,11 @@ paths:
       responses:
         '200':
           description: Success.
+          content:
+            application/did+json:
+              schema:
+                type: object
+                description: A map of properties.
   /methods:
     get:
       summary: Returns a list of supported DID methods.
