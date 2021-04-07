@@ -126,7 +126,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
  * [Branching Strategy](/docs/branching-strategy.md)
  * [Design Goals](/docs/design-goals.md)
  * [Troubleshooting](/docs/troubleshooting.md)
- * [Java Components](/resolver/java)
+ * [Java Components](/docs/java-components.md)
 
 ## About
 
