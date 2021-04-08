@@ -68,6 +68,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ebsi:DfPaUdYwuzcqFoiMDSrUX8aQyZnr2SesH3vDVASYv8PE
 	curl -X GET http://localhost:8080/1.0/identifiers/did:emtrust:0x242a5ac36676462bd58a
 	curl -X GET http://localhost:8080/1.0/identifiers/did:meta:0000000000000000000000000000000000000000000000000000000000005e65
+	curl -X GET http://localhost:8080/1.0/identifiers/did:tz:tz1YwA1FwpgLtc1G8DKbbZ6e6PTb1dQMRn5x
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
@@ -120,6 +121,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-ebsi](https://api.preprod.ebsi.eu/docs/#/DID%20Registry) | 2.0.0 | 2.0.0 | [URL](https://api.preprod.ebsi.eu/did-registry/v2/identifiers/) |
 | [did-emtrust](https://github.com/Halialabs/did-spec) | 0.1| 0.1 | [halialabsdev/emtrust_did_driver](https://hub.docker.com/r/halialabsdev/emtrust_did_driver) |
 | [did-meta](https://github.com/METADIUM/meta-DID/blob/master/doc/DID-method-metadium.md) | 1.0 | 1.0 | [URL](https://resolver.metadium.com/1.0/identifiers/) |
+| [did-tz](https://github.com/spruceid/ssi/tree/main/did-tezos/) | 0.1.0 | [1.0 CR Draft 20210627](https://www.w3.org/TR/2021/CRD-did-core-20210627/) | [0.1](https://did-tezos.spruceid.com/) | [ghcr.io/spruceid/didkit-http](https://github.com/orgs/spruceid/packages/container/package/didkit-http)
 
 ## More Information
 
