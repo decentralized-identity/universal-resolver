@@ -7,9 +7,9 @@ sh -c "echo $*"
 
 echo "host: $INPUT_HOST"
 echo "config: $INPUT_CONFIG"
-echo "out-folder: $INPUT_OUT_FOLDER"
+echo "out folder: $INPUT_OUT_FOLDER"
 echo "debug: $INPUT_DEBUG"
-echo "keep-report: $INPUT_KEEP_RESULT"
+echo "keep result: $INPUT_KEEP_RESULT"
 
 if "$INPUT_DEBUG"; then
   echo "Current folder"
