@@ -34,4 +34,7 @@ cat -b "$INPUT_OUT_FOLDER/smoke-tests-result-*.json"
 
 if "$INPUT_KEEP_RESULT"; then
     echo "Push result file to repo"
+    git config --global user.email "admin@danubetech.com"
+    git config --global user.name "Smoke tests workflow"
+    git add . && git commit -m "Smoke test results" && git push
 fi
