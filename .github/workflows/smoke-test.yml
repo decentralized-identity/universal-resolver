@@ -1,0 +1,17 @@
+name: Smoke test
+
+on:
+  push:
+    branches: [ driver-status-reporting ]
+  workflow_dispatch:
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Run smoke tests
+        uses: ./ci/smoke-tests
+        with:
+          host: https://dev.uniresolver.io
+          out-folder: /github/workspace/driver-status-reports
