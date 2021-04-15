@@ -17,6 +17,10 @@ inputs:
     description: 'Enhance logging'
     required: false
     default: false
+  keep-result:
+    description: 'Keep result file'
+    required: false
+    default: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
