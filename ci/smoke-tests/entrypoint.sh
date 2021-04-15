@@ -30,11 +30,12 @@ python --version
 
 python /smoke-tests/smoke-test.py --host "$INPUT_HOST" --config "$INPUT_CONFIG" --out "$INPUT_OUT_FOLDER"
 
-cat -b "$INPUT_OUT_FOLDER/smoke-tests-result-*.json"
-
-if "$INPUT_KEEP_RESULT"; then
+if "$INPUT_KEEP_RESULT";
+  then
     echo "Push result file to repo"
     git config --global user.email "admin@danubetech.com"
     git config --global user.name "Smoke tests workflow"
     git add . && git commit -m "Smoke test results" && git push
+  else
+    cat -b /smoke-tests/smoke-tests-result-*.json
 fi
