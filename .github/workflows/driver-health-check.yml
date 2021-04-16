@@ -16,3 +16,6 @@ jobs:
           host: https://dev.uniresolver.io
           out_folder: /github/workspace/driver-status-reports
           keep_result: true
+      - name: Run did-test-suite
+        run: |
+          echo "Run did-test-suite for $FILENAME"

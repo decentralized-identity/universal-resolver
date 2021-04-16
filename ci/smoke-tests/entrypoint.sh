@@ -35,7 +35,11 @@ if "$INPUT_KEEP_RESULT";
     echo "Push result file to repo"
     git config --global user.email "admin@danubetech.com"
     git config --global user.name "Smoke tests workflow"
-    git add . && git commit -m "Smoke test results" && git push
+    git add .
+    # Pass filename to next step in github action
+    FILENAME=$(git diff --name-only --staged)
+    echo "::set-env name=FILENAME::$FILENAME"
+    git commit -m "Smoke test results" && git push
   else
     cat -b /smoke-tests/smoke-tests-result-*.json
 fi
