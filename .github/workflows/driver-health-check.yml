@@ -18,4 +18,4 @@ jobs:
           keep_result: true
       - name: Run did-test-suite
         run: |
-          echo "Run did-test-suite for $FILENAME"
+          echo "Run did-test-suite for {{ env.filename }}"

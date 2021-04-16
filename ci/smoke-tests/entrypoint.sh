@@ -37,8 +37,7 @@ if "$INPUT_KEEP_RESULT";
     git config --global user.name "Smoke tests workflow"
     git add .
     # Pass filename to next step in github action
-    FILENAME=$(git diff --name-only --staged)
-    echo "::set-env name=FILENAME::$FILENAME"
+    echo "filename=$(git diff --name-only --staged)" >> "$GITHUB_ENV"
     git commit -m "Smoke test results" && git push
   else
     cat -b /smoke-tests/smoke-tests-result-*.json
