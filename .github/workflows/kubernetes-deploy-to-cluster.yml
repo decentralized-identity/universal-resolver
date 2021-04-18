@@ -11,14 +11,16 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: 
+      name: Dev
     steps:
     - uses: actions/checkout@master
     - name: Deploy to AWS
       uses: ./ci/deploy-k8s-aws
       env:
-        KUBE_CONFIG_DATA: ${{env.KUBE_CONFIG_DATA}}
-        AWS_ACCESS_KEY_ID: ${{env.AWS_ACCESS_KEY_ID}}
-        AWS_SECRET_ACCESS_KEY: ${{env.AWS_SECRET_ACCESS_KEY}}
+        KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG_DATA}}
+        AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+        AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
         RPC_URL_TESTNET: ${{env.RPC_URL_TESTNET}}
         RPC_CERT_TESTNET: ${{env.RPC_CERT_TESTNET}}
     - name: Sleep for 120 seconds
