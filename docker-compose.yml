@@ -1,7 +1,9 @@
 version: "3.5"
 
 ### NOTE - this file is used to generatee the Kubernetes pods
-# Enable any DID drivers we want to support
+# Enable any DID drivers we want to support.
+# If enabling drivers, check if special config needs to be uncommented in ci/scripts/driver-config.yaml
+# or entrypoint.sh (e.g. bitcr)
 
 networks:
   default:

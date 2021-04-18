@@ -21,12 +21,13 @@ python prepare-deployment.py
 echo "Driver config script"
 python driver-config.py
 
-echo "Apply did-btcr secrets"
-python substitute-btcr-driver-values.py --url "$RPC_URL_TESTNET" --cert "$RPC_CERT_TESTNET"
-
+# re-enable if the BTCR driver is enabled
+#echo "Apply did-btcr secrets"
+#python substitute-btcr-driver-values.py --url "$RPC_URL_TESTNET" --cert "$RPC_CERT_TESTNET"
+#
 echo "## Deployment Folder ##"
 cd deploy
-cat deployment-driver-did-btcr.yaml
+#cat deployment-driver-did-btcr.yaml
 ls -al .
 
 echo "### Deploying following Specs ### "
