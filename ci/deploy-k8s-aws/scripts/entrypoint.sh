@@ -10,6 +10,9 @@ ls -al /
 echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
 export KUBECONFIG=/tmp/config
 
+echo "## Kubeconfig ##"
+kubectl config view
+
 cp /*.py /*.yaml -r /app-specs -r /namespace . 2>/dev/null || :
 
 echo "Current workspace Folder"
@@ -32,5 +35,7 @@ ls -al .
 
 echo "### Deploying following Specs ### "
 cat deploy.sh
+
+echo "### Running deployment:"
 
 ./deploy.sh
