@@ -33,10 +33,8 @@ def add_deployment(deployment_file, outputdir):
 
 
 def get_container_name(container_tag):
-    if container_tag.find('/') < 0:
-        return
-    user, container_name_version = container_tag.split('/')
-    return container_name_version.split(':')[0]
+    split_list = container_tag.split('/')
+    return split_list[-1].split(':')[0]
 
 
 def get_container_port(ports):
