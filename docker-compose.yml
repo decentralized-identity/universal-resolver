@@ -11,16 +11,16 @@ services:
     image: universalresolver/uni-resolver-web:latest
     ports:
       - "8080:8080"
-  driver-did-btcr:
-    image: universalresolver/driver-did-btcr:latest
-    environment:
-      uniresolver_driver_did_btcr_bitcoinConnection: ${uniresolver_driver_did_btcr_bitcoinConnection}
-      uniresolver_driver_did_btcr_rpcUrlMainnet: ${uniresolver_driver_did_btcr_rpcUrlMainnet}
-      uniresolver_driver_did_btcr_rpcUrlTestnet: ${uniresolver_driver_did_btcr_rpcUrlTestnet}
-      uniresolver_driver_did_btcr_rpcCertMainnet: ${uniresolver_driver_did_btcr_rpcCertMainnet}
-      uniresolver_driver_did_btcr_rpcCertTestnet: ${uniresolver_driver_did_btcr_rpcCertTestnet}
-    ports:
-      - "8081:8080"
+#  driver-did-btcr:
+#    image: universalresolver/driver-did-btcr:latest
+#    environment:
+#      uniresolver_driver_did_btcr_bitcoinConnection: ${uniresolver_driver_did_btcr_bitcoinConnection}
+#      uniresolver_driver_did_btcr_rpcUrlMainnet: ${uniresolver_driver_did_btcr_rpcUrlMainnet}
+#      uniresolver_driver_did_btcr_rpcUrlTestnet: ${uniresolver_driver_did_btcr_rpcUrlTestnet}
+#      uniresolver_driver_did_btcr_rpcCertMainnet: ${uniresolver_driver_did_btcr_rpcCertMainnet}
+#      uniresolver_driver_did_btcr_rpcCertTestnet: ${uniresolver_driver_did_btcr_rpcCertTestnet}
+#    ports:
+#      - "8081:8080"
   driver-did-sov:
     image: universalresolver/driver-did-sov:latest
     environment:
