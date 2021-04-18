@@ -9,12 +9,16 @@ inputs:
     description: 'Uni-Resolver configuration file'
     required: false
     default: /github/workspace/config.json
-  out folder:
+  out_folder:
     description: 'Folder location of smoke-tests-result-<timestamp> file'
     required: false
     default: /smoke-tests
   debug:
     description: 'Enhance logging'
+    required: false
+    default: false
+  keep_result:
+    description: 'Keep result file'
     required: false
     default: false
 runs:

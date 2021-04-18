@@ -18,8 +18,6 @@ import uniresolver.web.WebUniResolver;
 
 public class ResolveServlet extends WebUniResolver {
 
-	private static final long serialVersionUID = 1579362184113490816L;
-
 	protected static Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
 	public static final String MIME_TYPE = "application/json";

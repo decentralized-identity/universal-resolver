@@ -1,4 +1,4 @@
-# Universal Resolver — Java Development
+# Universal Resolver — Java Components
 
 This is a Java implementation of a Universal Resolver. See [universal-resolver](https://github.com/decentralized-identity/universal-resolver/) for a general introduction to Universal Resolvers and drivers.
 
