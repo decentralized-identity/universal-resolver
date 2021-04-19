@@ -124,8 +124,8 @@ def main(argv):
     # run tests
     results = asyncio.run(run_tests(test_data=test_data))
 
-    timestr = strftime("%d-%m-%Y_%H-%M-%S-UTC", gmtime())
-    filename = "smoke-tests-result-" + timestr + ".json"
+    results_timestamp = strftime("%Y-%m-%d_%H-%M-%S-UTC", gmtime())
+    filename = "smoke-tests-result-" + results_timestamp + ".json"
     print('Out folder: ' + out_folder)
     out_path = out_folder + filename
     print('Writing to path: ' + out_path)

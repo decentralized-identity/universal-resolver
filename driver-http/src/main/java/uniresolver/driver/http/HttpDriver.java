@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,13 +39,13 @@ public class HttpDriver implements Driver {
 	public static final URI DEFAULT_RESOLVE_URI = null;
 	public static final URI DEFAULT_PROPERTIES_URI = null;
 	public static final Pattern DEFAULT_PATTERN = null;
-	public static final String DEFAULT_ENCODE_IDENTIFIER = null;
+	public static final List<String> DEFAULT_TEST_IDENTIFIERS = Collections.emptyList();
 
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
 	private URI resolveUri = DEFAULT_RESOLVE_URI;
 	private URI propertiesUri = DEFAULT_PROPERTIES_URI;
 	private Pattern pattern = DEFAULT_PATTERN;
-	private String encodeIdentifier = DEFAULT_ENCODE_IDENTIFIER;
+	private List<String> testIdentifiers = DEFAULT_TEST_IDENTIFIERS;
 
 	public HttpDriver() {
 
@@ -82,20 +84,17 @@ public class HttpDriver implements Driver {
 
 		if (log.isDebugEnabled()) log.debug("Matched identifier: " + matchedIdentifier);
 
-		// encode identifier
+		// URL-encode identifier
 
-		String encodedIdentifier;
+		String urlEncodedIdentifier;
 
 		try {
 
-			if ("url".equals(this.getEncodeIdentifier())) encodedIdentifier = URLEncoder.encode(matchedIdentifier, "UTF-8");
-			else encodedIdentifier = matchedIdentifier;
+			urlEncodedIdentifier = URLEncoder.encode(matchedIdentifier, "UTF-8");
 		} catch (UnsupportedEncodingException ex) {
 
 			throw new ResolutionException(ex.getMessage(), ex);
 		}
-
-		if (log.isDebugEnabled()) log.debug("Encoded identifier: " + encodedIdentifier);
 
 		// prepare HTTP request
 
@@ -103,11 +102,14 @@ public class HttpDriver implements Driver {
 
 		if (uriString.contains("$1")) {
 
-			uriString = uriString.replace("$1", encodedIdentifier);
+			uriString = uriString.replace("$1", matchedIdentifier);
+		} else if (uriString.contains("$2")) {
+
+			uriString = uriString.replace("$2", urlEncodedIdentifier);
 		} else {
 
 			if (! uriString.endsWith("/")) uriString += "/";
-			uriString += encodedIdentifier;
+			uriString += matchedIdentifier;
 		}
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
@@ -170,7 +172,7 @@ public class HttpDriver implements Driver {
 		if (this.getResolveUri() != null) httpProperties.put("resolveUri", this.getResolveUri().toString());
 		if (this.getPropertiesUri() != null) httpProperties.put("propertiesUri", this.getPropertiesUri().toString());
 		if (this.getPattern() != null) httpProperties.put("pattern", this.getPattern().toString());
-		if (this.getEncodeIdentifier() != null) httpProperties.put("encodeIdentifier", this.getEncodeIdentifier());
+		if (this.getTestIdentifiers() != null) httpProperties.put("testIdentifiers", this.getTestIdentifiers());
 
 		Map<String, Object> properties = new HashMap<String, Object> ();
 		properties.put("http", httpProperties);
@@ -243,6 +245,12 @@ public class HttpDriver implements Driver {
 		return properties;
 	}
 
+	@Override
+	public List<String> testIdentifiers() throws ResolutionException {
+
+		return this.getTestIdentifiers();
+	}
+
 	/*
 	 * Getters and setters
 	 */
@@ -302,13 +310,13 @@ public class HttpDriver implements Driver {
 		this.pattern = Pattern.compile(pattern);
 	}
 
-	public String getEncodeIdentifier() {
+	public List<String> getTestIdentifiers() {
 
-		return this.encodeIdentifier;
+		return this.testIdentifiers;
 	}
 
-	public void setEncodeIdentifier(String encodeIdentifier) {
+	public void setTestIdentifiers(List<String> testIdentifiers) {
 
-		this.encodeIdentifier = encodeIdentifier;
+		this.testIdentifiers = testIdentifiers;
 	}
 }

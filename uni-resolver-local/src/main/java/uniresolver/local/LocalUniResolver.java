@@ -5,12 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.net.URI;
+import java.util.*;
 import java.util.Map.Entry;
 
 import foundation.identity.did.DIDDocument;
@@ -32,11 +28,13 @@ import uniresolver.local.extensions.Extension;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.result.ResolveResult;
 
+import javax.json.Json;
+
 public class LocalUniResolver implements UniResolver {
 
 	private static Logger log = LoggerFactory.getLogger(LocalUniResolver.class);
 
-	private Map<String, Driver> drivers = new HashMap<String, Driver> ();
+	private List<Driver> drivers = new ArrayList<Driver> ();
 	private List<Extension> extensions = new ArrayList<Extension> ();
 
 	public LocalUniResolver() {
@@ -47,7 +45,7 @@ public class LocalUniResolver implements UniResolver {
 
 		final Gson gson = new Gson();
 
-		Map<String, Driver> drivers = new HashMap<String, Driver> ();
+		List<Driver> drivers = new ArrayList<Driver> ();
 
 		try (Reader reader = new FileReader(new File(filePath))) {
 
@@ -62,46 +60,38 @@ public class LocalUniResolver implements UniResolver {
 
 				JsonObject jsonObjectDriver = (JsonObject) jsonElementsDrivers.next();
 
-				String id = jsonObjectDriver.has("id") ? jsonObjectDriver.get("id").getAsString() : null;
 				String pattern = jsonObjectDriver.has("pattern") ? jsonObjectDriver.get("pattern").getAsString() : null;
-				String image = jsonObjectDriver.has("image") ? jsonObjectDriver.get("image").getAsString() : null;
-				String imagePort = jsonObjectDriver.has("imagePort") ? jsonObjectDriver.get("imagePort").getAsString() : null;
-				String imageProperties = jsonObjectDriver.has("imageProperties") ? jsonObjectDriver.get("imageProperties").getAsString() : null;
 				String url = jsonObjectDriver.has("url") ? jsonObjectDriver.get("url").getAsString() : null;
+				String propertiesEndpoint = jsonObjectDriver.has("propertiesEndpoint") ? jsonObjectDriver.get("propertiesEndpoint").getAsString() : null;
+				JsonArray testIdentifiers = jsonObjectDriver.has("testIdentifiers") ? jsonObjectDriver.get("testIdentifiers").getAsJsonArray() : null;
 
 				if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
-				if (image == null && url == null) throw new IllegalArgumentException("Missing 'image' and 'url' entry in driver configuration (need either one).");
+				if (url == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
+
+				// construct HTTP driver
 
 				HttpDriver driver = new HttpDriver();
+
 				driver.setPattern(pattern);
 
-				if (url != null) {
+				if (url.contains("$1") || url.contains("$2")) {
 
 					driver.setResolveUri(url);
+					driver.setPropertiesUri((URI) null);
 				} else {
 
-					String httpDriverUri = image.substring(image.indexOf("/") + 1);
-					if (httpDriverUri.contains(":")) httpDriverUri = httpDriverUri.substring(0, httpDriverUri.indexOf(":"));
-					httpDriverUri = "http://" + httpDriverUri + ":" + (imagePort != null ? imagePort : "8080" ) + "/";
+					if (! url.endsWith("/")) url = url + "/";
 
-					driver.setResolveUri(httpDriverUri + "1.0/identifiers/$1");
-
-					if ("true".equals(imageProperties)) {
-
-						driver.setPropertiesUri(httpDriverUri + "1.0/properties");
-					}
+					driver.setResolveUri(url + "1.0/identifiers/");
+					if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(url + "1.0/properties");
 				}
 
-				if (id == null) {
+				driver.setTestIdentifiers(readTestIdentifiers(testIdentifiers));
 
-					id = "driver";
-					if (image != null) id += "-" + image;
-					if (image == null || drivers.containsKey(id)) id += "-" + Integer.toString(i);
-				}
+				// done
 
-				drivers.put(id, driver);
-
-				if (log.isInfoEnabled()) log.info("Added driver '" + id + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
+				drivers.add(driver);
+				if (log.isInfoEnabled()) log.info("Added driver for pattern '" + pattern + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
 			}
 		}
 
@@ -202,32 +192,99 @@ public class LocalUniResolver implements UniResolver {
 
 		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
 
-		Map<String, Map<String, Object>> properties = new HashMap<String, Map<String, Object>> ();
+		Map<String, Map<String, Object>> properties = new LinkedHashMap<String, Map<String, Object>> ();
 
-		for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
+		int i = 0;
 
-			if (log.isDebugEnabled()) log.debug("Loading properties for driver " + driver.getKey() + " (" + driver.getValue().getClass().getSimpleName() + ")");
+		for (Driver driver : this.getDrivers()) {
 
-			Map<String, Object> driverProperties = driver.getValue().properties();
+			if (log.isDebugEnabled()) log.debug("Loading properties for driver " + driver.getClass().getSimpleName());
+
+			String driverKey = "driver-" + i;
+			Map<String, Object> driverProperties = driver.properties();
 			if (driverProperties == null) driverProperties = Collections.emptyMap();
 
-			properties.put(driver.getKey(), driverProperties);
+			properties.put(driverKey, driverProperties);
+
+			i++;
 		}
 
-		if (log.isDebugEnabled()) log.debug("Loading properties: " + properties);
+		// done
 
+		if (log.isDebugEnabled()) log.debug("Loaded properties: " + properties);
 		return properties;
+	}
+
+	@Override
+	public Set<String> methods() throws ResolutionException {
+
+		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
+
+		Set<String> methods = this.testIdentifiers().keySet();
+
+		// done
+
+		if (log.isDebugEnabled()) log.debug("Loaded methods: " + methods);
+		return methods;
+	}
+
+	@Override
+	public Map<String, List<String>> testIdentifiers() throws ResolutionException {
+
+		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
+
+		Map<String, List<String>> testIdentifiers = new LinkedHashMap<String, List<String>> ();
+
+		for (Driver driver : this.getDrivers()) {
+
+			if (log.isDebugEnabled()) log.debug("Loading test identifiers for driver " + driver.getClass().getSimpleName());
+
+			List<String> driverTestIdentifiers = driver.testIdentifiers();
+			if (driverTestIdentifiers == null) driverTestIdentifiers = Collections.emptyList();
+
+			for (String driverTestIdentifier : driverTestIdentifiers) {
+
+				String driverTestIdentifierMethod = driverTestIdentifier.substring("did:".length());
+				driverTestIdentifierMethod = driverTestIdentifierMethod.substring(0, driverTestIdentifierMethod.indexOf(':'));
+
+				List<String> methodTestIdentifiers = testIdentifiers.get(driverTestIdentifierMethod);
+
+				if (methodTestIdentifiers == null) {
+
+					methodTestIdentifiers = new ArrayList<String> ();
+					testIdentifiers.put(driverTestIdentifierMethod, methodTestIdentifiers);
+				}
+
+				methodTestIdentifiers.add(driverTestIdentifier);
+			}
+		}
+
+		// done
+
+		if (log.isDebugEnabled()) log.debug("Loaded test identifiers: " + testIdentifiers);
+		return testIdentifiers;
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	private static List<String> readTestIdentifiers(JsonArray jsonTestIdentifiers) {
+
+		List<String> testIdentifiers = new ArrayList<String> (jsonTestIdentifiers.size());
+		for (JsonElement jsonTestIdentifier : jsonTestIdentifiers) testIdentifiers.add(jsonTestIdentifier.getAsString());
+		return testIdentifiers;
 	}
 
 	public void resolveWithDrivers(String resolveIdentifier, ResolveResult resolveResult) throws ResolutionException {
 
 		ResolveResult driverResolveResult = null;
-		String usedDriverId = null;
+		Driver usedDriver = null;
 
-		for (Entry<String, Driver> driver : this.getDrivers().entrySet()) {
+		for (Driver driver : this.getDrivers()) {
 
-			if (log.isDebugEnabled()) log.debug("Attemping to resolve " + resolveIdentifier + " with driver " + driver.getValue().getClass());
-			driverResolveResult = driver.getValue().resolve(resolveIdentifier);
+			if (log.isDebugEnabled()) log.debug("Attempting to resolve " + resolveIdentifier + " with driver " + driver.getClass().getSimpleName());
+			driverResolveResult = driver.resolve(resolveIdentifier);
 
 			if (driverResolveResult != null && driverResolveResult.getDidDocument() != null && driverResolveResult.getDidDocument().getJsonObject().isEmpty()) {
 
@@ -236,7 +293,7 @@ public class LocalUniResolver implements UniResolver {
 
 			if (driverResolveResult != null) {
 
-				usedDriverId = driver.getKey();
+				usedDriver = driver;
 
 				resolveResult.setDidDocument(driverResolveResult.getDidDocument());
 				resolveResult.setDidDocumentMetadata(driverResolveResult.getDidDocumentMetadata());
@@ -245,10 +302,18 @@ public class LocalUniResolver implements UniResolver {
 			}
 		}
 
-		if (usedDriverId != null) {
+		if (usedDriver != null) {
 
-			resolveResult.getDidResolutionMetadata().put("driverId", usedDriverId);
-			if (log.isDebugEnabled()) log.debug("Resolved " + resolveIdentifier + " with driver " + usedDriverId);
+			if (usedDriver instanceof HttpDriver) {
+
+				resolveResult.getDidResolutionMetadata().put("pattern", ((HttpDriver) usedDriver).getPattern().pattern());
+				resolveResult.getDidResolutionMetadata().put("driverUrl", ((HttpDriver) usedDriver).getResolveUri());
+
+				if (log.isDebugEnabled()) log.debug("Resolved " + resolveIdentifier + " with driver " + drivers.getClass().getSimpleName() + " and pattern " + ((HttpDriver) usedDriver).getPattern().pattern());
+			} else {
+
+				if (log.isDebugEnabled()) log.debug("Resolved " + resolveIdentifier + " with driver " + drivers.getClass().getSimpleName());
+			}
 		} else {
 
 			if (log.isDebugEnabled()) log.debug("No result with " + this.getDrivers().size() + " drivers.");
@@ -261,7 +326,7 @@ public class LocalUniResolver implements UniResolver {
 	 * Getters and setters
 	 */
 
-	public Map<String, Driver> getDrivers() {
+	public List<Driver> getDrivers() {
 
 		return this.drivers;
 	}
@@ -269,7 +334,7 @@ public class LocalUniResolver implements UniResolver {
 	@SuppressWarnings("unchecked")
 	public <T extends Driver> T getDriver(Class<T> driverClass) {
 
-		for (Driver driver : this.getDrivers().values()) {
+		for (Driver driver : this.getDrivers()) {
 
 			if (driverClass.isAssignableFrom(driver.getClass())) return (T) driver;
 		}
@@ -277,7 +342,7 @@ public class LocalUniResolver implements UniResolver {
 		return null;
 	}
 
-	public void setDrivers(Map<String, Driver> drivers) {
+	public void setDrivers(List<Driver> drivers) {
 
 		this.drivers = drivers;
 	}

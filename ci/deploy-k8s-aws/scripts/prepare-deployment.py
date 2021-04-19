@@ -45,14 +45,13 @@ def get_container_port(ports):
 def generate_deployment_specs(containers, outputdir):
     for container in containers:
         container_tag = containers[container]['image']
-        container_name = get_container_name(container_tag)
         container_port = get_container_port(containers[container]['ports'])
         fin = open("k8s-template.yaml", "rt")
-        deployment_file = "deployment-%s.yaml" % container_name
+        deployment_file = "deployment-%s.yaml" % container
         fout = open(outputdir + '/' + deployment_file, "wt")
-        print('Writing file: ' + outputdir + '/' + deployment_file + ' for container: ' + container_tag)
+        print('Writing file: ' + outputdir + '/' + deployment_file + ' for container: ' + container)
         for line in fin:
-            fout.write(line.replace('{{containerName}}', container_name).replace('{{containerTag}}', container_tag).replace('{{containerPort}}', container_port))
+            fout.write(line.replace('{{containerName}}', container).replace('{{containerTag}}', container_tag).replace('{{containerPort}}', container_port))
         add_deployment(deployment_file, outputdir)
         fin.close()
         fout.close()
@@ -139,12 +138,10 @@ def generate_ingress(containers, outputdir):
     for container in containers:
         print(container)
         print(containers[container]['ports'])
-        container_tag = containers[container]['image']
         container_port = get_container_port(containers[container]['ports'])
-        container_name = get_container_name(container_tag)
-        if container_name == 'uni-resolver-web':  # this is the default-name, hosted at: DEFAULT_DOMAIN_NAME
+        if container == 'uni-resolver-web':  # this is the default-name, hosted at: DEFAULT_DOMAIN_NAME
             continue
-        subpath = container_name.replace('did', '').replace('driver', '').replace('uni-resolver', '').replace('-',
+        subpath = container.replace('did', '').replace('driver', '').replace('uni-resolver', '').replace('-',
                                                                                                                    '')
         print('Adding path: ' + subpath)
 

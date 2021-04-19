@@ -17,8 +17,6 @@ import uniresolver.web.WebUniResolver;
 
 public class PropertiesServlet extends WebUniResolver {
 
-	private static final long serialVersionUID = 3865183054854163102L;
-
 	protected static Logger log = LoggerFactory.getLogger(PropertiesServlet.class);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -44,8 +42,8 @@ public class PropertiesServlet extends WebUniResolver {
 			propertiesString = properties == null ? null : objectMapper.writeValueAsString(properties);
 		} catch (Exception ex) {
 
-			if (log.isWarnEnabled()) log.warn("Driver reported: " + ex.getMessage(), ex);
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Driver reported: " + ex.getMessage());
+			if (log.isWarnEnabled()) log.warn("Resolver reported: " + ex.getMessage(), ex);
+			WebUniResolver.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolver reported: " + ex.getMessage());
 			return;
 		}
 

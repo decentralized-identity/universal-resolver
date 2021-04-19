@@ -3,7 +3,9 @@ package uniresolver.web;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -61,6 +63,18 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	public Map<String, Map<String, Object>> properties() throws ResolutionException {
 
 		return this.getUniResolver() == null ? null : this.getUniResolver().properties();
+	}
+
+	@Override
+	public Set<String> methods() throws ResolutionException {
+
+		return this.getUniResolver() == null ? null : this.getUniResolver().methods();
+	}
+
+	@Override
+	public Map<String, List<String>> testIdentifiers() throws ResolutionException {
+
+		return this.getUniResolver() == null ? null : this.getUniResolver().testIdentifiers();
 	}
 
 	/*

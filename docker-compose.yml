@@ -33,7 +33,7 @@ services:
     ports:
       - "8082:8080"
   uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:1.4.0
+    image: uport/uni-resolver-driver-did-uport:2.0.8
     ports:
       - "8083:8081"
 #  driver-did-stack:
@@ -203,3 +203,10 @@ services:
     image: identitydotcom/driver-did-sol:latest
     ports:
       - "8118:8080"
+  driver-did-lit:
+    image: ibct/driver-did-lit:0.1.0
+    environment:
+      LEDGIS_LIT_ENDPOINT: ${LEDGIS_LIT_ENDPOINT}
+      LEDGIS_LIT_CODE: ${LEDGIS_LIT_CODE}
+    ports:
+      - "8119:8080"
