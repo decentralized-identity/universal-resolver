@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "#### Smoketest for the Universal Resolver Kubernetes Deployment ####"
+echo "#### Driver Status for a Universal Resolver Deployment ####"
 
 echo "Running with parameters:"
 sh -c "echo $*"
@@ -28,17 +28,17 @@ fi
 
 python --version
 
-python /smoke-tests/smoke-test.py --host "$INPUT_HOST" --config "$INPUT_CONFIG" --out "$INPUT_OUT_FOLDER"
+python /get-driver-status/get-driver-status.py --host "$INPUT_HOST" --config "$INPUT_CONFIG" --out "$INPUT_OUT_FOLDER"
 
 if "$INPUT_KEEP_RESULT";
   then
     echo "Push result file to repo"
     git config --global user.email "admin@danubetech.com"
-    git config --global user.name "Smoke tests workflow"
+    git config --global user.name "Get driver status workflow"
     git add .
     # Pass filename to next step in github action
     echo "filename=$(git diff --name-only --staged)" >> "$GITHUB_ENV"
-    git commit -m "Smoke test results" && git push
+    git commit -m "Get driver status results" && git push
   else
-    cat -b /smoke-tests/smoke-tests-result-*.json
+    cat -b /driver-status-reports/driver-status-*.json
 fi

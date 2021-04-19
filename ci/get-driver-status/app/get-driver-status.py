@@ -51,10 +51,16 @@ def create_test_data(drivers_config, host):
 # Run tests START
 async def fetch_html(url: str, session: ClientSession):
     resp = await session.request(method="GET", url=url)
-    html = await resp.text()
+    plain_html = await resp.text()
     logger.info("Got response [%s] for URL: %s", resp.status, url)
-    logger.info("With body:\n %s", html)
-    return {"status": resp.status, "body": html}
+    logger.info("With body:\n %s", plain_html)
+
+    if resp.status == 200:
+        did_document = json.loads(plain_html)
+        logger.info("With didDocument:\n %s", did_document)
+        return {"status": resp.status, "resolutionResponse": did_document}
+    else:
+        return {"status": resp.status, "error": plain_html}
 
 
 async def write_one(results, data, session):
@@ -89,7 +95,8 @@ async def run_tests(test_data):
 # Run tests END
 
 def main(argv):
-    help_text = './smoke-test.py -i <ingress-file> -c <uni-resolver-config> -o <out-folder>'
+    help_text = './get-driver-status.py -host <uni-resolver-host> -config <uni-resolver-config> -out <out-folder> ' \
+                '--write200 <True/False>'
     host = 'https://dev.uniresolver.io'
     config = '/github/workspace/config.json'
     out_folder = './'
@@ -125,7 +132,7 @@ def main(argv):
     results = asyncio.run(run_tests(test_data=test_data))
 
     results_timestamp = strftime("%Y-%m-%d_%H-%M-%S-UTC", gmtime())
-    filename = "smoke-tests-result-" + results_timestamp + ".json"
+    filename = "driver-status-" + results_timestamp + ".json"
     print('Out folder: ' + out_folder)
     out_path = out_folder + filename
     print('Writing to path: ' + out_path)

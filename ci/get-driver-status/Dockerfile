@@ -1,7 +1,7 @@
 FROM python:3.8.3-buster
 
-LABEL "com.github.actions.name"="Smoke Test"
-LABEL "com.github.actions.description"="Smoke Test for testing the Universal Resolver after a deplyoment"
+LABEL "com.github.actions.name"="Get driver status"
+LABEL "com.github.actions.description"="Get driver status for a Universal Resolver deplyoment"
 LABEL "com.github.actions.icon"="mic"
 LABEL "com.github.actions.color"="blue"
 LABEL "version"="1.0.0"
@@ -12,12 +12,12 @@ LABEL "maintainer"="Bernhard Fuchs <bernhard.fuchs@danubetech.com>"
 RUN apt-get update && \
     apt-get upgrade -y
 
-WORKDIR /smoke-tests/
+WORKDIR /get-driver-status/
 
 COPY app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app/smoke-test.py .
+COPY app/get-driver-status.py .
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh

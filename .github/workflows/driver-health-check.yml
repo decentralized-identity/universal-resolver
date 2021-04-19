@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Run smoke tests
-        uses: ./ci/smoke-tests
+      - name: Get driver status
+        uses: ./ci/get-driver-status
         with:
           host: https://dev.uniresolver.io
           out_folder: /github/workspace/driver-status-reports

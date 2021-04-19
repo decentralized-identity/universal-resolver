@@ -1,10 +1,10 @@
-# universal-resolver-k8s-deployment-smoke-tests
+# universal-resolver-deployment-driver-status
 
 This tool can be used as a standalone script for testing an existing deployment of the Uni Resolver, it can be integrated as a [github action](https://github.com/features/actions) into a github workflow, or it can be run as docker container.
 
-## Run smoke-test script manually
+## Run get-driver-status script manually
 
-    python smoke-test.py --host <host-where-resolver-is-deployed> --config <path-to-uni-resolver-config> --out <path-to-result-file> --write200 false
+    python get-driver-status.py --host <host-where-resolver-is-deployed> --config <path-to-uni-resolver-config> --out <path-to-result-file> --write200 false
     
 The script needs Python 3 and dependencies listed in the `requirements.txt`.   
 
@@ -24,8 +24,8 @@ Default values:
  
 ## Use action in github workflow
 
-    - name: Smoke Test
-      uses: ./ci/smoke-tests
+    - name: Get Driver Status
+      uses: ./ci/driver-status
       with:
         host: <http-or-https>://<host>
         config: <path-to-uniresolver-config>
@@ -38,8 +38,8 @@ Example can be seen in the [uni-resolver workflow configuration](https://github.
 ## Run as docker container
 ### Build container with
 
-    docker build -f Dockerfile -t smoke-test .
+    docker build -f Dockerfile -t get-driver-status .
     
 ### Run container with
 
-    docker run -it --rm -e HOST=<host-where-resolver-is-deployed> -e CONFIG_FILE=<path-to-config.json> --name smoke-test smoke-test
+    docker run -it --rm -e HOST=<host-where-resolver-is-deployed> -e CONFIG_FILE=<path-to-config.json> --name get-driver-status .
