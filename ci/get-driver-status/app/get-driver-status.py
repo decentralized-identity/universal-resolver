@@ -58,7 +58,11 @@ async def fetch_html(url: str, session: ClientSession):
     if resp.status == 200:
         did_document = json.loads(plain_html)
         logger.info("With didDocument:\n %s", did_document)
-        return {"status": resp.status, "resolutionResponse": did_document}
+        return {
+                "status": resp.status,
+                "resolutionResponse.application/did+json": did_document,
+                "resolutionResponse.application/did+ld+json": plain_html
+            }
     else:
         return {"status": resp.status, "error": plain_html}
 
