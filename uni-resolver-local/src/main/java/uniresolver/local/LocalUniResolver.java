@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URI;
 import java.util.*;
-import java.util.Map.Entry;
 
 import foundation.identity.did.DIDDocument;
 import foundation.identity.did.DIDURL;
@@ -27,8 +26,6 @@ import uniresolver.driver.http.HttpDriver;
 import uniresolver.local.extensions.Extension;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.result.ResolveResult;
-
-import javax.json.Json;
 
 public class LocalUniResolver implements UniResolver {
 
