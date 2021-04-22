@@ -204,3 +204,7 @@ services:
       LEDGIS_LIT_CODE: ${LEDGIS_LIT_CODE}
     ports:
       - "8119:8080"
+  driver-did-infra:
+    image: infrablockchain/infra-did-resolver:latest
+    ports:
+      - "8120:8080"
