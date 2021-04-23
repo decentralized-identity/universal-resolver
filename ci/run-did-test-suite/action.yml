@@ -1,0 +1,15 @@
+name: 'uni-resolver-did-test-suite'
+description: 'Run did-test-suite against Universal Resolver deployment'
+inputs:
+  host:
+    description: 'Host of Uni-Resolver deployment'
+    required: false
+  file:
+    description: 'File with Uni-resolver response'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.host }}
+    - ${{ inputs.file }}
