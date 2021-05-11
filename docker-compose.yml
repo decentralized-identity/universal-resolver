@@ -27,7 +27,7 @@ services:
     ports:
       - "8082:8080"
   uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:2.0.8
+    image: uport/uni-resolver-driver-did-uport:2.1.0
     ports:
       - "8083:8081"
   driver-did-stack:
@@ -193,8 +193,8 @@ services:
     image: meshplus/driver-did-bitxhub:latest
     ports:
       - "8117:8080"
-  driver-did-solid:
-    image: identitydotcom/driver-did-solid:0.1.0
+  driver-did-sol:
+    image: identitydotcom/driver-did-sol:0.1.0
     ports:
       - "8118:8080"
   driver-did-lit:
