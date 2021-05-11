@@ -35,13 +35,13 @@ def extract_did_method(did):
 def create_test_data(drivers_config, host):
     test_data = []
     for driver in drivers_config:
-        did: str = driver["testIdentifiers"][0]
-        if did.startswith("did:"):
-            driver_test_data = {
-                "method": extract_did_method(driver["testIdentifiers"][0]),
-                "url": host + driver["testIdentifiers"][0]
-            }
-            test_data.append(driver_test_data)
+        for testIdentifier in driver["testIdentifiers"]:
+            if testIdentifier.startswith("did:"):
+                driver_test_data = {
+                    "method": extract_did_method(testIdentifier),
+                    "url": host + testIdentifier
+                }
+                test_data.append(driver_test_data)
 
     return test_data
 
@@ -59,8 +59,7 @@ async def fetch_html(url: str, session: ClientSession):
         did_document = json.loads(plain_html)
         logger.info("With didDocument:\n %s", did_document)
         result = {"status": resp.status, "resolutionResponse": {}}
-        result["resolutionResponse"]["application/did+json"] = did_document
-        result["resolutionResponse"]["application/did+ld+json"] = plain_html
+        result["resolutionResponse"]["application/did+ld+json"] = did_document
         return result
     else:
         return {"status": resp.status, "error": plain_html}
