@@ -5,13 +5,13 @@ const axios = require('axios');
 
 const testDataSkeleton = {
     implementation: 'Universal Resolver',
-    implementer: 'Danubetech GmbH',
+    implementer: 'Decentralized Identity Foundation and Contributors',
     expectedOutcomes: {
-        defaultOutcomes: [0,4,5,6],
-        invalidDidErrorOutcome: [1],
-        notFoundErrorOutcome: [2],
+        defaultOutcomes: [],
+        invalidDidErrorOutcome: [],
+        notFoundErrorOutcome: [],
         representationNotSupportedErrorOutcome: [],
-        deactivatedOutcome: [3]
+        deactivatedOutcome: []
     },
     executions: []
 }
@@ -21,8 +21,30 @@ const extractDid = (url) => {
     return splitUrl[splitUrl.length - 1];
 }
 
+const extractMethodName = (url) => {
+    return extractDid(url).split(':')[1];
+}
+
 const getTestResults = async(testData) => {
     return await axios.post('http://0.0.0.0:8080/test-suite-manager/generate-report', testData);
+}
+
+const writeFile = (testData, methodName) => {
+    fs.writeFileSync(
+        `/Users/devfox/testsuites/did-test-suite/packages/did-core-test-server/suites/implementations/universal-resolver-did-${methodName}.json`,
+        JSON.stringify(testData)
+    )
+}
+
+const getWorkingMethods = (resolutionResults) => {
+    const workingMethods = [];
+    const urls = Object.keys( resolutionResults );
+    urls.forEach(url => {
+        if (resolutionResults[url].status === 200) {
+            workingMethods.push(extractMethodName(url));
+        }
+    })
+    return Array.from(new Set(workingMethods))
 }
 
 try {
@@ -36,42 +58,52 @@ try {
     console.log(`The event payload: ${payload}`);
 
     // const filename = core.getInput('file');
-    const filename = '/Users/devfox/tmp/driver-status-2021-04-19_15-58-42-UTC.json';
+    const filename = '/Users/devfox/tmp/driver-status-2021-05-11_12-20-18-UTC.json';
     console.log(`Running test-suite against ${filename}`);
 
     const rawData = fs.readFileSync(filename);
     const resolutionResults = JSON.parse(rawData);
-    console.log(resolutionResults)
 
     const testData = testDataSkeleton;
-    const keys = Object.keys( resolutionResults );
-    keys.forEach(key => {
-        console.log('### Key', key)
-        console.log('### Value', resolutionResults[key])
+    const workingMethods = getWorkingMethods(resolutionResults)
+    const urls = Object.keys( resolutionResults );
 
-        if (resolutionResults[key].status === 200) {
-            testData.executions.push({
-                function: 'resolve',
-                input: {
-                    did: extractDid(key),
-                    resolutionOptions: {}
-                },
-                output: {
-                    didResolutionMetadata: resolutionResults[key].didResolutionMetadata,
-                    didDocument: resolutionResults[key].didDocument,
-                    didDocumentMetadata: resolutionResults[key].didDocumentMetadata
+    workingMethods.forEach(methodName => {
+        testData.executions = [];
+        testData.expectedOutcomes.defaultOutcomes = [];
+
+        urls.forEach(url => {
+            console.log('### Key', url)
+            console.log('### Value', resolutionResults[url])
+
+            if (resolutionResults[url].status === 200 && methodName === extractMethodName(extractDid(url))) {
+                if (testData.expectedOutcomes.defaultOutcomes[0] === undefined) {
+                    testData.expectedOutcomes.defaultOutcomes[0] = 0;
+                } else {
+                    const length = testData.expectedOutcomes.defaultOutcomes.length;
+                    testData.expectedOutcomes.defaultOutcomes.push(length);
                 }
-            })
-        }
-    });
 
-    console.log(testData);
+                testData.executions.push({
+                    function: 'resolveRepresentation',
+                    input: {
+                        did: extractDid(url),
+                        resolutionOptions: {
+                            accept: "application/did+ld+json"
+                        }
+                    },
+                    output: {
+                        didResolutionMetadata: resolutionResults[url].resolutionResponse["application/did+ld+json"].didResolutionMetadata,
+                        didDocumentStream: JSON.stringify(resolutionResults[url].resolutionResponse["application/did+ld+json"].didDocument),
+                        didDocumentMetadata: resolutionResults[url].resolutionResponse["application/did+ld+json"].didDocumentMetadata
+                    }
+                })
 
-    testResults = getTestResults(testData);
+            }
+        });
 
-    console.log('###TestResults')
-    console.log(testResults)
-
+        writeFile(testData, methodName)
+    })
 } catch (error) {
     core.setFailed(error.message);
 }
