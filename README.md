@@ -66,6 +66,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bitxhub:appchain001:0xc7F999b83Af6DF9e67d0a37Ee7e900bF38b3D013
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sol:ygGfLvAyuRymPNv2fJDK1ZMpdy59m8cV5dak6A8uHKa
 	curl -X GET http://localhost:8080/1.0/identifiers/did:lit:AEZ87t1bi5bRxmVh3ksMUi
+	curl -X GET http://localhost:8080/1.0/identifiers/did:ebsi:DfPaUdYwuzcqFoiMDSrUX8aQyZnr2SesH3vDVASYv8PE
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
@@ -116,6 +117,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-bitxhub](https://github.com/meshplus/driver-did-bitxhub) | 1.0.0 | [1.0.0 WD](https://w3c.github.io/did-core/) | (missing) | [meshplus/driver-did-bitxhub](https://hub.docker.com/repository/docker/meshplus/driver-did-bitxhub) |
 | [did-sol](https://github.com/identity-com/sol-did)|1.0.0|[1.0 WD](https://w3c.github.io/did-core/)|[1.0.0](https://github.com/identity-com/sol-did/)|[identitydotcom/driver-did-sol](https://hub.docker.com/r/identitydotcom/driver-did-sol)
 | [did-lit](https://github.com/ibct-dev/lit-resolver) | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1.0](https://github.com/ibct-dev/lit-DID/blob/main/docs/did:lit-method-spec_eng_v0.1.0.md) | [ibct/driver-did-lit](https://hub.docker.com/r/ibct/driver-did-lit)
+| [did-ebsi](https://api.preprod.ebsi.eu/docs/#/DID%20Registry) | 2.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | 2.0.0 | (missing) |
 
 ## More Information
 

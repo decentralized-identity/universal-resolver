@@ -212,6 +212,11 @@
           "pattern": "^(did:lit:(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$",
           "url": "http://driver-did-lit:8080/",
           "testIdentifiers": [ "did:lit:AEZ87t1bi5bRxmVh3ksMUi" ]
+        },
+        {
+		  "pattern": "^(did:ebsi:.+)$",
+          "url": "https://api.preprod.ebsi.eu/did-registry/v2/identifiers/$1",
+          "testIdentifiers": [ "did:ebsi:DfPaUdYwuzcqFoiMDSrUX8aQyZnr2SesH3vDVASYv8PE" ]
         }
 	]
 }
