@@ -58,16 +58,19 @@ try {
     console.log(`The event payload: ${payload}`);
 
     // const filename = core.getInput('file');
-    const filename = '/Users/devfox/tmp/driver-status-2021-05-11_12-20-18-UTC.json';
+    const filename = '/Users/devfox/tmp/driver-status-2021-05-19_09-51-50-UTC.json';
     console.log(`Running test-suite against ${filename}`);
+
+    const mode = "MANUAL";
+    // const mode = "AUTOMATIC";
 
     const rawData = fs.readFileSync(filename);
     const resolutionResults = JSON.parse(rawData);
 
-    const testData = testDataSkeleton;
     const workingMethods = getWorkingMethods(resolutionResults)
-    const urls = Object.keys( resolutionResults );
+    const urls = Object.keys(resolutionResults);
 
+    const testData = testDataSkeleton;
     workingMethods.forEach(methodName => {
         testData.executions = [];
         testData.expectedOutcomes.defaultOutcomes = [];
@@ -77,12 +80,9 @@ try {
             console.log('### Value', resolutionResults[url])
 
             if (resolutionResults[url].status === 200 && methodName === extractMethodName(extractDid(url))) {
-                if (testData.expectedOutcomes.defaultOutcomes[0] === undefined) {
-                    testData.expectedOutcomes.defaultOutcomes[0] = 0;
-                } else {
-                    const length = testData.expectedOutcomes.defaultOutcomes.length;
-                    testData.expectedOutcomes.defaultOutcomes.push(length);
-                }
+                testData.expectedOutcomes.defaultOutcomes[0] === undefined ?
+                    testData.expectedOutcomes.defaultOutcomes[0] = 0 :
+                    testData.expectedOutcomes.defaultOutcomes.push(testData.expectedOutcomes.defaultOutcomes.length)
 
                 testData.executions.push({
                     function: 'resolveRepresentation',
@@ -102,7 +102,8 @@ try {
             }
         });
 
-        writeFile(testData, methodName)
+        if (mode === "MANUAL") writeFile(testData, methodName);
+        if (mode === "AUTOMATIC") getTestResults(createSuitesInput(testData));
     })
 } catch (error) {
     core.setFailed(error.message);
