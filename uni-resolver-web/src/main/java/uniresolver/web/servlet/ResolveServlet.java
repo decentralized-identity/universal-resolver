@@ -91,6 +91,8 @@ public class ResolveServlet extends WebUniResolver {
 
 			if (acceptMediaType.includes(MediaType.valueOf(ResolveResult.MIME_TYPE))) {
 
+				resolveResult.getDidResolutionMetadata().put("contentType", DIDDocument.MIME_TYPE_JSON_LD);
+
 				WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, ResolveResult.MIME_TYPE, resolveResult.toJson());
 				return;
 			} else if (acceptMediaType.includes(MediaType.valueOf(DIDDocument.MIME_TYPE_JSON_LD))) {

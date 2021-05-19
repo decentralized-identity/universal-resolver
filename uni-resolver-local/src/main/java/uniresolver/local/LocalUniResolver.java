@@ -127,7 +127,7 @@ public class LocalUniResolver implements UniResolver {
 		try {
 
 			didUrl = DIDURL.fromString(identifier);
-			resolveResult.getDidResolutionMetadata().put("didUrl", didUrl.toJsonObject(false));
+			resolveResult.getDidResolutionMetadata().put("didUrl", didUrl.toMap(false));
 
 			log.debug("Identifier " + identifier + " is a valid DID URL: " + didUrl);
 		} catch (IllegalArgumentException | ParserException ex) {
