@@ -17,8 +17,8 @@ const testDataSkeleton = {
 }
 
 const extractDid = (url) => {
-    const splitUrl = url.split('/');
-    return splitUrl[splitUrl.length - 1];
+    const didWithParams = url.split('/');
+    return didWithParams[didWithParams.length - 1].split('?')[0];
 }
 
 const extractMethodName = (url) => {
@@ -40,7 +40,7 @@ const getWorkingMethods = (resolutionResults) => {
     const workingMethods = [];
     const urls = Object.keys( resolutionResults );
     urls.forEach(url => {
-        if (resolutionResults[url].status === 200) {
+        if (resolutionResults[url].status === 200 && resolutionResults[url].resolutionResponse["application/did+ld+json"].didDocument.id !== undefined) {
             workingMethods.push(extractMethodName(url));
         }
     })
@@ -58,7 +58,7 @@ try {
     console.log(`The event payload: ${payload}`);
 
     // const filename = core.getInput('file');
-    const filename = '/Users/devfox/tmp/driver-status-2021-05-19_09-51-50-UTC.json';
+    const filename = '/Users/devfox/tmp/driver-status-2021-05-19_15-08-15-UTC.json';
     console.log(`Running test-suite against ${filename}`);
 
     const mode = "MANUAL";
@@ -68,18 +68,16 @@ try {
     const resolutionResults = JSON.parse(rawData);
 
     const workingMethods = getWorkingMethods(resolutionResults)
+    console.log('##Working methods', workingMethods)
     const urls = Object.keys(resolutionResults);
 
     const testData = testDataSkeleton;
-    workingMethods.forEach(methodName => {
+    workingMethods.forEach(workingMethodName => {
         testData.executions = [];
         testData.expectedOutcomes.defaultOutcomes = [];
 
         urls.forEach(url => {
-            console.log('### Key', url)
-            console.log('### Value', resolutionResults[url])
-
-            if (resolutionResults[url].status === 200 && methodName === extractMethodName(extractDid(url))) {
+            if (workingMethodName === extractMethodName(extractDid(url))) {
                 testData.expectedOutcomes.defaultOutcomes[0] === undefined ?
                     testData.expectedOutcomes.defaultOutcomes[0] = 0 :
                     testData.expectedOutcomes.defaultOutcomes.push(testData.expectedOutcomes.defaultOutcomes.length)
@@ -87,7 +85,7 @@ try {
                 testData.executions.push({
                     function: 'resolveRepresentation',
                     input: {
-                        did: extractDid(url),
+                        did: resolutionResults[url].resolutionResponse["application/did+ld+json"].didDocument.id,
                         resolutionOptions: {
                             accept: "application/did+ld+json"
                         }
@@ -102,7 +100,7 @@ try {
             }
         });
 
-        if (mode === "MANUAL") writeFile(testData, methodName);
+        if (mode === "MANUAL") writeFile(testData, workingMethodName);
         if (mode === "AUTOMATIC") getTestResults(createSuitesInput(testData));
     })
 } catch (error) {
