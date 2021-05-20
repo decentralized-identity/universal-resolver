@@ -47,6 +47,28 @@ const getWorkingMethods = (resolutionResults) => {
     return Array.from(new Set(workingMethods))
 }
 
+const createExpectedOutcomes = (testData, resolutionResult, index) => {
+
+    if (resolutionResult.resolutionResponse["application/did+ld+json"].didDocumentMetadata.deactivated === true) {
+        testData.expectedOutcomes.deactivatedOutcome[0] === undefined ?
+            testData.expectedOutcomes.deactivatedOutcome[0] = index :
+            testData.expectedOutcomes.deactivatedOutcome.push(index)
+    } else {
+        testData.expectedOutcomes.defaultOutcomes[0] === undefined ?
+            testData.expectedOutcomes.defaultOutcomes[0] = index :
+            testData.expectedOutcomes.defaultOutcomes.push(index)
+    }
+}
+
+const resetTestData = (testData) => {
+    testData.executions = [];
+    testData.expectedOutcomes.defaultOutcomes = [];
+    testData.expectedOutcomes.invalidDidErrorOutcome = [];
+    testData.expectedOutcomes.notFoundErrorOutcome = [];
+    testData.expectedOutcomes.representationNotSupportedErrorOutcome = [];
+    testData.expectedOutcomes.deactivatedOutcome = [];
+}
+
 try {
     // // `who-to-greet` input defined in action metadata file
     // const nameToGreet = core.getInput('who-to-greet');
@@ -73,14 +95,12 @@ try {
 
     const testData = testDataSkeleton;
     workingMethods.forEach(workingMethodName => {
-        testData.executions = [];
-        testData.expectedOutcomes.defaultOutcomes = [];
+        resetTestData(testData);
 
+        let index = 0;
         urls.forEach(url => {
             if (workingMethodName === extractMethodName(extractDid(url))) {
-                testData.expectedOutcomes.defaultOutcomes[0] === undefined ?
-                    testData.expectedOutcomes.defaultOutcomes[0] = 0 :
-                    testData.expectedOutcomes.defaultOutcomes.push(testData.expectedOutcomes.defaultOutcomes.length)
+                createExpectedOutcomes(testData, resolutionResults[url], index)
 
                 testData.executions.push({
                     function: 'resolveRepresentation',
@@ -96,7 +116,7 @@ try {
                         didDocumentMetadata: resolutionResults[url].resolutionResponse["application/did+ld+json"].didDocumentMetadata
                     }
                 })
-
+                index++;
             }
         });
 
