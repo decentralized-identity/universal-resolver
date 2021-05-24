@@ -217,6 +217,11 @@
 		  "pattern": "^(did:ebsi:.+)$",
           "url": "https://api.preprod.ebsi.eu/did-registry/v2/identifiers/$1",
           "testIdentifiers": [ "did:ebsi:DfPaUdYwuzcqFoiMDSrUX8aQyZnr2SesH3vDVASYv8PE" ]
-        }
+        },
+		{
+			"pattern": "^(did:emtrust:.+)$",
+			"url": "http://driver-did-emtrust:8080/",
+			"testIdentifiers": [ "did:emtrust:0x242a5ac36676462bd58a" ]
+		  }
 	]
 }
