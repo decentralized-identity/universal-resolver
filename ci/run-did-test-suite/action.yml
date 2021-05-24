@@ -4,12 +4,12 @@ inputs:
   host:
     description: 'Host of Uni-Resolver deployment'
     required: false
-  file:
-    description: 'File with Uni-resolver response'
+  driver_status_report:
+    description: 'File with testset of Uni-resolver response'
     required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
     - ${{ inputs.host }}
-    - ${{ inputs.file }}
+    - ${{ inputs.driver_status_report }}

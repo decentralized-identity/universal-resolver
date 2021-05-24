@@ -37,10 +37,10 @@ const getMode = () => {
 }
 
 const getTestset = () => {
-    if (argv["TESTSET_PATH"] !== undefined) {
-        return argv["TESTSET_PATH"];
+    if (argv["DRIVER_STATUS_REPORT"] !== undefined) {
+        return argv["DRIVER_STATUS_REPORT"];
     } else {
-        return core.getInput('file');
+        return core.getInput('DRIVER_STATUS_REPORT');
     }
 }
 
