@@ -204,3 +204,7 @@ services:
       LEDGIS_LIT_CODE: ${LEDGIS_LIT_CODE}
     ports:
       - "8119:8080"
+  driver-did-emtrust:
+    image: halialabsdev/emtrust_did_driver:latest
+    ports:
+      - "8120:8080"
