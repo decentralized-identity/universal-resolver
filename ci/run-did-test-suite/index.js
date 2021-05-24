@@ -1,7 +1,11 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const fs = require('fs');
-const axios = require('axios');
+const argv = require('minimist')(process.argv.slice(2));
+
+const { runTests } = require("./testserver-utils");
+const { generateLocalFile, generateDefaultFile } = require("./local-files-utils");
+const { resetTestData, createExpectedOutcomes, extractDid, extractMethodName, getWorkingMethods } = require("./utils");
 
 const testDataSkeleton = {
     implementation: 'Universal Resolver',
@@ -16,57 +20,36 @@ const testDataSkeleton = {
     executions: []
 }
 
-const extractDid = (url) => {
-    const didWithParams = url.split('/');
-    return didWithParams[didWithParams.length - 1].split('?')[0];
+const getOutputPath = () => {
+    return argv["OUTPUT_PATH"] !== undefined ? argv["OUTPUT_PATH"] : './'
 }
 
-const extractMethodName = (url) => {
-    return extractDid(url).split(':')[1];
-}
-
-const getTestResults = async(testData) => {
-    return await axios.post('http://0.0.0.0:8080/test-suite-manager/generate-report', testData);
-}
-
-const writeFile = (testData, methodName) => {
-    fs.writeFileSync(
-        `/Users/devfox/testsuites/did-test-suite/packages/did-core-test-server/suites/implementations/universal-resolver-did-${methodName}.json`,
-        JSON.stringify(testData)
-    )
-}
-
-const getWorkingMethods = (resolutionResults) => {
-    const workingMethods = [];
-    const urls = Object.keys( resolutionResults );
-    urls.forEach(url => {
-        if (resolutionResults[url].status === 200 && resolutionResults[url].resolutionResponse["application/did+ld+json"].didDocument.id !== undefined) {
-            workingMethods.push(extractMethodName(url));
-        }
-    })
-    return Array.from(new Set(workingMethods))
-}
-
-const createExpectedOutcomes = (testData, resolutionResult, index) => {
-
-    if (resolutionResult.resolutionResponse["application/did+ld+json"].didDocumentMetadata.deactivated === true) {
-        testData.expectedOutcomes.deactivatedOutcome[0] === undefined ?
-            testData.expectedOutcomes.deactivatedOutcome[0] = index :
-            testData.expectedOutcomes.deactivatedOutcome.push(index)
+/* Set mode of test results
+*  LOCAL => local files are created for manual upload
+*  SERVER => tests are run against a hosted testserver
+* */
+const getMode = () => {
+    if (argv["MODE"] !== undefined) {
+        return argv["MODE"].toUpperCase();
     } else {
-        testData.expectedOutcomes.defaultOutcomes[0] === undefined ?
-            testData.expectedOutcomes.defaultOutcomes[0] = index :
-            testData.expectedOutcomes.defaultOutcomes.push(index)
+        return "SERVER";
     }
 }
 
-const resetTestData = (testData) => {
-    testData.executions = [];
-    testData.expectedOutcomes.defaultOutcomes = [];
-    testData.expectedOutcomes.invalidDidErrorOutcome = [];
-    testData.expectedOutcomes.notFoundErrorOutcome = [];
-    testData.expectedOutcomes.representationNotSupportedErrorOutcome = [];
-    testData.expectedOutcomes.deactivatedOutcome = [];
+const getTestset = () => {
+    if (argv["TESTSET_PATH"] !== undefined) {
+        return argv["TESTSET_PATH"];
+    } else {
+        return core.getInput('file');
+    }
+}
+
+const getHost = () => {
+    if (argv["HOST"] !== undefined) {
+        return argv["HOST"];
+    } else {
+        return core.getInput('host');
+    }
 }
 
 try {
@@ -76,24 +59,37 @@ try {
     // const time = (new Date()).toTimeString();
     // core.setOutput("time", time);
     // Get the JSON webhook payload for the event that triggered the workflow
+
     const payload = JSON.stringify(github.context.payload, undefined, 2)
     console.log(`The event payload: ${payload}`);
 
-    // const filename = core.getInput('file');
-    const filename = '/Users/devfox/tmp/driver-status-2021-05-19_15-08-15-UTC.json';
-    console.log(`Running test-suite against ${filename}`);
+    const mode = getMode();
+    console.log(`Running in ${mode} mode`);
 
-    const mode = "MANUAL";
-    // const mode = "AUTOMATIC";
+    // LOCAL mode env variables
+    const outputPath = getOutputPath();
+    console.log(`Output path for testfiles ${outputPath}`);
+    const shouldGenerateDefaultFile = argv["GENERATE_DEFAULT_FILE"];
 
-    const rawData = fs.readFileSync(filename);
+    // SERVER mode env variables
+    const host = getHost();
+    console.log(`Testserver host ${host}`);
+
+    // Common testset
+    const testSet = getTestset();
+    console.log(`Running with testSet: ${testSet}`);
+    // const filename = '/Users/devfox/tmp/driver-status-2021-05-19_15-08-15-UTC.json';
+
+    const rawData = fs.readFileSync(testSet);
     const resolutionResults = JSON.parse(rawData);
 
-    const workingMethods = getWorkingMethods(resolutionResults)
-    console.log('##Working methods', workingMethods)
+    const workingMethods = getWorkingMethods(resolutionResults);
+    console.log('Working methods', workingMethods);
     const urls = Object.keys(resolutionResults);
 
     const testData = testDataSkeleton;
+    const resolvers = [];
+
     workingMethods.forEach(workingMethodName => {
         resetTestData(testData);
 
@@ -120,9 +116,17 @@ try {
             }
         });
 
-        if (mode === "MANUAL") writeFile(testData, workingMethodName);
-        if (mode === "AUTOMATIC") getTestResults(createSuitesInput(testData));
+        if (mode === "LOCAL") generateLocalFile(testData, workingMethodName, outputPath);
+        if (mode === "SERVER") resolvers.push(testData);
     })
+
+    if (mode === "LOCAL" && shouldGenerateDefaultFile === true) {
+        generateDefaultFile(outputPath)
+    }
+
+    if (mode === "SERVER") {
+        runTests(resolvers, host);
+    }
 } catch (error) {
     core.setFailed(error.message);
 }
