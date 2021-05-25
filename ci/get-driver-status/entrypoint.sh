@@ -26,9 +26,12 @@ if "$INPUT_DEBUG"; then
   cat /github/workspace/deploy/uni-resolver-ingress.yaml
 fi
 
-python --version
+DATE_WITH_TIME=$(TZ=UTC date "+%Y-%m-%d_%H:%M:%S")
+REPORTS_FOLDER="$INPUT_OUT_FOLDER/nightly-run-$DATE_WITH_TIME"
+mkdir "$REPORTS_FOLDER"
 
-python /get-driver-status/get-driver-status.py --host "$INPUT_HOST" --config "$INPUT_CONFIG" --out "$INPUT_OUT_FOLDER"
+python --version
+python /get-driver-status/get-driver-status.py --host "$INPUT_HOST" --config "$INPUT_CONFIG" --out "$REPORTS_FOLDER"
 
 if "$INPUT_KEEP_RESULT";
   then
@@ -38,6 +41,7 @@ if "$INPUT_KEEP_RESULT";
     git add .
     # Pass driver_status_report to next step in github action
     echo "driver_status_report=$(git diff --name-only --staged)" >> "$GITHUB_ENV"
+    echo "reports_folder=$REPORTS_FOLDER" >> "$GITHUB_ENV"
     git commit -m "Get driver status results" && git push
   else
     cat -b /driver-status-reports/driver-status-*.json
