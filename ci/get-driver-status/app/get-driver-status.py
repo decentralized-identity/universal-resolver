@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-from time import gmtime, strftime
+import datetime
 import logging
 import re
 import json
@@ -133,7 +133,7 @@ def main(argv):
     # run tests
     results = asyncio.run(run_tests(test_data=test_data))
 
-    results_timestamp = strftime("%Y-%m-%d_%H-%M-%S-UTC", gmtime())
+    results_timestamp = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
     filename = "driver-status-" + results_timestamp + ".json"
     print('Out folder: ' + out_folder)
     out_path = out_folder + filename
