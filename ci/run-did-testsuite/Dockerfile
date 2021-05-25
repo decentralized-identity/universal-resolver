@@ -9,12 +9,15 @@ LABEL "repository"="https://github.com/decentralized-identity/universal-resolver
 LABEL "homepage"="https://uniresolver.io"
 LABEL "maintainer"="Bernhard Fuchs <bernhard.fuchs@danubetech.com>"
 
-WORKDIR /run-did-test-suite/
+WORKDIR /run-did-testsuite/
 
-COPY package.json .
+COPY app/package.json .
 RUN npm install
 
-COPY index.js .
+COPY app/index.js .
+COPY app/local-files-utils.js .
+COPY app/testserver-utils.js .
+COPY app/utils.js .
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
