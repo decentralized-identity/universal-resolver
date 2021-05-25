@@ -7,7 +7,7 @@ const runTests = (resolvers, host, outputPath) => {
         resolvers: resolvers}]
     ).then(res => {
         const timestamp = new Date().toISOString().split('.')[0];
-        fs.writeFileSync(`${outputPath}/did-testsuite-report-${timestamp}.json`, JSON.stringify(res.data.suitesReportJson, null, 2))
+        fs.writeFileSync(`${outputPath}/did-test-suite-report-${timestamp}.json`, JSON.stringify(res.data.suitesReportJson, null, 2))
     }).catch(err => console.log(err));
 }
 

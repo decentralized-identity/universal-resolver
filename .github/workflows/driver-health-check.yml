@@ -16,9 +16,9 @@ jobs:
           host: https://dev.uniresolver.io
           out_folder: /home/runner/work/universal-resolver/universal-resolver/driver-status-reports
           keep_result: true
-      - name: Run did-testsuite
-        uses: ./ci/run-did-testsuite
+      - name: Run did-test-suite
+        uses: ./ci/run-did-test-suite
         with:
-          host: https://testsuite.uniresolver.io/test-suite-manager/generate-report
+          host: https://test-suite.uniresolver.io/test-suite-manager/generate-report
           driver_status_report: ${{ env.driver_status_report }}
           reports_folder: ${{ env.reports_folder }}

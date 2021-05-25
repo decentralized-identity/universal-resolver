@@ -12,7 +12,7 @@ LABEL "maintainer"="Bernhard Fuchs <bernhard.fuchs@danubetech.com>"
 RUN apk update && apk upgrade && \
     apk add --no-cache git
 
-WORKDIR /run-did-testsuite/
+WORKDIR /run-did-test-suite/
 
 COPY app/package.json .
 RUN npm install
