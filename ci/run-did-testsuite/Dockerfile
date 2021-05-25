@@ -9,6 +9,9 @@ LABEL "repository"="https://github.com/decentralized-identity/universal-resolver
 LABEL "homepage"="https://uniresolver.io"
 LABEL "maintainer"="Bernhard Fuchs <bernhard.fuchs@danubetech.com>"
 
+RUN apk update && apk upgrade && \
+    apk add --no-cache git
+
 WORKDIR /run-did-testsuite/
 
 COPY app/package.json .
