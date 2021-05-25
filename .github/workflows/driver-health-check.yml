@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  smoke-tests:
+  driver-health-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -16,8 +16,8 @@ jobs:
           host: https://dev.uniresolver.io
           out_folder: /github/workspace/driver-status-reports
           keep_result: true
-      - name: Run did-test-suite
-        uses: ./ci/run-did-test-suite
+      - name: Run did-testsuite
+        uses: ./ci/run-did-testsuite
         with:
           host: https://testsuite.uniresolver.io
           driver_status_report: ${{ env.driver_status_report }}
