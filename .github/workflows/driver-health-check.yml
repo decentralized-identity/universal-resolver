@@ -16,9 +16,6 @@ jobs:
           host: https://dev.uniresolver.io
           out_folder: /home/runner/work/universal-resolver/universal-resolver/driver-status-reports
           keep_result: true
-      - uses: actions/checkout@v2
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Run did-testsuite
         uses: ./ci/run-did-testsuite
         with:
