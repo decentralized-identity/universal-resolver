@@ -78,7 +78,6 @@ try {
     // Common testset
     const testSet = getTestset();
     console.log(`Running with testSet: ${testSet}`);
-    // const filename = '/Users/devfox/tmp/driver-status-2021-05-19_15-08-15-UTC.json';
 
     const rawData = fs.readFileSync(testSet);
     const resolutionResults = JSON.parse(rawData);
@@ -87,10 +86,10 @@ try {
     console.log('Working methods', workingMethods);
     const urls = Object.keys(resolutionResults);
 
-    const testData = testDataSkeleton;
     const resolvers = [];
 
     workingMethods.forEach(workingMethodName => {
+        const testData = {...testDataSkeleton};
         resetTestData(testData);
 
         let index = 0;
