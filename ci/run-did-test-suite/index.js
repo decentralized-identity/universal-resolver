@@ -124,7 +124,7 @@ try {
     }
 
     if (mode === "SERVER") {
-        runTests(resolvers, host);
+        runTests(resolvers, host, outputPath);
     }
 } catch (error) {
     core.setFailed(error.message);
