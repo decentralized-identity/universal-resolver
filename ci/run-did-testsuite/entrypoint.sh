@@ -13,5 +13,5 @@ node /run-did-testsuite/index.js --HOST="$INPUT_HOST" --DRIVER_STATUS_REPORT="$I
 echo "Push report file to repo"
 git config --global user.email "admin@danubetech.com"
 git config --global user.name "Get driver status workflow"
-git add .
-git commit -m "Did testsuite report" && git push
+git fetch && git pull
+git add . && git commit -m "Did testsuite report" && git push
