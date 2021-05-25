@@ -19,6 +19,6 @@ jobs:
       - name: Run did-test-suite
         uses: ./ci/run-did-test-suite
         with:
-          host: https://test-suite.uniresolver.io/test-suite-manager/generate-report
+          host: https://did-test-suite.uniresolver.io/test-suite-manager/generate-report
           driver_status_report: ${{ env.driver_status_report }}
           reports_folder: ${{ env.reports_folder }}
