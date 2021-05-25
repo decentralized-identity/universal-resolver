@@ -14,7 +14,7 @@ jobs:
         uses: ./ci/get-driver-status
         with:
           host: https://dev.uniresolver.io
-          out_folder: /github/workspace/driver-status-reports
+          out_folder: /home/runner/work/universal-resolver/universal-resolver/driver-status-reports
           keep_result: true
       - uses: actions/checkout@v2
       - name: Setup tmate session
