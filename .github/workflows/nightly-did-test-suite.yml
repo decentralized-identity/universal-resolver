@@ -1,0 +1,24 @@
+name: Nightly did-test-suite
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  driver-health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Get driver status
+        uses: ./ci/get-driver-status
+        with:
+          host: https://dev.uniresolver.io
+          out_folder: /home/runner/work/universal-resolver/universal-resolver/driver-status-reports
+          keep_result: true
+      - name: Run did-test-suite
+        uses: ./ci/run-did-test-suite
+        with:
+          host: https://did-test-suite.uniresolver.io/test-suite-manager/generate-report
+          driver_status_report: ${{ env.driver_status_report }}
+          reports_folder: ${{ env.reports_folder }}
