@@ -10,6 +10,7 @@ const { resetTestData, createExpectedOutcomes, extractDid, extractMethodName, ge
 const testDataSkeleton = {
     implementation: 'Universal Resolver',
     implementer: 'Decentralized Identity Foundation and Contributors',
+    didMethod: '',
     expectedOutcomes: {
         defaultOutcomes: [],
         invalidDidErrorOutcome: [],
@@ -64,7 +65,7 @@ try {
     // LOCAL mode env variables
     const outputPath = getOutputPath();
     console.log(`Output path for testfiles ${outputPath}`);
-    const shouldGenerateDefaultFile = argv["GENERATE_DEFAULT_FILE"];
+    const shouldGenerateDefaultFile = JSON.parse(argv["GENERATE_DEFAULT_FILE"].toLowerCase());
 
     // SERVER mode env variables
     const host = getHost();
@@ -86,6 +87,7 @@ try {
     workingMethods.forEach(workingMethodName => {
         const testData = {...testDataSkeleton};
         resetTestData(testData);
+        testData.didMethod = `did:${workingMethodName}`;
 
         let index = 0;
         urls.forEach(url => {

@@ -3,7 +3,7 @@ const fs = require("fs")
 const generateLocalFile = (testData, methodName, path) => {
     fs.writeFileSync(
         `${path}/universal-resolver-did-${methodName}.json`,
-        JSON.stringify(testData)
+        JSON.stringify(testData, null, 4)
     );
 };
 
