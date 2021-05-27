@@ -53,6 +53,14 @@ const getHost = () => {
     }
 }
 
+const getShouldGenerateDefaultFile = () => {
+    if (argv["GENERATE_DEFAULT_FILE"] !== undefined) {
+        return JSON.parse(argv["GENERATE_DEFAULT_FILE"].toLowerCase())
+    } else {
+        return false;
+    }
+}
+
 try {
     // Get the JSON webhook payload for the event that triggered the workflow
     const payload = JSON.stringify(github.context.payload, undefined, 2)
@@ -65,7 +73,7 @@ try {
     // LOCAL mode env variables
     const outputPath = getOutputPath();
     console.log(`Output path for testfiles ${outputPath}`);
-    const shouldGenerateDefaultFile = JSON.parse(argv["GENERATE_DEFAULT_FILE"].toLowerCase());
+    const shouldGenerateDefaultFile = getShouldGenerateDefaultFile();
 
     // SERVER mode env variables
     const host = getHost();
