@@ -1,26 +1,30 @@
 package uniresolver;
 
+import uniresolver.result.ResolveResult;
+
 public class ResolutionException extends Exception {
 
-	private static final long serialVersionUID = 4161108637058811960L;
+	private ResolveResult resolveResult;
 
 	public ResolutionException() {
 		super();
 	}
 
-	public ResolutionException(String arg0, Throwable arg1, boolean arg2, boolean arg3) {
-		super(arg0, arg1, arg2, arg3);
+	public ResolutionException(ResolveResult resolveResult) {
+		super(resolveResult.getErrorMessage());
+		if (!resolveResult.isErrorResult()) throw new IllegalArgumentException("Not an error result: " + resolveResult);
+		this.resolveResult = resolveResult;
 	}
 
-	public ResolutionException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
+	public ResolutionException(String message, Throwable ex) {
+		super(message, ex);
 	}
 
-	public ResolutionException(String arg0) {
-		super(arg0);
+	public ResolutionException(String message) {
+		super(message);
 	}
 
-	public ResolutionException(Throwable arg0) {
-		super(arg0);
+	public ResolutionException(Throwable ex) {
+		super(ex);
 	}
 }

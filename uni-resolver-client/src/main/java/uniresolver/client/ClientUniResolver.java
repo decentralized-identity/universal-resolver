@@ -1,25 +1,27 @@
 package uniresolver.client;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.util.*;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.result.ResolveResult;
+import uniresolver.util.HttpBindingUtil;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class ClientUniResolver implements UniResolver {
 
@@ -27,17 +29,11 @@ public class ClientUniResolver implements UniResolver {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
-	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers");
-	public static final URI DEFAULT_PROPERTIES_URI = URI.create("http://localhost:8080/1.0/properties");
-	public static final URI DEFAULT_METHODS_URI = URI.create("http://localhost:8080/1.0/methods");
-	public static final URI DEFAULT_TEST_IDENTIFIERS_URI = URI.create("http://localhost:8080/1.0/testIdentifiers");
-
-	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
-	private URI resolveUri = DEFAULT_RESOLVE_URI;
-	private URI propertiesUri = DEFAULT_PROPERTIES_URI;
-	private URI methodsUri = DEFAULT_METHODS_URI;
-	private URI testIdentifiersUri = DEFAULT_TEST_IDENTIFIERS_URI;
+	private HttpClient httpClient = HttpClients.createDefault();
+	private URI resolveUri = URI.create("http://localhost:8080/1.0/identifiers");
+	private URI propertiesUri = URI.create("http://localhost:8080/1.0/properties");
+	private URI methodsUri = URI.create("http://localhost:8080/1.0/methods");
+	private URI testIdentifiersUri = URI.create("http://localhost:8080/1.0/testIdentifiers");
 
 	public ClientUniResolver() {
 
@@ -57,71 +53,84 @@ public class ClientUniResolver implements UniResolver {
 	}
 
 	@Override
-	public ResolveResult resolve(String identifier) throws ResolutionException {
+	public ResolveResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 
-		return this.resolve(identifier, null);
-	}
+		if (didString == null) throw new NullPointerException();
 
-	@Override
-	public ResolveResult resolve(String identifier, Map<String, String> options) throws ResolutionException {
+		// URL-encode DID
 
-		if (identifier == null) throw new NullPointerException();
+		String urlEncodedDid = URLEncoder.encode(didString, StandardCharsets.UTF_8);
 
-		// encode identifier
-
-		String encodedIdentifier;
-
-		try {
-
-			encodedIdentifier = URLEncoder.encode(identifier, "UTF-8");
-		} catch (UnsupportedEncodingException ex) {
-
-			throw new ResolutionException(ex.getMessage(), ex);
-		}
-
-		// prepare HTTP request
+		// set HTTP URI
 
 		String uriString = this.getResolveUri().toString();
 		if (! uriString.endsWith("/")) uriString += "/";
-		uriString += encodedIdentifier;
+		uriString += urlEncodedDid;
+
+		// set Accept header
+
+		String accept = (String) resolutionOptions.get("accept");
+		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolveRepresentation().");
+
+		List<String> acceptMediaTypes = Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
+		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
+
+		// prepare HTTP request
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", ResolveResult.MIME_TYPE);
+		httpGet.addHeader("Accept", acceptMediaTypesString);
 
 		// execute HTTP request
 
-		ResolveResult resolveResult;
+		ResolveResult resolveResult = null;
 
-		if (log.isDebugEnabled()) log.debug("Request for identifier " + identifier + " to: " + uriString);
+		if (log.isDebugEnabled()) log.debug("Request for DID " + didString + " to: " + uriString);
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
-
-			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
-
-			if (statusCode == 404) return null;
+			// execute HTTP request
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-			String httpBody = EntityUtils.toString(httpEntity);
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+			ContentType contentType = ContentType.get(httpResponse.getEntity());
+			Charset charset = contentType != null ? contentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
+
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+			if (log.isDebugEnabled()) log.debug("Response content type from " + uriString + ": " + contentType + " / " + charset);
+
+			// read result
+
+			byte[] httpBodyBytes = EntityUtils.toByteArray(httpEntity);
+			String httpBodyString = new String(httpBodyBytes, charset);
 			EntityUtils.consume(httpEntity);
 
-			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
+			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBodyString);
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) {
-
-				if (log.isWarnEnabled()) log.warn("Cannot retrieve RESOLVE RESULT for " + identifier + " from " + uriString + ": " + httpBody);
-				throw new ResolutionException(httpBody);
+			if (contentType != null && isResolveContentType(contentType)) {
+				resolveResult = HttpBindingUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
-			resolveResult = ResolveResult.fromJson(httpBody);
-		} catch (IOException ex) {
+			if (statusCode != 200 && resolveResult == null) {
+				throw new ResolutionException("Cannot retrieve result for " + didString + ": " + statusCode + " " + statusMessage + " (" + httpBodyString + ")");
+			}
 
-			throw new ResolutionException("Cannot retrieve RESOLVE RESULT for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);
+			if (resolveResult != null && resolveResult.isErrorResult()) {
+				throw new ResolutionException(resolveResult);
+			}
+
+			if (resolveResult == null) {
+				resolveResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, contentType);
+			}
+		} catch (ResolutionException ex) {
+
+			throw ex;
+		} catch (Exception ex) {
+
+			throw new ResolutionException("Cannot retrieve resolve result for " + didString + " from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved RESOLVE RESULT for " + identifier + " (" + uriString + "): " + resolveResult);
+		if (log.isDebugEnabled()) log.debug("Retrieved resolve result for " + didString + " (" + uriString + "): " + resolveResult);
 
 		// done
 
@@ -276,6 +285,16 @@ public class ClientUniResolver implements UniResolver {
 		// done
 
 		return testIdentifiers;
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	private static final ContentType RESOLVE_RESULT_CONTENT_TYPE = ContentType.parse(ResolveResult.MEDIA_TYPE);
+
+	private static boolean isResolveContentType(ContentType contentType) {
+		return RESOLVE_RESULT_CONTENT_TYPE.getMimeType().equals(contentType.getMimeType()) && RESOLVE_RESULT_CONTENT_TYPE.getParameter("profile").equals(contentType.getParameter("profile"));
 	}
 
 	/*

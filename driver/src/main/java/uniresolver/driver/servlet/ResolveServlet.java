@@ -1,24 +1,25 @@
 package uniresolver.driver.servlet;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import foundation.identity.did.DID;
+import foundation.identity.did.representations.Representations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uniresolver.result.ResolveResult;
+import uniresolver.util.HttpBindingUtil;
 
-public class ResolveServlet extends AbstractServlet implements Servlet {
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
-	private static final long serialVersionUID = -531456245094927384L;
+public class ResolveServlet extends HttpServlet implements Servlet {
 
-	private static Logger log = LoggerFactory.getLogger(ResolveServlet.class);
+	private static final Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
 	public ResolveServlet() {
 
@@ -26,7 +27,7 @@ public class ResolveServlet extends AbstractServlet implements Servlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		// read request
 
@@ -37,58 +38,53 @@ public class ResolveServlet extends AbstractServlet implements Servlet {
 		String servletPath = request.getServletPath();
 		String requestPath = request.getRequestURI();
 
-		if (log.isDebugEnabled()) log.debug("contextPath: " + contextPath + ", servletPath: " + servletPath + ", requestPath: " + requestPath);
-
 		String identifier = requestPath.substring(contextPath.length() + servletPath.length());
-		if (log.isDebugEnabled()) log.debug("processing identifier (1): " + identifier);
-
 		if (identifier.startsWith("/")) identifier = identifier.substring(1);
-		if (log.isDebugEnabled()) log.debug("processing identifier (2): " + identifier);
+		identifier = URLDecoder.decode(identifier, StandardCharsets.UTF_8);
 
-		try {
-
-			identifier = URLDecoder.decode(identifier, "UTF-8");
-		} catch (UnsupportedEncodingException ex) {
-
-			throw new IOException(ex.getMessage(), ex);
-		}
-
-		if (log.isInfoEnabled()) log.info("Incoming resolve request for identifier: " + identifier);
+		if (log.isInfoEnabled()) log.info("Driver: Incoming resolve request for identifier: " + identifier);
 
 		if (identifier == null) {
 
-			sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "No identifier found in resolve request.");
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "Driver: No identifier found in resolve request.");
 			return;
 		}
+
+		// assume identifier is a DID
+
+		String didString = identifier;
+
+		// prepare resolution options
+
+		Map<String, Object> resolutionOptions = new HashMap<>();
+		resolutionOptions.put("accept", Representations.MEDIA_TYPE_JSONLD);
 
 		// invoke the driver
 
 		ResolveResult resolveResult;
-		String resolveResultString;
 
 		try {
 
-			resolveResult = InitServlet.getDriver().resolve(identifier);
-			resolveResultString = resolveResult == null ? null : resolveResult.toJson();
+			resolveResult = InitServlet.getDriver().resolveRepresentation(DID.fromString(didString), resolutionOptions);
 		} catch (Exception ex) {
 
-			if (log.isWarnEnabled()) log.warn("Driver reported for " + identifier + ": " + ex.getMessage(), ex);
-			sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Driver reported for " + identifier + ": " + ex.getMessage());
+			if (log.isWarnEnabled()) log.warn("Driver: Resolver problem for " + didString + ": " + ex.getMessage(), ex);
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Driver: Resolve problem for " + didString + ": " + ex.getMessage());
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("Resolve result for " + identifier + ": " + resolveResultString);
+		if (log.isInfoEnabled()) log.info("Driver: Resolve result for " + didString + ": " + resolveResult);
 
 		// no resolve result?
 
-		if (resolveResultString == null) {
+		if (resolveResult == null || resolveResult.getDidDocumentStream() == null) {
 
-			sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No resolve result for " + identifier);
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "Driver: No resolve result for " + didString);
 			return;
 		}
 
 		// write resolve result
 
-		sendResponse(response, HttpServletResponse.SC_OK, ResolveResult.MIME_TYPE, resolveResultString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, ResolveResult.MEDIA_TYPE, HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
 	}
 }
