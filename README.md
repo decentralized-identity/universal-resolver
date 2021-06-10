@@ -68,6 +68,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:lit:AEZ87t1bi5bRxmVh3ksMUi
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ebsi:DfPaUdYwuzcqFoiMDSrUX8aQyZnr2SesH3vDVASYv8PE
 	curl -X GET http://localhost:8080/1.0/identifiers/did:emtrust:0x242a5ac36676462bd58a
+	curl -X GET http://localhost:8080/1.0/identifiers/did:meta:0000000000000000000000000000000000000000000000000000000000005e65
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
@@ -120,6 +121,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-lit](https://github.com/ibct-dev/lit-resolver) | 0.1.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1.0](https://github.com/ibct-dev/lit-DID/blob/main/docs/did:lit-method-spec_eng_v0.1.0.md) | [ibct/driver-did-lit](https://hub.docker.com/r/ibct/driver-did-lit)
 | [did-ebsi](https://api.preprod.ebsi.eu/docs/#/DID%20Registry) | 2.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | 2.0.0 | (missing) |
 | [did-emtrust](https://github.com/Halialabs/did-spec) | 0.1| [1.0 WD](https://w3c.github.io/did-core/) | 0.1 | [halialabsdev/emtrust_did_driver](https://hub.docker.com/r/halialabsdev/emtrust_did_driver) |
+| [did-meta](https://github.com/METADIUM/meta-DID/blob/master/doc/DID-method-metadium.md) | 1.0 | [1.0 WD](https://w3c.github.io/did-core/) | 1.0 | [URL](https://resolver.metadium.com/1.0/identifiers/) |
 
 ## More Information
 
