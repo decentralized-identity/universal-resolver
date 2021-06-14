@@ -34,14 +34,6 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{env.AWS_SECRET_ACCESS_KEY}}
         RPC_URL_TESTNET: ${{env.RPC_URL_TESTNET}}
         RPC_CERT_TESTNET: ${{env.RPC_CERT_TESTNET}}
-    - name: Sleep for 120 seconds
-      uses: jakejarvis/wait-action@master
-      with:
-        time: '120s'
-    - name: Smoke Test
-      uses: ./ci/smoke-tests
-      with:
-        host: https://dev.uniresolver.io
     - name: Slack notification
       uses: 8398a7/action-slack@v3
       with:

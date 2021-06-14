@@ -19,8 +19,9 @@ http://btcr.dev.uniresolver.io/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
 The software is automatically updated on every commit and PR on the master branch. See [CI-CD](/docs/continuous-integration-and-delivery.md) for more details
 
 
-Currently the system is deployed in the AWS cloud by the use of the Elastic Kubernetes Service (EKS). Please be aware that the use of AWS is not mandatory for hosting the resolver. Any environment that supports Docker Compose or Kubernetes will be capable of running an instance of the Universal Resolver.
+Currently the system is deployed in the AWS cloud by the use of the Elastic Kubernetes Service (EKS). Please be aware that the use of AWS is not mandatory for hosting the resolver. Any environment that supports Docker Compose or Kubernetes will be capable of running an instance of the Universal Resolver.  
 
+We are using two `m5.large` instances (2 vCPU / 8GB RAM) due to the limitations of 29 pods per instance of this type on AWS EKS. This should not be treated as a recommendation, just an information.
 
 ## AWS Architecture
  

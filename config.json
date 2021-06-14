@@ -84,10 +84,6 @@
 			"url": "https://github-did.com/api/v1/did/$1",
 			"testIdentifiers": [ "did:github:gjgd" ]
 		}, {
-			"pattern": "^(did:neoid:.+)$",
-			"url": "http://seraph-id-did-driver:8080/",
-			"testIdentifiers" : [ "did:neoid:priv:b4eeeb80d20bfb38b23001d0659ce0c1d96be0aa" ]
-		}, {
 			"pattern": "^(did:ccp:.+)$",
 			"url": "http://driver-did-ccp:8080/",
 			"testIdentifiers": ["did:ccp:ceNobbK6Me9F5zwyE3MKY88QZLw", "did:ccp:3CzQLF3qfFVQ1CjGVzVRZaFXrjAd"]
@@ -128,32 +124,32 @@
 			"pattern": "^(did:abt:.+)$",
 			"url": "http://driver-did-abt:8080/",
 			"testIdentifiers": [ "did:abt:z11MVbRGLFt6RXaHzX7Xj7rmHfeiyFkJiiRE" ]
-		},{
+		}, {
 			"pattern": "^(did:trustbloc:.+)$",
 			"url": "http://driver-did-trustbloc:8102/resolveDID?did=$1",
 			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiBLTZcCj6u_XsufSuLVh2zbPEREjDcu8bnPgs0XyKkfPQ" ]
-		},{
+		}, {
 			"pattern": "^(did:sirius:.+)$",
 			"url": "http://tsjs-did-sirius-id-driver:8080/",
 			"testIdentifiers": [ "did:sirius:2VhYrbauc2cCx9ZpCp5wrDtK7HKf7jrsvgoKBD4KgK" ]
-    	},{
+    		}, {
 			"pattern": "^(did:mpg:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
 			"url": "http://driver-did-mpg:8080/",
 			"propertiesEndpoint": "true",
 			"testIdentifiers": [ "did:mpg:7PGGnRdvKKFftSXU3Jw75Vk5npfg" ]
-		},{
+		}, {
 			"pattern": "^(did:trust:.+)$",
 			"url": "http://driver-did-trust:8080/",
 			"testIdentifiers": [ "did:trust:cert.EiDi8NEZVyvqmHeWRB5kUagWo3sDSQlCtl1nZ1vVgLdozw","did:trust:license.EiBdAy5GeNr9qcVQ-40fOwMVQW2CRGT2M238cp6yLJLnGg" ]
-		},{
+		}, {
 			"pattern": "^(did:io:.+)$",
 			"url": "http://uni-resolver-driver-did-io:8080/",
 			"testIdentifiers": [ "did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A" ]
-        }, {
-            "pattern": "^(did:bba:.+)$",
+        	}, {
+            		"pattern": "^(did:bba:.+)$",
 			"url": "http://bba-did-driver:8080/",
-            "testIdentifiers": [ "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf", "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044" ]
-        }, {
+            		"testIdentifiers": [ "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf", "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044" ]
+        	}, {
 			"pattern": "^(did:cy:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
 			"url": "http://driver-did-cy:8080/",
 			"propertiesEndpoint": "true",
@@ -172,9 +168,9 @@
 			"testIdentifiers": [ "did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w" ]
 		},
 		{
-		  "pattern": "^(did:ace:.+)$",
+		  	"pattern": "^(did:ace:.+)$",
 			"url": "http://ace-did-driver:8080/",
-		  "testIdentifiers": [ "did:ace:0xf81c16a78b257c10fddf87ed4324d433317169a005ddf36a3a1ba937ba9788e3" ]
+		  	"testIdentifiers": [ "did:ace:0xf81c16a78b257c10fddf87ed4324d433317169a005ddf36a3a1ba937ba9788e3" ]
 		},
 		{
 			"pattern": "^(did:gatc:.+)$",
@@ -203,25 +199,30 @@
 			"propertiesEndpoint": "true",
 			"testIdentifiers": [ "did:bitxhub:appchain001:0xc7F999b83Af6DF9e67d0a37Ee7e900bF38b3D013" ]
 		},
-        {
-          "pattern": "^(did:sol:.+)$",
-          "url": "http://driver-did-sol:8080/",
-          "testIdentifiers": [ "did:sol:ygGfLvAyuRymPNv2fJDK1ZMpdy59m8cV5dak6A8uHKa" ]
-        },
-        {
-          "pattern": "^(did:lit:(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$",
-          "url": "http://driver-did-lit:8080/",
-          "testIdentifiers": [ "did:lit:AEZ87t1bi5bRxmVh3ksMUi" ]
-        },
-        {
-		  "pattern": "^(did:ebsi:.+)$",
-          "url": "https://api.preprod.ebsi.eu/did-registry/v2/identifiers/$1",
-          "testIdentifiers": [ "did:ebsi:DfPaUdYwuzcqFoiMDSrUX8aQyZnr2SesH3vDVASYv8PE" ]
-        },
+		{
+			"pattern": "^(did:sol:.+)$",
+			"url": "http://driver-did-sol:8080/",
+			"testIdentifiers": [ "did:sol:ygGfLvAyuRymPNv2fJDK1ZMpdy59m8cV5dak6A8uHKa" ]
+		},
+		{
+			"pattern": "^(did:lit:(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$",
+			"url": "http://driver-did-lit:8080/",
+			"testIdentifiers": [ "did:lit:AEZ87t1bi5bRxmVh3ksMUi" ]
+		},
+		{
+			"pattern": "^(did:ebsi:.+)$",
+			"url": "https://api.preprod.ebsi.eu/did-registry/v2/identifiers/$1",
+			"testIdentifiers": [ "did:ebsi:DfPaUdYwuzcqFoiMDSrUX8aQyZnr2SesH3vDVASYv8PE" ]
+		},
 		{
 			"pattern": "^(did:emtrust:.+)$",
 			"url": "http://driver-did-emtrust:8080/",
 			"testIdentifiers": [ "did:emtrust:0x242a5ac36676462bd58a" ]
-		  }
+		},
+		{
+			"pattern": "^(did:meta:.+)$",
+			"url": "https://resolver.metadium.com/1.0/identifiers/$1",
+			"testIdentifiers": [ "did:meta:0000000000000000000000000000000000000000000000000000000000005e65" ]
+		}
 	]
 }
