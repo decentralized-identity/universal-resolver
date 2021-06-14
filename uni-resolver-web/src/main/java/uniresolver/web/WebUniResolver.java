@@ -35,7 +35,7 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	@Override
 	protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		response.setHeader("Access-Control-Allow-Headers", "Accept, Content-Type");
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
