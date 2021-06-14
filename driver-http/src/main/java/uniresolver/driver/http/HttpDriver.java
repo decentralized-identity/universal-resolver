@@ -146,7 +146,7 @@ public class HttpDriver implements Driver {
 			}
 
 			if (statusCode != 200 && resolveResult == null) {
-				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.internalError, "Cannot retrieve result for " + did + ": " + statusCode + " " + statusMessage + " (" + httpBodyString + ")");
+				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.internalError, "Driver cannot retrieve result for " + did + ": " + statusCode + " " + statusMessage + " (" + httpBodyString + ")");
 				if (log.isWarnEnabled()) log.warn("Driver cannot retrieve result for " + did + " from " + uriString + ": " + resolveResult.getError() + " - " + resolveResult.getErrorMessage());
 			}
 
