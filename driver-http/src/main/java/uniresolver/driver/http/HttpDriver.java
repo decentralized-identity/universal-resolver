@@ -48,9 +48,9 @@ public class HttpDriver implements Driver {
 
 		if (this.getPattern() == null || this.getResolveUri() == null) return null;
 
-		// match DID
+		// match string
 
-		DID matchedDid = null;
+		String matchedString = null;
 
 		if (this.getPattern() != null) {
 
@@ -65,22 +65,17 @@ public class HttpDriver implements Driver {
 
 			if (matcher.groupCount() > 0) {
 
-				String matchedDidString = "";
-				for (int i=1; i<=matcher.groupCount(); i++) if (matcher.group(i) != null) matchedDidString += matcher.group(i);
-				try {
-					matchedDid = DID.fromString(matchedDidString);
-				} catch (ParserException ex) {
-					throw new ResolutionException("Cannot parse matched DID " + matchedDidString + ": " + ex.getMessage(), ex);
-				}
+				matchedString = "";
+				for (int i=1; i<=matcher.groupCount(); i++) if (matcher.group(i) != null) matchedString += matcher.group(i);
 			}
 		}
 
-		if (matchedDid == null) matchedDid = did;
-		if (log.isDebugEnabled()) log.debug("Matched DID: " + matchedDid);
+		if (matchedString == null) matchedString = did.getDidString();
+		if (log.isDebugEnabled()) log.debug("Matched string: " + matchedString);
 
 		// URL-encode DID
 
-		String urlEncodedDid = URLEncoder.encode(matchedDid.getDidString(), StandardCharsets.UTF_8);
+		String urlEncodedDid = URLEncoder.encode(matchedString, StandardCharsets.UTF_8);
 
 		// set HTTP URI
 
@@ -88,14 +83,14 @@ public class HttpDriver implements Driver {
 
 		if (uriString.contains("$1")) {
 
-			uriString = uriString.replace("$1", matchedDid.getDidString());
+			uriString = uriString.replace("$1", matchedString);
 		} else if (uriString.contains("$2")) {
 
 			uriString = uriString.replace("$2", urlEncodedDid);
 		} else {
 
 			if (! uriString.endsWith("/")) uriString += "/";
-			uriString += matchedDid.getDidString();
+			uriString += matchedString;
 		}
 
 		// set Accept header
