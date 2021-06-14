@@ -1,25 +1,20 @@
 package uniresolver.driver.servlet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uniresolver.driver.Driver;
+
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+public class PropertiesServlet extends HttpServlet implements Servlet {
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import uniresolver.driver.Driver;
-
-public class PropertiesServlet extends AbstractServlet implements Servlet {
-
-	private static final long serialVersionUID = -2093931014950367385L;
-
-	private static Logger log = LoggerFactory.getLogger(PropertiesServlet.class);
+	private static final Logger log = LoggerFactory.getLogger(PropertiesServlet.class);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -29,7 +24,7 @@ public class PropertiesServlet extends AbstractServlet implements Servlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		// read request
 
@@ -50,7 +45,7 @@ public class PropertiesServlet extends AbstractServlet implements Servlet {
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Properties problem: " + ex.getMessage(), ex);
-			sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Properties problem: " + ex.getMessage());
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Properties problem: " + ex.getMessage());
 			return;
 		}
 
@@ -60,12 +55,12 @@ public class PropertiesServlet extends AbstractServlet implements Servlet {
 
 		if (properties == null) {
 
-			sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No properties.");
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No properties.");
 			return;
 		}
 
 		// write properties
 
-		sendResponse(response, HttpServletResponse.SC_OK, Driver.PROPERTIES_MIME_TYPE, propertiesString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, Driver.PROPERTIES_MIME_TYPE, propertiesString);
 	}
 }

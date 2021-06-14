@@ -1,7 +1,11 @@
 package uniresolver.examples;
+import foundation.identity.did.DID;
 import info.weboftrust.btctxlookup.bitcoinconnection.BlockcypherAPIBitcoinConnection;
 import uniresolver.driver.did.btcr.DidBtcrDriver;
 import uniresolver.result.ResolveResult;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestDriverDidBtcr {
 
@@ -10,7 +14,8 @@ public class TestDriverDidBtcr {
 		DidBtcrDriver driver = new DidBtcrDriver();
 		driver.setBitcoinConnectionTestnet(BlockcypherAPIBitcoinConnection.get());
 
-		ResolveResult ResolveResult = driver.resolve("did:btcr:xz35-jznz-q6mr-7q6");
-		System.out.println(ResolveResult.toJson());
+		Map<String, Object> resolveOptions = new HashMap<>();
+		ResolveResult resolveResult = driver.resolve(DID.fromString("did:btcr:xz35-jznz-q6mr-7q6"), resolveOptions);
+		System.out.println(resolveResult.toJson());
 	}
 }

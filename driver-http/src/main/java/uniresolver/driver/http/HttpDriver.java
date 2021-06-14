@@ -1,162 +1,176 @@
 package uniresolver.driver.http;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import foundation.identity.did.DIDDocument;
-import foundation.identity.did.representations.Representations;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import foundation.identity.did.DID;
+import foundation.identity.did.parser.ParserException;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
 import uniresolver.result.ResolveResult;
+import uniresolver.util.HttpBindingUtil;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HttpDriver implements Driver {
 
-	public static final String MIME_TYPES = ResolveResult.MIME_TYPE + "," + Representations.MEDIA_TYPE_JSONLD + "," + "application/ld+json";
-
-	private static Logger log = LoggerFactory.getLogger(HttpDriver.class);
+	private static final Logger log = LoggerFactory.getLogger(HttpDriver.class);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
-	public static final URI DEFAULT_RESOLVE_URI = null;
-	public static final URI DEFAULT_PROPERTIES_URI = null;
-	public static final Pattern DEFAULT_PATTERN = null;
-	public static final List<String> DEFAULT_TEST_IDENTIFIERS = Collections.emptyList();
-
-	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
-	private URI resolveUri = DEFAULT_RESOLVE_URI;
-	private URI propertiesUri = DEFAULT_PROPERTIES_URI;
-	private Pattern pattern = DEFAULT_PATTERN;
-	private List<String> testIdentifiers = DEFAULT_TEST_IDENTIFIERS;
+	private HttpClient httpClient = HttpClients.createDefault();
+	private URI resolveUri = null;
+	private URI propertiesUri = null;
+	private Pattern pattern = null;
+	private List<String> testIdentifiers = Collections.emptyList();
 
 	public HttpDriver() {
 
 	}
 
 	@Override
-	public ResolveResult resolve(String identifier) throws ResolutionException {
+	public ResolveResult resolveRepresentation(DID did, Map<String, Object> resolutionOptions) throws ResolutionException {
 
 		if (this.getPattern() == null || this.getResolveUri() == null) return null;
 
-		// match identifier
+		// match DID
 
-		String matchedIdentifier = null;
+		DID matchedDid = null;
 
 		if (this.getPattern() != null) {
 
-			Matcher matcher = this.getPattern().matcher(identifier);
+			Matcher matcher = this.getPattern().matcher(did.getDidString());
 
 			if (! matcher.matches()) {
-
-				if (log.isDebugEnabled()) log.debug("Skipping identifier " + identifier + " - does not match pattern " + this.getPattern());
+				if (log.isDebugEnabled()) log.debug("Skipping identifier " + did + " - does not match pattern " + this.getPattern());
 				return null;
 			} else {
-
-				if (log.isDebugEnabled()) log.debug("Identifier " + identifier + " matches pattern " + this.getPattern() + " with " + matcher.groupCount() + " groups");
+				if (log.isDebugEnabled()) log.debug("Identifier " + did + " matches pattern " + this.getPattern() + " with " + matcher.groupCount() + " groups");
 			}
 
 			if (matcher.groupCount() > 0) {
 
-				identifier = "";
-				for (int i=1; i<=matcher.groupCount(); i++) if (matcher.group(i) != null) identifier += matcher.group(i);
+				String matchedDidString = "";
+				for (int i=1; i<=matcher.groupCount(); i++) if (matcher.group(i) != null) matchedDidString += matcher.group(i);
+				try {
+					matchedDid = DID.fromString(matchedDidString);
+				} catch (ParserException ex) {
+					throw new ResolutionException("Cannot parse matched DID " + matchedDidString + ": " + ex.getMessage(), ex);
+				}
 			}
 		}
 
-		if (matchedIdentifier == null) matchedIdentifier = identifier;
+		if (matchedDid == null) matchedDid = did;
+		if (log.isDebugEnabled()) log.debug("Matched DID: " + matchedDid);
 
-		if (log.isDebugEnabled()) log.debug("Matched identifier: " + matchedIdentifier);
+		// URL-encode DID
 
-		// URL-encode identifier
+		String urlEncodedDid = URLEncoder.encode(matchedDid.getDidString(), StandardCharsets.UTF_8);
 
-		String urlEncodedIdentifier;
-
-		try {
-
-			urlEncodedIdentifier = URLEncoder.encode(matchedIdentifier, "UTF-8");
-		} catch (UnsupportedEncodingException ex) {
-
-			throw new ResolutionException(ex.getMessage(), ex);
-		}
-
-		// prepare HTTP request
+		// set HTTP URI
 
 		String uriString = this.getResolveUri().toString();
 
 		if (uriString.contains("$1")) {
 
-			uriString = uriString.replace("$1", matchedIdentifier);
+			uriString = uriString.replace("$1", matchedDid.getDidString());
 		} else if (uriString.contains("$2")) {
 
-			uriString = uriString.replace("$2", urlEncodedIdentifier);
+			uriString = uriString.replace("$2", urlEncodedDid);
 		} else {
 
 			if (! uriString.endsWith("/")) uriString += "/";
-			uriString += matchedIdentifier;
+			uriString += matchedDid.getDidString();
 		}
 
+		// set Accept header
+
+		String accept = (String) resolutionOptions.get("accept");
+		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolveRepresentation().");
+
+		List<String> acceptMediaTypes = Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
+		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
+
+		// prepare HTTP request
+
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", MIME_TYPES);
+		httpGet.addHeader("Accept", acceptMediaTypesString);
 
-		// execute HTTP request
+		// execute HTTP request and read response
 
-		ResolveResult resolveResult;
+		ResolveResult resolveResult = null;
 
-		if (log.isDebugEnabled()) log.debug("Request for identifier " + identifier + " to: " + uriString);
+		if (log.isDebugEnabled()) log.debug("Driver request for DID " + did + " to: " + uriString);
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
-
-			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
-
-			if (statusCode == 404) return null;
+			// execute HTTP request
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-			String httpBody = EntityUtils.toString(httpEntity);
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+			ContentType contentType = ContentType.get(httpResponse.getEntity());
+			Charset charset = contentType != null ? contentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
+
+			if (log.isDebugEnabled()) log.debug("Driver response status from " + uriString + ": " + statusCode + " " + statusMessage);
+			if (log.isDebugEnabled()) log.debug("Driver response content type from " + uriString + ": " + contentType + " / " + charset);
+
+			// read result
+
+			byte[] httpBodyBytes = EntityUtils.toByteArray(httpEntity);
+			String httpBodyString = new String(httpBodyBytes, charset);
 			EntityUtils.consume(httpEntity);
 
-			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
+			if (log.isDebugEnabled()) log.debug("Driver response body from " + uriString + ": " + httpBodyString);
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) {
-
-				if (log.isWarnEnabled()) log.warn("Cannot retrieve RESOLVE RESULT for " + identifier + " from " + uriString + ": " + httpBody);
-				throw new ResolutionException(httpBody);
+			if (contentType != null && isResolveContentType(contentType)) {
+				resolveResult = HttpBindingUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
-			try {
-
-				resolveResult = ResolveResult.fromJson(httpBody);
-			} catch (Exception ex) {
-
-				if (log.isWarnEnabled()) log.warn("No RESOLVE RESULT. Maybe DID DOCUMENT: " + httpBody + " (" + ex.getMessage());
-				resolveResult = ResolveResult.build(DIDDocument.fromJson(httpBody));
+			if (statusCode == 404 && resolveResult == null) {
+				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.notFound, statusCode + " " + statusMessage + " (" + httpBodyString + ")");
 			}
-		} catch (IOException ex) {
 
-			throw new ResolutionException("Cannot retrieve RESOLVE RESULT for " + identifier + " from " + uriString + ": " + ex.getMessage(), ex);
+			if (statusCode == 406 && resolveResult == null) {
+				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.representationNotSupported, statusCode + " " + statusMessage + " (" + httpBodyString + ")");
+			}
+
+			if (statusCode != 200 && resolveResult == null) {
+				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.internalError, "Cannot retrieve result for " + did + ": " + statusCode + " " + statusMessage + " (" + httpBodyString + ")");
+				if (log.isWarnEnabled()) log.warn("Driver cannot retrieve result for " + did + " from " + uriString + ": " + resolveResult.getError() + " - " + resolveResult.getErrorMessage());
+			}
+
+			if (resolveResult != null && resolveResult.isErrorResult()) {
+				throw new ResolutionException(resolveResult);
+			}
+
+			if (resolveResult == null) {
+				resolveResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, contentType);
+			}
+		} catch (ResolutionException ex) {
+
+			throw ex;
+		} catch (Exception ex) {
+
+			throw new ResolutionException("Driver cannot retrieve resolve result for " + did + " from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved RESOLVE RESULT for " + identifier + " (" + uriString + "): " + resolveResult);
+		if (log.isDebugEnabled()) log.debug("Driver retrieved resolve result for " + did + " (" + uriString + "): " + resolveResult);
 
 		// done
 
@@ -253,71 +267,68 @@ public class HttpDriver implements Driver {
 	}
 
 	/*
+	 * Helper methods
+	 */
+
+	private static final ContentType RESOLVE_RESULT_CONTENT_TYPE = ContentType.parse(ResolveResult.MEDIA_TYPE);
+
+	private static boolean isResolveContentType(ContentType contentType) {
+		return RESOLVE_RESULT_CONTENT_TYPE.getMimeType().equals(contentType.getMimeType()) && RESOLVE_RESULT_CONTENT_TYPE.getParameter("profile").equals(contentType.getParameter("profile"));
+	}
+
+	/*
 	 * Getters and setters
 	 */
 
 	public HttpClient getHttpClient() {
-
 		return this.httpClient;
 	}
 
 	public void setHttpClient(HttpClient httpClient) {
-
 		this.httpClient = httpClient;
 	}
 
 	public URI getResolveUri() {
-
 		return this.resolveUri;
 	}
 
 	public void setResolveUri(URI resolveUri) {
-
 		this.resolveUri = resolveUri;
 	}
 
 	public void setResolveUri(String resolveUri) {
-
 		this.resolveUri = URI.create(resolveUri);
 	}
 
 	public URI getPropertiesUri() {
-
 		return this.propertiesUri;
 	}
 
 	public void setPropertiesUri(URI propertiesUri) {
-
 		this.propertiesUri = propertiesUri;
 	}
 
 	public void setPropertiesUri(String propertiesUri) {
-
 		this.propertiesUri = URI.create(propertiesUri);
 	}
 
 	public Pattern getPattern() {
-
 		return this.pattern;
 	}
 
 	public void setPattern(Pattern pattern) {
-
 		this.pattern = pattern;
 	}
 
 	public void setPattern(String pattern) {
-
 		this.pattern = Pattern.compile(pattern);
 	}
 
 	public List<String> getTestIdentifiers() {
-
 		return this.testIdentifiers;
 	}
 
 	public void setTestIdentifiers(List<String> testIdentifiers) {
-
 		this.testIdentifiers = testIdentifiers;
 	}
 }
