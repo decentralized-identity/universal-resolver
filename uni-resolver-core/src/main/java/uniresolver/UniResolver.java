@@ -1,5 +1,7 @@
 package uniresolver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uniresolver.result.ResolveResult;
 import uniresolver.util.ResolveResultUtil;
 import uniresolver.w3c.DIDResolver;
@@ -15,8 +17,11 @@ public interface UniResolver extends DIDResolver {
 	public static final String METHODS_MIME_TYPE = "application/json";
 	public static final String TEST_IDENTIFIER_MIME_TYPE = "application/json";
 
+	static final Logger log = LoggerFactory.getLogger(UniResolver.class);
+
 	@Override
 	default public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
 		ResolveResult resolveRepresentationResult = this.resolveRepresentation(didString, resolutionOptions);
 		ResolveResult resolveResult = ResolveResultUtil.convertToResolveResult(resolveRepresentationResult);
 		return resolveResult;
@@ -24,6 +29,7 @@ public interface UniResolver extends DIDResolver {
 
 	@Override
 	default public ResolveResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
 		ResolveResult resolveResult = this.resolve(didString, resolutionOptions);
 		String accept = (String) resolutionOptions.get("accept");
 		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolveRepresentation().");

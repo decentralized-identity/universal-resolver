@@ -120,7 +120,7 @@ public class HttpDriver implements Driver {
 			int statusCode = httpResponse.getStatusLine().getStatusCode();
 			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
 			ContentType contentType = ContentType.get(httpResponse.getEntity());
-			Charset charset = contentType != null ? contentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
+			Charset charset = (contentType != null && contentType.getCharset() != null) ? contentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
 
 			if (log.isDebugEnabled()) log.debug("Driver response status from " + uriString + ": " + statusCode + " " + statusMessage);
 			if (log.isDebugEnabled()) log.debug("Driver response content type from " + uriString + ": " + contentType + " / " + charset);

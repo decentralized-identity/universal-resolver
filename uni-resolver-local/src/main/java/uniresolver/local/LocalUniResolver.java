@@ -100,11 +100,13 @@ public class LocalUniResolver implements UniResolver {
 
 	@Override
 	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
 		return this.resolveOrResolveRepresentation(didString, resolutionOptions, false);
 	}
 
 	@Override
 	public ResolveResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
 		return this.resolveOrResolveRepresentation(didString, resolutionOptions, true);
 	}
 

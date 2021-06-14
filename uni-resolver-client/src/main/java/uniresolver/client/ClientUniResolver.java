@@ -55,6 +55,8 @@ public class ClientUniResolver implements UniResolver {
 	@Override
 	public ResolveResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 
+		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
+
 		if (didString == null) throw new NullPointerException();
 
 		// URL-encode DID
@@ -94,7 +96,7 @@ public class ClientUniResolver implements UniResolver {
 			int statusCode = httpResponse.getStatusLine().getStatusCode();
 			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
 			ContentType contentType = ContentType.get(httpResponse.getEntity());
-			Charset charset = contentType != null ? contentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
+			Charset charset = (contentType != null && contentType.getCharset() != null) ? contentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
 
 			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
 			if (log.isDebugEnabled()) log.debug("Response content type from " + uriString + ": " + contentType + " / " + charset);

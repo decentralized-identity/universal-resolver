@@ -53,6 +53,7 @@ public class ResolveServlet extends WebUniResolver {
 		// prepare resolution options
 
 		String acceptHeaderString = request.getHeader("Accept");
+		if (log.isDebugEnabled()) log.info("Incoming Accept: header string: " + acceptHeaderString);
 		List<MediaType> acceptMediaTypes = MediaType.parseMediaTypes(acceptHeaderString != null ? acceptHeaderString : "*/*");
 		MediaType.sortBySpecificityAndQuality(acceptMediaTypes);
 
