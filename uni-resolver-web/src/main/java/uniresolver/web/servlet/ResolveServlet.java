@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import foundation.identity.did.DIDDocument;
+import foundation.identity.did.representations.Representations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,11 +91,11 @@ public class ResolveServlet extends WebUniResolver {
 
 			if (acceptMediaType.includes(MediaType.valueOf(ResolveResult.MIME_TYPE))) {
 
-				resolveResult.getDidResolutionMetadata().put("contentType", DIDDocument.MIME_TYPE_JSON_LD);
+				resolveResult.getDidResolutionMetadata().put("contentType", Representations.MEDIA_TYPE_JSONLD);
 
 				WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, ResolveResult.MIME_TYPE, resolveResult.toJson());
 				return;
-			} else if (acceptMediaType.includes(MediaType.valueOf(DIDDocument.MIME_TYPE_JSON_LD))) {
+			} else if (acceptMediaType.includes(MediaType.valueOf(Representations.MEDIA_TYPE_JSONLD))) {
 
 				if (resolveResult.getDidDocument() == null) {
 
@@ -103,9 +103,9 @@ public class ResolveServlet extends WebUniResolver {
 					return;
 				}
 
-				resolveResult.getDidResolutionMetadata().put("contentType", DIDDocument.MIME_TYPE_JSON_LD);
+				resolveResult.getDidResolutionMetadata().put("contentType", Representations.MEDIA_TYPE_JSONLD);
 
-				WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, DIDDocument.MIME_TYPE_JSON_LD, resolveResult.getDidDocument().toJson());
+				WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, Representations.MEDIA_TYPE_JSONLD, resolveResult.getDidDocument().toJson());
 				return;
 			} else if (resolveResult.getContentType() != null && acceptMediaType.includes(MediaType.valueOf(resolveResult.getContentType()))) {
 
