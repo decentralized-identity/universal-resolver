@@ -1,6 +1,7 @@
 package uniresolver;
 
 import uniresolver.result.DereferenceResult;
+import uniresolver.result.ResolveResult;
 
 public class DereferencingException extends Exception {
 
@@ -26,5 +27,13 @@ public class DereferencingException extends Exception {
 
 	public DereferencingException(Throwable ex) {
 		super(ex);
+	}
+
+	public DereferenceResult getDereferenceResult() {
+		return this.dereferenceResult;
+	}
+
+	public void setDereferenceResult(DereferenceResult dereferenceResult) {
+		this.dereferenceResult = dereferenceResult;
 	}
 }

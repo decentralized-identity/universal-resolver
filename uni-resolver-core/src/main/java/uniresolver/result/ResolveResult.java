@@ -72,15 +72,15 @@ public class ResolveResult {
 	 * Helper methods
 	 */
 
-	public static ResolveResult makeErrorResult(Error error, String errorMessage) {
+	public static ResolveResult makeErrorResult(Error error, String errorMessage, String contentType) {
 		ResolveResult resolveResult = ResolveResult.build();
 		resolveResult.setError(error.name());
 		if (errorMessage != null) resolveResult.setErrorMessage(errorMessage);
+		if (contentType != null) {
+			resolveResult.getDidResolutionMetadata().put("contentType", contentType);
+			resolveResult.setDidDocumentStream(new byte[0]);
+		}
 		return resolveResult;
-	}
-
-	public static ResolveResult makeErrorResult(Error error) {
-		return makeErrorResult(error, null);
 	}
 
 	@JsonIgnore
@@ -118,6 +118,10 @@ public class ResolveResult {
 
 	public static ResolveResult fromJson(Reader reader) throws IOException {
 		return objectMapper.readValue(reader, ResolveResult.class);
+	}
+
+	public Map<String, Object> toMap() {
+		return objectMapper.convertValue(this, Map.class);
 	}
 
 	public String toJson() {

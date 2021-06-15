@@ -27,4 +27,12 @@ public class ResolutionException extends Exception {
 	public ResolutionException(Throwable ex) {
 		super(ex);
 	}
+
+	public ResolveResult getResolveResult() {
+		return this.resolveResult;
+	}
+
+	public void setResolveResult(ResolveResult resolveResult) {
+		this.resolveResult = resolveResult;
+	}
 }

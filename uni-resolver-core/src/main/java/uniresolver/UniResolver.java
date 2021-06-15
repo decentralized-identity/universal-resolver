@@ -22,18 +22,30 @@ public interface UniResolver extends DIDResolver {
 	@Override
 	default public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
-		ResolveResult resolveRepresentationResult = this.resolveRepresentation(didString, resolutionOptions);
-		ResolveResult resolveResult = ResolveResultUtil.convertToResolveResult(resolveRepresentationResult);
+		ResolveResult resolveRepresentationResult = null;
+		try {
+			resolveRepresentationResult = this.resolveRepresentation(didString, resolutionOptions);
+		} catch (ResolutionException ex) {
+			if (ex.getResolveResult() != null) ex.setResolveResult(ResolveResultUtil.convertToResolveResult(ex.getResolveResult()));
+			throw ex;
+		}
+		ResolveResult resolveResult = resolveRepresentationResult == null ? null : ResolveResultUtil.convertToResolveResult(resolveRepresentationResult);
 		return resolveResult;
 	}
 
 	@Override
 	default public ResolveResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
-		ResolveResult resolveResult = this.resolve(didString, resolutionOptions);
 		String accept = (String) resolutionOptions.get("accept");
 		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolveRepresentation().");
-		ResolveResult resolveRepresentationResult = ResolveResultUtil.convertToResolveRepresentationResult(resolveResult, accept);
+		ResolveResult resolveResult;
+		try {
+			resolveResult = this.resolve(didString, resolutionOptions);
+		} catch (ResolutionException ex) {
+			if (ex.getResolveResult() != null) ex.setResolveResult(ResolveResultUtil.convertToResolveRepresentationResult(ex.getResolveResult(), accept));
+			throw ex;
+		}
+		ResolveResult resolveRepresentationResult = resolveResult == null ? null : ResolveResultUtil.convertToResolveRepresentationResult(resolveResult, accept);
 		return resolveRepresentationResult;
 	}
 

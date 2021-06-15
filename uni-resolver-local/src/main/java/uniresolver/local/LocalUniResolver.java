@@ -136,7 +136,12 @@ public class LocalUniResolver implements UniResolver {
 
 			String errorMessage = "DID " + didString + " is not valid: " + ex.getMessage();
 			if (log.isWarnEnabled()) log.warn(errorMessage);
-			throw new ResolutionException(ResolveResult.makeErrorResult(ResolveResult.Error.invalidDid, errorMessage));
+
+			if (resolveRepresentation) {
+				throw new ResolutionException(ResolveResult.makeErrorResult(ResolveResult.Error.invalidDid, errorMessage, (String) resolutionOptions.get("accept")));
+			} else {
+				throw new ResolutionException(ResolveResult.makeErrorResult(ResolveResult.Error.invalidDid, errorMessage, null));
+			}
 		}
 
 		// execute extensions (before)

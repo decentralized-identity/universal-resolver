@@ -53,7 +53,8 @@ public class LocalUniDereferencer implements UniDereferencer {
 
             String errorMessage = "DID URL " + didUrlString + " is not valid: " + ex.getMessage();
             if (log.isWarnEnabled()) log.warn(errorMessage);
-            throw new DereferencingException(DereferenceResult.makeErrorResult(DereferenceResult.Error.invalidDidUrl, errorMessage));
+
+            throw new DereferencingException(DereferenceResult.makeErrorResult(DereferenceResult.Error.invalidDidUrl, errorMessage, (String) dereferenceOptions.get("accept")));
         }
 
         // resolve DID

@@ -66,15 +66,15 @@ public class DereferenceResult {
 	 * Helper methods
 	 */
 
-	public static DereferenceResult makeErrorResult(Error error, String errorMessage) {
+	public static DereferenceResult makeErrorResult(Error error, String errorMessage, String contentType) {
 		DereferenceResult dereferenceResult = DereferenceResult.build();
 		dereferenceResult.setError(error.name());
 		if (errorMessage != null) dereferenceResult.setErrorMessage(errorMessage);
+		if (contentType != null) {
+			dereferenceResult.getDereferencingMetadata().put("contentType", contentType);
+			dereferenceResult.setContentStream(new byte[0]);
+		}
 		return dereferenceResult;
-	}
-
-	public static DereferenceResult makeErrorResult(Error error) {
-		return makeErrorResult(error, null);
 	}
 
 	@JsonIgnore
@@ -124,8 +124,16 @@ public class DereferenceResult {
 		return objectMapper.readValue(reader, DereferenceResult.class);
 	}
 
-	public String toJson() throws JsonProcessingException {
-		return objectMapper.writeValueAsString(this);
+	public Map<String, Object> toMap() {
+		return objectMapper.convertValue(this, Map.class);
+	}
+
+	public String toJson() {
+		try {
+			return objectMapper.writeValueAsString(this);
+		} catch (JsonProcessingException ex) {
+			throw new RuntimeException("Cannot write JSON: " + ex.getMessage(), ex);
+		}
 	}
 
 	/*
@@ -178,10 +186,6 @@ public class DereferenceResult {
 
 	@Override
 	public String toString() {
-		try {
-			return this.toJson();
-		} catch (JsonProcessingException ex) {
-			return ex.getMessage();
-		}
+		return this.toJson();
 	}
 }

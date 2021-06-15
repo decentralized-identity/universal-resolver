@@ -19,6 +19,20 @@ public class ResolveResultUtil {
 
     public static ResolveResult convertToResolveResult(ResolveResult resolveRepresentationResult) throws ResolutionException {
 
+        if (resolveRepresentationResult == null) throw new NullPointerException();
+
+        if (resolveRepresentationResult.isErrorResult()) {
+
+            ResolveResult resolveResult = ResolveResult.build();
+            resolveResult.setDidResolutionMetadata(new HashMap<>(resolveRepresentationResult.getDidResolutionMetadata()));
+            resolveResult.getDidResolutionMetadata().remove("contentType");
+            resolveResult.setDidDocument(null);
+            resolveResult.setDidDocumentMetadata(new HashMap<>(resolveRepresentationResult.getDidDocumentMetadata()));
+
+            if (log.isDebugEnabled()) log.debug("Converted to resolve() error result: " + resolveResult);
+            return resolveResult;
+        }
+
         if (resolveRepresentationResult.getDidResolutionMetadata() == null) throw new IllegalArgumentException("No 'didResolutionMetadata' returned from resolveRepresentation().");
         if (resolveRepresentationResult.getDidDocumentMetadata() == null) throw new IllegalArgumentException("No 'didDocumentMetadata' returned from resolveRepresentation().");
         if (resolveRepresentationResult.getDidDocument() != null) throw new ResolutionException("Unexpected 'didDocument' returned from resolveRepresentation().");
@@ -30,7 +44,7 @@ public class ResolveResultUtil {
         byte[] didDocumentStream = resolveRepresentationResult.getDidDocumentStream();
 
         RepresentationConsumer representationConsumer = Representations.getConsumer(contentType);
-        if (representationConsumer == null) throw new ResolutionException(ResolveResult.makeErrorResult(ResolveResult.Error.representationNotSupported));
+        if (representationConsumer == null) throw new ResolutionException(ResolveResult.makeErrorResult(ResolveResult.Error.representationNotSupported, null, null));
         if (log.isDebugEnabled()) log.debug("Converting to resolve() result using " + representationConsumer.getClass().getSimpleName() + ": " + resolveRepresentationResult);
 
         RepresentationConsumer.Result result;
@@ -57,6 +71,20 @@ public class ResolveResultUtil {
 
     public static ResolveResult convertToResolveRepresentationResult(ResolveResult resolveResult, String mediaType) throws ResolutionException {
 
+        if (resolveResult == null) throw new NullPointerException();
+
+        if (resolveResult.isErrorResult()) {
+
+            ResolveResult resolveRepresentationResult = ResolveResult.build();
+            resolveRepresentationResult.setDidResolutionMetadata(new HashMap<>(resolveResult.getDidResolutionMetadata()));
+            resolveRepresentationResult.getDidResolutionMetadata().put("contentType", mediaType);
+            resolveRepresentationResult.setDidDocumentStream(new byte[0]);
+            resolveRepresentationResult.setDidDocumentMetadata(new HashMap<>(resolveResult.getDidDocumentMetadata()));
+
+            if (log.isDebugEnabled()) log.debug("Converted to resolveRepresentation() error result: " + resolveRepresentationResult);
+            return resolveRepresentationResult;
+        }
+
         if (resolveResult.getDidResolutionMetadata() == null) throw new IllegalArgumentException("No 'didResolutionMetadata' returned from resolve().");
         if (resolveResult.getDidDocumentMetadata() == null) throw new IllegalArgumentException("No 'didDocumentMetadata' returned from resolve().");
         if (resolveResult.getDidDocument() == null) throw new ResolutionException("No 'didDocument' returned from resolve().");
@@ -69,7 +97,7 @@ public class ResolveResultUtil {
         DIDDocument didDocument = resolveResult.getDidDocument();
 
         RepresentationProducer representationProducer = Representations.getProducer(mediaType);
-        if (representationProducer == null) throw new ResolutionException(ResolveResult.makeErrorResult(ResolveResult.Error.representationNotSupported));
+        if (representationProducer == null) throw new ResolutionException(ResolveResult.makeErrorResult(ResolveResult.Error.representationNotSupported, null, mediaType));
         if (log.isDebugEnabled()) log.debug("Converting to resolveRepresentation() result using " + representationProducer.getClass().getSimpleName() + ": " + resolveResult);
 
         RepresentationProducer.Result result;

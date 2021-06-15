@@ -109,7 +109,7 @@ public class ClientUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBodyString);
 
-			if (contentType != null && (HttpBindingUtil.isResolveResultContentType(contentType) || HttpBindingUtil.isResolveResultContent(httpBodyString))) {
+			if ((contentType != null && HttpBindingUtil.isResolveResultContentType(contentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
 				resolveResult = HttpBindingUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 

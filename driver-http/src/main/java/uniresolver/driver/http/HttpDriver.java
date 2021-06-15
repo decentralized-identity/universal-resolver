@@ -132,20 +132,20 @@ public class HttpDriver implements Driver {
 
 			if (log.isDebugEnabled()) log.debug("Driver response body from " + uriString + ": " + httpBodyString);
 
-			if (contentType != null && (HttpBindingUtil.isResolveResultContentType(contentType) || HttpBindingUtil.isResolveResultContent(httpBodyString))) {
+			if ((contentType != null && HttpBindingUtil.isResolveResultContentType(contentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
 				resolveResult = HttpBindingUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
 			if (statusCode == 404 && resolveResult == null) {
-				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.notFound, statusCode + " " + statusMessage + " (" + httpBodyString + ")");
+				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.notFound, statusCode + " " + statusMessage + " (" + httpBodyString + ")", accept);
 			}
 
 			if (statusCode == 406 && resolveResult == null) {
-				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.representationNotSupported, statusCode + " " + statusMessage + " (" + httpBodyString + ")");
+				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.representationNotSupported, statusCode + " " + statusMessage + " (" + httpBodyString + ")", accept);
 			}
 
 			if (statusCode != 200 && resolveResult == null) {
-				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.internalError, "Driver cannot retrieve result for " + did + ": " + statusCode + " " + statusMessage + " (" + httpBodyString + ")");
+				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.internalError, "Driver cannot retrieve result for " + did + ": " + statusCode + " " + statusMessage + " (" + httpBodyString + ")", accept);
 				if (log.isWarnEnabled()) log.warn("Driver cannot retrieve result for " + did + " from " + uriString + ": " + resolveResult.getError() + " - " + resolveResult.getErrorMessage());
 			}
 

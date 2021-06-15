@@ -28,18 +28,22 @@ public class HttpBindingUtil {
         ResolveResult resolveResult = ResolveResult.build();
         Map<String, Object> json = objectMapper.readValue(httpBody, Map.class);
         Object didDocument = json.get("didDocument");
-        Map<String, Object> didResolutionMetadata = (Map<String, Object>) json.get("didResolutionMetadata");
-        Map<String, Object> didDocumentMetadata = (Map<String, Object>) json.get("didDocumentMetadata");
-        if (didResolutionMetadata != null) resolveResult.setDidResolutionMetadata(didResolutionMetadata);
-        if (didDocumentMetadata != null) resolveResult.setDidDocumentMetadata(didDocumentMetadata);
+        Map<String, Object> didResolutionMetadata = json.containsKey("didResolutionMetadata") ? (Map<String, Object>) json.get("didResolutionMetadata") : new HashMap<>();
+        Map<String, Object> didDocumentMetadata = json.containsKey("didDocumentMetadata") ? (Map<String, Object>) json.get("didDocumentMetadata") : new HashMap<>();
+        resolveResult.setDidResolutionMetadata(didResolutionMetadata);
+        resolveResult.setDidDocumentMetadata(didDocumentMetadata);
         byte[] didDocumentStream = null;
         if (didDocument instanceof Map) {
             didDocumentStream = objectMapper.writeValueAsBytes((Map<String, Object>) didDocument);
         } else if (didDocument instanceof String) {
-            try {
-                didDocumentStream = Hex.decodeHex((String) didDocument);
-            } catch (DecoderException ex) {
-                didDocumentStream = ((String) didDocument).getBytes(StandardCharsets.UTF_8);
+            if (((String) didDocument).isEmpty()) {
+                didDocumentStream = new byte[0];
+            } else {
+                try {
+                    didDocumentStream = Hex.decodeHex((String) didDocument);
+                } catch (DecoderException ex) {
+                    didDocumentStream = ((String) didDocument).getBytes(StandardCharsets.UTF_8);
+                }
             }
         }
         return ResolveResult.build(didResolutionMetadata, null, didDocumentStream, didDocumentMetadata);
@@ -51,7 +55,9 @@ public class HttpBindingUtil {
         Map<String, Object> json = new HashMap<>();
         json.put("didResolutionMetadata", resolveResult.getDidResolutionMetadata());
         json.put("didDocumentMetadata", resolveResult.getDidDocumentMetadata());
-        if (isJson(resolveResult.getDidDocumentStream())) {
+        if (resolveResult.getDidDocumentStream() == null || resolveResult.getDidDocumentStream().length == 0) {
+            json.put("didDocument", "");
+        } else if (isJson(resolveResult.getDidDocumentStream())) {
             json.put("didDocument", objectMapper.readValue(new ByteArrayInputStream(resolveResult.getDidDocumentStream()), Map.class));
         } else {
             json.put("didDocument", Hex.encodeHexString(resolveResult.getDidDocumentStream()));
