@@ -1,6 +1,7 @@
 package uniresolver.util;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
 import org.apache.commons.codec.DecoderException;
@@ -73,6 +74,24 @@ public class HttpBindingUtil {
     /*
      * Helper methods
      */
+
+    private static final ContentType RESOLVE_RESULT_CONTENT_TYPE = ContentType.parse(ResolveResult.MEDIA_TYPE);
+
+    public static boolean isResolveResultContentType(ContentType contentType) {
+        return RESOLVE_RESULT_CONTENT_TYPE.getMimeType().equals(contentType.getMimeType()) && RESOLVE_RESULT_CONTENT_TYPE.getParameter("profile").equals(contentType.getParameter("profile"));
+    }
+
+    public static boolean isResolveResultContent(String contentString) throws IOException {
+        try {
+            Map<String, Object> json = objectMapper.readValue(contentString, Map.class);
+            if (! json.containsKey("didResolutionMetadata")) return false;
+            if (! json.containsKey("didDocumentMetadata")) return false;
+            if (! json.containsKey("didDocument")) return false;
+        } catch (JsonProcessingException ex) {
+            return false;
+        }
+        return true;
+    }
 
     private static boolean isJson(byte[] bytes) throws IOException {
         try {

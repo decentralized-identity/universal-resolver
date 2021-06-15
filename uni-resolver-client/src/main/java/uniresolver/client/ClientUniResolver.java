@@ -109,7 +109,7 @@ public class ClientUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBodyString);
 
-			if (contentType != null && isResolveContentType(contentType)) {
+			if (contentType != null && (HttpBindingUtil.isResolveResultContentType(contentType) || HttpBindingUtil.isResolveResultContent(httpBodyString))) {
 				resolveResult = HttpBindingUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
@@ -287,16 +287,6 @@ public class ClientUniResolver implements UniResolver {
 		// done
 
 		return testIdentifiers;
-	}
-
-	/*
-	 * Helper methods
-	 */
-
-	private static final ContentType RESOLVE_RESULT_CONTENT_TYPE = ContentType.parse(ResolveResult.MEDIA_TYPE);
-
-	private static boolean isResolveContentType(ContentType contentType) {
-		return RESOLVE_RESULT_CONTENT_TYPE.getMimeType().equals(contentType.getMimeType()) && RESOLVE_RESULT_CONTENT_TYPE.getParameter("profile").equals(contentType.getParameter("profile"));
 	}
 
 	/*

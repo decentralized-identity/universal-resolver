@@ -2,7 +2,6 @@ package uniresolver.driver.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DID;
-import foundation.identity.did.parser.ParserException;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -133,7 +132,7 @@ public class HttpDriver implements Driver {
 
 			if (log.isDebugEnabled()) log.debug("Driver response body from " + uriString + ": " + httpBodyString);
 
-			if (contentType != null && isResolveContentType(contentType)) {
+			if (contentType != null && (HttpBindingUtil.isResolveResultContentType(contentType) || HttpBindingUtil.isResolveResultContent(httpBodyString))) {
 				resolveResult = HttpBindingUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
@@ -259,16 +258,6 @@ public class HttpDriver implements Driver {
 	public List<String> testIdentifiers() throws ResolutionException {
 
 		return this.getTestIdentifiers();
-	}
-
-	/*
-	 * Helper methods
-	 */
-
-	private static final ContentType RESOLVE_RESULT_CONTENT_TYPE = ContentType.parse(ResolveResult.MEDIA_TYPE);
-
-	private static boolean isResolveContentType(ContentType contentType) {
-		return RESOLVE_RESULT_CONTENT_TYPE.getMimeType().equals(contentType.getMimeType()) && RESOLVE_RESULT_CONTENT_TYPE.getParameter("profile").equals(contentType.getParameter("profile"));
 	}
 
 	/*
