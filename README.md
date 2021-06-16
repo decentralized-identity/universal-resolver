@@ -76,8 +76,8 @@ If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
 Are you developing a DID method and Universal Resolver driver? Click [Driver Development](/docs/driver-development.md) for instructions.
 
-| Driver Name | Driver Version | DID Method Spec Version | Docker Image |
-| ----------- | -------------- | ----------------------- | ------------ |
+| Driver Name | Driver Version | DID Method Spec Version | Docker Image or URL |
+| ----------- | -------------- | ----------------------- | ------------------- |
 | [did-abt](https://github.com/ArcBlock/uni-resolver-driver-did-abt) | 0.1-SNAPSHOT | [0.1](https://arcblock.github.io/abt-did-spec/) | [arcblock/driver-did-abt](https://hub.docker.com/repository/docker/arcblock/driver-did-abt)  |
 | [did-btcr](https://github.com/decentralized-identity/uni-resolver-driver-did-btcr/) | 0.1-SNAPSHOT | [0.1](https://w3c-ccg.github.io/didm-btcr) | [universalresolver/driver-did-btcr](https://hub.docker.com/r/universalresolver/driver-did-btcr/)
 | [did-sov](https://github.com/decentralized-identity/uni-resolver-driver-did-sov/) | 0.1-SNAPSHOT | [0.1](https://sovrin-foundation.github.io/sovrin/spec/did-method-spec-template.html) | [universalresolver/driver-did-sov](https://hub.docker.com/r/universalresolver/driver-did-sov/)
@@ -119,7 +119,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-bitxhub](https://github.com/meshplus/driver-did-bitxhub) | 1.0.0 | (missing) | [meshplus/driver-did-bitxhub](https://hub.docker.com/repository/docker/meshplus/driver-did-bitxhub) |
 | [did-sol](https://github.com/identity-com/sol-did)|1.0.0|[1.0.0](https://github.com/identity-com/sol-did/)|[identitydotcom/driver-did-sol](https://hub.docker.com/r/identitydotcom/driver-did-sol)
 | [did-lit](https://github.com/ibct-dev/lit-resolver) | 0.1.0 | [0.1.0](https://github.com/ibct-dev/lit-DID/blob/main/docs/did:lit-method-spec_eng_v0.1.0.md) | [ibct/driver-did-lit](https://hub.docker.com/r/ibct/driver-did-lit)
-| [did-ebsi](https://api.preprod.ebsi.eu/docs/#/DID%20Registry) | 2.0.0 | 2.0.0 | (missing) |
+| [did-ebsi](https://api.preprod.ebsi.eu/docs/#/DID%20Registry) | 2.0.0 | 2.0.0 | [URL](https://api.preprod.ebsi.eu/did-registry/v2/identifiers/) |
 | [did-emtrust](https://github.com/Halialabs/did-spec) | 0.1| 0.1 | [halialabsdev/emtrust_did_driver](https://hub.docker.com/r/halialabsdev/emtrust_did_driver) |
 | [did-meta](https://github.com/METADIUM/meta-DID/blob/master/doc/DID-method-metadium.md) | 1.0 | 1.0 | [URL](https://resolver.metadium.com/1.0/identifiers/) |
 
