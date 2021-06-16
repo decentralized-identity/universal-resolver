@@ -10,7 +10,7 @@ See [here](/docs/instances/development-instance.md) for more information about t
 
 ## https://resolver.identity.foundation — hosted by DIF
 
-This is not actually an instance of the Universal Resolver, but a load balancer that will redirect to the DIF member instances listed below:
+This is an alternate name for the same development instance (see above). In this future, this may become a redirect service, or reverse proxy, or load balancer, or similar service that will forward requests to the DIF member instances listed below:
 
 ## DIF member instances
 
