@@ -24,7 +24,7 @@ A Swagger API definition is available [here](https://github.com/decentralized-id
   [DID Method Registry](https://w3c.github.io/did-spec-registries/#did-methods) of the W3C DID WG.
 - Multiple drivers for the same DID method are allowed and can be listed in the README, but only one can be included in the
   configuration. In this case, the DIF I&D WG will choose a default.
-- Contact information must be provided when contributing a driver.
+- Contact information must be provided when contributing a driver (either email address, or Github/Gitlab/Bitbucket handle).
 - Driver source code must be publicly available and fully open-source under a permissive license (Apache 2.0 preferred).
 - Driver source code may optionally be hosted at DIF (as a contribution to the I&D WG).
 - Driver image must be published on a publicly accessible container registry.
