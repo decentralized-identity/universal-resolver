@@ -2,13 +2,15 @@
 
 Various instances of the Universal Resolver exist that are hosted by DIF as well as the DIF member community.
 
-## https://dev.uniresolver.io — hosted by DIF
+## DIF instances
+
+# https://dev.uniresolver.io
 
 This is the development instance, which runs the latest code-base of the Universal Resolver project.
 
 See [here](/docs/instances/development-instance.md) for more information about this instance.
 
-## https://resolver.identity.foundation — hosted by DIF
+# https://resolver.identity.foundation
 
 This is an alternate name for the same development instance (see above). In the future, this may become a redirect service, or reverse proxy, or load balancer, or similar service that will forward requests to the DIF member instances listed below:
 
