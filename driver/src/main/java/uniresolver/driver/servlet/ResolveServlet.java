@@ -97,6 +97,6 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		// write resolve result
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, ResolveResult.MEDIA_TYPE, HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
+		ServletUtil.sendResponse(response, HttpBindingUtil.httpStatusCodeForResolveResult(resolveResult), ResolveResult.MEDIA_TYPE, HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
 	}
 }

@@ -106,7 +106,7 @@ public class ResolveServlet extends WebUniResolver {
 
 			if (acceptMediaType.includes(MediaType.valueOf(ResolveResult.MEDIA_TYPE))) {
 
-				ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, ResolveResult.MEDIA_TYPE, HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
+				ServletUtil.sendResponse(response, HttpBindingUtil.httpStatusCodeForResolveResult(resolveResult), ResolveResult.MEDIA_TYPE, HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
 				return;
 			} else if (contentType != null && acceptMediaType.includes(MediaType.valueOf(contentType))) {
 
@@ -116,6 +116,5 @@ public class ResolveServlet extends WebUniResolver {
 		}
 
 		ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_ACCEPTABLE, null, "Not acceptable media type " + acceptHeaderString);
-		return;
 	}
 }

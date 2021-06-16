@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +76,19 @@ public class HttpBindingUtil {
         resolveResult.getDidResolutionMetadata().put("contentType", contentType.getMimeType());
         resolveResult.setDidDocumentStream(httpBodyBytes);
         return resolveResult;
+    }
+
+    public static int httpStatusCodeForResolveResult(ResolveResult resolveResult) {
+        if (ResolveResult.Error.notFound.name().equals(resolveResult.getError()))
+            return HttpStatus.SC_NOT_FOUND;
+        else if (ResolveResult.Error.invalidDid.name().equals(resolveResult.getError()))
+            return HttpStatus.SC_BAD_REQUEST;
+        else if (ResolveResult.Error.representationNotSupported.name().equals(resolveResult.getError()))
+            return HttpStatus.SC_NOT_ACCEPTABLE;
+        else if (resolveResult.isErrorResult())
+            return HttpStatus.SC_INTERNAL_SERVER_ERROR;
+        else
+            return HttpStatus.SC_OK;
     }
 
     /*
