@@ -10,7 +10,7 @@ The CI/CD pipeline helps achieving the following goals:
 * Avoidance of repetitive, manual tasks
 * Increase of Software Quality 
 
-After every code change the CI/CD pipeline builds all software packages/Docker containers automatically. Once the containers are built, they are automatically deployed to the dev-system. By these measures building as well as deployment issues are immediately discovered. Once the freshly built containers are deployed, automatic tests are run in order to verify the software and to detect functional issues.
+After every code change the CI/CD pipeline builds all software packages/Docker containers automatically. Once the containers are built, they are automatically deployed to the [development instance](/docs/instances/development-instance.md). By these measures building as well as deployment issues are immediately discovered. Once the freshly built containers are deployed, automatic tests are run in order to verify the software and to detect functional issues.
 
 ## Building Blocks
 

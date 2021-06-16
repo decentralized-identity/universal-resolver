@@ -6,7 +6,7 @@ A Universal Resolver is an identifier resolver that works with any decentralized
 
 See this [blog post](https://medium.com/decentralized-identity/a-universal-resolver-for-self-sovereign-identifiers-48e6b4a5cc3c) and this [webinar](https://ssimeetup.org/did-resolution-given-did-how-do-retrieve-document-markus-sabadello-webinar-13/) for an introduction.
 
-See https://resolver.identity.foundation/ for a stable version or https://dev.uniresolver.io/ for a test instance of a Universal Resolver.
+See https://dev.uniresolver.io/ for a development instance of the Universal Resolver, and see [Instances](/docs/instances/instances.md) for additional Universal Resolver instances hosted by the community.
 
 ## Quick Start
 
@@ -125,9 +125,9 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 
 ## More Information
 
+ * [Instances](/docs/instances/instances.md)
  * [Driver Development](/docs/driver-development.md)
  * [Continuous Integration and Delivery](/docs/continuous-integration-and-delivery.md)
- * [Development System](/docs/dev-system.md)
  * [Branching Strategy](/docs/branching-strategy.md)
  * [Design Goals](/docs/design-goals.md)
  * [Troubleshooting](/docs/troubleshooting.md)
