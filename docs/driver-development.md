@@ -20,7 +20,7 @@ A Swagger API definition is available [here](https://github.com/decentralized-id
 
 ## Driver Rules
 
-- The DID method implemented by the driver must be registered in the
+- The DID method implemented by the driver must have a specification that is registered in the
   [DID Method Registry](https://w3c.github.io/did-spec-registries/#did-methods) of the W3C DID WG.
 - Multiple drivers for the same DID method are allowed and can be listed in the README, but only one can be included in the
   configuration. In this case, the DIF I&D WG will choose a default.
