@@ -16,7 +16,7 @@ Your driver will be invoked via an HTTP GET call to:
 
 Your driver will receive an `Accept` header with the value `application/ld+json`, and it should return either a valid [DID Document](https://w3c-ccg.github.io/did-resolution/#output-diddocument) or a [DID Resolution Result](https://w3c-ccg.github.io/did-resolution/#output-didresolutionresult) in the HTTP body.
 
-A Swagger API definition is available [here](https://github.com/decentralized-identity/universal-resolver/blob/master/swagger/api-driver.yml).
+A Swagger API definition is available [here](https://github.com/decentralized-identity/universal-resolver/blob/main/swagger/api-driver.yml).
 
 ## Driver Rules
 
