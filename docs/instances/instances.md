@@ -10,7 +10,7 @@ See [here](/docs/instances/development-instance.md) for more information about t
 
 ## https://resolver.identity.foundation — hosted by DIF
 
-This is an alternate name for the same development instance (see above). In this future, this may become a redirect service, or reverse proxy, or load balancer, or similar service that will forward requests to the DIF member instances listed below:
+This is an alternate name for the same development instance (see above). In the future, this may become a redirect service, or reverse proxy, or load balancer, or similar service that will forward requests to the DIF member instances listed below:
 
 ## DIF member instances
 
