@@ -4,7 +4,7 @@ Various instances of the Universal Resolver exist that are hosted by DIF as well
 
 ## https://dev.uniresolver.io — hosted by DIF
 
-This is the development instance, which runs the latest code—base of the Universal Resolver project.
+This is the development instance, which runs the latest code-base of the Universal Resolver project.
 
 See [here](/docs/instances/development-instance.md) for more information about this instance.
 
