@@ -74,7 +74,7 @@ If your Docker image does not exist:
 - Your driver will be removed immediately.
 - You are welcome to still fix the problem later and re-contribute your driver.
 
-If your driver does not fulfill the Driver Rules (see above):
+If your driver does not fulfill the [Driver Rules](#driver-rules):
 
 - You will be contacted and given 30 days to fix the problem; after that, your driver will be removed.
 - You are welcome to still fix the problem later and re-contribute your driver.
