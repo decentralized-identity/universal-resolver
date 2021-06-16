@@ -14,6 +14,8 @@ This is an alternate name for the same development instance (see above). In the 
 
 ## DIF member instances
 
+This section lists additional instances of the Universal Resolver, hosted by DIF members. They may differ in terms of performance, hardening, supported DID methods, etc.
+
 ### https://resolver.spherity.com/ — hosted by Spherity
 
 (this space can contain specific information about this instance of the Universal Resolver)
