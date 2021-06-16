@@ -67,12 +67,17 @@ In order to update a driver, simply submit a new PR that increments the Docker i
 If your Docker image exists and starts, but your example DIDs cannot be resolved or your driver produces invalid responses:
 
 - You will be contacted and given 30 days to fix the problem; after that, your driver will be removed.
-- You are welcome to still fix the problem and re-contribute your driver.
+- You are welcome to still fix the problem later and re-contribute your driver.
 
 If your Docker image does not exist:
 
 - Your driver will be removed immediately.
-- You are welcome to still fix the problem and re-contribute your driver.
+- You are welcome to still fix the problem later and re-contribute your driver.
+
+If your driver does not fulfill the Driver Rules (see above):
+
+- You will be contacted and given 30 days to fix the problem; after that, your driver will be removed.
+- You are welcome to still fix the problem later and re-contribute your driver.
 
 ### How to test a driver locally
 
