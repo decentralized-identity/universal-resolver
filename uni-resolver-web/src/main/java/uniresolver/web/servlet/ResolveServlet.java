@@ -1,10 +1,11 @@
 package uniresolver.web.servlet;
 
-import foundation.identity.did.representations.Representations;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import uniresolver.ResolutionException;
+import uniresolver.driver.util.HttpBindingServerUtil;
 import uniresolver.result.ResolveResult;
 import uniresolver.util.HttpBindingUtil;
 import uniresolver.util.ResolveResultUtil;
@@ -54,16 +55,18 @@ public class ResolveServlet extends WebUniResolver {
 
 		// prepare resolution options
 
-		String acceptHeaderString = request.getHeader("Accept");
-		if (log.isDebugEnabled()) log.info("Incoming Accept: header string: " + acceptHeaderString);
-		List<MediaType> acceptMediaTypes = MediaType.parseMediaTypes(acceptHeaderString != null ? acceptHeaderString : "*/*");
-		MediaType.sortBySpecificityAndQuality(acceptMediaTypes);
+		String httpAcceptHeader = request.getHeader("Accept");
+		if (log.isInfoEnabled()) log.info("Incoming Accept: header string: " + httpAcceptHeader);
 
-		String accept = acceptMediaTypes.size() > 0 ? acceptMediaTypes.get(0).toString() : null;
-		if (accept == null || ! Representations.MEDIA_TYPES.contains(accept)) accept = Representations.DEFAULT_MEDIA_TYPE;
+		List<MediaType> httpAcceptMediaTypes = MediaType.parseMediaTypes(httpAcceptHeader != null ? httpAcceptHeader : ResolveResult.MEDIA_TYPE);
+		MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
+
+		String accept = HttpBindingServerUtil.acceptForHttpAcceptMediaTypes(httpAcceptMediaTypes);
 
 		Map<String, Object> resolutionOptions = new HashMap<>();
 		resolutionOptions.put("accept", accept);
+
+		if (log.isDebugEnabled()) log.debug("Using resolution options: " + resolutionOptions);
 
 		// execute the request
 
@@ -79,10 +82,10 @@ public class ResolveServlet extends WebUniResolver {
 			if (ex instanceof ResolutionException && ((ResolutionException) ex).getResolveResult() != null) {
 				resolveResult = ((ResolutionException) ex).getResolveResult();
 			} else {
-				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.internalError, "Resolve problem for " + didString + ": " + ex.getMessage(), accept);
+				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Resolve problem for " + didString + ": " + ex.getMessage(), accept);
 			}
 
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
+			ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveResult), null, HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
 			return;
 		}
 
@@ -92,29 +95,48 @@ public class ResolveServlet extends WebUniResolver {
 
 		if (resolveResult == null || resolveResult.getDidDocumentStream() == null) {
 
-			resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.notFound, "No resolve result for " + didString, accept);
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null,  HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
+			resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, "No resolve result for " + didString, accept);
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null,  HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
 			return;
 		}
 
 		// write resolve result
 
-		for (MediaType acceptMediaType : acceptMediaTypes) {
+		for (MediaType acceptMediaType : httpAcceptMediaTypes) {
 
-			String contentType = (String) resolveResult.getDidResolutionMetadata().get("contentType");
-			if (log.isDebugEnabled()) log.debug("Trying to find content for media type " + acceptMediaType + " to satisfy " + contentType);
+			if (HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, MediaType.valueOf(ResolveResult.MEDIA_TYPE))) {
 
-			if (acceptMediaType.includes(MediaType.valueOf(ResolveResult.MEDIA_TYPE))) {
-
-				ServletUtil.sendResponse(response, HttpBindingUtil.httpStatusCodeForResolveResult(resolveResult), ResolveResult.MEDIA_TYPE, HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
+				ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveResult), ResolveResult.MEDIA_TYPE, HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
 				return;
-			} else if (contentType != null && acceptMediaType.includes(MediaType.valueOf(contentType))) {
+			} else {
 
-				ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, contentType, resolveResult.getDidDocumentStream());
+				if (!HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, MediaType.valueOf(resolveResult.getContentType()))) {
+
+					// try to convert
+
+					String sourceMediaType = resolveResult.getContentType();
+					String targetMediaType = HttpBindingUtil.representationMediaTypeForMediaType(ContentType.parse(acceptMediaType.toString()).getMimeType());
+					if (targetMediaType == null) {
+						if (log.isDebugEnabled()) log.debug("Cannot convert resolve result from " + sourceMediaType + " to " + targetMediaType);
+						continue;
+					} else {
+						if (log.isDebugEnabled()) log.debug("Attempting to convert resolve result from " + sourceMediaType + " to " + targetMediaType);
+					}
+
+					try {
+						resolveResult = ResolveResultUtil.convertToResolveRepresentationResult(ResolveResultUtil.convertToResolveResult(resolveResult), targetMediaType);
+						resolveResult.getDidResolutionMetadata().put("convertedFrom", sourceMediaType);
+						resolveResult.getDidResolutionMetadata().put("convertedTo", targetMediaType);
+					} catch (ResolutionException ex) {
+						throw new IOException(ex.getMessage(), ex);
+					}
+				}
+
+				ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveResult), resolveResult.getContentType(), resolveResult.getDidDocumentStream());
 				return;
 			}
 		}
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_ACCEPTABLE, null, "Not acceptable media type " + acceptHeaderString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_ACCEPTABLE, null, "Not acceptable media type " + httpAcceptHeader);
 	}
 }

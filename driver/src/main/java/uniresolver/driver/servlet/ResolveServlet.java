@@ -1,13 +1,12 @@
 package uniresolver.driver.servlet;
 
 import foundation.identity.did.DID;
-import foundation.identity.did.representations.Representations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import uniresolver.ResolutionException;
+import uniresolver.driver.util.HttpBindingServerUtil;
 import uniresolver.result.ResolveResult;
-import uniresolver.util.HttpBindingUtil;
-import uniresolver.util.ResolveResultUtil;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +16,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ResolveServlet extends HttpServlet implements Servlet {
@@ -58,10 +58,18 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		// prepare resolution options
 
-		String accept = Representations.MEDIA_TYPE_JSONLD;
+		String httpAcceptHeader = request.getHeader("Accept");
+		if (log.isInfoEnabled()) log.info("Driver: Incoming Accept: header string: " + httpAcceptHeader);
+
+		List<MediaType> httpAcceptMediaTypes = MediaType.parseMediaTypes(httpAcceptHeader != null ? httpAcceptHeader : ResolveResult.MEDIA_TYPE);
+		MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
+
+		String accept = HttpBindingServerUtil.acceptForHttpAcceptMediaTypes(httpAcceptMediaTypes);
 
 		Map<String, Object> resolutionOptions = new HashMap<>();
 		resolutionOptions.put("accept", accept);
+
+		if (log.isDebugEnabled()) log.debug("Driver: Using resolution options: " + resolutionOptions);
 
 		// invoke the driver
 
@@ -77,10 +85,10 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 			if (ex instanceof ResolutionException && ((ResolutionException) ex).getResolveResult() != null) {
 				resolveResult = ((ResolutionException) ex).getResolveResult();
 			} else {
-				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.internalError, "Driver: Resolve problem for " + didString + ": " + ex.getMessage(), accept);
+				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Driver: Resolve problem for " + didString + ": " + ex.getMessage(), accept);
 			}
 
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
+			ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveResult), null, HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
 			return;
 		}
 
@@ -90,13 +98,13 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		if (resolveResult == null || resolveResult.getDidDocumentStream() == null) {
 
-			resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.notFound, "Driver: No resolve result for " + didString, accept);
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null,  HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
+			resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, "Driver: No resolve result for " + didString, accept);
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null,  HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
 			return;
 		}
 
 		// write resolve result
 
-		ServletUtil.sendResponse(response, HttpBindingUtil.httpStatusCodeForResolveResult(resolveResult), ResolveResult.MEDIA_TYPE, HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
+		ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveResult), ResolveResult.MEDIA_TYPE, HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
 	}
 }

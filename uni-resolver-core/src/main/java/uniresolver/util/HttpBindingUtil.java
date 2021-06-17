@@ -1,21 +1,19 @@
 package uniresolver.util;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.result.ResolveResult;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class HttpBindingUtil {
@@ -27,7 +25,7 @@ public class HttpBindingUtil {
     public static ResolveResult fromHttpBodyResolveResult(String httpBody) throws IOException {
         if (log.isDebugEnabled()) log.debug("Deserizalizing resolve result from HTTP body.");
         ResolveResult resolveResult = ResolveResult.build();
-        Map<String, Object> json = objectMapper.readValue(httpBody, Map.class);
+        Map<String, Object> json = objectMapper.readValue(httpBody, LinkedHashMap.class);
         Object didDocument = json.get("didDocument");
         Map<String, Object> didResolutionMetadata = json.containsKey("didResolutionMetadata") ? (Map<String, Object>) json.get("didResolutionMetadata") : new HashMap<>();
         Map<String, Object> didDocumentMetadata = json.containsKey("didDocumentMetadata") ? (Map<String, Object>) json.get("didDocumentMetadata") : new HashMap<>();
@@ -46,60 +44,38 @@ public class HttpBindingUtil {
                     didDocumentStream = ((String) didDocument).getBytes(StandardCharsets.UTF_8);
                 }
             }
+        } else if (didDocument == null) {
+            didDocumentStream = new byte[0];
         }
         return ResolveResult.build(didResolutionMetadata, null, didDocumentStream, didDocumentMetadata);
     }
 
-    public static String toHttpBodyResolveResult(ResolveResult resolveResult) throws IOException {
-        if (log.isDebugEnabled()) log.debug("Serializing resolve result to HTTP body.");
-        if (resolveResult.getDidDocument() != null) throw new IllegalArgumentException("Cannot serialize abstract DID document.");
-        Map<String, Object> json = new HashMap<>();
-        json.put("didResolutionMetadata", resolveResult.getDidResolutionMetadata());
-        json.put("didDocumentMetadata", resolveResult.getDidDocumentMetadata());
-        if (resolveResult.getDidDocumentStream() == null || resolveResult.getDidDocumentStream().length == 0) {
-            json.put("didDocument", "");
-        } else if (isJson(resolveResult.getDidDocumentStream())) {
-            json.put("didDocument", objectMapper.readValue(new ByteArrayInputStream(resolveResult.getDidDocumentStream()), Map.class));
-        } else {
-            json.put("didDocument", Hex.encodeHexString(resolveResult.getDidDocumentStream()));
+    public static ResolveResult fromHttpBodyDidDocument(byte[] httpBodyBytes, ContentType httpContentType) {
+        if (log.isDebugEnabled()) log.debug("Deserizalizing DID document from HTTP body.");
+        if (httpContentType == null) {
+            if (log.isDebugEnabled()) log.warn("No content type. Assuming default " + Representations.DEFAULT_MEDIA_TYPE);
+            httpContentType = ContentType.create(Representations.DEFAULT_MEDIA_TYPE);
         }
-        return objectMapper.writeValueAsString(json);
-    }
-
-    public static ResolveResult fromHttpBodyDidDocument(byte[] httpBodyBytes, ContentType contentType) {
-        if (log.isDebugEnabled()) log.debug("Deserizalizing resolve result from HTTP body.");
-        if (contentType == null) {
-            if (log.isDebugEnabled()) log.warn("Driver received no content type. Assuming default " + Representations.DEFAULT_MEDIA_TYPE);
-            contentType = ContentType.create(Representations.DEFAULT_MEDIA_TYPE);
-        }
+        String contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
         ResolveResult resolveResult = ResolveResult.build();
-        resolveResult.getDidResolutionMetadata().put("contentType", contentType.getMimeType());
+        resolveResult.setContentType(contentType);
         resolveResult.setDidDocumentStream(httpBodyBytes);
         return resolveResult;
     }
 
-    public static int httpStatusCodeForResolveResult(ResolveResult resolveResult) {
-        if (ResolveResult.Error.notFound.name().equals(resolveResult.getError()))
-            return HttpStatus.SC_NOT_FOUND;
-        else if (ResolveResult.Error.invalidDid.name().equals(resolveResult.getError()))
-            return HttpStatus.SC_BAD_REQUEST;
-        else if (ResolveResult.Error.representationNotSupported.name().equals(resolveResult.getError()))
-            return HttpStatus.SC_NOT_ACCEPTABLE;
-        else if (resolveResult.isErrorResult())
-            return HttpStatus.SC_INTERNAL_SERVER_ERROR;
-        else
-            return HttpStatus.SC_OK;
+    public static String representationMediaTypeForMediaType(String mediaType) {
+        if (mediaType == null) throw new NullPointerException();
+        if ("application/ld+json".equals(mediaType)) mediaType = Representations.MEDIA_TYPE_JSONLD;
+        if ("application/json".equals(mediaType)) mediaType = Representations.MEDIA_TYPE_JSON;
+        if ("application/cbor".equals(mediaType)) mediaType = Representations.MEDIA_TYPE_CBOR;
+        if (! Representations.MEDIA_TYPES.contains(mediaType)) return null;
+        return mediaType;
     }
-
-    /*
-     * Helper methods
-     */
-
-    private static final ContentType RESOLVE_RESULT_CONTENT_TYPE = ContentType.parse(ResolveResult.MEDIA_TYPE);
 
     public static boolean isResolveResultContentType(ContentType contentType) {
-        return RESOLVE_RESULT_CONTENT_TYPE.getMimeType().equals(contentType.getMimeType()) && RESOLVE_RESULT_CONTENT_TYPE.getParameter("profile").equals(contentType.getParameter("profile"));
-    }
+        ContentType resolveResultContentType = ContentType.parse(ResolveResult.MEDIA_TYPE);
+        return resolveResultContentType.getMimeType().equals(contentType.getMimeType()) && resolveResultContentType.getParameter("profile").equals(contentType.getParameter("profile"));
+     }
 
     public static boolean isResolveResultContent(String contentString) throws IOException {
         try {
@@ -111,13 +87,5 @@ public class HttpBindingUtil {
             return false;
         }
         return true;
-    }
-
-    private static boolean isJson(byte[] bytes) throws IOException {
-        try {
-            return objectMapper.getFactory().createParser(bytes).readValueAsTree() != null;
-        } catch (JsonParseException ex) {
-            return false;
-        }
     }
 }

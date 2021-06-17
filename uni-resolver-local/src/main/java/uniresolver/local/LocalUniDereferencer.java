@@ -51,10 +51,10 @@ public class LocalUniDereferencer implements UniDereferencer {
             if (log.isDebugEnabled()) log.debug("DID URL " + didUrlString + " is valid: " + didUrl);
         } catch (IllegalArgumentException | ParserException ex) {
 
-            String errorMessage = "DID URL " + didUrlString + " is not valid: " + ex.getMessage();
+            String errorMessage = ex.getMessage();
             if (log.isWarnEnabled()) log.warn(errorMessage);
 
-            throw new DereferencingException(DereferenceResult.makeErrorResult(DereferenceResult.Error.invalidDidUrl, errorMessage, (String) dereferenceOptions.get("accept")));
+            throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INVALIDDIDURL, errorMessage, (String) dereferenceOptions.get("accept")));
         }
 
         // resolve DID
@@ -74,7 +74,7 @@ public class LocalUniDereferencer implements UniDereferencer {
         // dereference
 
         if (resolveResult.getDidResolutionMetadata().containsKey("contentType")) {
-            dereferenceResult.getDereferencingMetadata().put("contentType", (String) resolveResult.getDidResolutionMetadata().get("contentType"));
+            dereferenceResult.getDereferencingMetadata().put("contentType", resolveResult.getContentType());
         }
 
         if (didUrl.isBareDid()) {

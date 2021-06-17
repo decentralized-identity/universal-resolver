@@ -28,6 +28,10 @@ public class ResolutionException extends Exception {
 		super(ex);
 	}
 
+	/*
+	 * Getters and setters
+	 */
+
 	public ResolveResult getResolveResult() {
 		return this.resolveResult;
 	}
