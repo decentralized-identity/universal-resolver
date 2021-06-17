@@ -11,11 +11,12 @@ public class TestDriverDidBtcr {
 
 	public static void main(String[] args) throws Exception {
 
-		DidBtcrDriver driver = new DidBtcrDriver();
-		driver.setBitcoinConnectionTestnet(BlockcypherAPIBitcoinConnection.get());
+		Map<String, Object> driverProperties = new HashMap<>();
+		driverProperties.put("bitcoinConnection", "blockcypherapi");
+		DidBtcrDriver driver = new DidBtcrDriver(driverProperties);
 
 		Map<String, Object> resolveOptions = new HashMap<>();
-		ResolveResult resolveResult = driver.resolve(DID.fromString("did:btcr:xz35-jznz-q6mr-7q6"), resolveOptions);
+		ResolveResult resolveResult = driver.resolve(DID.fromString("did:btcr:x705-jznz-q3nl-srs"), resolveOptions);
 		System.out.println(resolveResult.toJson());
 	}
 }
