@@ -70,7 +70,7 @@ public class ResolveResultUtil {
 
         // done
 
-        if (log.isDebugEnabled()) log.debug("Converted to resolve() result using " + representationConsumer.getClass().getSimpleName() + ": " + resolveResult);
+        if (log.isDebugEnabled()) log.debug("Converted to resolve() result using " + representationConsumer + ": " + resolveResult);
         return resolveResult;
     }
 
@@ -126,7 +126,7 @@ public class ResolveResultUtil {
 
         // done
 
-        if (log.isDebugEnabled()) log.debug("Converted to resolveRepresentation() result using " + representationProducer.getClass().getSimpleName() + ": " + resolveRepresentationResult);
+        if (log.isDebugEnabled()) log.debug("Converted to resolveRepresentation() result using " + representationProducer + ": " + resolveRepresentationResult);
         return resolveRepresentationResult;
     }
 }
