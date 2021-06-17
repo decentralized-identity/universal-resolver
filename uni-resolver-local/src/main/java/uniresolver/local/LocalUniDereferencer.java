@@ -89,6 +89,7 @@ public class LocalUniDereferencer implements UniDereferencer {
         if (didUrl.getFragment() != null && didUrl.getUriWithoutFragment().equals(didUrl.getDid().toUri())) {
             if (log.isDebugEnabled()) log.debug("Dereferencing DID URL with a fragment: " + didUrl);
             JsonLDObject jsonLdObject = JsonLDDereferencer.findByIdInJsonLdObject(didDocument, didUrl.toUri(), didUrl.getDid().toUri());
+            dereferenceResult.setContentType("application/ld+json");
             dereferenceResult.setContentStream(jsonLdObject.toJson().getBytes(StandardCharsets.UTF_8));
             dereferenceResult.setContentMetadata(resolveRepresentationResult.getDidDocumentMetadata());
         }
