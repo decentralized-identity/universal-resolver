@@ -2,38 +2,83 @@ package uniresolver.examples.w3ctestsuite;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DID;
+import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 public class TestSuiteUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    static String makeTestSuiteReport(String expectedOutcome, String function, String didString, String didMethod, Map<String, Object> resolutionOptions, ResolveResult resolveResult) throws Exception {
+    static String makeIdentifierTestSuiteReport(String didMethod, List<String> dids, Map<String, String> didParameters) throws Exception {
 
-        Map<String, Object> expectedOutcomes = new LinkedHashMap<>();
-        expectedOutcomes.put(expectedOutcome, Collections.singletonList(0));
+        Map<String, Object> json = new LinkedHashMap<>();
+        json.put("implementation", "Universal Resolver");
+        json.put("implementer", "Decentralized Identity Foundation and Contributors");
+        json.put("didMethod", didMethod);
+        json.put("dids", dids);
+        json.put("didParameters", didParameters);
 
-        Map<String, Object> input = new LinkedHashMap<>();
-        input.put("did", didString);
-        input.put("resolutionOptions", resolutionOptions);
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+    }
 
-        Map<String, Object> output = resolveResult.toMap();
+    static String makeDidResolutionTestSuiteReport(Map<String, List<Integer>> expectedOutcomes, List<String> function, List<String> didString, String didMethod, List<Map<String, Object>> resolutionOptions, List<ResolveResult> resolveResults) throws Exception {
 
-        Map<String, Object> execution = new LinkedHashMap<>();
-        execution.put("function", function);
-        execution.put("input", input);
-        execution.put("output", output);
+        List<Object> executions = new ArrayList<>();
+
+        for (int i=0; i<function.size(); i++) {
+
+            Map<String, Object> input = new LinkedHashMap<>();
+            input.put("did", didString.get(i));
+            input.put("resolutionOptions", resolutionOptions.get(i));
+
+            Map<String, Object> output = resolveResults.get(i).toMap();
+
+            Map<String, Object> execution = new LinkedHashMap<>();
+            execution.put("function", function.get(i));
+            execution.put("input", input);
+            execution.put("output", output);
+
+            executions.add(execution);
+        }
 
         Map<String, Object> json = new LinkedHashMap<>();
         json.put("implementation", "Universal Resolver");
         json.put("implementer", "Decentralized Identity Foundation and Contributors");
         json.put("didMethod", didMethod);
         json.put("expectedOutcomes", expectedOutcomes);
-        json.put("executions", Collections.singletonList(execution));
+        json.put("executions", executions);
+
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+    }
+
+    static String makeDidUrlDereferencingTestSuiteReport(Map<String, List<Integer>> expectedOutcomes, List<String> function, List<String> didUrlString, String didMethod, Map<String, Object> dereferenceOptions, List<DereferenceResult> dereferenceResults) throws Exception {
+
+        List<Object> executions = new ArrayList<>();
+
+        for (int i=0; i<function.size(); i++) {
+
+            Map<String, Object> input = new LinkedHashMap<>();
+            input.put("didUrl", didUrlString.get(i));
+            input.put("dereferenceOptions", dereferenceOptions);
+
+            Map<String, Object> output = dereferenceResults.get(i).toMap();
+
+            Map<String, Object> execution = new LinkedHashMap<>();
+            execution.put("function", function.get(i));
+            execution.put("input", input);
+            execution.put("output", output);
+
+            executions.add(execution);
+        }
+
+        Map<String, Object> json = new LinkedHashMap<>();
+        json.put("implementation", "Universal Resolver");
+        json.put("implementer", "Decentralized Identity Foundation and Contributors");
+        json.put("didMethod", didMethod);
+        json.put("expectedOutcomes", expectedOutcomes);
+        json.put("executions", executions);
 
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
     }
