@@ -22,7 +22,7 @@ public interface UniResolver extends DIDResolver {
 
 	@Override
 	default public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
-		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
+		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
 		String accept = (String) resolutionOptions.get("accept");
 		if (accept != null) throw new ResolutionException("Unexpected 'accept' provided in 'resolutionOptions' for resolve().");
 		resolutionOptions.put("accept", Representations.DEFAULT_MEDIA_TYPE);
