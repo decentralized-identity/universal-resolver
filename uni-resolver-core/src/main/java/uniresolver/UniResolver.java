@@ -25,6 +25,7 @@ public interface UniResolver extends DIDResolver {
 		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
 		String accept = (String) resolutionOptions.get("accept");
 		if (accept != null) throw new ResolutionException("Unexpected 'accept' provided in 'resolutionOptions' for resolve().");
+		resolutionOptions = new HashMap<>(resolutionOptions);
 		resolutionOptions.put("accept", Representations.DEFAULT_MEDIA_TYPE);
 		ResolveResult resolveRepresentationResult = null;
 		try {
@@ -42,6 +43,7 @@ public interface UniResolver extends DIDResolver {
 		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
 		String accept = (String) resolutionOptions.get("accept");
 		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolveRepresentation().");
+		resolutionOptions = new HashMap<>(resolutionOptions);
 		ResolveResult resolveResult;
 		try {
 			resolveResult = this.resolve(didString, resolutionOptions);
