@@ -42,6 +42,10 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         DereferenceResult dereferenceResult = DereferenceResult.build();
 
+        // check options
+
+        String accept = (String) dereferenceOptions.get("accept");
+
         // parse DID URL
 
         DIDURL didUrl = null;
@@ -55,7 +59,7 @@ public class LocalUniDereferencer implements UniDereferencer {
             String errorMessage = ex.getMessage();
             if (log.isWarnEnabled()) log.warn(errorMessage);
 
-            throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INVALIDDIDURL, errorMessage, (String) dereferenceOptions.get("accept")));
+            throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INVALIDDIDURL, errorMessage, accept));
         }
 
         // resolve DID
@@ -69,6 +73,14 @@ public class LocalUniDereferencer implements UniDereferencer {
             resolveRepresentationResult = this.uniResolver.resolveRepresentation(didUrl.getDid().getDidString(), resolveOptions);
             resolveResult = ResolveResultUtil.convertToResolveResult(resolveRepresentationResult);
         } catch (ResolutionException ex) {
+            if (ex.getResolveResult().isErrorResult()) {
+                if (ResolveResult.ERROR_INVALIDDID.equals(ex.getResolveResult().getError()))
+                    throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INVALIDDIDURL, "Error " + ex.getResolveResult().getError() + " from resolver: " + ex.getResolveResult().getErrorMessage(), accept));
+                else if (ResolveResult.ERROR_NOTFOUND.equals(ex.getResolveResult().getError()))
+                    throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_NOTFOUND, "Error " + ex.getResolveResult().getError() + " from resolver: " + ex.getResolveResult().getErrorMessage(), accept));
+                else
+                    throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INTERNALERROR, "Error " + ex.getResolveResult().getError() + " from resolver: " + ex.getResolveResult().getErrorMessage(), accept));
+            }
             throw new DereferencingException("Cannot resolve DID " + didUrl.getDid().getDidString() + ": " + ex.getMessage(), ex);
         }
 
@@ -89,6 +101,9 @@ public class LocalUniDereferencer implements UniDereferencer {
         if (didUrl.getFragment() != null && didUrl.getUriWithoutFragment().equals(didUrl.getDid().toUri())) {
             if (log.isDebugEnabled()) log.debug("Dereferencing DID URL with a fragment: " + didUrl);
             JsonLDObject jsonLdObject = JsonLDDereferencer.findByIdInJsonLdObject(didDocument, didUrl.toUri(), didUrl.getDid().toUri());
+            if (jsonLdObject == null) {
+                throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_NOTFOUND, "Fragment not found: " + didUrl.getFragment(), accept));
+            }
             dereferenceResult.setContentType("application/ld+json");
             dereferenceResult.setContentStream(jsonLdObject.toJson().getBytes(StandardCharsets.UTF_8));
             dereferenceResult.setContentMetadata(resolveRepresentationResult.getDidDocumentMetadata());
