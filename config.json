@@ -163,10 +163,15 @@
 			"url": "http://schema-registry-did-resolver:8080/",
 			"testIdentifiers": [ "did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J", "did:schema:evan-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J" ]
 		}, {
-			"pattern": "^(did:ion:.+)$",
-			"url": "http://driver-did-ion:8080/",
-			"testIdentifiers": [ "did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w" ]
-		},
+            "pattern": "^(did:ion:test.+)$",
+            "url": "https://dev.discover.did.msidentity.com/",
+            "testIdentifiers": [ "did:ion:test:EiBEYjAmR8mLSBdiAv0tmASmpvQK8_BGe_p4O3s3fTHROA" ]
+       },
+          {
+            "pattern": "^(did:ion:(?!test).+)$",
+            "url": "http://driver-did-ion:8080/",
+            "testIdentifiers": [ "did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w" ]
+          },
 		{
 		  	"pattern": "^(did:ace:.+)$",
 			"url": "http://ace-did-driver:8080/",
