@@ -73,7 +73,7 @@ public class LocalUniDereferencer implements UniDereferencer {
             resolveRepresentationResult = this.uniResolver.resolveRepresentation(didUrl.getDid().getDidString(), resolveOptions);
             resolveResult = ResolveResultUtil.convertToResolveResult(resolveRepresentationResult);
         } catch (ResolutionException ex) {
-            if (ex.getResolveResult().isErrorResult()) {
+            if (ex.getResolveResult() != null && ex.getResolveResult().isErrorResult()) {
                 if (ResolveResult.ERROR_INVALIDDID.equals(ex.getResolveResult().getError()))
                     throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INVALIDDIDURL, "Error " + ex.getResolveResult().getError() + " from resolver: " + ex.getResolveResult().getErrorMessage(), accept));
                 else if (ResolveResult.ERROR_NOTFOUND.equals(ex.getResolveResult().getError()))
