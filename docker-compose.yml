@@ -30,6 +30,10 @@ services:
     image: uport/uni-resolver-driver-did-uport:2.1.0
     ports:
       - "8083:8081"
+  eosio-driver:
+    image: gimlyblockchain/eosio-universal-resolver-driver
+    ports:
+      - "8083:8081"    
   driver-did-stack:
     image: universalresolver/driver-did-stack:latest
     ports:
