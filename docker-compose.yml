@@ -1,7 +1,9 @@
 version: "3.5"
+
 networks:
   default:
     name: universal-resolver
+
 services:
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
@@ -30,10 +32,6 @@ services:
     image: uport/uni-resolver-driver-did-uport:2.1.0
     ports:
       - "8083:8081"
-  eosio-driver:
-    image: gimlyblockchain/eosio-universal-resolver-driver
-    ports:
-      - "8083:8081"    
   driver-did-stack:
     image: universalresolver/driver-did-stack:latest
     ports:
@@ -208,3 +206,8 @@ services:
     image: halialabsdev/emtrust_did_driver:latest
     ports:
       - "8120:8080"
+  eosio-driver:
+    container_name: eosio-driver
+    image: gimlyblockchain/eosio-universal-resolver-driver
+    ports:
+      - "8121:8080"
