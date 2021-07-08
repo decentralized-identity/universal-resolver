@@ -1,0 +1,19 @@
+name: 'uni-resolver-did-test-suite'
+description: 'Run did-test-suite against Universal Resolver deployment'
+inputs:
+  host:
+    description: 'Host of Uni-Resolver deployment'
+    required: false
+  driver_status_report:
+    description: 'File with testset of Uni-resolver response'
+    required: false
+  reports_folder:
+    description: 'Destination folder of reports'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.host }}
+    - ${{ inputs.driver_status_report }}
+    - ${{ inputs.reports_folder }}

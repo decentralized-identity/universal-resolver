@@ -23,6 +23,14 @@
 		<property name="uniResolver" ref="UniResolver" />
 	</bean>
 
+	<bean name="MethodsServlet" class="uniresolver.web.servlet.MethodsServlet">
+		<property name="uniResolver" ref="UniResolver" />
+	</bean>
+
+	<bean name="TestIdentifiersServlet" class="uniresolver.web.servlet.TestIdentifiersServlet">
+		<property name="uniResolver" ref="UniResolver" />
+	</bean>
+
 	<!-- DRIVERS (VIA JAVA API) -->
 
 	<bean id="DidBtcrDriver" class="uniresolver.driver.did.btcr.DidBtcrDriver">

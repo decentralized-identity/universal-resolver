@@ -25,4 +25,4 @@ COPY --from=build /opt/universal-resolver/uni-resolver-web/config.json /var/lib/
 # done
 
 EXPOSE 8080
-CMD java -jar /usr/local/jetty/start.jar -Djetty.http.port=8080
+CMD java -Djetty.http.port=8080 -jar /usr/local/jetty/start.jar

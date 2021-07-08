@@ -1,9 +1,6 @@
 package uniresolver.local.extensions.impl;
 
-import foundation.identity.did.DIDDocument;
-import foundation.identity.did.DIDURL;
-import foundation.identity.did.Service;
-import foundation.identity.did.VerificationMethod;
+import foundation.identity.did.*;
 import foundation.identity.did.parser.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +28,7 @@ public class ServiceParameterExtension extends AbstractParameterExtension implem
 	}
 
 	@Override
-	public ExtensionStatus afterResolve(String identifier, DIDURL didUrl, Map<String, String> options, ResolveResult resolveResult, LocalUniResolver localUniResolver) throws ResolutionException {
+	public ExtensionStatus afterResolve(String identifier, DIDURL didUrl, DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, LocalUniResolver localUniResolver) throws ResolutionException {
 
 		if (didUrl == null) return ExtensionStatus.DEFAULT;
 		if (didUrl.getParameters() == null) return ExtensionStatus.DEFAULT;

@@ -76,6 +76,46 @@ paths:
           description: invalid input!
         '500':
           description: error!
+  /properties:
+    get:
+      summary: Returns a map of properties of the resolver.
+      operationId: properties
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/did+json:
+              schema:
+                type: object
+                description: A map of properties.
+  /methods:
+    get:
+      summary: Returns a list of supported DID methods.
+      operationId: methods
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/did+json:
+              schema:
+                type: array
+                items:
+                  type: string
+                description: The list of supported DID methods.
+                example: ["btcr","sov","v1","key"]
+  /testIdentifiers:
+    get:
+      summary: Returns a list of test identifiers that can be resolved.
+      operationId: testIdentifiers
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/did+json:
+              schema:
+                type: object
+                description: A map of test identifiers, grouped by DID method.
+                example: { "btcr": ["did:btcr:xz35-jznz-q9yu-ply", "did:btcr:xkrn-xz7q-qsye-28p"], "sov": ["did:sov:WRfXPg8dantKVubE3HX8pw"] }
 components:
   schemas:
     ResolutionResult:

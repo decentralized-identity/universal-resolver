@@ -27,7 +27,7 @@ services:
     ports:
       - "8082:8080"
   uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:1.4.0
+    image: uport/uni-resolver-driver-did-uport:2.1.0
     ports:
       - "8083:8081"
   driver-did-stack:
@@ -56,10 +56,6 @@ services:
     image: hacera/hacera-did-driver:latest
     ports:
       - "8089:8080"
-  seraph-id-did-driver:
-    image: swisscomblockchainag/seraph-id-did-driver:latest
-    ports:
-      - "8090:8080"
   driver-did-ccp:
     image: universalresolver/driver-did-ccp:latest
     ports:
@@ -193,14 +189,18 @@ services:
     image: meshplus/driver-did-bitxhub:latest
     ports:
       - "8117:8080"
-  driver-did-solid:
-    image: identitydotcom/driver-did-solid:0.1.0
+  driver-did-sol:
+    image: identitydotcom/driver-did-sol:0.1.0
     ports:
       - "8118:8080"
   driver-did-lit:
-    image: ibct/driver-did-lit:0.1.0
+    image: ibct/driver-did-lit:0.1.1
     environment:
       LEDGIS_LIT_ENDPOINT: ${LEDGIS_LIT_ENDPOINT}
       LEDGIS_LIT_CODE: ${LEDGIS_LIT_CODE}
     ports:
       - "8119:8080"
+  driver-did-emtrust:
+    image: halialabsdev/emtrust_did_driver:latest
+    ports:
+      - "8120:8080"

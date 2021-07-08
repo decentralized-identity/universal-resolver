@@ -1,0 +1,30 @@
+name: 'uni-resolver-get-driver-status'
+description: 'Get driver status for Universal Resolver deployment'
+inputs:
+  host:
+    description: 'Host of Uni-Resolver deployment'
+    required: false
+    default: http://dev.uniresolver.io
+  config:
+    description: 'Uni-Resolver configuration file'
+    required: false
+    default: /github/workspace/config.json
+  out_folder:
+    description: 'Folder location of driver-status-result-<timestamp> file'
+    required: false
+    default: /driver-status
+  debug:
+    description: 'Enhance logging'
+    required: false
+    default: false
+  keep_result:
+    description: 'Keep result file'
+    required: false
+    default: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.host }}
+    - ${{ inputs.config }}
+    - ${{ inputs.out_folder }}
