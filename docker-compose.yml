@@ -89,10 +89,6 @@ services:
       uniresolver_driver_did_echo_devnet_rpc_url: ${uniresolver_driver_did_echo_devnet_rpc_url}
     ports:
       - "8096:8080"
-  driver-did-factom:
-    image: sphereon/driver-did-factom:latest
-    ports:
-      - "8097:8080"
   driver-did-key:
     image: universalresolver/driver-did-key:latest
     ports:
