@@ -223,6 +223,11 @@
 			"pattern": "^(did:meta:.+)$",
 			"url": "https://resolver.metadium.com/1.0/identifiers/$1",
 			"testIdentifiers": [ "did:meta:0000000000000000000000000000000000000000000000000000000000005e65" ]
+		},
+		{
+			"pattern": "^(did:orb:.+)$",
+			"url": "http://orb-did-driver:8121/resolveDID?did=$1",
+			"testIdentifiers": [ "did:orb:ipfs:bafkreifco5fp7ztvqnnvv4aqnnbktuvzhlh5tofr65ahyy37euafoscn7m:EiClaNSwhKSP6tQe36bYc5w41oRpCi1xv89MkUnNBm8agw" ]
 		}
 	]
 }
