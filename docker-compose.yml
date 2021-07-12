@@ -207,3 +207,12 @@ services:
       HOST: 0.0.0.0
     ports:
       - "8121:8080"
+  orb-did-driver:
+    container_name: orb-did-driver
+    image: ghcr.io/trustbloc-cicd/orb-did-driver:v0.1.0-snapshot-894f273
+    environment:
+      ORB_DRIVER_HOST_URL: ${ORB_DRIVER_HOST_URL}
+      ORB_DRIVER_TLS_SYSTEMCERTPOOL: ${ORB_DRIVER_TLS_SYSTEMCERTPOOL}
+    ports:
+      - "8121:8121"
+    command: start
