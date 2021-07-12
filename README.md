@@ -45,7 +45,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:kilt:5CqJa4Ct7oMeMESzehTiN9fwYdGLd7tqeirRMpGDh2XxYYyx
 	curl -X GET http://localhost:8080/1.0/identifiers/did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734
 	curl -X GET http://localhost:8080/1.0/identifiers/did:echo:1.1.25.0
-	curl -X GET http://localhost:8080/1.0/identifiers/did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dock:5FXqofpV7dsuki925U1dSzDvBuQbaci5yWTQGVWRQ7bdQP5p
 	curl -X GET http://localhost:8080/1.0/identifiers/did:abt:z116ygT18P67xBp3scBtZLU6xVoDy268bgnY
 	curl -X GET http://localhost:8080/1.0/identifiers/did:trustbloc:testnet.trustbloc.dev:EiBLTZcCj6u_XsufSuLVh2zbPEREjDcu8bnPgs0XyKkfPQ
@@ -69,6 +68,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ebsi:DfPaUdYwuzcqFoiMDSrUX8aQyZnr2SesH3vDVASYv8PE
 	curl -X GET http://localhost:8080/1.0/identifiers/did:emtrust:0x242a5ac36676462bd58a
 	curl -X GET http://localhost:8080/1.0/identifiers/did:meta:0000000000000000000000000000000000000000000000000000000000005e65
+	curl -X GET http://localhost:8080/1.0/identifiers/did:tz:tz1YwA1FwpgLtc1G8DKbbZ6e6PTb1dQMRn5x
+	curl -X GET http://localhost:8080/1.0/identifiers/did:orb:ipfs:bafkreifco5fp7ztvqnnvv4aqnnbktuvzhlh5tofr65ahyy37euafoscn7m:EiClaNSwhKSP6tQe36bYc5w41oRpCi1xv89MkUnNBm8agw
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
@@ -99,7 +100,6 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-kilt](https://github.com/KILTprotocol/kilt-did-driver) | 1.2.1 | [1.0](https://github.com/KILTprotocol/kilt-did-driver/blob/master/DID%20Method%20Specification.md) | [kiltprotocol/kilt-did-driver](https://hub.docker.com/r/kiltprotocol/kilt-did-driver)| KILT Protocol (SSI credentials)
 | [did-evan](https://github.com/evannetwork/did-driver) | 0.1 | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | [evannetwork/evan-did-driver](https://hub.docker.com/r/evannetwork/evan-did-driver) | evan.network
 | [did-echo](https://github.com/echoprotocol/uni-resolver-driver-did-echo) | 0.0.1 | [1.0](https://github.com/echoprotocol/uni-resolver-driver-did-echo/blob/master/echo_did_specifications.md) | [echoprotocol/uni-resolver-driver-did-echo](https://hub.docker.com/r/echoprotocol/uni-resolver-driver-did-echo) | Echo network (for applications that work with Bitcoin and Ethereum)
-| [did-factom](https://github.com/Sphereon-Opensource/driver-did-factom) | 0.1-SNAPSHOT | [1.0](https://github.com/bi-foundation/FIS/blob/feature/DID/FIS/DID.md) | [sphereon/driver-did-factom](https://hub.docker.com/r/sphereon/driver-did-factom) | Factom blockchain
 | [did-key](https://github.com/decentralized-identity/uni-resolver-driver-did-key) | 1.0.0 | [0.7](https://w3c-ccg.github.io/did-method-key/) | [universalresolver/driver-did-key](https://hub.docker.com/r/universalresolver/driver-did-key) | Public keys (in general)
 | [did-dock](https://github.com/docknetwork/dock-did-driver) | 0.1.0 | [0.1](https://github.com/docknetwork/dock-did-driver/blob/master/Dock%20DID%20method%20specification.md) | [docknetwork/dock-did-driver](https://hub.docker.com/r/docknetwork/dock-did-driver) | Dock verifiable credentials
 | [did-trustbloc](https://github.com/trustbloc/trustbloc-did-method) | 0.1.5 | [0.1](https://github.com/trustbloc/trustbloc-did-method/blob/v0.1.5/docs/spec/trustbloc-did-method.md) | [trustbloc/driver-did-trustbloc](https://github.com/trustbloc/trustbloc-did-method/packages/212043) | TrustBloc consortium verification method
@@ -118,10 +118,13 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-unisot](https://gitlab.com/unisot-did/unisot-did-driver)|1.0.0|[1.0.0](https://gitlab.com/unisot-did/unisot-did-method-specification)|[unisot/unisot-did-driver](https://hub.docker.com/r/unisot/unisot-did-driver) | UNISOT distributed identity system (atop Bitcoin SV blockchain)
 | [did-bitxhub](https://github.com/meshplus/driver-did-bitxhub) | 1.0.0 | (missing) | [meshplus/driver-did-bitxhub](https://hub.docker.com/repository/docker/meshplus/driver-did-bitxhub) |
 | [did-sol](https://github.com/identity-com/sol-did)|1.0.0|[1.0.0](https://github.com/identity-com/sol-did/)|[identitydotcom/driver-did-sol](https://hub.docker.com/r/identitydotcom/driver-did-sol) | Solana blockchain
-| [did-lit](https://github.com/ibct-dev/lit-resolver) | 0.1.0 | [0.1.0](https://github.com/ibct-dev/lit-DID/blob/main/docs/did:lit-method-spec_eng_v0.1.0.md) | [ibct/driver-did-lit](https://hub.docker.com/r/ibct/driver-did-lit) | LEDGIS blockchain
+| [did-lit](https://github.com/ibct-dev/lit-resolver) | 0.1.1 | [0.1.1](https://github.com/ibct-dev/lit-DID/blob/main/docs/did:lit-method-spec_eng_v0.1.1.md) | [ibct/driver-did-lit](https://hub.docker.com/r/ibct/driver-did-lit) | LEDGIS blockchain
 | [did-ebsi](https://api.preprod.ebsi.eu/docs/#/DID%20Registry) | 2.0.0 | 2.0.0 | [URL](https://api.preprod.ebsi.eu/did-registry/v2/identifiers/) | EBSI Platform (European Blockchain Services Infrastructure)
 | [did-emtrust](https://github.com/Halialabs/did-spec) | 0.1| 0.1 | [halialabsdev/emtrust_did_driver](https://hub.docker.com/r/halialabsdev/emtrust_did_driver) | EmTrust WAI distributed identity system
 | [did-meta](https://github.com/METADIUM/meta-DID/blob/master/doc/DID-method-metadium.md) | 1.0 | 1.0 | [URL](https://resolver.metadium.com/1.0/identifiers/) | Metadium Decentralized Identifiers
+| [did-tz](https://github.com/spruceid/ssi/tree/main/did-tezos/) | 0.1.0 | [1.0 CR Draft 20210627](https://www.w3.org/TR/2021/CRD-did-core-20210627/) | [0.1](https://did-tezos.spruceid.com/) | [ghcr.io/spruceid/didkit-http](https://github.com/orgs/spruceid/packages/container/package/didkit-http)
+| [did-orb](https://github.com/trustbloc/orb) | 0.1.1 | [0.1](https://trustbloc.github.io/did-method-orb/) | [trustbloc/orb-did-driver](https://github.com/orgs/trustbloc-cicd/packages/container/package/orb-did-driver)
+
 
 ## More Information
 
