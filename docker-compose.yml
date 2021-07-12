@@ -200,6 +200,13 @@ services:
     image: halialabsdev/emtrust_did_driver:latest
     ports:
       - "8120:8080"
+  driver-didkit:
+    image: ghcr.io/spruceid/didkit-http:latest
+    environment:
+      PORT: 8080
+      HOST: 0.0.0.0
+    ports:
+      - "8121:8080"
   orb-did-driver:
     container_name: orb-did-driver
     image: ghcr.io/trustbloc-cicd/orb-did-driver:v0.1.0-snapshot-894f273

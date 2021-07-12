@@ -108,7 +108,7 @@
 			"url": "http://uni-resolver-driver-did-echo:8080/",
 			"testIdentifiers": [ "did:echo:1.1.25.0" ]
 		}, {
-			"pattern": "^(did:key:.+)$",
+			"pattern": "^(did:key:z6Mk.+)$",
 			"url": "http://driver-did-key:8080/",
 			"testIdentifiers": [ "did:key:z6Mkfriq1MqLBoPWecGoDLjguo1sB9brj6wT3qZ5BxkKpuP6", "did:key:z6MksQ35B5bwZDQq4QKuhQW2Sv6dcqwg4PqcSFf67pdgrtjB", "did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH" ]
 		}, {
@@ -225,6 +225,16 @@
 			"testIdentifiers": [ "did:meta:0000000000000000000000000000000000000000000000000000000000005e65" ]
 		},
 		{
+			"pattern": "^did:(?:tz:|web:|key:(?:z6Mk|zQ3s|zDna)).+$",
+			"url": "http://driver-didkit:8080/identifiers/$1",
+			"testIdentifiers": [
+				"did:tz:tz1YwA1FwpgLtc1G8DKbbZ6e6PTb1dQMRn5x",
+				"did:tz:delphinet:tz1WvvbEGpBXGeTVbLiR6DYBe1izmgiYuZbq",
+				"did:web:identity.foundation",
+				"did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH",
+				"did:key:zQ3shokFTS3brHcDQrn82RUDfCZESWL1ZdCEJwekUDPQiYBme",
+				"did:key:zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169"
+			]
 			"pattern": "^(did:orb:.+)$",
 			"url": "http://orb-did-driver:8121/resolveDID?did=$1",
 			"testIdentifiers": [ "did:orb:ipfs:bafkreifco5fp7ztvqnnvv4aqnnbktuvzhlh5tofr65ahyy37euafoscn7m:EiClaNSwhKSP6tQe36bYc5w41oRpCi1xv89MkUnNBm8agw" ]
