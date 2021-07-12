@@ -1,7 +1,9 @@
 version: "3.5"
+
 networks:
   default:
     name: universal-resolver
+
 services:
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
@@ -216,3 +218,8 @@ services:
     ports:
       - "8121:8121"
     command: start
+  eosio-driver:
+    container_name: eosio-driver
+    image: gimlyblockchain/eosio-universal-resolver-driver
+    ports:
+      - "8122:8080"
