@@ -1,3 +1,9 @@
+driver-didkit:
+  env:
+    - name: PORT
+      value: 8080
+    - name: HOST
+      value: 0.0.0.0
 driver-did-trustbloc:
   command: ['sh', '-c', 'did-method start']
   env:
