@@ -1,11 +1,11 @@
-# Universal Resolver — Development System
+# Universal Resolver — Development Instance
 
-The dev-system or the sandbox installation, which runs the latest code-base of the Universal Resolver project, is hosted at:
+The development instance, which runs the latest code-base of the Universal Resolver project, is hosted at:
 
 https://dev.uniresolver.io
 
 The drivers are exposed by their subdomains (DID method-names). For example: btcr.dev.uniresolver.io 
-> Note for driver-developers: The subdomains are automatically generated based on the Docker image tag e.g.: driver-did-btcr, which consequently must have the DID-method name as part of the tag-name (pattern:  driver-di-`<DID method name>`). 
+> Note for driver-developers: The subdomains are automatically generated based on the Docker image tag e.g.: driver-did-btcr, which consequently must have the DID-method name as part of the tag-name (pattern:  driver-did-`<DID method name>`). 
 
 DIDs can be resolved by calling the resolver:
 
@@ -23,9 +23,9 @@ We are using two `m5.large` instances (2 vCPU / 8GB RAM) due to the limitations 
 
 ## AWS Architecture
 
-This picture illustrates the AWS architecture for hosting the Universal resolver as well as the traffic-flow through the system.
+This picture illustrates the AWS architecture for hosting the Universal Resolver as well as the traffic-flow through the system.
 
-<p align="center"><img src="figures/aws-architecture.png" width="75%"></p>
+<p align="center"><img src="../figures/aws-architecture.png" width="75%"></p>
 
 The entry-point to the system is the public Internet facing Application Load Balancer (ALB), that sits at the edge of the AWS cloud and is bound to the DNS name “dev.uniresolver.io”. When resolving DIDs the traffic flows through the ALB to the resolver. Based on the configuration of each DID-method the resolver calls the corresponding DID-driver (typical scenario) or may call another HTTP endpoint (another resolver or directly the DLT if HTTP is supported). In order to gain performance, blockchain nodes may also be added to the deployment, as sketched at Driver C.
 
