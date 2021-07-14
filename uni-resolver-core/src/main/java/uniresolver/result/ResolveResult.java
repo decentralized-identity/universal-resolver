@@ -6,11 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DIDDocument;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import uniresolver.ResolutionException;
+import uniresolver.util.ResolveResultUtil;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @JsonPropertyOrder({ "didResolutionMetadata", "didDocument", "didDocumentStream", "didDocumentMetadata" })
@@ -18,6 +21,11 @@ import java.util.Map;
 public class ResolveResult {
 
 	public static final String MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
+
+	public static final String ERROR_INVALIDDID = "invalidDid";
+	public static final String ERROR_NOTFOUND = "notFound";
+	public static final String ERROR_REPRESENTATIONNOTSUPPORTED = "representationNotSupported";
+	public static final String ERROR_INTERNALERROR = "internalError";
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -57,55 +65,62 @@ public class ResolveResult {
 		return new ResolveResult(null, null, null, null);
 	}
 
-	/*
-	 * Helper classes
-	 */
+	public static ResolveResult makeErrorResolveResult(String error, String errorMessage) {
+		ResolveResult resolveResult = ResolveResult.build();
+		resolveResult.setDidDocument(null);
+		resolveResult.setError(error == null ? ERROR_INTERNALERROR : error);
+		if (errorMessage != null) resolveResult.setErrorMessage(errorMessage);
+		return resolveResult;
+	}
 
-	public enum Error {
-		invalidDid,
-		notFound,
-		representationNotSupported,
-		internalError
+	public static ResolveResult makeErrorResolveRepresentationResult(String error, String errorMessage, String mediaType) {
+		try {
+			return ResolveResultUtil.convertToResolveRepresentationResult(makeErrorResolveResult(error, errorMessage), mediaType);
+		} catch (ResolutionException ex) {
+			throw new IllegalArgumentException(ex.getMessage(), ex);
+		}
 	}
 
 	/*
 	 * Helper methods
 	 */
 
-	public static ResolveResult makeErrorResult(Error error, String errorMessage, String contentType) {
-		ResolveResult resolveResult = ResolveResult.build();
-		resolveResult.setError(error.name());
-		if (errorMessage != null) resolveResult.setErrorMessage(errorMessage);
-		if (contentType != null) {
-			resolveResult.getDidResolutionMetadata().put("contentType", contentType);
-			resolveResult.setDidDocumentStream(new byte[0]);
-		}
-		return resolveResult;
-	}
-
 	@JsonIgnore
 	public boolean isErrorResult() {
-		return this.getDidResolutionMetadata() != null && this.getDidResolutionMetadata().containsKey("error");
-	}
-
-	@JsonIgnore
-	public void setError(String error) {
-		this.getDidResolutionMetadata().put("error", error);
+		return this.getError() != null;
 	}
 
 	@JsonIgnore
 	public String getError() {
-		return (String) this.getDidResolutionMetadata().get("error");
+		return this.getDidResolutionMetadata() == null ? null : (String) this.getDidResolutionMetadata().get("error");
 	}
 
 	@JsonIgnore
-	public void setErrorMessage(String errorMessage) {
-		this.getDidResolutionMetadata().put("errorMessage", errorMessage);
+	public void setError(String error) {
+		if (this.getDidResolutionMetadata() == null) this.setDidResolutionMetadata(new HashMap<>());
+		this.getDidResolutionMetadata().put("error", error);
 	}
 
 	@JsonIgnore
 	public String getErrorMessage() {
-		return (String) this.getDidResolutionMetadata().get("errorMessage");
+		return this.getDidResolutionMetadata() == null ? null : (String) this.getDidResolutionMetadata().get("errorMessage");
+	}
+
+	@JsonIgnore
+	public void setErrorMessage(String errorMessage) {
+		if (this.getDidResolutionMetadata() == null) this.setDidResolutionMetadata(new HashMap<>());
+		this.getDidResolutionMetadata().put("errorMessage", errorMessage);
+	}
+
+	@JsonIgnore
+	public String getContentType() {
+		return this.getDidResolutionMetadata() == null ? null : (String) this.getDidResolutionMetadata().get("contentType");
+	}
+
+	@JsonIgnore
+	public void setContentType(String contentType) {
+		if (this.getDidResolutionMetadata() == null) this.setDidResolutionMetadata(new HashMap<>());
+		this.getDidResolutionMetadata().put("contentType", contentType);
 	}
 
 	/*
@@ -121,7 +136,7 @@ public class ResolveResult {
 	}
 
 	public Map<String, Object> toMap() {
-		return objectMapper.convertValue(this, Map.class);
+		return objectMapper.convertValue(this, LinkedHashMap.class);
 	}
 
 	public String toJson() {
@@ -129,6 +144,14 @@ public class ResolveResult {
 			return objectMapper.writeValueAsString(this);
 		} catch (JsonProcessingException ex) {
 			throw new RuntimeException("Cannot write JSON: " + ex.getMessage(), ex);
+		}
+	}
+
+	private static boolean isJson(byte[] bytes) {
+		try {
+			return objectMapper.getFactory().createParser(bytes).readValueAsTree() != null;
+		} catch (IOException ex) {
+			return false;
 		}
 	}
 
@@ -163,7 +186,15 @@ public class ResolveResult {
 
 	@JsonGetter("didDocumentStream")
 	public final String getDidDocumentStreamAsString() {
-		return this.getDidDocumentStream() == null ? null : new String(this.getDidDocumentStream(), StandardCharsets.UTF_8);
+		if (this.getDidDocumentStream() == null) {
+			return null;
+		} else {
+			if (isJson(this.getDidDocumentStream())) {
+				return new String(this.getDidDocumentStream(), StandardCharsets.UTF_8);
+			} else {
+				return Hex.encodeHexString(this.getDidDocumentStream());
+			}
+		}
 	}
 
 	@JsonIgnore
@@ -173,7 +204,15 @@ public class ResolveResult {
 
 	@JsonSetter("didDocumentStream")
 	public final void setDidDocumentStreamAsString(String didDocumentStream) throws DecoderException {
-		this.setDidDocumentStream(didDocumentStream == null ? null : Hex.decodeHex(didDocumentStream));
+		if (didDocumentStream == null) {
+			this.setDidDocumentStream(null);
+		} else {
+			try {
+				this.setDidDocumentStream(Hex.decodeHex(didDocumentStream));
+			} catch (DecoderException ex) {
+				this.setDidDocumentStream(didDocumentStream.getBytes(StandardCharsets.UTF_8));
+			}
+		}
 	}
 
 	@JsonGetter

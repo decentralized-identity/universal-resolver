@@ -1,5 +1,6 @@
 package uniresolver;
 
+import foundation.identity.did.representations.Representations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.result.ResolveResult;
@@ -21,7 +22,11 @@ public interface UniResolver extends DIDResolver {
 
 	@Override
 	default public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
-		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
+		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
+		String accept = (String) resolutionOptions.get("accept");
+		if (accept != null) throw new ResolutionException("Unexpected 'accept' provided in 'resolutionOptions' for resolve().");
+		resolutionOptions = new HashMap<>(resolutionOptions);
+		resolutionOptions.put("accept", Representations.DEFAULT_MEDIA_TYPE);
 		ResolveResult resolveRepresentationResult = null;
 		try {
 			resolveRepresentationResult = this.resolveRepresentation(didString, resolutionOptions);
@@ -38,6 +43,7 @@ public interface UniResolver extends DIDResolver {
 		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
 		String accept = (String) resolutionOptions.get("accept");
 		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolveRepresentation().");
+		resolutionOptions = new HashMap<>(resolutionOptions);
 		ResolveResult resolveResult;
 		try {
 			resolveResult = this.resolve(didString, resolutionOptions);

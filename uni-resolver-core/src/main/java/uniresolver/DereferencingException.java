@@ -29,6 +29,10 @@ public class DereferencingException extends Exception {
 		super(ex);
 	}
 
+	/*
+	 * Getters and setters
+	 */
+
 	public DereferenceResult getDereferenceResult() {
 		return this.dereferenceResult;
 	}

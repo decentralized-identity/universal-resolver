@@ -77,6 +77,8 @@ public class ClientUniResolver implements UniResolver {
 		List<String> acceptMediaTypes = Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
 
+		if (log.isDebugEnabled()) log.debug("Setting Accept: header to " + acceptMediaTypesString);
+
 		// prepare HTTP request
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
@@ -86,43 +88,52 @@ public class ClientUniResolver implements UniResolver {
 
 		ResolveResult resolveResult = null;
 
-		if (log.isDebugEnabled()) log.debug("Request for DID " + didString + " to: " + uriString);
+		if (log.isDebugEnabled()) log.debug("Request for DID " + didString + " to " + uriString + " with Accept: header " + acceptMediaTypesString);
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
 			// execute HTTP request
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
-			ContentType contentType = ContentType.get(httpResponse.getEntity());
-			Charset charset = (contentType != null && contentType.getCharset() != null) ? contentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
+			int httpStatusCode = httpResponse.getStatusLine().getStatusCode();
+			String httpStatusMessage = httpResponse.getStatusLine().getReasonPhrase();
+			ContentType httpContentType = ContentType.get(httpResponse.getEntity());
+			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
 
-			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
-			if (log.isDebugEnabled()) log.debug("Response content type from " + uriString + ": " + contentType + " / " + charset);
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + httpStatusCode + " " + httpStatusMessage);
+			if (log.isDebugEnabled()) log.debug("Response content type from " + uriString + ": " + httpContentType + " / " + httpCharset);
 
 			// read result
 
 			byte[] httpBodyBytes = EntityUtils.toByteArray(httpEntity);
-			String httpBodyString = new String(httpBodyBytes, charset);
+			String httpBodyString = new String(httpBodyBytes, httpCharset);
 			EntityUtils.consume(httpEntity);
 
 			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBodyString);
 
-			if ((contentType != null && HttpBindingUtil.isResolveResultContentType(contentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
+			if ((httpContentType != null && HttpBindingUtil.isResolveResultContentType(httpContentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
 				resolveResult = HttpBindingUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
-			if (statusCode != 200 && resolveResult == null) {
-				throw new ResolutionException("Cannot retrieve result for " + didString + ": " + statusCode + " " + statusMessage + " (" + httpBodyString + ")");
+			if (httpStatusCode == 404 && resolveResult == null) {
+				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
+			}
+
+			if (httpStatusCode == 406 && resolveResult == null) {
+				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
+			}
+
+			if (httpStatusCode != 200 && resolveResult == null) {
+				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Cannot retrieve result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
 			}
 
 			if (resolveResult != null && resolveResult.isErrorResult()) {
+				if (log.isWarnEnabled()) log.warn(resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
 				throw new ResolutionException(resolveResult);
 			}
 
 			if (resolveResult == null) {
-				resolveResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, contentType);
+				resolveResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
 			}
 		} catch (ResolutionException ex) {
 

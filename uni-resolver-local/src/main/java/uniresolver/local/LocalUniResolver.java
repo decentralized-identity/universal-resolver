@@ -124,6 +124,10 @@ public class LocalUniResolver implements UniResolver {
 		ResolveResult resolveResult = ResolveResult.build();
 		ExtensionStatus extensionStatus = new ExtensionStatus();
 
+		// check options
+
+		String accept = (String) resolutionOptions.get("accept");
+
 		// parse DID
 
 		DID did = null;
@@ -134,13 +138,13 @@ public class LocalUniResolver implements UniResolver {
 			if (log.isDebugEnabled()) log.debug("DID " + didString + " is valid: " + did);
 		} catch (IllegalArgumentException | ParserException ex) {
 
-			String errorMessage = "DID " + didString + " is not valid: " + ex.getMessage();
+			String errorMessage = ex.getMessage();
 			if (log.isWarnEnabled()) log.warn(errorMessage);
 
 			if (resolveRepresentation) {
-				throw new ResolutionException(ResolveResult.makeErrorResult(ResolveResult.Error.invalidDid, errorMessage, (String) resolutionOptions.get("accept")));
+				throw new ResolutionException(ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INVALIDDID, errorMessage, accept));
 			} else {
-				throw new ResolutionException(ResolveResult.makeErrorResult(ResolveResult.Error.invalidDid, errorMessage, null));
+				throw new ResolutionException(ResolveResult.makeErrorResolveResult(ResolveResult.ERROR_INVALIDDID, errorMessage));
 			}
 		}
 

@@ -1,7 +1,9 @@
 version: "3.5"
+
 networks:
   default:
     name: universal-resolver
+
 services:
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
@@ -89,10 +91,6 @@ services:
       uniresolver_driver_did_echo_devnet_rpc_url: ${uniresolver_driver_did_echo_devnet_rpc_url}
     ports:
       - "8096:8080"
-  driver-did-factom:
-    image: sphereon/driver-did-factom:latest
-    ports:
-      - "8097:8080"
   driver-did-key:
     image: universalresolver/driver-did-key:latest
     ports:
@@ -194,7 +192,7 @@ services:
     ports:
       - "8118:8080"
   driver-did-lit:
-    image: ibct/driver-did-lit:0.1.0
+    image: ibct/driver-did-lit:0.1.1
     environment:
       LEDGIS_LIT_ENDPOINT: ${LEDGIS_LIT_ENDPOINT}
       LEDGIS_LIT_CODE: ${LEDGIS_LIT_CODE}
@@ -204,3 +202,24 @@ services:
     image: halialabsdev/emtrust_did_driver:latest
     ports:
       - "8120:8080"
+  driver-didkit:
+    image: ghcr.io/spruceid/didkit-http:latest
+    environment:
+      PORT: 8080
+      HOST: 0.0.0.0
+    ports:
+      - "8121:8080"
+  orb-did-driver:
+    container_name: orb-did-driver
+    image: ghcr.io/trustbloc-cicd/orb-did-driver:v0.1.0-snapshot-894f273
+    environment:
+      ORB_DRIVER_HOST_URL: ${ORB_DRIVER_HOST_URL}
+      ORB_DRIVER_TLS_SYSTEMCERTPOOL: ${ORB_DRIVER_TLS_SYSTEMCERTPOOL}
+    ports:
+      - "8121:8121"
+    command: start
+  eosio-driver:
+    container_name: eosio-driver
+    image: gimlyblockchain/eosio-universal-resolver-driver
+    ports:
+      - "8122:8080"

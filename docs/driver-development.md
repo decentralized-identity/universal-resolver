@@ -49,7 +49,6 @@ Create a PR that edits the following files in the Universal Resolver root direct
 - `README.md` (insert a line to the driver table)
   * driver name (e.g. `did-example`), with link to driver source code
   * driver version (e.g. `0.1`), should match Docker image version
-  * DID spec version that the driver conforms to, with link to DID spec
   * DID method spec version (e.g. `0.1`), with link to DID method spec (or mark "missing")
   * Docker image name (e.g. `exampleorg/uni-resolver-driver-did-example`) with link to hosted Docker image
   * contact information

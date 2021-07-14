@@ -16,7 +16,8 @@ public class TestClientUniResolver {
 		ClientUniResolver uniResolver = new ClientUniResolver();
 		uniResolver.setResolveUri("http://localhost:8080/1.0/identifiers/");
 
-		ResolveResult resolveResult = uniResolver.resolveRepresentation("did:sov:WRfXPg8dantKVubE3HX8pw", resolveOptions);
+		ResolveResult resolveResult = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw", resolveOptions);
 		System.out.println(resolveResult.toJson());
+		System.out.println(resolveResult.getDidDocument().toJson());
 	}
 }

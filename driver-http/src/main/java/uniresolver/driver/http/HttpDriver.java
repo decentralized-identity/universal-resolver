@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
+import uniresolver.driver.util.HttpBindingServerUtil;
 import uniresolver.result.ResolveResult;
 import uniresolver.util.HttpBindingUtil;
 
@@ -100,6 +101,8 @@ public class HttpDriver implements Driver {
 		List<String> acceptMediaTypes = Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
 
+		if (log.isDebugEnabled()) log.debug("Setting Accept: header to " + acceptMediaTypesString);
+
 		// prepare HTTP request
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
@@ -109,52 +112,52 @@ public class HttpDriver implements Driver {
 
 		ResolveResult resolveResult = null;
 
-		if (log.isDebugEnabled()) log.debug("Driver request for DID " + did + " to: " + uriString);
+		if (log.isDebugEnabled()) log.debug("Driver request for DID " + did + " to " + uriString + " with Accept: header " + acceptMediaTypesString);
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
 			// execute HTTP request
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
-			ContentType contentType = ContentType.get(httpResponse.getEntity());
-			Charset charset = (contentType != null && contentType.getCharset() != null) ? contentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
+			int httpStatusCode = httpResponse.getStatusLine().getStatusCode();
+			String httpStatusMessage = httpResponse.getStatusLine().getReasonPhrase();
+			ContentType httpContentType = ContentType.get(httpResponse.getEntity());
+			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
 
-			if (log.isDebugEnabled()) log.debug("Driver response status from " + uriString + ": " + statusCode + " " + statusMessage);
-			if (log.isDebugEnabled()) log.debug("Driver response content type from " + uriString + ": " + contentType + " / " + charset);
+			if (log.isDebugEnabled()) log.debug("Driver response status from " + uriString + ": " + httpStatusCode + " " + httpStatusMessage);
+			if (log.isDebugEnabled()) log.debug("Driver response content type from " + uriString + ": " + httpContentType + " / " + httpCharset);
 
 			// read result
 
 			byte[] httpBodyBytes = EntityUtils.toByteArray(httpEntity);
-			String httpBodyString = new String(httpBodyBytes, charset);
+			String httpBodyString = new String(httpBodyBytes, httpCharset);
 			EntityUtils.consume(httpEntity);
 
 			if (log.isDebugEnabled()) log.debug("Driver response body from " + uriString + ": " + httpBodyString);
 
-			if ((contentType != null && HttpBindingUtil.isResolveResultContentType(contentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
+			if ((httpContentType != null && HttpBindingUtil.isResolveResultContentType(httpContentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
 				resolveResult = HttpBindingUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
-			if (statusCode == 404 && resolveResult == null) {
-				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.notFound, statusCode + " " + statusMessage + " (" + httpBodyString + ")", accept);
+			if (httpStatusCode == 404 && resolveResult == null) {
+				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
 			}
 
-			if (statusCode == 406 && resolveResult == null) {
-				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.representationNotSupported, statusCode + " " + statusMessage + " (" + httpBodyString + ")", accept);
+			if (httpStatusCode == 406 && resolveResult == null) {
+				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
 			}
 
-			if (statusCode != 200 && resolveResult == null) {
-				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.internalError, "Driver cannot retrieve result for " + did + ": " + statusCode + " " + statusMessage + " (" + httpBodyString + ")", accept);
-				if (log.isWarnEnabled()) log.warn("Driver cannot retrieve result for " + did + " from " + uriString + ": " + resolveResult.getError() + " - " + resolveResult.getErrorMessage());
+			if (httpStatusCode != 200 && resolveResult == null) {
+				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Driver cannot retrieve result for " + did + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
 			}
 
 			if (resolveResult != null && resolveResult.isErrorResult()) {
+				if (log.isWarnEnabled()) log.warn(resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
 				throw new ResolutionException(resolveResult);
 			}
 
 			if (resolveResult == null) {
-				resolveResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, contentType);
+				resolveResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
 			}
 		} catch (ResolutionException ex) {
 
@@ -241,7 +244,7 @@ public class HttpDriver implements Driver {
 				throw new ResolutionException(httpBody);
 			}
 
-			properties = (Map<String, Object>) objectMapper.readValue(httpBody, Map.class);
+			properties = (Map<String, Object>) objectMapper.readValue(httpBody, LinkedHashMap.class);
 		} catch (IOException ex) {
 
 			throw new ResolutionException("Cannot retrieve DRIVER PROPERTIES from " + uriString + ": " + ex.getMessage(), ex);

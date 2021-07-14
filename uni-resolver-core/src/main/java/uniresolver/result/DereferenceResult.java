@@ -1,6 +1,7 @@
 package uniresolver.result;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.DecoderException;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @JsonPropertyOrder({ "dereferencingMetadata", "contentStream", "contentMetadata" })
@@ -17,6 +19,10 @@ import java.util.Map;
 public class DereferenceResult {
 
 	public static final String MIME_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
+
+	public static final String ERROR_INVALIDDIDURL = "invalidDidUrl";
+	public static final String ERROR_NOTFOUND = "notFound";
+	public static final String ERROR_INTERNALERROR = "internalError";
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -52,63 +58,54 @@ public class DereferenceResult {
 		return new DereferenceResult(null, null, null);
 	}
 
-	/*
-	 * Helper classes
-	 */
-
-	public enum Error {
-		invalidDidUrl,
-		notFound,
-		internalError
+	public static DereferenceResult makeErrorDereferenceResult(String error, String errorMessage, String contentType) {
+		DereferenceResult dereferenceResult = DereferenceResult.build();
+		dereferenceResult.setError(error == null ? ERROR_INTERNALERROR : error);
+		if (errorMessage != null) dereferenceResult.setErrorMessage(errorMessage);
+		dereferenceResult.setContentType(contentType);
+		dereferenceResult.setContentStream(new byte[0]);
+		return dereferenceResult;
 	}
 
 	/*
 	 * Helper methods
 	 */
 
-	public static DereferenceResult makeErrorResult(Error error, String errorMessage, String contentType) {
-		DereferenceResult dereferenceResult = DereferenceResult.build();
-		dereferenceResult.setError(error.name());
-		if (errorMessage != null) dereferenceResult.setErrorMessage(errorMessage);
-		if (contentType != null) {
-			dereferenceResult.getDereferencingMetadata().put("contentType", contentType);
-			dereferenceResult.setContentStream(new byte[0]);
-		}
-		return dereferenceResult;
-	}
-
 	@JsonIgnore
 	public boolean isErrorDereferenceResult() {
-		return this.getDereferencingMetadata() != null && this.getDereferencingMetadata().containsKey("error");
-	}
-
-	@JsonIgnore
-	public void setError(String error) {
-		this.getDereferencingMetadata().put("error", error);
+		return this.getError() != null;
 	}
 
 	@JsonIgnore
 	public String getError() {
-		return (String) this.getDereferencingMetadata().get("error");
+		return this.getDereferencingMetadata() == null ? null : (String) this.getDereferencingMetadata().get("error");
 	}
 
 	@JsonIgnore
-	public void setErrorMessage(String errorMessage) {
-		this.getDereferencingMetadata().put("errorMessage", errorMessage);
+	public void setError(String error) {
+		if (this.getDereferencingMetadata() == null) this.setDereferencingMetadata(new HashMap<>());
+		this.getDereferencingMetadata().put("error", error);
 	}
 
 	@JsonIgnore
 	public String getErrorMessage() {
-		return (String) this.getDereferencingMetadata().get("errorMessage");
+		return this.getDereferencingMetadata() == null ? null : (String) this.getDereferencingMetadata().get("errorMessage");
+	}
+
+	@JsonIgnore
+	public void setErrorMessage(String errorMessage) {
+		if (this.getDereferencingMetadata() == null) this.setDereferencingMetadata(new HashMap<>());
+		this.getDereferencingMetadata().put("errorMessage", errorMessage);
 	}
 
 	@JsonIgnore
 	public String getContentType() {
-		return (String) this.getDereferencingMetadata().get("contentType");
+		return this.getDereferencingMetadata() == null ? null : (String) this.getDereferencingMetadata().get("contentType");
 	}
 
 	@JsonIgnore
 	public void setContentType(String contentType) {
+		if (this.getDereferencingMetadata() == null) this.setDereferencingMetadata(new HashMap<>());
 		this.getDereferencingMetadata().put("contentType", contentType);
 	}
 
@@ -125,7 +122,7 @@ public class DereferenceResult {
 	}
 
 	public Map<String, Object> toMap() {
-		return objectMapper.convertValue(this, Map.class);
+		return objectMapper.convertValue(this, LinkedHashMap.class);
 	}
 
 	public String toJson() {
@@ -133,6 +130,14 @@ public class DereferenceResult {
 			return objectMapper.writeValueAsString(this);
 		} catch (JsonProcessingException ex) {
 			throw new RuntimeException("Cannot write JSON: " + ex.getMessage(), ex);
+		}
+	}
+
+	private static boolean isJson(byte[] bytes) {
+		try {
+			return objectMapper.getFactory().createParser(bytes).readValueAsTree() != null;
+		} catch (IOException ex) {
+			return false;
 		}
 	}
 
@@ -157,7 +162,15 @@ public class DereferenceResult {
 
 	@JsonGetter("contentStream")
 	public final String getContentStreamAsString() {
-		return this.getContentStream() == null ? null : new String(this.getContentStream(), StandardCharsets.UTF_8);
+		if (this.getContentStream() == null) {
+			return null;
+		} else {
+			if (isJson(this.getContentStream())) {
+				return new String(this.getContentStream(), StandardCharsets.UTF_8);
+			} else {
+				return Hex.encodeHexString(this.getContentStream());
+			}
+		}
 	}
 
 	@JsonIgnore
@@ -166,8 +179,16 @@ public class DereferenceResult {
 	}
 
 	@JsonSetter("contentStream")
-	public final void setDidDocumentStreamAsString(String contentStream) throws DecoderException {
-		this.setContentStream(contentStream == null ? null : Hex.decodeHex(contentStream));
+	public final void setContentStreamAsString(String contentStream) {
+		if (contentStream == null) {
+			this.setContentStream(null);
+		} else {
+			try {
+				this.setContentStream(Hex.decodeHex(contentStream));
+			} catch (DecoderException ex) {
+				this.setContentStream(contentStream.getBytes(StandardCharsets.UTF_8));
+			}
+		}
 	}
 
 	@JsonGetter

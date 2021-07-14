@@ -13,6 +13,7 @@ import uniresolver.UniDereferencer;
 import uniresolver.UniResolver;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
+import uniresolver.util.ResolveResultUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -41,6 +42,10 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         DereferenceResult dereferenceResult = DereferenceResult.build();
 
+        // check options
+
+        String accept = (String) dereferenceOptions.get("accept");
+
         // parse DID URL
 
         DIDURL didUrl = null;
@@ -51,21 +56,31 @@ public class LocalUniDereferencer implements UniDereferencer {
             if (log.isDebugEnabled()) log.debug("DID URL " + didUrlString + " is valid: " + didUrl);
         } catch (IllegalArgumentException | ParserException ex) {
 
-            String errorMessage = "DID URL " + didUrlString + " is not valid: " + ex.getMessage();
+            String errorMessage = ex.getMessage();
             if (log.isWarnEnabled()) log.warn(errorMessage);
 
-            throw new DereferencingException(DereferenceResult.makeErrorResult(DereferenceResult.Error.invalidDidUrl, errorMessage, (String) dereferenceOptions.get("accept")));
+            throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INVALIDDIDURL, errorMessage, accept));
         }
 
         // resolve DID
 
-        Map<String, Object> resolveOptions = new HashMap<>();
-        if (dereferenceOptions.containsKey("accept")) resolveOptions.put("accept", dereferenceOptions.get("accept"));
+        Map<String, Object> resolveOptions = new HashMap<>(dereferenceOptions);
 
-        ResolveResult resolveResult = null;
+        ResolveResult resolveRepresentationResult;
+        ResolveResult resolveResult;
+
         try {
-            resolveResult = this.uniResolver.resolve(didUrl.getDid().getDidString(), resolveOptions);
+            resolveRepresentationResult = this.uniResolver.resolveRepresentation(didUrl.getDid().getDidString(), resolveOptions);
+            resolveResult = ResolveResultUtil.convertToResolveResult(resolveRepresentationResult);
         } catch (ResolutionException ex) {
+            if (ex.getResolveResult() != null && ex.getResolveResult().isErrorResult()) {
+                if (ResolveResult.ERROR_INVALIDDID.equals(ex.getResolveResult().getError()))
+                    throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INVALIDDIDURL, "Error " + ex.getResolveResult().getError() + " from resolver: " + ex.getResolveResult().getErrorMessage(), accept));
+                else if (ResolveResult.ERROR_NOTFOUND.equals(ex.getResolveResult().getError()))
+                    throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_NOTFOUND, "Error " + ex.getResolveResult().getError() + " from resolver: " + ex.getResolveResult().getErrorMessage(), accept));
+                else
+                    throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INTERNALERROR, "Error " + ex.getResolveResult().getError() + " from resolver: " + ex.getResolveResult().getErrorMessage(), accept));
+            }
             throw new DereferencingException("Cannot resolve DID " + didUrl.getDid().getDidString() + ": " + ex.getMessage(), ex);
         }
 
@@ -73,21 +88,25 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         // dereference
 
-        if (resolveResult.getDidResolutionMetadata().containsKey("contentType")) {
-            dereferenceResult.getDereferencingMetadata().put("contentType", (String) resolveResult.getDidResolutionMetadata().get("contentType"));
+        if (resolveRepresentationResult.getDidResolutionMetadata().containsKey("contentType")) {
+            dereferenceResult.getDereferencingMetadata().put("contentType", resolveRepresentationResult.getContentType());
         }
 
         if (didUrl.isBareDid()) {
             if (log.isDebugEnabled()) log.debug("Dereferencing DID URL that is a bare DID: " + didUrl);
-            dereferenceResult.setContentStream(resolveResult.getDidDocumentStream());
-            dereferenceResult.setContentMetadata(resolveResult.getDidDocumentMetadata());
+            dereferenceResult.setContentStream(resolveRepresentationResult.getDidDocumentStream());
+            dereferenceResult.setContentMetadata(resolveRepresentationResult.getDidDocumentMetadata());
         }
 
         if (didUrl.getFragment() != null && didUrl.getUriWithoutFragment().equals(didUrl.getDid().toUri())) {
             if (log.isDebugEnabled()) log.debug("Dereferencing DID URL with a fragment: " + didUrl);
             JsonLDObject jsonLdObject = JsonLDDereferencer.findByIdInJsonLdObject(didDocument, didUrl.toUri(), didUrl.getDid().toUri());
+            if (jsonLdObject == null) {
+                throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_NOTFOUND, "Fragment not found: " + didUrl.getFragment(), accept));
+            }
+            dereferenceResult.setContentType("application/ld+json");
             dereferenceResult.setContentStream(jsonLdObject.toJson().getBytes(StandardCharsets.UTF_8));
-            dereferenceResult.setContentMetadata(resolveResult.getDidDocumentMetadata());
+            dereferenceResult.setContentMetadata(resolveRepresentationResult.getDidDocumentMetadata());
         }
 
         // done
