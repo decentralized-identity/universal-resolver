@@ -6,7 +6,7 @@ The Universal Resolver resolves Decentralized Identifiers (DIDs) across many dif
 
 See this [blog post](https://medium.com/decentralized-identity/a-universal-resolver-for-self-sovereign-identifiers-48e6b4a5cc3c) and this [webinar](https://ssimeetup.org/did-resolution-given-did-how-do-retrieve-document-markus-sabadello-webinar-13/) for an introduction.
 
-See https://resolver.identity.foundation/ for a stable version or https://dev.uniresolver.io/ for a test instance of a Universal Resolver.
+See https://resolver.identity.foundation/ for a stable version or https://dev.uniresolver.io/ for a test instance of a Universal Resolver. See [Docker Hub](https://hub.docker.com/u/universalresolver) for images.
 
 ## Quick Start
 
