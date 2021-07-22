@@ -28,6 +28,7 @@ A Swagger API definition is available [here](https://github.com/decentralized-id
 - Driver source code must be publicly available and fully open-source under a permissive license (Apache 2.0 preferred).
 - Driver source code may optionally be hosted at DIF (as a contribution to the I&D WG).
 - Driver image must be published on a publicly accessible container registry.
+- Driver image hosted on Dockerhub should have [Expanded Support for Open Source Software Projects](https://www.docker.com/blog/expanded-support-for-open-source-software-projects/) to avoid hitting Dockerhub pull limits.
 - Driver image should be tested both as standalone Docker container, and as part of the Universal Resolver with `docker-compose`.
 
 ## How to
