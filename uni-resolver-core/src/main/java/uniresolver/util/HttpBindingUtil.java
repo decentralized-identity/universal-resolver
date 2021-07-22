@@ -80,8 +80,6 @@ public class HttpBindingUtil {
     public static boolean isResolveResultContent(String contentString) throws IOException {
         try {
             Map<String, Object> json = objectMapper.readValue(contentString, Map.class);
-            if (! json.containsKey("didResolutionMetadata")) return false;
-            if (! json.containsKey("didDocumentMetadata")) return false;
             if (! json.containsKey("didDocument")) return false;
         } catch (JsonProcessingException ex) {
             return false;
