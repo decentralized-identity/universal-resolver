@@ -18,6 +18,17 @@ const getWorkingMethods = (resolutionResults) => {
     return Array.from(new Set(workingMethods))
 }
 
+const getWorkingUrls = (resolutionResults) => {
+    const workingUrls = [];
+    const urls = Object.keys( resolutionResults );
+    urls.forEach(url => {
+        if (resolutionResults[url].status === 200 && resolutionResults[url].resolutionResponse["application/did+ld+json"].didDocument.id !== undefined) {
+            workingUrls.push(url);
+        }
+    })
+    return Array.from(new Set(workingUrls))
+}
+
 const createExpectedOutcomes = (testData, resolutionResult, index) => {
 
     if (resolutionResult.resolutionResponse["application/did+ld+json"].didDocumentMetadata.deactivated === true) {
@@ -44,6 +55,7 @@ module.exports = {
     extractDid,
     extractMethodName,
     getWorkingMethods,
+    getWorkingUrls,
     createExpectedOutcomes,
     resetTestData
 }

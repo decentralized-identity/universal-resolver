@@ -5,7 +5,7 @@ const argv = require('minimist')(process.argv.slice(2));
 
 const { runTests } = require("./testserver-utils");
 const { generateLocalFile, generateDefaultFile } = require("./local-files-utils");
-const { resetTestData, createExpectedOutcomes, extractDid, extractMethodName, getWorkingMethods } = require("./utils");
+const { resetTestData, createExpectedOutcomes, extractDid, extractMethodName, getWorkingMethods, getWorkingUrls } = require("./utils");
 
 const testDataSkeleton = {
     implementation: 'Universal Resolver',
@@ -88,7 +88,9 @@ try {
 
     const workingMethods = getWorkingMethods(resolutionResults);
     console.log('Working methods', workingMethods);
-    const urls = Object.keys(resolutionResults);
+
+    const workingUrls = getWorkingUrls(resolutionResults);
+    console.log('Working Urls', workingUrls);
 
     const resolvers = [];
 
@@ -98,7 +100,7 @@ try {
         testData.didMethod = `did:${workingMethodName}`;
 
         let index = 0;
-        urls.forEach(url => {
+        workingUrls.forEach(url => {
             if (workingMethodName === extractMethodName(extractDid(url))) {
                 createExpectedOutcomes(testData, resolutionResults[url], index)
 
