@@ -47,7 +47,7 @@ public class HttpBindingServerUtil {
     public static String acceptForHttpAcceptMediaTypes(List<MediaType> httpAcceptMediaTypes) {
         for (ContentType httpAcceptMediaType : httpAcceptMediaTypes.stream().map((x) -> ContentType.parse(x.toString())).collect(Collectors.toList())) {
             if (HttpBindingUtil.isResolveResultContentType(httpAcceptMediaType)) {
-                return Representations.MEDIA_TYPE_JSONLD;
+                return Representations.DEFAULT_MEDIA_TYPE;
             }
             String representationMediaType = HttpBindingUtil.representationMediaTypeForMediaType(httpAcceptMediaType.getMimeType());
             if (representationMediaType != null) return representationMediaType;
