@@ -19,7 +19,7 @@ public interface Driver {
 	static final Logger log = LoggerFactory.getLogger(Driver.class);
 
 	default public ResolveResult resolve(DID did, Map<String, Object> resolutionOptions) throws ResolutionException {
-		if (log.isDebugEnabled()) log.debug("Driver: resolveRepresentation(" + did + ")  with options: " + resolutionOptions);
+		if (log.isDebugEnabled()) log.debug("Driver: resolve(" + did + ")  with options: " + resolutionOptions);
 		ResolveResult resolveRepresentationResult = null;
 		try {
 			resolveRepresentationResult = this.resolveRepresentation(did, resolutionOptions);

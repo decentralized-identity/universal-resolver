@@ -57,7 +57,7 @@ public class ResolveResultUtil {
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.putAll(result.representationSpecificEntries.get(contentType));
                 map.putAll(result.didDocument);
-                didDocument = DIDDocument.fromMap(map);
+                didDocument = DIDDocument.fromMap(result.didDocument);
             } catch (IOException ex) {
                 throw new ResolutionException("Problem during consumption of " + contentType + ": " + ex.getMessage(), ex);
             }
@@ -70,7 +70,7 @@ public class ResolveResultUtil {
 
         // done
 
-        if (log.isDebugEnabled()) log.debug("Converted to resolve() result using " + representationConsumer + ": " + resolveResult);
+        if (log.isDebugEnabled()) log.debug("Converted to resolve() result using " + representationConsumer.getClass() + ": " + resolveResult);
         return resolveResult;
     }
 
@@ -126,7 +126,7 @@ public class ResolveResultUtil {
 
         // done
 
-        if (log.isDebugEnabled()) log.debug("Converted to resolveRepresentation() result using " + representationProducer + ": " + resolveRepresentationResult);
+        if (log.isDebugEnabled()) log.debug("Converted to resolveRepresentation() result using " + representationProducer.getClass() + ": " + resolveRepresentationResult);
         return resolveRepresentationResult;
     }
 }
