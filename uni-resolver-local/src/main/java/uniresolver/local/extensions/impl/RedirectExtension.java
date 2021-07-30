@@ -20,7 +20,7 @@ public class RedirectExtension extends AbstractExtension implements Extension {
 	private static Logger log = LoggerFactory.getLogger(RedirectExtension.class);
 
 	@Override
-	public ExtensionStatus afterResolve(String identifier, DIDURL didUrl, DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, LocalUniResolver localUniResolver) throws ResolutionException {
+	public ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, LocalUniResolver localUniResolver) throws ResolutionException {
 
 		if (! resolveResult.getDidDocumentMetadata().containsKey("redirect")) return ExtensionStatus.DEFAULT;
 

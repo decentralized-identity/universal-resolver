@@ -121,6 +121,7 @@ public class LocalUniResolver implements UniResolver {
 
 		// prepare resolve result
 
+		DID did = null;
 		ResolveResult resolveResult = ResolveResult.build();
 		ExtensionStatus extensionStatus = new ExtensionStatus();
 
@@ -128,9 +129,7 @@ public class LocalUniResolver implements UniResolver {
 
 		String accept = (String) resolutionOptions.get("accept");
 
-		// parse DID
-
-		DID did = null;
+		// parse
 
 		try {
 
@@ -148,20 +147,18 @@ public class LocalUniResolver implements UniResolver {
 			}
 		}
 
-		// execute extensions (before)
+		// [before resolve]
 
-		if (! extensionStatus.skipExtensionsBefore()) {
-
+		if (! extensionStatus.skipBeforeResolve()) {
 			for (Extension extension : this.getExtensions()) {
-
-				extensionStatus.or(extension.beforeResolve(didString, null, did, resolutionOptions, resolveResult, resolveRepresentation, this));
-				if (extensionStatus.skipExtensionsBefore()) break;
+				extensionStatus.or(extension.beforeResolve(did, resolutionOptions, resolveResult, resolveRepresentation, this));
+				if (extensionStatus.skipBeforeResolve()) break;
 			}
 		}
 
-		// try all drivers
+		// [resolve]
 
-		if (! extensionStatus.skipDriver()) {
+		if (! extensionStatus.skipResolve()) {
 
 			if (log.isDebugEnabled()) log.debug("Resolving DID: " + did);
 
@@ -175,14 +172,12 @@ public class LocalUniResolver implements UniResolver {
 			resolveResult.getDidResolutionMetadata().putAll(driverResolveResult.getDidResolutionMetadata());
 		}
 
-		// execute extensions (after)
+		// [after resolve]
 
-		if (! extensionStatus.skipExtensionsAfter()) {
-
+		if (! extensionStatus.skipAfterResolve()) {
 			for (Extension extension : this.getExtensions()) {
-
-				extensionStatus.or(extension.afterResolve(null, null, did, resolutionOptions, resolveResult, resolveRepresentation, this));
-				if (extensionStatus.skipExtensionsAfter()) break;
+				extensionStatus.or(extension.afterResolve(did, resolutionOptions, resolveResult, resolveRepresentation, this));
+				if (extensionStatus.skipAfterResolve()) break;
 			}
 		}
 
