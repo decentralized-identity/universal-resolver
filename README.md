@@ -125,7 +125,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-ebsi](https://api.preprod.ebsi.eu/docs/#/DID%20Registry) | 2.0.0 | 2.0.0 | [URL](https://api.preprod.ebsi.eu/did-registry/v2/identifiers/) | EBSI Platform (European Blockchain Services Infrastructure)
 | [did-emtrust](https://github.com/Halialabs/did-spec) | 0.1| 0.1 | [halialabsdev/emtrust_did_driver](https://hub.docker.com/r/halialabsdev/emtrust_did_driver) | EmTrust WAI distributed identity system
 | [did-meta](https://github.com/METADIUM/meta-DID/blob/master/doc/DID-method-metadium.md) | 1.0 | 1.0 | [URL](https://resolver.metadium.com/1.0/identifiers/) | Metadium Decentralized Identifiers
-| [did-tz](https://github.com/spruceid/ssi/tree/main/did-tezos/) | 0.1.0 | [1.0 CR Draft 20210627](https://www.w3.org/TR/2021/CRD-did-core-20210627/) | [0.1](https://did-tezos.spruceid.com/) | [ghcr.io/spruceid/didkit-http](https://github.com/orgs/spruceid/packages/container/package/didkit-http)
+| [did-tz](https://github.com/spruceid/ssi/tree/main/did-tezos/) | 0.1.0 | [0.1](https://did-tezos.spruceid.com/) | [ghcr.io/spruceid/didkit-http](https://github.com/orgs/spruceid/packages/container/package/didkit-http) | Tezos DID method
 | [did-orb](https://github.com/trustbloc/orb) | 0.1.1 | [0.1](https://trustbloc.github.io/did-method-orb/) | [trustbloc/orb-did-driver](https://github.com/orgs/trustbloc-cicd/packages/container/package/orb-did-driver) | 
 
 
