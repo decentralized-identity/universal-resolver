@@ -1,4 +1,4 @@
-package uniresolver.util;
+package uniresolver.result;
 
 import foundation.identity.did.DIDDocument;
 import foundation.identity.did.representations.Representations;
@@ -7,44 +7,34 @@ import foundation.identity.did.representations.production.RepresentationProducer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
-import uniresolver.result.ResolveResult;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ResolveResultUtil {
+class Conversion {
 
-    private static final Logger log = LoggerFactory.getLogger(ResolveResultUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(Conversion.class);
 
-    public static ResolveResult convertToResolveResult(ResolveResult resolveRepresentationResult) throws ResolutionException {
+    static ResolveDataModelResult convertToResolveDataModelResult(ResolveRepresentationResult resolveRepresentationResult) throws ResolutionException {
 
         if (resolveRepresentationResult == null) throw new NullPointerException();
 
-        // check result of resolveRepresentation()
+        // check resolveRepresentation() result
 
         if (resolveRepresentationResult.getDidResolutionMetadata() == null) throw new IllegalArgumentException("No 'didResolutionMetadata' returned from resolveRepresentation().");
         if (resolveRepresentationResult.getDidDocumentMetadata() == null) throw new IllegalArgumentException("No 'didDocumentMetadata' returned from resolveRepresentation().");
-        if (resolveRepresentationResult.getDidDocument() != null) throw new IllegalArgumentException("Unexpected 'didDocument' returned from resolveRepresentation().");
         if (resolveRepresentationResult.getDidDocumentStream() == null) throw new IllegalArgumentException("No 'didDocumentStream' returned from resolveRepresentation().");
         if (resolveRepresentationResult.isErrorResult() && resolveRepresentationResult.getDidDocumentStream().length > 0) throw new IllegalArgumentException("Unexpected 'didDocumentStream' despite error returned from resolveRepresentation().");
 
         if (resolveRepresentationResult.getContentType() == null) throw new IllegalArgumentException("No 'contentType' in 'didResolutionMetadata' returned from resolveRepresentation().");
-
-        // create result of resolve()
-
-        ResolveResult resolveResult = ResolveResult.build();
-        resolveResult.setDidResolutionMetadata(new HashMap<>(resolveRepresentationResult.getDidResolutionMetadata()));
-        resolveResult.getDidResolutionMetadata().remove("contentType");
-        resolveResult.setDidDocumentMetadata(new HashMap<>(resolveRepresentationResult.getDidDocumentMetadata()));
 
         // convert didDocumentStream to didDocument
 
         RepresentationConsumer representationConsumer = null;
         DIDDocument didDocument;
 
-        if (! resolveResult.isErrorResult()) {
+        if (! resolveRepresentationResult.isErrorResult()) {
 
             String contentType = resolveRepresentationResult.getContentType();
             byte[] didDocumentStream = resolveRepresentationResult.getDidDocumentStream();
@@ -66,34 +56,33 @@ public class ResolveResultUtil {
             didDocument = null;
         }
 
-        resolveResult.setDidDocument(didDocument);
+        // create resolve() result
+
+        ResolveDataModelResult resolveDataModelResult = ResolveDataModelResult.build();
+        resolveDataModelResult.setDidResolutionMetadata(new LinkedHashMap<>(resolveRepresentationResult.getDidResolutionMetadata()));
+        resolveDataModelResult.getDidResolutionMetadata().remove("contentType");
+        resolveDataModelResult.setDidDocument(didDocument);
+        resolveDataModelResult.setDidDocumentMetadata(new LinkedHashMap<>(resolveRepresentationResult.getDidDocumentMetadata()));
+
+        resolveDataModelResult.resolveRepresentationResults.put(resolveRepresentationResult.getContentType(), resolveRepresentationResult);
 
         // done
 
-        if (log.isDebugEnabled()) log.debug("Converted to resolve() result using " + representationConsumer.getClass() + ": " + resolveResult);
-        return resolveResult;
+        if (log.isDebugEnabled()) log.debug("Converted to resolve() result using consumer " + (representationConsumer == null ? null : representationConsumer.getClass()) + ": " + resolveRepresentationResult + " --------> " + resolveDataModelResult);
+        return resolveDataModelResult;
     }
 
-    public static ResolveResult convertToResolveRepresentationResult(ResolveResult resolveResult, String mediaType) throws ResolutionException {
+    static ResolveRepresentationResult convertToResolveRepresentationResult(ResolveDataModelResult resolveDataModelResult, String mediaType) throws ResolutionException {
 
-        if (resolveResult == null) throw new NullPointerException();
+        if (resolveDataModelResult == null) throw new NullPointerException();
         if (mediaType == null) throw new IllegalArgumentException("No 'mediaType' provided.");
 
-        // check result of resolve()
+        // check resolve() result
 
-        if (resolveResult.getDidResolutionMetadata() == null) throw new IllegalArgumentException("No 'didResolutionMetadata' returned from resolve().");
-        if (resolveResult.getDidDocumentMetadata() == null) throw new IllegalArgumentException("No 'didDocumentMetadata' returned from resolve().");
-        if ((!resolveResult.isErrorResult()) && resolveResult.getDidDocument() == null) throw new IllegalArgumentException("No 'didDocument' returned from resolve().");
-        if (resolveResult.isErrorResult() && resolveResult.getDidDocument() != null) throw new IllegalArgumentException("Unexpected 'didDocument' despite error returned from resolve().");
-        if (resolveResult.getDidDocumentStream() != null) throw new IllegalArgumentException("Unexpected 'didDocumentStream' returned from resolve().");
-
-        if (resolveResult.getContentType() != null) throw new IllegalArgumentException("Unexpected 'contentType' returned from resolve().");
-
-        // create result of resolveRepresentation()
-
-        ResolveResult resolveRepresentationResult = ResolveResult.build();
-        resolveRepresentationResult.setDidResolutionMetadata(new HashMap<>(resolveResult.getDidResolutionMetadata()));
-        resolveRepresentationResult.setDidDocumentMetadata(new HashMap<>(resolveResult.getDidDocumentMetadata()));
+        if (resolveDataModelResult.getDidResolutionMetadata() == null) throw new IllegalArgumentException("No 'didResolutionMetadata' returned from resolve().");
+        if (resolveDataModelResult.getDidDocumentMetadata() == null) throw new IllegalArgumentException("No 'didDocumentMetadata' returned from resolve().");
+        if ((!resolveDataModelResult.isErrorResult()) && resolveDataModelResult.getDidDocument() == null) throw new IllegalArgumentException("No 'didDocument' returned from resolve().");
+        if (resolveDataModelResult.isErrorResult() && resolveDataModelResult.getDidDocument() != null) throw new IllegalArgumentException("Unexpected 'didDocument' despite error returned from resolve().");
 
         // convert didDocument to didDocumentStream
 
@@ -101,9 +90,9 @@ public class ResolveResultUtil {
         byte[] didDocumentStream;
         String contentType;
 
-        if (! resolveResult.isErrorResult()) {
+        if (! resolveDataModelResult.isErrorResult()) {
 
-            DIDDocument didDocument = resolveResult.getDidDocument();
+            DIDDocument didDocument = resolveDataModelResult.getDidDocument();
 
             representationProducer = Representations.getProducer(mediaType);
             if (representationProducer == null) throw new ResolutionException(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, "No producer for " + mediaType);
@@ -121,12 +110,19 @@ public class ResolveResultUtil {
             contentType = mediaType;
         }
 
+        // create resolveRepresentation() result
+
+        ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
+        resolveRepresentationResult.setDidResolutionMetadata(new LinkedHashMap<>(resolveDataModelResult.getDidResolutionMetadata()));
         resolveRepresentationResult.setContentType(contentType);
         resolveRepresentationResult.setDidDocumentStream(didDocumentStream);
+        resolveRepresentationResult.setDidDocumentMetadata(new LinkedHashMap<>(resolveDataModelResult.getDidDocumentMetadata()));
+
+        resolveRepresentationResult.resolveDataModelResult = resolveDataModelResult;
 
         // done
 
-        if (log.isDebugEnabled()) log.debug("Converted to resolveRepresentation() result using " + representationProducer.getClass() + ": " + resolveRepresentationResult);
+        if (log.isDebugEnabled()) log.debug("Converted to resolveRepresentation() result using producer " + (representationProducer == null ? null : representationProducer.getClass()) + ": " + resolveDataModelResult + " --------> " + resolveRepresentationResult);
         return resolveRepresentationResult;
     }
 }

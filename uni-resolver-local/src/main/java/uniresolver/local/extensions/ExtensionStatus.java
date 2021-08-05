@@ -4,33 +4,36 @@ public class ExtensionStatus {
 
 	public static final ExtensionStatus DEFAULT = new ExtensionStatus();
 
-	public static final ExtensionStatus SKIP_BEFORE_RESOLVE = new ExtensionStatus(true, false, false, false, false, false);
-	public static final ExtensionStatus SKIP_RESOLVE = new ExtensionStatus(false, true, false, false, false, false);
-	public static final ExtensionStatus SKIP_AFTER_RESOLVE = new ExtensionStatus(false, false, true, false, false, false);
-	public static final ExtensionStatus SKIP_BEFORE_DEREFERENCE = new ExtensionStatus(false, false, false, true, false, false);
-	public static final ExtensionStatus SKIP_DEREFERENCE = new ExtensionStatus(false, false, false, false, true, false);
-	public static final ExtensionStatus SKIP_AFTER_DEREFERENCE = new ExtensionStatus(false, false, false, false, false, true);
+	public static final ExtensionStatus SKIP_BEFORE_RESOLVE = new ExtensionStatus(true, false, false, false, false, false, false);
+	public static final ExtensionStatus SKIP_RESOLVE = new ExtensionStatus(false, true, false, false, false, false, false);
+	public static final ExtensionStatus SKIP_AFTER_RESOLVE = new ExtensionStatus(false, false, true, false, false, false, false);
+	public static final ExtensionStatus SKIP_BEFORE_DEREFERENCE = new ExtensionStatus(false, false, false, true, false, false, false);
+	public static final ExtensionStatus SKIP_DEREFERENCE_PRIMARY = new ExtensionStatus(false, false, false, false, true, false, false);
+	public static final ExtensionStatus SKIP_DEREFERENCE_SECONDARY = new ExtensionStatus(false, false, false, false, false, true, false);
+	public static final ExtensionStatus SKIP_AFTER_DEREFERENCE = new ExtensionStatus(false, false, false, false, false, false, true);
 
 	private boolean skipBeforeResolve;
 	private boolean skipResolve;
 	private boolean skipAfterResolve;
 	private boolean skipBeforeDereference;
-	private boolean skipDereference;
+	private boolean skipDereferencePrimary;
+	private boolean skipDereferenceSecondary;
 	private boolean skipAfterDereference;
 
-	public ExtensionStatus(boolean skipBeforeResolve, boolean skipResolve, boolean skipAfterResolve, boolean skipBeforeDereference, boolean skipDereference, boolean skipAfterDereference) {
+	public ExtensionStatus(boolean skipBeforeResolve, boolean skipResolve, boolean skipAfterResolve, boolean skipBeforeDereference, boolean skipDereferencePrimary, boolean skipDereferenceSecondary, boolean skipAfterDereference) {
 
 		this.skipBeforeResolve = skipBeforeResolve;
 		this.skipResolve = skipResolve;
 		this.skipAfterResolve = skipAfterResolve;
 		this.skipBeforeDereference = skipBeforeDereference;
-		this.skipDereference = skipDereference;
+		this.skipDereferencePrimary = skipDereferencePrimary;
+		this.skipDereferenceSecondary = skipDereferenceSecondary;
 		this.skipAfterDereference = skipAfterDereference;
 	}
 
 	public ExtensionStatus() {
 
-		this(false, false, false, false, false, false);
+		this(false, false, false, false, false, false, false);
 	}
 
 	public void or(ExtensionStatus extensionStatus) {
@@ -41,7 +44,8 @@ public class ExtensionStatus {
 		this.skipResolve |= extensionStatus.skipResolve;
 		this.skipAfterResolve |= extensionStatus.skipAfterResolve;
 		this.skipBeforeDereference |= extensionStatus.skipBeforeDereference;
-		this.skipDereference |= extensionStatus.skipDereference;
+		this.skipDereferencePrimary |= extensionStatus.skipDereferencePrimary;
+		this.skipDereferenceSecondary |= extensionStatus.skipDereferenceSecondary;
 		this.skipAfterDereference |= extensionStatus.skipAfterDereference;
 	}
 
@@ -61,8 +65,12 @@ public class ExtensionStatus {
 		return skipBeforeDereference;
 	}
 
-	public boolean skipDereference() {
-		return skipDereference;
+	public boolean skipDereferencePrimary() {
+		return skipDereferencePrimary;
+	}
+
+	public boolean skipDereferenceSecondary() {
+		return skipDereferenceSecondary;
 	}
 
 	public boolean skipAfterDereference() {

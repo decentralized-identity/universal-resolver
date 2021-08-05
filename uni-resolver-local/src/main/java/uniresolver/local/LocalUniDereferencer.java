@@ -1,24 +1,20 @@
 package uniresolver.local;
 
-import foundation.identity.did.DIDDocument;
 import foundation.identity.did.DIDURL;
 import foundation.identity.did.parser.ParserException;
-import foundation.identity.jsonld.JsonLDDereferencer;
-import foundation.identity.jsonld.JsonLDObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.DereferencingException;
 import uniresolver.ResolutionException;
 import uniresolver.UniDereferencer;
 import uniresolver.UniResolver;
-import uniresolver.driver.Driver;
-import uniresolver.local.extensions.Extension;
+import uniresolver.local.configuration.LocalUniResolverConfigurator;
+import uniresolver.local.extensions.DereferencerExtension;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
-import uniresolver.util.ResolveResultUtil;
 
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +26,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
     private UniResolver uniResolver;
 
-    private List<Extension> extensions = new ArrayList<Extension>();
+    private List<DereferencerExtension> extensions = new ArrayList<>();
 
     public LocalUniDereferencer() {
 
@@ -40,103 +36,125 @@ public class LocalUniDereferencer implements UniDereferencer {
         this.uniResolver = uniResolver;
     }
 
+    /*
+     * Factory methods
+     */
+
+    public static LocalUniDereferencer fromConfigFile(String filePath) throws IOException {
+
+        LocalUniResolver localUniResolver = new LocalUniResolver();
+        LocalUniResolverConfigurator.configureLocalUniResolver(filePath, localUniResolver);
+
+        LocalUniDereferencer localUniDereferencer = new LocalUniDereferencer();
+        localUniDereferencer.setUniResolver(localUniResolver);
+
+        return localUniDereferencer;
+    }
+
+    /*
+     * Dereferencer methods
+     */
+
     @Override
-    public DereferenceResult dereference(String didUrlString, Map<String, Object> dereferenceOptions) throws DereferencingException {
+    public DereferenceResult dereference(String didUrlString, Map<String, Object> dereferenceOptions) throws ResolutionException, DereferencingException {
+
+        if (log.isDebugEnabled()) log.debug("dereference(" + didUrlString + ")  with options: " + dereferenceOptions);
 
         if (didUrlString == null) throw new NullPointerException();
 
         // prepare dereference result
 
         DIDURL didUrl = null;
+        DIDURL didUrlWithoutFragment = null;
+        String didUrlFragment = null;
         DereferenceResult dereferenceResult = DereferenceResult.build();
         ExtensionStatus extensionStatus = new ExtensionStatus();
-
-        // check options
-
-        String accept = (String) dereferenceOptions.get("accept");
 
         // parse
 
         try {
 
             didUrl = DIDURL.fromString(didUrlString);
+            didUrlWithoutFragment = DIDURL.fromUri(didUrl.getUriWithoutFragment());
+            didUrlFragment = didUrl.getFragment() == null ? null : "#" + didUrl.getFragment();
             if (log.isDebugEnabled()) log.debug("DID URL " + didUrlString + " is valid: " + didUrl);
         } catch (IllegalArgumentException | ParserException ex) {
 
             String errorMessage = ex.getMessage();
             if (log.isWarnEnabled()) log.warn(errorMessage);
-
-            throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INVALIDDIDURL, errorMessage, accept));
+            throw new DereferencingException(DereferenceResult.ERROR_INVALIDDIDURL, errorMessage, ex);
         }
-
-        // [resolve]
-
-        Map<String, Object> resolveOptions = new HashMap<>(dereferenceOptions);
-
-        ResolveResult resolveRepresentationResult;
-        ResolveResult resolveResult;
-        DIDDocument didDocument;
-
-        try {
-
-            resolveRepresentationResult = this.uniResolver.resolveRepresentation(didUrl.getDid().getDidString(), resolveOptions);
-            resolveResult = ResolveResultUtil.convertToResolveResult(resolveRepresentationResult);
-            didDocument = resolveResult.getDidDocument();
-        } catch (ResolutionException ex) {
-
-            if (ex.getResolveResult() != null && ex.getResolveResult().isErrorResult()) {
-                if (ResolveResult.ERROR_INVALIDDID.equals(ex.getResolveResult().getError()))
-                    throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INVALIDDIDURL, "Error " + ex.getResolveResult().getError() + " from resolver: " + ex.getResolveResult().getErrorMessage(), accept));
-                else if (ResolveResult.ERROR_NOTFOUND.equals(ex.getResolveResult().getError()))
-                    throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_NOTFOUND, "Error " + ex.getResolveResult().getError() + " from resolver: " + ex.getResolveResult().getErrorMessage(), accept));
-                else
-                    throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_INTERNALERROR, "Error " + ex.getResolveResult().getError() + " from resolver: " + ex.getResolveResult().getErrorMessage(), accept));
-            }
-            throw new DereferencingException("Cannot resolve DID " + didUrl.getDid().getDidString() + ": " + ex.getMessage(), ex);
-        }
-
-        dereferenceResult.getDereferencingMetadata().putAll(resolveRepresentationResult.getDidResolutionMetadata());
 
         // [before dereference]
 
         if (! extensionStatus.skipBeforeDereference()) {
-            for (Extension extension : this.getExtensions()) {
-                extensionStatus.or(extension.beforeDereference(didUrl, dereferenceOptions, dereferenceResult, didDocument, this));
+            for (DereferencerExtension extension : this.getExtensions()) {
+                extensionStatus.or(extension.beforeDereference(didUrl, dereferenceOptions, dereferenceResult, this));
                 if (extensionStatus.skipBeforeDereference()) break;
             }
         }
 
-        // [dereference]
+        // [resolve]
+
+        ResolveResult resolveResult = null;
 
         if (! extensionStatus.skipResolve()) {
 
-            if (didUrl.isBareDid()) {
+            // dereference options + DID parameters = resolve options
 
-                if (log.isDebugEnabled()) log.debug("Dereferencing DID URL that is a bare DID: " + didUrl);
-                dereferenceResult.setContentStream(resolveRepresentationResult.getDidDocumentStream());
-                dereferenceResult.setContentMetadata(resolveRepresentationResult.getDidDocumentMetadata());
+            Map<String, Object> resolveOptions = new HashMap<>(dereferenceOptions);
+            if (didUrl.getParameters() != null) resolveOptions.putAll(didUrl.getParameters());
+
+            // resolve
+
+            resolveResult = this.uniResolver.resolveRepresentation(didUrl.getDid().getDidString(), resolveOptions);
+
+            // dereferencing metadata = DID resolution metadata - content type
+
+            if (resolveResult != null) {
+                dereferenceResult.getDereferencingMetadata().putAll(resolveResult.getDidResolutionMetadata());
+                dereferenceResult.setContentType(null);
             }
+        }
 
-            if (didUrl.getFragment() != null && didUrl.getUriWithoutFragment().equals(didUrl.getDid().toUri())) {
+        // [dereference primary]
 
-                if (log.isDebugEnabled()) log.debug("Dereferencing DID URL with a fragment: " + didUrl);
-                JsonLDObject jsonLdObject = JsonLDDereferencer.findByIdInJsonLdObject(didDocument, didUrl.toUri(), didUrl.getDid().toUri());
-                if (jsonLdObject == null) {
-                    throw new DereferencingException(DereferenceResult.makeErrorDereferenceResult(DereferenceResult.ERROR_NOTFOUND, "Fragment not found: " + didUrl.getFragment(), accept));
-                }
-                dereferenceResult.setContentType("application/ld+json");
-                dereferenceResult.setContentStream(jsonLdObject.toJson().getBytes(StandardCharsets.UTF_8));
-                dereferenceResult.setContentMetadata(resolveRepresentationResult.getDidDocumentMetadata());
+        if (! extensionStatus.skipDereferencePrimary()) {
+            if (log.isInfoEnabled()) log.info("Dereferencing (primary): " + didUrlWithoutFragment);
+            for (DereferencerExtension extension : this.getExtensions()) {
+                extensionStatus.or(extension.dereferencePrimary(didUrlWithoutFragment, dereferenceOptions, resolveResult, dereferenceResult, this));
+                if (extensionStatus.skipDereferencePrimary()) break;
+            }
+        }
+
+        // [dereference secondary]
+
+        if (! extensionStatus.skipDereferenceSecondary()) {
+            if (log.isInfoEnabled()) log.info("Dereferencing (secondary): " + didUrlWithoutFragment + ", " + didUrlFragment);
+            for (DereferencerExtension extension : this.getExtensions()) {
+                extensionStatus.or(extension.dereferenceSecondary(didUrlWithoutFragment, didUrlFragment, dereferenceOptions, dereferenceResult, this));
+                if (extensionStatus.skipDereferenceSecondary()) break;
             }
         }
 
         // [after dereference]
 
         if (! extensionStatus.skipAfterDereference()) {
-            for (Extension extension : this.getExtensions()) {
-                extensionStatus.or(extension.afterDereference(didUrl, dereferenceOptions, dereferenceResult, didDocument, this));
+            for (DereferencerExtension extension : this.getExtensions()) {
+                extensionStatus.or(extension.afterDereference(didUrl, dereferenceOptions, dereferenceResult, this));
                 if (extensionStatus.skipAfterDereference()) break;
             }
+        }
+
+        // additional metadata
+
+        dereferenceResult.getDereferencingMetadata().put("didUrl", didUrl.toMap(false));
+
+        // nothing found?
+
+        if (! dereferenceResult.isComplete()) {
+            if (log.isInfoEnabled()) log.info("Dereference result is incomplete: " + dereferenceResult);
+            throw new DereferencingException(DereferenceResult.ERROR_NOTFOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
         }
 
         // done
@@ -156,11 +174,11 @@ public class LocalUniDereferencer implements UniDereferencer {
         this.uniResolver = uniResolver;
     }
 
-    public List<Extension> getExtensions() {
+    public List<DereferencerExtension> getExtensions() {
         return this.extensions;
     }
 
-    public void setExtensions(List<Extension> extensions) {
+    public void setExtensions(List<DereferencerExtension> extensions) {
         this.extensions = extensions;
     }
 }

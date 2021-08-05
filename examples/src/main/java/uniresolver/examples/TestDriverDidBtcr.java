@@ -2,6 +2,7 @@ package uniresolver.examples;
 import foundation.identity.did.DID;
 import info.weboftrust.btctxlookup.bitcoinconnection.BlockcypherAPIBitcoinConnection;
 import uniresolver.driver.did.btcr.DidBtcrDriver;
+import uniresolver.result.ResolveDataModelResult;
 import uniresolver.result.ResolveResult;
 
 import java.util.HashMap;

@@ -1,11 +1,14 @@
 package uniresolver;
 
 import uniresolver.result.DereferenceResult;
-import uniresolver.result.ResolveResult;
+
+import java.util.Map;
 
 public class DereferencingException extends Exception {
 
-	private String error;
+	private String error = null;
+	private Map<String, Object> dereferencingMetadata = null;
+
 	private DereferenceResult dereferenceResult;
 
 	public DereferencingException() {
@@ -17,13 +20,29 @@ public class DereferencingException extends Exception {
 		this.error = error;
 	}
 
+	public DereferencingException(String error, String message, Map<String, Object> dereferencingMetadata) {
+		super(message);
+		this.error = error;
+		this.dereferencingMetadata = dereferencingMetadata;
+	}
+
 	public DereferencingException(String error, String message, Throwable ex) {
 		super(message, ex);
 		this.error = error;
 	}
 
+	public DereferencingException(String error, String message, Map<String, Object> dereferencingMetadata, Throwable ex) {
+		super(message, ex);
+		this.error = error;
+		this.dereferencingMetadata = dereferencingMetadata;
+	}
+
 	public DereferencingException(String message) {
 		this(DereferenceResult.ERROR_INTERNALERROR, message);
+	}
+
+	public DereferencingException(String message, Map<String, Object> dereferencingMetadata) {
+		this(DereferenceResult.ERROR_INTERNALERROR, message, dereferencingMetadata);
 	}
 
 	public DereferencingException(String message, Throwable ex) {
@@ -46,6 +65,14 @@ public class DereferencingException extends Exception {
 
 	public void setError(String error) {
 		this.error = error;
+	}
+
+	public Map<String, Object> getDereferencingMetadata() {
+		return dereferencingMetadata;
+	}
+
+	public void setDereferencingMetadata(Map<String, Object> dereferencingMetadata) {
+		this.dereferencingMetadata = dereferencingMetadata;
 	}
 
 	public DereferenceResult getDereferenceResult() {

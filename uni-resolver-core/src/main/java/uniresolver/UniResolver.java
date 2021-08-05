@@ -3,8 +3,8 @@ package uniresolver;
 import foundation.identity.did.representations.Representations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uniresolver.result.ResolveResult;
-import uniresolver.util.ResolveResultUtil;
+import uniresolver.result.ResolveDataModelResult;
+import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.w3c.DIDResolver;
 
 import java.util.HashMap;
@@ -21,34 +21,45 @@ public interface UniResolver extends DIDResolver {
 	static final Logger log = LoggerFactory.getLogger(UniResolver.class);
 
 	@Override
-	default public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	default public ResolveDataModelResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
+
+		if (didString == null) throw new NullPointerException();
+		if (resolutionOptions == null) resolutionOptions = new HashMap<>();
+
 		String accept = (String) resolutionOptions.get("accept");
 		if (accept != null) throw new ResolutionException("Unexpected 'accept' provided in 'resolutionOptions' for resolve().");
-		resolutionOptions = new HashMap<>(resolutionOptions);
-		resolutionOptions.put("accept", Representations.DEFAULT_MEDIA_TYPE);
-		ResolveResult resolveRepresentationResult = this.resolveRepresentation(didString, resolutionOptions);
-		ResolveResult resolveResult = resolveRepresentationResult == null ? null : ResolveResultUtil.convertToResolveResult(resolveRepresentationResult);
-		return resolveResult;
+
+		Map<String, Object> resolveRepresentationResolutionOptions = Map.of("accept", Representations.DEFAULT_MEDIA_TYPE);
+
+		ResolveRepresentationResult resolveRepresentationResult = this.resolveRepresentation(didString, resolveRepresentationResolutionOptions);
+
+		return resolveRepresentationResult == null ? null : resolveRepresentationResult.toResolveDataModelResult();
 	}
 
 	@Override
-	default public ResolveResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	default public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
+
+		if (didString == null) throw new NullPointerException();
+		if (resolutionOptions == null) resolutionOptions = new HashMap<>();
+
 		String accept = (String) resolutionOptions.get("accept");
-		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolveRepresentation().");
-		resolutionOptions = new HashMap<>(resolutionOptions);
-		ResolveResult resolveResult = this.resolve(didString, resolutionOptions);
-		ResolveResult resolveRepresentationResult = resolveResult == null ? null : ResolveResultUtil.convertToResolveRepresentationResult(resolveResult, accept);
-		return resolveRepresentationResult;
+
+		Map<String, Object> resolveDataModelResolutionOptions = new HashMap<>(resolutionOptions);
+		resolveDataModelResolutionOptions.remove("accept");
+
+		ResolveDataModelResult resolveDataModelResult = this.resolve(didString, resolveDataModelResolutionOptions);
+
+		return resolveDataModelResult == null ? null : resolveDataModelResult.toResolveRepresentationResult(accept);
 	}
 
-	default public ResolveResult resolve(String didString) throws ResolutionException {
-		return this.resolve(didString, new HashMap<String, Object>());
+	default public ResolveDataModelResult resolve(String didString) throws ResolutionException {
+		return this.resolve(didString, new HashMap<>());
 	}
 
-	default public ResolveResult resolveRepresentation(String didString) throws ResolutionException {
-		return this.resolveRepresentation(didString, new HashMap<String, Object>());
+	default public ResolveRepresentationResult resolveRepresentation(String didString) throws ResolutionException {
+		return this.resolveRepresentation(didString, new HashMap<>());
 	}
 
 	public Map<String, Map<String, Object>> properties() throws ResolutionException;

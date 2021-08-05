@@ -2,6 +2,7 @@ package uniresolver.examples;
 
 import foundation.identity.did.DID;
 import uniresolver.driver.did.sov.DidSovDriver;
+import uniresolver.result.ResolveDataModelResult;
 import uniresolver.result.ResolveResult;
 
 import java.util.HashMap;

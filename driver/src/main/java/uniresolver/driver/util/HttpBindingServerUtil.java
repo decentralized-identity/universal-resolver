@@ -1,7 +1,6 @@
 package uniresolver.driver.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
 import org.apache.commons.codec.binary.Hex;
@@ -10,37 +9,53 @@ import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import uniresolver.result.DereferenceResult;
+import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
+import uniresolver.result.Result;
 import uniresolver.util.HttpBindingUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class HttpBindingServerUtil {
 
     private static final Logger log = LoggerFactory.getLogger(HttpBindingServerUtil.class);
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.USE_DEFAULTS);
 
-    static {
-        objectMapper.setSerializationInclusion(JsonInclude.Include.USE_DEFAULTS);
+    public static String toHttpBodyResolveRepresentationResult(ResolveRepresentationResult resolveRepresentationResult) throws IOException {
+        if (log.isDebugEnabled()) log.debug("Serializing resolve result to HTTP body.");
+        Map<String, Object> json = new LinkedHashMap<>();
+        json.put("didResolutionMetadata", resolveRepresentationResult.getDidResolutionMetadata());
+        if (resolveRepresentationResult.getDidDocumentStream() == null || resolveRepresentationResult.getDidDocumentStream().length == 0) {
+            json.put("didDocument", null);
+        } else if (isJson(resolveRepresentationResult.getDidDocumentStream())) {
+            json.put("didDocument", objectMapper.readValue(new ByteArrayInputStream(resolveRepresentationResult.getDidDocumentStream()), LinkedHashMap.class));
+        } else {
+            json.put("didDocument", Hex.encodeHexString(resolveRepresentationResult.getDidDocumentStream()));
+        }
+        json.put("didDocumentMetadata", resolveRepresentationResult.getDidDocumentMetadata());
+        return objectMapper.writeValueAsString(json);
     }
 
-    public static String toHttpBodyResolveResult(ResolveResult resolveResult) throws IOException {
-        if (log.isDebugEnabled()) log.debug("Serializing resolve result to HTTP body.");
-        if (resolveResult.getDidDocument() != null) throw new IllegalArgumentException("Cannot serialize abstract DID document.");
-        Map<String, Object> json = new HashMap<>();
-        json.put("didResolutionMetadata", resolveResult.getDidResolutionMetadata());
-        json.put("didDocumentMetadata", resolveResult.getDidDocumentMetadata());
-        if (resolveResult.getDidDocumentStream() == null || resolveResult.getDidDocumentStream().length == 0) {
-            json.put("didDocument", null);
-        } else if (isJson(resolveResult.getDidDocumentStream())) {
-            json.put("didDocument", objectMapper.readValue(new ByteArrayInputStream(resolveResult.getDidDocumentStream()), LinkedHashMap.class));
+    public static String toHttpBodyDereferenceResult(DereferenceResult dereferenceResult) throws IOException {
+        if (log.isDebugEnabled()) log.debug("Serializing dereference result to HTTP body.");
+        Map<String, Object> json = new LinkedHashMap<>();
+        json.put("dereferencingMetadata", dereferenceResult.getDereferencingMetadata());
+        if (dereferenceResult.getContentStream() == null || dereferenceResult.getContentStream().length == 0) {
+            json.put("content", null);
+        } else if (isJson(dereferenceResult.getContentStream())) {
+            json.put("content", objectMapper.readValue(new ByteArrayInputStream(dereferenceResult.getContentStream()), LinkedHashMap.class));
         } else {
-            json.put("didDocument", Hex.encodeHexString(resolveResult.getDidDocumentStream()));
+            json.put("content", Hex.encodeHexString(dereferenceResult.getContentStream()));
         }
+        json.put("contentMetadata", dereferenceResult.getContentMetadata());
         return objectMapper.writeValueAsString(json);
     }
 
@@ -55,29 +70,31 @@ public class HttpBindingServerUtil {
         return Representations.DEFAULT_MEDIA_TYPE;
     }
 
-    public static boolean isMediaTypeAcceptable(MediaType acceptMediaType, MediaType contentType) {
+    public static boolean isMediaTypeAcceptable(MediaType acceptMediaType, String mediaTypeString) {
+        if (mediaTypeString == null) throw new NullPointerException();
+        MediaType mediaType = MediaType.valueOf(mediaTypeString);
         boolean acceptable = false;
-        if (acceptMediaType.includes(contentType))
+        if (acceptMediaType.includes(mediaType))
             acceptable = true;
-        else if (acceptMediaType.getType().equals(contentType.getType()) && contentType.getSubtype().endsWith("+" + acceptMediaType.getSubtype()))
+        else if (acceptMediaType.getType().equals(mediaType.getType()) && mediaType.getSubtype().endsWith("+" + acceptMediaType.getSubtype()))
             acceptable = true;
         if (!acceptMediaType.isWildcardType() && !acceptMediaType.isWildcardSubtype()) {
             if (acceptMediaType.getParameters() != null) {
-                acceptable &= Objects.equals(acceptMediaType.getParameter("profile"), contentType.getParameter("profile"));
+                acceptable &= Objects.equals(acceptMediaType.getParameter("profile"), mediaType.getParameter("profile"));
             }
         }
-        if (log.isDebugEnabled()) log.debug("Checking if content type " + contentType + " is acceptable for " + acceptMediaType + ": " + acceptable);
+        if (log.isDebugEnabled()) log.debug("Checking if media type " + mediaType + " is acceptable for " + acceptMediaType + ": " + acceptable);
         return acceptable;
     }
 
-    public static int httpStatusCodeForResolveResult(ResolveResult resolveResult) {
-        if (ResolveResult.ERROR_NOTFOUND.equals(resolveResult.getError()))
+    public static int httpStatusCodeForResult(Result result) {
+        if (ResolveResult.ERROR_NOTFOUND.equals(result.getError()))
             return HttpStatus.SC_NOT_FOUND;
-        else if (ResolveResult.ERROR_INVALIDDID.equals(resolveResult.getError()))
+        else if (ResolveResult.ERROR_INVALIDDID.equals(result.getError()))
             return HttpStatus.SC_BAD_REQUEST;
-        else if (ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED.equals(resolveResult.getError()))
+        else if (ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED.equals(result.getError()))
             return HttpStatus.SC_NOT_ACCEPTABLE;
-        else if (resolveResult.isErrorResult())
+        else if (result.isErrorResult())
             return HttpStatus.SC_INTERNAL_SERVER_ERROR;
         else
             return HttpStatus.SC_OK;

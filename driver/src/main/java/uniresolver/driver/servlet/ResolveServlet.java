@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import uniresolver.ResolutionException;
 import uniresolver.driver.util.HttpBindingServerUtil;
+import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
+import uniresolver.util.HttpBindingUtil;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
@@ -73,38 +75,64 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		// invoke the driver
 
-		ResolveResult resolveRepresentationResult;
+		ResolveRepresentationResult resolveRepresentationResult;
 
 		try {
 
 			resolveRepresentationResult = InitServlet.getDriver().resolveRepresentation(DID.fromString(didString), resolutionOptions);
+			if (resolveRepresentationResult == null) throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, "Driver: No resolve result for " + didString);
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Driver: Resolve problem for " + didString + ": " + ex.getMessage(), ex);
 
-			if (ex instanceof ResolutionException) {
-				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult((ResolutionException) ex, accept);
-			} else {
-				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Driver: Resolve problem for " + didString + ": " + ex.getMessage(), accept);
+			if (! (ex instanceof ResolutionException)) {
+				ex = new ResolutionException(ResolveResult.ERROR_INTERNALERROR, "Driver: esolve problem for " + didString + ": " + ex.getMessage());
 			}
 
-			ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveRepresentationResult), null, HttpBindingServerUtil.toHttpBodyResolveResult(resolveRepresentationResult));
-			return;
+			resolveRepresentationResult = ResolveRepresentationResult.makeErrorResult((ResolutionException) ex, accept);
 		}
 
 		if (log.isInfoEnabled()) log.info("Driver: Resolve result for " + didString + ": " + resolveRepresentationResult);
 
-		// no resolve result?
-
-		if (resolveRepresentationResult == null || resolveRepresentationResult.getDidDocumentStream() == null) {
-
-			resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, "Driver: No resolve result for " + didString, accept);
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null,  HttpBindingServerUtil.toHttpBodyResolveResult(resolveRepresentationResult));
-			return;
-		}
-
 		// write resolve result
 
-		ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveRepresentationResult), ResolveResult.MEDIA_TYPE, HttpBindingServerUtil.toHttpBodyResolveResult(resolveRepresentationResult));
+		for (MediaType acceptMediaType : httpAcceptMediaTypes) {
+
+			if (HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, ResolveResult.MEDIA_TYPE)) {
+
+				ServletUtil.sendResponse(
+						response,
+						HttpBindingServerUtil.httpStatusCodeForResult(resolveRepresentationResult),
+						ResolveResult.MEDIA_TYPE,
+						HttpBindingServerUtil.toHttpBodyResolveRepresentationResult(resolveRepresentationResult));
+				return;
+			} else {
+
+				// determine representation media type
+
+				String representationMediaType = HttpBindingUtil.representationMediaTypeForMediaType(acceptMediaType.toString());
+				if (representationMediaType != null) {
+					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + acceptMediaType + " via DID document representation media type " + representationMediaType);
+				} else {
+					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + acceptMediaType);
+					continue;
+				}
+
+				ServletUtil.sendResponse(
+						response,
+						HttpBindingServerUtil.httpStatusCodeForResult(resolveRepresentationResult),
+						resolveRepresentationResult.getContentType(),
+						resolveRepresentationResult.getDidDocumentStream()
+				);
+				return;
+			}
+		}
+
+		ServletUtil.sendResponse(
+				response,
+				HttpServletResponse.SC_NOT_ACCEPTABLE,
+				null,
+				"Not acceptable media types " + httpAcceptHeader);
+		return;
 	}
 }

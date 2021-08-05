@@ -8,11 +8,12 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uniresolver.result.DereferenceResult;
+import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -22,18 +23,19 @@ public class HttpBindingUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static ResolveResult fromHttpBodyResolveRepresentationResult(String httpBody) throws IOException {
-        if (log.isDebugEnabled()) log.debug("Deserializing resolve result from HTTP body.");
-        ResolveResult resolveResult = ResolveResult.build();
+    public static ResolveRepresentationResult fromHttpBodyResolveRepresentationResult(String httpBody) throws IOException {
+        if (log.isDebugEnabled()) log.debug("Deserializing resolve representation result from HTTP body.");
+
+        ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
         Map<String, Object> json = objectMapper.readValue(httpBody, LinkedHashMap.class);
+
+        if (json.containsKey("didResolutionMetadata")) resolveRepresentationResult.setDidResolutionMetadata((Map<String, Object>) json.get("didResolutionMetadata"));
+        if (json.containsKey("didDocumentMetadata")) resolveRepresentationResult.setDidDocumentMetadata((Map<String, Object>) json.get("didDocumentMetadata"));
+
+        byte[] didDocumentStream = new byte[0];
         Object didDocument = json.get("didDocument");
-        Map<String, Object> didResolutionMetadata = json.containsKey("didResolutionMetadata") ? (Map<String, Object>) json.get("didResolutionMetadata") : new HashMap<>();
-        Map<String, Object> didDocumentMetadata = json.containsKey("didDocumentMetadata") ? (Map<String, Object>) json.get("didDocumentMetadata") : new HashMap<>();
-        resolveResult.setDidResolutionMetadata(didResolutionMetadata);
-        resolveResult.setDidDocumentMetadata(didDocumentMetadata);
-        byte[] didDocumentStream = null;
         if (didDocument instanceof Map) {
-            didDocumentStream = objectMapper.writeValueAsBytes((Map<String, Object>) didDocument);
+            didDocumentStream = objectMapper.writeValueAsBytes(didDocument);
         } else if (didDocument instanceof String) {
             if (((String) didDocument).isEmpty()) {
                 didDocumentStream = new byte[0];
@@ -44,37 +46,74 @@ public class HttpBindingUtil {
                     didDocumentStream = ((String) didDocument).getBytes(StandardCharsets.UTF_8);
                 }
             }
-        } else if (didDocument == null) {
-            didDocumentStream = new byte[0];
         }
-        return ResolveResult.build(didResolutionMetadata, null, didDocumentStream, didDocumentMetadata);
+
+        resolveRepresentationResult.setDidDocumentStream(didDocumentStream);
+        return resolveRepresentationResult;
     }
 
-    public static ResolveResult fromHttpBodyDidDocument(byte[] httpBodyBytes, ContentType httpContentType) {
+    public static DereferenceResult fromHttpBodyDereferenceResult(String httpBody) throws IOException {
+        if (log.isDebugEnabled()) log.debug("Deserializing dereference result from HTTP body.");
+
+        DereferenceResult dereferenceResult = DereferenceResult.build();
+        Map<String, Object> json = objectMapper.readValue(httpBody, LinkedHashMap.class);
+
+        if (json.containsKey("dereferencingMetadata")) dereferenceResult.setDereferencingMetadata((Map<String, Object>) json.get("dereferencingMetadata"));
+        if (json.containsKey("contentMetadata")) dereferenceResult.setContentMetadata((Map<String, Object>) json.get("contentMetadata"));
+
+        byte[] contentStream = new byte[0];
+        Object content = json.get("content");
+        if (content instanceof Map) {
+            contentStream = objectMapper.writeValueAsBytes(content);
+        } else if (content instanceof String) {
+            if (((String) content).isEmpty()) {
+                contentStream = new byte[0];
+            } else {
+                try {
+                    contentStream = Hex.decodeHex((String) content);
+                } catch (DecoderException ex) {
+                    contentStream = ((String) content).getBytes(StandardCharsets.UTF_8);
+                }
+            }
+        }
+
+        dereferenceResult.setContentStream(contentStream);
+        return dereferenceResult;
+    }
+
+    public static ResolveRepresentationResult fromHttpBodyDidDocument(byte[] httpBodyBytes, ContentType httpContentType) {
         if (log.isDebugEnabled()) log.debug("Deserializing DID document from HTTP body.");
+
         if (httpContentType == null) {
             if (log.isDebugEnabled()) log.warn("No content type. Assuming default " + Representations.DEFAULT_MEDIA_TYPE);
             httpContentType = ContentType.create(Representations.DEFAULT_MEDIA_TYPE);
         }
+
         String contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
-        ResolveResult resolveResult = ResolveResult.build();
-        resolveResult.setContentType(contentType);
-        resolveResult.setDidDocumentStream(httpBodyBytes);
-        return resolveResult;
+
+        ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
+        resolveRepresentationResult.setContentType(contentType);
+        resolveRepresentationResult.setDidDocumentStream(httpBodyBytes);
+        return resolveRepresentationResult;
     }
 
-    public static String representationMediaTypeForMediaType(String mediaType) {
-        if (mediaType == null) throw new NullPointerException();
-        if ("application/ld+json".equals(mediaType)) mediaType = Representations.MEDIA_TYPE_JSONLD;
-        if ("application/json".equals(mediaType)) mediaType = Representations.MEDIA_TYPE_JSON;
-        if ("application/cbor".equals(mediaType)) mediaType = Representations.MEDIA_TYPE_CBOR;
-        if (! Representations.MEDIA_TYPES.contains(mediaType)) return null;
-        return mediaType;
+    public static String representationMediaTypeForMediaType(String mediaTypeString) {
+        if (mediaTypeString == null) throw new NullPointerException();
+        ContentType mediaType = mediaTypeString == null ? null : ContentType.parse(mediaTypeString);
+        String representationMediaType = null;
+        if ("application/ld+json".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_JSONLD;
+        if ("application/json".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_JSON;
+        if ("application/cbor".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_CBOR;
+        if (Representations.MEDIA_TYPES.contains(mediaType.getMimeType())) representationMediaType = mediaType.getMimeType();
+        return representationMediaType;
     }
+
+    private static final ContentType RESOLVE_RESULT_CONTENT_TYPE = ContentType.parse(ResolveResult.MEDIA_TYPE);
 
     public static boolean isResolveResultContentType(ContentType contentType) {
-        ContentType resolveResultContentType = ContentType.parse(ResolveResult.MEDIA_TYPE);
-        return resolveResultContentType.getMimeType().equals(contentType.getMimeType()) && resolveResultContentType.getParameter("profile").equals(contentType.getParameter("profile"));
+        boolean isResolveResultMimeTypeEquals = RESOLVE_RESULT_CONTENT_TYPE.getMimeType().equals(contentType.getMimeType());
+        boolean isResolveResultProfileEquals = RESOLVE_RESULT_CONTENT_TYPE.getParameter("profile").equals(contentType.getParameter("profile"));
+        return isResolveResultMimeTypeEquals && isResolveResultProfileEquals;
      }
 
     public static boolean isResolveResultContent(String contentString) throws IOException {

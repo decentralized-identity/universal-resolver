@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
+import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 import uniresolver.util.HttpBindingUtil;
 
@@ -53,11 +54,12 @@ public class ClientUniResolver implements UniResolver {
 	}
 
 	@Override
-	public ResolveResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 
 		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
 
 		if (didString == null) throw new NullPointerException();
+		if (resolutionOptions == null) resolutionOptions = new HashMap<>();
 
 		// URL-encode DID
 
@@ -84,9 +86,9 @@ public class ClientUniResolver implements UniResolver {
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
 		httpGet.addHeader("Accept", acceptMediaTypesString);
 
-		// execute HTTP request
+		// execute HTTP request and read response
 
-		ResolveResult resolveRepresentationResult = null;
+		ResolveRepresentationResult resolveRepresentationResult = null;
 
 		if (log.isDebugEnabled()) log.debug("Request for DID " + didString + " to " + uriString + " with Accept: header " + acceptMediaTypesString);
 
@@ -116,15 +118,15 @@ public class ClientUniResolver implements UniResolver {
 			}
 
 			if (httpStatusCode == 404 && resolveRepresentationResult == null) {
-				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
+				throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode == 406 && resolveRepresentationResult == null) {
-				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
+				throw new ResolutionException(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode != 200 && resolveRepresentationResult == null) {
-				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Cannot retrieve result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
+				throw new ResolutionException(ResolveResult.ERROR_INTERNALERROR, "Cannot retrieve result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (resolveRepresentationResult != null && resolveRepresentationResult.isErrorResult()) {
@@ -147,7 +149,7 @@ public class ClientUniResolver implements UniResolver {
 
 		// done
 
-		return resolveRepresentationResult;
+		return resolveRepresentationResult.toResolveRepresentationResult(accept);
 	}
 
 	@Override
