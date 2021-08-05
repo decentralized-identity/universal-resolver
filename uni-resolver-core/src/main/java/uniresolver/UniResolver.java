@@ -27,13 +27,7 @@ public interface UniResolver extends DIDResolver {
 		if (accept != null) throw new ResolutionException("Unexpected 'accept' provided in 'resolutionOptions' for resolve().");
 		resolutionOptions = new HashMap<>(resolutionOptions);
 		resolutionOptions.put("accept", Representations.DEFAULT_MEDIA_TYPE);
-		ResolveResult resolveRepresentationResult = null;
-		try {
-			resolveRepresentationResult = this.resolveRepresentation(didString, resolutionOptions);
-		} catch (ResolutionException ex) {
-			if (ex.getResolveResult() != null) ex.setResolveResult(ResolveResultUtil.convertToResolveResult(ex.getResolveResult()));
-			throw ex;
-		}
+		ResolveResult resolveRepresentationResult = this.resolveRepresentation(didString, resolutionOptions);
 		ResolveResult resolveResult = resolveRepresentationResult == null ? null : ResolveResultUtil.convertToResolveResult(resolveRepresentationResult);
 		return resolveResult;
 	}
@@ -44,13 +38,7 @@ public interface UniResolver extends DIDResolver {
 		String accept = (String) resolutionOptions.get("accept");
 		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolveRepresentation().");
 		resolutionOptions = new HashMap<>(resolutionOptions);
-		ResolveResult resolveResult;
-		try {
-			resolveResult = this.resolve(didString, resolutionOptions);
-		} catch (ResolutionException ex) {
-			if (ex.getResolveResult() != null) ex.setResolveResult(ResolveResultUtil.convertToResolveRepresentationResult(ex.getResolveResult(), accept));
-			throw ex;
-		}
+		ResolveResult resolveResult = this.resolve(didString, resolutionOptions);
 		ResolveResult resolveRepresentationResult = resolveResult == null ? null : ResolveResultUtil.convertToResolveRepresentationResult(resolveResult, accept);
 		return resolveRepresentationResult;
 	}

@@ -1,11 +1,11 @@
 package uniresolver.result;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import uniresolver.DereferencingException;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -50,12 +50,8 @@ public class DereferenceResult {
 		return new DereferenceResult(dereferencingMetadata, contentStream, contentMetadata);
 	}
 
-	public static DereferenceResult build(byte[] contentStream) {
-		return new DereferenceResult(new HashMap<String, Object> (), contentStream, new HashMap<String, Object> ());
-	}
-
 	public static DereferenceResult build() {
-		return new DereferenceResult(null, null, null);
+		return new DereferenceResult(new HashMap<>(), null, new HashMap<>());
 	}
 
 	public static DereferenceResult makeErrorDereferenceResult(String error, String errorMessage, String contentType) {
@@ -67,12 +63,19 @@ public class DereferenceResult {
 		return dereferenceResult;
 	}
 
+	public static DereferenceResult makeErrorDereferenceResult(DereferencingException ex, String contentType) {
+		if (ex.getDereferenceResult() != null && contentType.equals(ex.getDereferenceResult().getContentType())) {
+			return ex.getDereferenceResult();
+		}
+		return makeErrorDereferenceResult(ex.getError(), ex.getMessage(), contentType);
+	}
+
 	/*
 	 * Helper methods
 	 */
 
 	@JsonIgnore
-	public boolean isErrorDereferenceResult() {
+	public boolean isErrorResult() {
 		return this.getError() != null;
 	}
 

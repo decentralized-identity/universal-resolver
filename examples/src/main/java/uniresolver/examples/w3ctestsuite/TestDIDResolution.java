@@ -2,11 +2,9 @@ package uniresolver.examples.w3ctestsuite;
 
 import uniresolver.ResolutionException;
 import uniresolver.client.ClientUniResolver;
-import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +61,7 @@ public class TestDIDResolution {
 			} catch (ResolutionException ex) {
 
 //				ex.printStackTrace(System.err);
-				resolveResult = ex.getResolveResult();
+				resolveResult = ex.getResolveRepresentationResult();
 			}
 
 			resolveResults.add(resolveResult);

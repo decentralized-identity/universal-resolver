@@ -73,38 +73,38 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		// invoke the driver
 
-		ResolveResult resolveResult;
+		ResolveResult resolveRepresentationResult;
 
 		try {
 
-			resolveResult = InitServlet.getDriver().resolveRepresentation(DID.fromString(didString), resolutionOptions);
+			resolveRepresentationResult = InitServlet.getDriver().resolveRepresentation(DID.fromString(didString), resolutionOptions);
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Driver: Resolve problem for " + didString + ": " + ex.getMessage(), ex);
 
-			if (ex instanceof ResolutionException && ((ResolutionException) ex).getResolveResult() != null) {
-				resolveResult = ((ResolutionException) ex).getResolveResult();
+			if (ex instanceof ResolutionException) {
+				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult((ResolutionException) ex, accept);
 			} else {
-				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Driver: Resolve problem for " + didString + ": " + ex.getMessage(), accept);
+				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Driver: Resolve problem for " + didString + ": " + ex.getMessage(), accept);
 			}
 
-			ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveResult), null, HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
+			ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveRepresentationResult), null, HttpBindingServerUtil.toHttpBodyResolveResult(resolveRepresentationResult));
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("Driver: Resolve result for " + didString + ": " + resolveResult);
+		if (log.isInfoEnabled()) log.info("Driver: Resolve result for " + didString + ": " + resolveRepresentationResult);
 
 		// no resolve result?
 
-		if (resolveResult == null || resolveResult.getDidDocumentStream() == null) {
+		if (resolveRepresentationResult == null || resolveRepresentationResult.getDidDocumentStream() == null) {
 
-			resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, "Driver: No resolve result for " + didString, accept);
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null,  HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
+			resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, "Driver: No resolve result for " + didString, accept);
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null,  HttpBindingServerUtil.toHttpBodyResolveResult(resolveRepresentationResult));
 			return;
 		}
 
 		// write resolve result
 
-		ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveResult), ResolveResult.MEDIA_TYPE, HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
+		ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveRepresentationResult), ResolveResult.MEDIA_TYPE, HttpBindingServerUtil.toHttpBodyResolveResult(resolveRepresentationResult));
 	}
 }

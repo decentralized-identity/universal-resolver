@@ -70,33 +70,33 @@ public class ResolveServlet extends WebUniResolver {
 
 		// execute the request
 
-		ResolveResult resolveResult;
+		ResolveResult resolveRepresentationResult;
 
 		try {
 
-			resolveResult = this.resolveRepresentation(didString, resolutionOptions);
+			resolveRepresentationResult = this.resolveRepresentation(didString, resolutionOptions);
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolve problem for " + didString + ": " + ex.getMessage(), ex);
 
-			if (ex instanceof ResolutionException && ((ResolutionException) ex).getResolveResult() != null) {
-				resolveResult = ((ResolutionException) ex).getResolveResult();
+			if (ex instanceof ResolutionException) {
+				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult((ResolutionException) ex, accept);
 			} else {
-				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Resolve problem for " + didString + ": " + ex.getMessage(), accept);
+				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Resolve problem for " + didString + ": " + ex.getMessage(), accept);
 			}
 
-			ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveResult), null, HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
+			ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveRepresentationResult), null, HttpBindingServerUtil.toHttpBodyResolveResult(resolveRepresentationResult));
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("Resolve result for " + didString + ": " + resolveResult);
+		if (log.isInfoEnabled()) log.info("Resolve result for " + didString + ": " + resolveRepresentationResult);
 
 		// no resolve result?
 
-		if (resolveResult == null || resolveResult.getDidDocumentStream() == null) {
+		if (resolveRepresentationResult == null || resolveRepresentationResult.getDidDocumentStream() == null) {
 
-			resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, "No resolve result for " + didString, accept);
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null,  HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
+			resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, "No resolve result for " + didString, accept);
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null,  HttpBindingServerUtil.toHttpBodyResolveResult(resolveRepresentationResult));
 			return;
 		}
 
@@ -106,15 +106,15 @@ public class ResolveServlet extends WebUniResolver {
 
 			if (HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, MediaType.valueOf(ResolveResult.MEDIA_TYPE))) {
 
-				ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveResult), ResolveResult.MEDIA_TYPE, HttpBindingServerUtil.toHttpBodyResolveResult(resolveResult));
+				ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveRepresentationResult), ResolveResult.MEDIA_TYPE, HttpBindingServerUtil.toHttpBodyResolveResult(resolveRepresentationResult));
 				return;
 			} else {
 
-				if (!HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, MediaType.valueOf(resolveResult.getContentType()))) {
+				if (!HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, MediaType.valueOf(resolveRepresentationResult.getContentType()))) {
 
 					// try to convert
 
-					String sourceMediaType = resolveResult.getContentType();
+					String sourceMediaType = resolveRepresentationResult.getContentType();
 					String targetMediaType = HttpBindingUtil.representationMediaTypeForMediaType(ContentType.parse(acceptMediaType.toString()).getMimeType());
 					if (targetMediaType == null) {
 						if (log.isDebugEnabled()) log.debug("Cannot convert resolve result from " + sourceMediaType + " to " + targetMediaType);
@@ -124,15 +124,15 @@ public class ResolveServlet extends WebUniResolver {
 					}
 
 					try {
-						resolveResult = ResolveResultUtil.convertToResolveRepresentationResult(ResolveResultUtil.convertToResolveResult(resolveResult), targetMediaType);
-						resolveResult.getDidResolutionMetadata().put("convertedFrom", sourceMediaType);
-						resolveResult.getDidResolutionMetadata().put("convertedTo", targetMediaType);
+						resolveRepresentationResult = ResolveResultUtil.convertToResolveRepresentationResult(ResolveResultUtil.convertToResolveResult(resolveRepresentationResult), targetMediaType);
+						resolveRepresentationResult.getDidResolutionMetadata().put("convertedFrom", sourceMediaType);
+						resolveRepresentationResult.getDidResolutionMetadata().put("convertedTo", targetMediaType);
 					} catch (ResolutionException ex) {
 						throw new IOException(ex.getMessage(), ex);
 					}
 				}
 
-				ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveResult), resolveResult.getContentType(), resolveResult.getDidDocumentStream());
+				ServletUtil.sendResponse(response, HttpBindingServerUtil.httpStatusCodeForResolveResult(resolveRepresentationResult), resolveRepresentationResult.getContentType(), resolveRepresentationResult.getDidDocumentStream());
 				return;
 			}
 		}

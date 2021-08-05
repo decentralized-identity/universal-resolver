@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
-import uniresolver.driver.util.HttpBindingServerUtil;
 import uniresolver.result.ResolveResult;
 import uniresolver.util.HttpBindingUtil;
 
@@ -110,7 +109,7 @@ public class HttpDriver implements Driver {
 
 		// execute HTTP request and read response
 
-		ResolveResult resolveResult = null;
+		ResolveResult resolveRepresentationResult = null;
 
 		if (log.isDebugEnabled()) log.debug("Driver request for DID " + did + " to " + uriString + " with Accept: header " + acceptMediaTypesString);
 
@@ -136,28 +135,28 @@ public class HttpDriver implements Driver {
 			if (log.isDebugEnabled()) log.debug("Driver response body from " + uriString + ": " + httpBodyString);
 
 			if ((httpContentType != null && HttpBindingUtil.isResolveResultContentType(httpContentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
-				resolveResult = HttpBindingUtil.fromHttpBodyResolveResult(httpBodyString);
+				resolveRepresentationResult = HttpBindingUtil.fromHttpBodyResolveRepresentationResult(httpBodyString);
 			}
 
-			if (httpStatusCode == 404 && resolveResult == null) {
-				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
+			if (httpStatusCode == 404 && resolveRepresentationResult == null) {
+				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
 			}
 
-			if (httpStatusCode == 406 && resolveResult == null) {
-				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
+			if (httpStatusCode == 406 && resolveRepresentationResult == null) {
+				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
 			}
 
-			if (httpStatusCode != 200 && resolveResult == null) {
-				resolveResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Driver cannot retrieve result for " + did + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
+			if (httpStatusCode != 200 && resolveRepresentationResult == null) {
+				resolveRepresentationResult = ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_INTERNALERROR, "Driver cannot retrieve result for " + did + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")", accept);
 			}
 
-			if (resolveResult != null && resolveResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn(resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
-				throw new ResolutionException(resolveResult);
+			if (resolveRepresentationResult != null && resolveRepresentationResult.isErrorResult()) {
+				if (log.isWarnEnabled()) log.warn(resolveRepresentationResult.getError() + " -> " + resolveRepresentationResult.getErrorMessage());
+				throw new ResolutionException(resolveRepresentationResult);
 			}
 
-			if (resolveResult == null) {
-				resolveResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
+			if (resolveRepresentationResult == null) {
+				resolveRepresentationResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
 			}
 		} catch (ResolutionException ex) {
 
@@ -167,11 +166,11 @@ public class HttpDriver implements Driver {
 			throw new ResolutionException("Driver cannot retrieve resolve result for " + did + " from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Driver retrieved resolve result for " + did + " (" + uriString + "): " + resolveResult);
+		if (log.isDebugEnabled()) log.debug("Driver retrieved resolve result for " + did + " (" + uriString + "): " + resolveRepresentationResult);
 
 		// done
 
-		return resolveResult;
+		return resolveRepresentationResult;
 	}
 
 	@Override

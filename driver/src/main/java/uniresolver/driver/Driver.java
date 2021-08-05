@@ -4,7 +4,6 @@ import foundation.identity.did.DID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
-import uniresolver.UniResolver;
 import uniresolver.result.ResolveResult;
 import uniresolver.util.ResolveResultUtil;
 
@@ -20,13 +19,7 @@ public interface Driver {
 
 	default public ResolveResult resolve(DID did, Map<String, Object> resolutionOptions) throws ResolutionException {
 		if (log.isDebugEnabled()) log.debug("Driver: resolve(" + did + ")  with options: " + resolutionOptions);
-		ResolveResult resolveRepresentationResult = null;
-		try {
-			resolveRepresentationResult = this.resolveRepresentation(did, resolutionOptions);
-		} catch (ResolutionException ex) {
-			if (ex.getResolveResult() != null) ex.setResolveResult(ResolveResultUtil.convertToResolveResult(ex.getResolveResult()));
-			throw ex;
-		}
+		ResolveResult resolveRepresentationResult = this.resolveRepresentation(did, resolutionOptions);
 		ResolveResult resolveResult = resolveRepresentationResult == null ? null : ResolveResultUtil.convertToResolveResult(resolveRepresentationResult);
 		return resolveResult;
 	}
@@ -35,13 +28,7 @@ public interface Driver {
 		if (log.isDebugEnabled()) log.debug("Driver: resolveRepresentation(" + did + ")  with options: " + resolutionOptions);
 		String accept = (String) resolutionOptions.get("accept");
 		if (accept == null) throw new ResolutionException("Driver: No 'accept' provided in 'resolutionOptions' for resolveRepresentation().");
-		ResolveResult resolveResult;
-		try {
-			resolveResult = this.resolve(did, resolutionOptions);
-		} catch (ResolutionException ex) {
-			if (ex.getResolveResult() != null) ex.setResolveResult(ResolveResultUtil.convertToResolveRepresentationResult(ex.getResolveResult(), accept));
-			throw ex;
-		}
+		ResolveResult resolveResult = this.resolve(did, resolutionOptions);
 		ResolveResult resolveRepresentationResult = resolveResult == null ? null : ResolveResultUtil.convertToResolveRepresentationResult(resolveResult, accept);
 		return resolveRepresentationResult;
 	}

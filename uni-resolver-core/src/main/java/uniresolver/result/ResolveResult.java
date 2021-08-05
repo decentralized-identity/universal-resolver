@@ -6,7 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DIDDocument;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
+import uniresolver.UniResolver;
 import uniresolver.util.ResolveResultUtil;
 
 import java.io.IOException;
@@ -19,6 +22,8 @@ import java.util.Map;
 @JsonPropertyOrder({ "didResolutionMetadata", "didDocument", "didDocumentStream", "didDocumentMetadata" })
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class ResolveResult {
+
+	static final Logger log = LoggerFactory.getLogger(ResolveResult.class);
 
 	public static final String MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
 
@@ -62,23 +67,23 @@ public class ResolveResult {
 	}
 
 	public static ResolveResult build() {
-		return new ResolveResult(null, null, null, null);
+		return new ResolveResult(new HashMap<>(), null, null, new HashMap<>());
 	}
 
-	public static ResolveResult makeErrorResolveResult(String error, String errorMessage) {
+	public static ResolveResult makeErrorResolveRepresentationResult(String error, String errorMessage, String contentType) {
 		ResolveResult resolveResult = ResolveResult.build();
-		resolveResult.setDidDocument(null);
 		resolveResult.setError(error == null ? ERROR_INTERNALERROR : error);
 		if (errorMessage != null) resolveResult.setErrorMessage(errorMessage);
+		resolveResult.setContentType(contentType);
+		resolveResult.setDidDocumentStream(new byte[0]);
 		return resolveResult;
 	}
 
-	public static ResolveResult makeErrorResolveRepresentationResult(String error, String errorMessage, String mediaType) {
-		try {
-			return ResolveResultUtil.convertToResolveRepresentationResult(makeErrorResolveResult(error, errorMessage), mediaType);
-		} catch (ResolutionException ex) {
-			throw new IllegalArgumentException(ex.getMessage(), ex);
+	public static ResolveResult makeErrorResolveRepresentationResult(ResolutionException ex, String contentType) {
+		if (ex.getResolveRepresentationResult() != null && contentType.equals(ex.getResolveRepresentationResult().getContentType())) {
+			return ex.getResolveRepresentationResult();
 		}
+		return makeErrorResolveRepresentationResult(ex.getError(), ex.getMessage(), contentType);
 	}
 
 	/*

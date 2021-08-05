@@ -22,8 +22,8 @@ public class HttpBindingUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static ResolveResult fromHttpBodyResolveResult(String httpBody) throws IOException {
-        if (log.isDebugEnabled()) log.debug("Deserizalizing resolve result from HTTP body.");
+    public static ResolveResult fromHttpBodyResolveRepresentationResult(String httpBody) throws IOException {
+        if (log.isDebugEnabled()) log.debug("Deserializing resolve result from HTTP body.");
         ResolveResult resolveResult = ResolveResult.build();
         Map<String, Object> json = objectMapper.readValue(httpBody, LinkedHashMap.class);
         Object didDocument = json.get("didDocument");
@@ -51,7 +51,7 @@ public class HttpBindingUtil {
     }
 
     public static ResolveResult fromHttpBodyDidDocument(byte[] httpBodyBytes, ContentType httpContentType) {
-        if (log.isDebugEnabled()) log.debug("Deserizalizing DID document from HTTP body.");
+        if (log.isDebugEnabled()) log.debug("Deserializing DID document from HTTP body.");
         if (httpContentType == null) {
             if (log.isDebugEnabled()) log.warn("No content type. Assuming default " + Representations.DEFAULT_MEDIA_TYPE);
             httpContentType = ContentType.create(Representations.DEFAULT_MEDIA_TYPE);

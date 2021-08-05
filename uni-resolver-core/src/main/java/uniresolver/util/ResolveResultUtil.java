@@ -44,20 +44,20 @@ public class ResolveResultUtil {
         RepresentationConsumer representationConsumer = null;
         DIDDocument didDocument;
 
-        if (!resolveResult.isErrorResult()) {
+        if (! resolveResult.isErrorResult()) {
 
-            String contentType = (String) resolveRepresentationResult.getContentType();
+            String contentType = resolveRepresentationResult.getContentType();
             byte[] didDocumentStream = resolveRepresentationResult.getDidDocumentStream();
 
             representationConsumer = Representations.getConsumer(contentType);
-            if (representationConsumer == null) throw new ResolutionException(ResolveResult.makeErrorResolveResult(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, "No consumer for " + contentType));
+            if (representationConsumer == null) throw new ResolutionException(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, "No consumer for " + contentType);
 
             try {
                 RepresentationConsumer.Result result = representationConsumer.consume(didDocumentStream);
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.putAll(result.representationSpecificEntries.get(contentType));
                 map.putAll(result.didDocument);
-                didDocument = DIDDocument.fromMap(result.didDocument);
+                didDocument = DIDDocument.fromMap(map);
             } catch (IOException ex) {
                 throw new ResolutionException("Problem during consumption of " + contentType + ": " + ex.getMessage(), ex);
             }
@@ -101,12 +101,12 @@ public class ResolveResultUtil {
         byte[] didDocumentStream;
         String contentType;
 
-        if (!resolveResult.isErrorResult()) {
+        if (! resolveResult.isErrorResult()) {
 
             DIDDocument didDocument = resolveResult.getDidDocument();
 
             representationProducer = Representations.getProducer(mediaType);
-            if (representationProducer == null) throw new ResolutionException(ResolveResult.makeErrorResolveRepresentationResult(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, "No producer for " + mediaType, mediaType));
+            if (representationProducer == null) throw new ResolutionException(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, "No producer for " + mediaType);
 
             try {
                 RepresentationProducer.Result result = representationProducer.produce(didDocument.toMap(), null);
