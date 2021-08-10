@@ -21,11 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Import Secrets
-        uses: hashicorp/vault-action@v2.1.1
+        uses: hashicorp/vault-action@v2.3.0
         with:
-          url: https://vault.danubetech.com
+          url: ${{ secrets.VAULT_ADDR }}
           token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
-          tlsSkipVerify: true
+          caCertificate: ${{ secrets.VAULTCA }}
           secrets: |
             ci/data/gh-workflows/dockerhub username | DOCKER_USERNAME ;
             ci/data/gh-workflows/dockerhub password | DOCKER_PASSWORD ;
@@ -54,11 +54,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Import Secrets
-        uses: hashicorp/vault-action@v2.1.1
+        uses: hashicorp/vault-action@v2.3.0
         with:
-          url: https://vault.danubetech.com
+          url: ${{ secrets.VAULT_ADDR }}
           token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
-          tlsSkipVerify: true
+          caCertificate: ${{ secrets.VAULTCA }}
           secrets: |
             ci/data/gh-workflows/workflow-dispatch token | WORKFLOW_DISPATCH_TOKEN ;
             ci/data/gh-workflows/deployment-status slack-webhook-url | SLACK_WEBHOOK_URL

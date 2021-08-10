@@ -16,11 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Import Secrets
-        uses: hashicorp/vault-action@v2.1.1
+        uses: hashicorp/vault-action@v2.3.0
         with:
-          url: https://vault.danubetech.com
+          url: ${{ secrets.VAULT_ADDR }}
           token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
-          tlsSkipVerify: true
+          caCertificate: ${{ secrets.VAULTCA }}
           secrets: |
             ci/data/gh-workflows/maven-danubetech-nexus username | MAVEN_USERNAME ;
             ci/data/gh-workflows/maven-danubetech-nexus password | MAVEN_PASSWORD ;
