@@ -32,6 +32,9 @@ public class HttpBindingUtil {
         if (json.containsKey("didResolutionMetadata")) resolveRepresentationResult.setDidResolutionMetadata((Map<String, Object>) json.get("didResolutionMetadata"));
         if (json.containsKey("didDocumentMetadata")) resolveRepresentationResult.setDidDocumentMetadata((Map<String, Object>) json.get("didDocumentMetadata"));
 
+        if (resolveRepresentationResult.getDidResolutionMetadata() == null) resolveRepresentationResult.setDidResolutionMetadata(new LinkedHashMap<>());
+        if (resolveRepresentationResult.getDidDocumentMetadata() == null) resolveRepresentationResult.setDidDocumentMetadata(new LinkedHashMap<>());
+
         byte[] didDocumentStream = new byte[0];
         Object didDocument = json.get("didDocument");
         if (didDocument instanceof Map) {
@@ -60,6 +63,9 @@ public class HttpBindingUtil {
 
         if (json.containsKey("dereferencingMetadata")) dereferenceResult.setDereferencingMetadata((Map<String, Object>) json.get("dereferencingMetadata"));
         if (json.containsKey("contentMetadata")) dereferenceResult.setContentMetadata((Map<String, Object>) json.get("contentMetadata"));
+
+        if (dereferenceResult.getDereferencingMetadata() == null) dereferenceResult.setDereferencingMetadata(new LinkedHashMap<>());
+        if (dereferenceResult.getContentMetadata() == null) dereferenceResult.setContentMetadata(new LinkedHashMap<>());
 
         byte[] contentStream = new byte[0];
         Object content = json.get("content");
