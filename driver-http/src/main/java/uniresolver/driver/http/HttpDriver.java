@@ -136,7 +136,7 @@ public class HttpDriver implements Driver {
 			if (log.isDebugEnabled()) log.debug("Driver response body from " + uriString + ": " + httpBodyString);
 
 			if ((httpContentType != null && HttpBindingUtil.isResolveResultContentType(httpContentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
-				resolveRepresentationResult = HttpBindingUtil.fromHttpBodyResolveRepresentationResult(httpBodyString);
+				resolveRepresentationResult = HttpBindingUtil.fromHttpBodyResolveRepresentationResult(httpBodyString, httpContentType);
 			}
 
 			if (httpStatusCode == 404 && resolveRepresentationResult == null) {

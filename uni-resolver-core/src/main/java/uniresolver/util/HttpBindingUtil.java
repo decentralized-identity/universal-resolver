@@ -23,17 +23,14 @@ public class HttpBindingUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static ResolveRepresentationResult fromHttpBodyResolveRepresentationResult(String httpBody) throws IOException {
+    public static ResolveRepresentationResult fromHttpBodyResolveRepresentationResult(String httpBody, ContentType httpContentType) throws IOException {
         if (log.isDebugEnabled()) log.debug("Deserializing resolve representation result from HTTP body.");
 
         ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
         Map<String, Object> json = objectMapper.readValue(httpBody, LinkedHashMap.class);
 
-        if (json.containsKey("didResolutionMetadata")) resolveRepresentationResult.setDidResolutionMetadata((Map<String, Object>) json.get("didResolutionMetadata"));
-        if (json.containsKey("didDocumentMetadata")) resolveRepresentationResult.setDidDocumentMetadata((Map<String, Object>) json.get("didDocumentMetadata"));
-
-        if (resolveRepresentationResult.getDidResolutionMetadata() == null) resolveRepresentationResult.setDidResolutionMetadata(new LinkedHashMap<>());
-        if (resolveRepresentationResult.getDidDocumentMetadata() == null) resolveRepresentationResult.setDidDocumentMetadata(new LinkedHashMap<>());
+        if (json.get("didResolutionMetadata") instanceof Map) resolveRepresentationResult.setDidResolutionMetadata((Map<String, Object>) json.get("didResolutionMetadata"));
+        if (json.get("didDocumentMetadata") instanceof Map) resolveRepresentationResult.setDidDocumentMetadata((Map<String, Object>) json.get("didDocumentMetadata"));
 
         byte[] didDocumentStream = new byte[0];
         Object didDocument = json.get("didDocument");
@@ -51,21 +48,30 @@ public class HttpBindingUtil {
             }
         }
 
+        if (resolveRepresentationResult.getContentType() == null) {
+            String contentType;
+            if (httpContentType != null) {
+                if (log.isDebugEnabled()) log.debug("No content type in resolution result. Assuming HTTP header is content type " + httpContentType);
+                contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
+            } else {
+                if (log.isDebugEnabled()) log.debug("No content type in resolution result or HTTP header. Assuming default content type " + Representations.DEFAULT_MEDIA_TYPE);
+                contentType = Representations.DEFAULT_MEDIA_TYPE;
+            }
+            resolveRepresentationResult.setContentType(contentType);
+        }
+
         resolveRepresentationResult.setDidDocumentStream(didDocumentStream);
         return resolveRepresentationResult;
     }
 
-    public static DereferenceResult fromHttpBodyDereferenceResult(String httpBody) throws IOException {
+    public static DereferenceResult fromHttpBodyDereferenceResult(String httpBody, ContentType httpContentType) throws IOException {
         if (log.isDebugEnabled()) log.debug("Deserializing dereference result from HTTP body.");
 
         DereferenceResult dereferenceResult = DereferenceResult.build();
         Map<String, Object> json = objectMapper.readValue(httpBody, LinkedHashMap.class);
 
-        if (json.containsKey("dereferencingMetadata")) dereferenceResult.setDereferencingMetadata((Map<String, Object>) json.get("dereferencingMetadata"));
-        if (json.containsKey("contentMetadata")) dereferenceResult.setContentMetadata((Map<String, Object>) json.get("contentMetadata"));
-
-        if (dereferenceResult.getDereferencingMetadata() == null) dereferenceResult.setDereferencingMetadata(new LinkedHashMap<>());
-        if (dereferenceResult.getContentMetadata() == null) dereferenceResult.setContentMetadata(new LinkedHashMap<>());
+        if (json.get("dereferencingMetadata") instanceof Map) dereferenceResult.setDereferencingMetadata((Map<String, Object>) json.get("dereferencingMetadata"));
+        if (json.get("contentMetadata") instanceof Map) dereferenceResult.setContentMetadata((Map<String, Object>) json.get("contentMetadata"));
 
         byte[] contentStream = new byte[0];
         Object content = json.get("content");
@@ -83,6 +89,18 @@ public class HttpBindingUtil {
             }
         }
 
+        if (dereferenceResult.getContentType() == null) {
+            String contentType;
+            if (httpContentType != null) {
+                if (log.isDebugEnabled()) log.debug("No content type in dereference result. Assuming HTTP header is content type " + httpContentType);
+                contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
+            } else {
+                if (log.isDebugEnabled()) log.debug("No content type in dereference result or HTTP header. Assuming default content type " + Representations.DEFAULT_MEDIA_TYPE);
+                contentType = Representations.DEFAULT_MEDIA_TYPE;
+            }
+            dereferenceResult.setContentType(contentType);
+        }
+
         dereferenceResult.setContentStream(contentStream);
         return dereferenceResult;
     }
@@ -90,15 +108,18 @@ public class HttpBindingUtil {
     public static ResolveRepresentationResult fromHttpBodyDidDocument(byte[] httpBodyBytes, ContentType httpContentType) {
         if (log.isDebugEnabled()) log.debug("Deserializing DID document from HTTP body.");
 
-        if (httpContentType == null) {
-            if (log.isDebugEnabled()) log.warn("No content type. Assuming default " + Representations.DEFAULT_MEDIA_TYPE);
-            httpContentType = ContentType.create(Representations.DEFAULT_MEDIA_TYPE);
-        }
-
-        String contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
-
         ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
+
+        String contentType;
+        if (httpContentType != null) {
+            if (log.isDebugEnabled()) log.debug("No content type. Assuming HTTP header is content type " + httpContentType);
+            contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
+        } else {
+            if (log.isDebugEnabled()) log.debug("No content type in HTTP header. Assuming default content type " + Representations.DEFAULT_MEDIA_TYPE);
+            contentType = Representations.DEFAULT_MEDIA_TYPE;
+        }
         resolveRepresentationResult.setContentType(contentType);
+
         resolveRepresentationResult.setDidDocumentStream(httpBodyBytes);
         return resolveRepresentationResult;
     }
