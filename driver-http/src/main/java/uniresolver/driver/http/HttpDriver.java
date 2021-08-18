@@ -171,7 +171,7 @@ public class HttpDriver implements Driver {
 
 		// done
 
-		return (ResolveRepresentationResult) resolveRepresentationResult;
+		return resolveRepresentationResult;
 	}
 
 	@Override
