@@ -116,6 +116,18 @@ public class DereferenceResult implements Result, StreamResult {
 	}
 
 	/*
+	 * Conversion
+	 */
+
+	public ResolveRepresentationResult toResolveRepresentationResult() {
+		ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
+		resolveRepresentationResult.getDidResolutionMetadata().putAll(this.getDereferencingMetadata());
+		resolveRepresentationResult.setDidDocumentStream(this.getContentStream());
+		resolveRepresentationResult.getDidDocumentMetadata().putAll(this.getContentMetadata());
+		return resolveRepresentationResult;
+	}
+
+	/*
 	 * Content type methods
 	 */
 

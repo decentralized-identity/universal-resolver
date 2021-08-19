@@ -106,6 +106,14 @@ public class ResolveRepresentationResult extends ResolveResult implements Result
 	 * Conversion
 	 */
 
+	public DereferenceResult toDereferenceResult() {
+		DereferenceResult dereferenceResult = DereferenceResult.build();
+		dereferenceResult.getDereferencingMetadata().putAll(this.getDidResolutionMetadata());
+		dereferenceResult.setContentStream(this.getDidDocumentStream());
+		dereferenceResult.getContentMetadata().putAll(this.getDidDocumentMetadata());
+		return dereferenceResult;
+	}
+
 	@Override
 	public void updateConversion() throws ResolutionException {
 
