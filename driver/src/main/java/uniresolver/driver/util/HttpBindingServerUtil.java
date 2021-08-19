@@ -9,10 +9,7 @@ import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import uniresolver.result.DereferenceResult;
-import uniresolver.result.ResolveRepresentationResult;
-import uniresolver.result.ResolveResult;
-import uniresolver.result.Result;
+import uniresolver.result.*;
 import uniresolver.util.HttpBindingUtil;
 
 import java.io.ByteArrayInputStream;
@@ -28,6 +25,16 @@ public class HttpBindingServerUtil {
     private static final Logger log = LoggerFactory.getLogger(HttpBindingServerUtil.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.USE_DEFAULTS);
+
+    public static String toHttpBodyStreamResult(StreamResult streamResult) throws IOException {
+        if (streamResult instanceof ResolveRepresentationResult) {
+            return toHttpBodyResolveRepresentationResult((ResolveRepresentationResult) streamResult);
+        } else if (streamResult instanceof DereferenceResult) {
+            return toHttpBodyDereferenceResult((DereferenceResult) streamResult);
+        } else {
+            throw new IllegalArgumentException("Invalid stream result: " + streamResult.getClass());
+        }
+    }
 
     public static String toHttpBodyResolveRepresentationResult(ResolveRepresentationResult resolveRepresentationResult) throws IOException {
         if (log.isDebugEnabled()) log.debug("Serializing resolve result to HTTP body.");
