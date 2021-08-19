@@ -131,7 +131,7 @@ public class HttpBindingUtil {
         if ("application/ld+json".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_JSONLD;
         if ("application/json".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_JSON;
         if ("application/cbor".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_CBOR;
-        if (Representations.MEDIA_TYPES.contains(mediaType.getMimeType())) representationMediaType = mediaType.getMimeType();
+        if (Representations.isRepresentationMediaType(mediaType.getMimeType())) representationMediaType = mediaType.getMimeType();
         return representationMediaType;
     }
 
