@@ -203,6 +203,7 @@ public class DereferenceResult implements Result, StreamResult {
 		this.dereferencingMetadata = dereferencingMetadata;
 	}
 
+	@Override
 	@JsonIgnore
 	public final byte[] getContentStream() {
 		return this.contentStream;
@@ -221,6 +222,7 @@ public class DereferenceResult implements Result, StreamResult {
 		}
 	}
 
+	@Override
 	@JsonIgnore
 	public final void setContentStream(byte[] contentStream) {
 		this.contentStream = contentStream;
@@ -247,18 +249,6 @@ public class DereferenceResult implements Result, StreamResult {
 	@JsonSetter
 	public final void setContentMetadata(Map<String, Object> contentMetadata) {
 		this.contentMetadata = contentMetadata;
-	}
-
-	@Override
-	@JsonIgnore
-	public final byte[] getStream() {
-		return this.getContentStream();
-	}
-
-	@Override
-	@JsonIgnore
-	public final void setStream(byte[] stream) {
-		this.setContentStream(stream);
 	}
 
 	/*

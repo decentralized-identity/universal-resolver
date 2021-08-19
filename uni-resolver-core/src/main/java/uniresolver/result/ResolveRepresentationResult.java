@@ -186,13 +186,13 @@ public class ResolveRepresentationResult extends ResolveResult implements Result
 
 	@Override
 	@JsonIgnore
-	public final byte[] getStream() {
+	public final byte[] getContentStream() {
 		return this.getDidDocumentStream();
 	}
 
 	@Override
 	@JsonIgnore
-	public final void setStream(byte[] stream) {
+	public final void setContentStream(byte[] stream) {
 		this.setDidDocumentStream(stream);
 	}
 
