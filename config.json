@@ -2,33 +2,28 @@
 	"drivers": [
 		{
 			"pattern": "^(did:btcr:.+)$",
-			"image": "universalresolver/driver-did-btcr",
-			"imageProperties": "true",
-			"tag": "latest",
+			"url": "http://driver-did-btcr:8080/",
+			"propertiesEndpoint": "true",
 			"testIdentifiers": [ "did:btcr:xz35-jznz-q9yu-ply", "did:btcr:xkrn-xz7q-qsye-28p", "did:btcr:x705-jznz-q3nl-srs" ]
 		}, {
 			"pattern": "^(did:sov:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$",
-			"image": "universalresolver/driver-did-sov",
-			"imageProperties": "true",
-			"tag": "latest",
-			"testIdentifiers": [ "did:sov:WRfXPg8dantKVubE3HX8pw" ]
+			"url": "http://driver-did-sov:8080/",
+			"propertiesEndpoint": "true",
+			"testIdentifiers": [ "did:sov:WRfXPg8dantKVubE3HX8pw", "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx", "did:sov:idu:6iHBriJn1DVJt3AjLEuHYL" ]
 		}, {
 			"pattern": "^(did:erc725:.+)$",
-			"image": "universalresolver/driver-did-erc725",
-			"imageProperties": "true",
-			"tag": "latest",
+			"url": "http://driver-did-erc725:8080/",
+			"propertiesEndpoint": "true",
 			"testIdentifiers": [ "did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E" ]
 		}, {
 			"pattern": "^(did:v1:nym:.+)$",
-			"image": "veresone/uni-resolver-did-v1-driver",
-			"imageProperties": "true",
-			"tag": "latest",
+			"url": "http://uni-resolver-did-v1-driver:8080/",
+			"propertiesEndpoint": "true",
 			"testIdentifiers": [ "did:v1:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR" ]
 		}, {
 			"pattern": "^(did:v1:test:nym:.+)$",
-			"image": "veresone/uni-resolver-did-v1-driver",
-			"imageProperties": "true",
-			"tag": "latest",
+			"url": "http://uni-resolver-did-v1-driver:8080/",
+			"propertiesEndpoint": "true",
 			"testIdentifiers": [ "did:v1:test:nym:z6MkgF4uJbLMoUin2uKaBf4Jb1F7SHzuALE8Ldq8FPPpHE9t", "did:v1:test:nym:z6MkmWLiAt5FtfwgFJwMDGS1GiFn1KpUXsd7bn1v2hLyXvud" ]
 		}, {
 			"pattern": "^did:ipid:(.+)$",
@@ -36,43 +31,55 @@
 			"testIdentifiers": [ "did:ipid:QmYA7p467t4BGgBL4NmyHtsXMoPrYH9b3kSG6dbgFYskJm" ]
 		}, {
 			"pattern": "^(did:stack:.+)$",
-			"image": "universalresolver/driver-did-stack",
-			"imageProperties": "true",
-			"tag": "latest",
+			"url": "http://driver-did-stack:8080/",
+			"propertiesEndpoint": "true",
 			"testIdentifiers": [ "did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0" ]
 		}, {
 			"pattern": "^(did:web:.+)$",
-			"image": "uport/uni-resolver-driver-did-uport",
-			"imagePort": "8081",
-			"tag": "latest",
-			"testIdentifiers": [ "did:web:did.actor:alice" ]
+			"url": "http://uni-resolver-driver-did-uport:8081/",
+			"testIdentifiers": [
+				"did:web:did.actor:alice",
+				"did:web:did.actor:bob",
+				"did:web:did.actor:carol",
+				"did:web:did.actor:mike"
+			]
 		}, {
 			"pattern": "^(did:ethr:.+)$",
-			"image": "uport/uni-resolver-driver-did-uport",
-			"imagePort": "8081",
-			"tag": "latest",
-			"testIdentifiers": [ "did:ethr:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736" ]
+			"url": "http://uni-resolver-driver-did-uport:8081/",
+			"testIdentifiers": [
+				"did:ethr:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736",
+				"did:ethr:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479",
+				"did:ethr:mainnet:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736",
+				"did:ethr:mainnet:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479",
+				"did:ethr:0x1:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736",
+				"did:ethr:0x1:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479",
+				"did:ethr:rinkeby:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736",
+				"did:ethr:rinkeby:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479",
+				"did:ethr:0x4:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736",
+				"did:ethr:0x4:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479",
+				"did:ethr:rsk:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736",
+				"did:ethr:rsk:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479",
+				"did:ethr:0x1e:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736",
+				"did:ethr:0x1e:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479"
+			]
+		}, {
+			"pattern": "^(did:eosio:.+)$",
+			"url": "http://eosio-driver:8080/",
+			"testIdentifiers": [
+				"did:eosio:eos:eoscanadacom",
+				"did:eosio:4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11:caleosblocks"
+			]
 		}, {
 			"pattern": "^(did:nacl:.+)$",
-			"image": "uport/uni-resolver-driver-did-uport",
-			"imagePort": "8081",
-			"tag": "latest",
+			"url": "http://uni-resolver-driver-did-uport:8081/",
 			"testIdentifiers": [ "did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI" ]
 		}, {
-			"pattern": "^((?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*(?:[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9]))$",
-			"image": "universalresolver/driver-dns",
-			"imageProperties": "true",
-			"tag": "latest",
-			"testIdentifiers": [ "ssi.labs.nic.at" ]
-		}, {
 			"pattern": "^(did:jolo:.+)$",
-			"image": "jolocomgmbh/jolocom-did-driver",
-			"tag": "latest",
+			"url": "http://jolocom-did-driver:8080/",
 			"testIdentifiers": [ "did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21" ]
 		}, {
 			"pattern": "^(did:hcr:.+)$",
-			"image": "hacera/hacera-did-driver",
-			"tag": "latest",
+			"url": "http://hacera-did-driver:8080/",
 			"testIdentifiers": [ "did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de" ]
 		}, {
 			"pattern": "^did:elem:(.+)$",
@@ -83,124 +90,163 @@
 			"url": "https://github-did.com/api/v1/did/$1",
 			"testIdentifiers": [ "did:github:gjgd" ]
 		}, {
-			"pattern": "^(did:neoid:.+)$",
-			"image": "swisscomblockchainag/seraph-id-did-driver",
-			"tag": "latest",
-			"testIdentifiers" : [ "did:neoid:priv:b4eeeb80d20bfb38b23001d0659ce0c1d96be0aa" ]
-		}, {
 			"pattern": "^(did:ccp:.+)$",
-			"image": "hello2mao/driver-did-ccp",
-			"tag": "latest",
+			"url": "http://driver-did-ccp:8080/",
 			"testIdentifiers": ["did:ccp:ceNobbK6Me9F5zwyE3MKY88QZLw", "did:ccp:3CzQLF3qfFVQ1CjGVzVRZaFXrjAd"]
 		}, {
 			"pattern": "^(did:work:.+)$",
-			"image": "didwork/work-did-driver",
-			"tag": "latest",
+			"url": "http://work-did-driver:8080/",
 			"testIdentifiers" : [ "did:work:2UUHQCd4psvkPLZGnWY33L" ]
 		}, {
 			"pattern": "^(did:ont:.+)$",
-			"image": "ontio/ontid-driver",
-			"tag": "latest",
+			"url": "http://ontid-driver:8080/",
 			"testIdentifiers": [ "did:ont:AN5g6gz9EoQ3sCNu7514GEghZurrktCMiH" ]
 		}, {
 			"pattern": "^(did:kilt:.+)$",
-			"image": "kiltprotocol/kilt-did-driver",
-			"tag": "1.0.1",
+			"url": "http://kilt-did-driver:8080/",
 			"testIdentifiers" : [ "did:kilt:5CqJa4Ct7oMeMESzehTiN9fwYdGLd7tqeirRMpGDh2XxYYyx" ]
 		}, {
 			"pattern": "^(did:evan:.+)$",
-			"image": "evannetwork/evan-did-driver",
-			"tag": "latest",
+			"url": "http://evan-did-driver:8080/",
 			"testIdentifiers": [ "did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734" ]
 		}, {
 			"pattern": "^(did:echo:.+)$",
-			"image": "echoprotocol/uni-resolver-driver-did-echo",
-			"tag": "latest",
+			"url": "http://uni-resolver-driver-did-echo:8080/",
 			"testIdentifiers": [ "did:echo:1.1.25.0" ]
 		}, {
-			"pattern": "^(did:factom:.+)$",
-			"image": "sphereon/driver-did-factom",
-			"tag": "latest",
-			"imageProperties": "true",
-			"testIdentifiers": [ "did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764" ]
-		}, {
-			"pattern": "^(did:key:.+)$",
-			"image": "universalresolver/driver-did-key",
-			"tag": "latest",
+			"pattern": "^(did:key:z6Mk.+)$",
+			"url": "http://driver-did-key:8080/",
 			"testIdentifiers": [ "did:key:z6Mkfriq1MqLBoPWecGoDLjguo1sB9brj6wT3qZ5BxkKpuP6", "did:key:z6MksQ35B5bwZDQq4QKuhQW2Sv6dcqwg4PqcSFf67pdgrtjB", "did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH" ]
 		}, {
 			"pattern": "^(did:dock:[a-zA-Z0-9]+)$",
-			"image": "docknetwork/dock-did-driver",
-			"tag": "latest",
+			"url": "http://dock-did-driver:8080/",
 			"testIdentifiers": [ "did:dock:5FXqofpV7dsuki925U1dSzDvBuQbaci5yWTQGVWRQ7bdQP5p" ]
 		}, {
 			"pattern": "^(did:abt:.+)$",
-			"image": "arcblock/driver-did-abt",
-			"tag": "latest",
+			"url": "http://driver-did-abt:8080/",
 			"testIdentifiers": [ "did:abt:z11MVbRGLFt6RXaHzX7Xj7rmHfeiyFkJiiRE" ]
-		},{
+		}, {
 			"pattern": "^(did:trustbloc:.+)$",
 			"url": "http://driver-did-trustbloc:8102/resolveDID?did=$1",
-			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiBh6SP9nw2W-1Z9Y9KB0-GZ8hvtYxFgE5oeSVbTmbpXmw" ]
-		},{
+			"testIdentifiers": [ "did:trustbloc:testnet.trustbloc.dev:EiBLTZcCj6u_XsufSuLVh2zbPEREjDcu8bnPgs0XyKkfPQ" ]
+		}, {
 			"pattern": "^(did:sirius:.+)$",
-			"image": "proximax/tsjs-did-sirius-id-driver",
-			"tag": "latest",
+			"url": "http://tsjs-did-sirius-id-driver:8080/",
 			"testIdentifiers": [ "did:sirius:2VhYrbauc2cCx9ZpCp5wrDtK7HKf7jrsvgoKBD4KgK" ]
-    	},{
+    		}, {
 			"pattern": "^(did:mpg:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
-			"image": "mpgshankr/driver-did-mpg",
-			"imageProperties": "true",
-			"tag": "latest",
+			"url": "http://driver-did-mpg:8080/",
+			"propertiesEndpoint": "true",
 			"testIdentifiers": [ "did:mpg:7PGGnRdvKKFftSXU3Jw75Vk5npfg" ]
-		},{
+		}, {
 			"pattern": "^(did:trust:.+)$",
-			"image": "bjwswang/driver-did-trust",
-			"tag": "latest",
-			"testIdentifiers": [ "did:trust:cert.EiBJ6qjVXgJ-A8xnaUiu4rtLDgeobQYgRWjMV49aCak4HQ","did:trust:licence.EiAMIYqz-ZlmFMrH6GqADqZThYmgV-x38Zwcjl6WR9qGhA" ]
-		},{
+			"url": "http://driver-did-trust:8080/",
+			"testIdentifiers": [ "did:trust:cert.EiDi8NEZVyvqmHeWRB5kUagWo3sDSQlCtl1nZ1vVgLdozw","did:trust:license.EiBdAy5GeNr9qcVQ-40fOwMVQW2CRGT2M238cp6yLJLnGg" ]
+		}, {
 			"pattern": "^(did:io:.+)$",
-			"image": "iotex/uni-resolver-driver-did-io",
-			"tag": "latest",
+			"url": "http://uni-resolver-driver-did-io:8080/",
 			"testIdentifiers": [ "did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A" ]
-        }, {
-            "pattern": "^(did:bba:.+)$",
-            "image": "blobaa/bba-did-driver",
-            "tag": "latest",
-            "testIdentifiers": [ "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf", "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044" ]
-        }, {
+        	}, {
+            		"pattern": "^(did:bba:.+)$",
+			"url": "http://bba-did-driver:8080/",
+            		"testIdentifiers": [ "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf", "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044" ]
+        	}, {
 			"pattern": "^(did:cy:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
-			"image": "chainyard/driver-did-cy",
-			"imageProperties": "true",
-			"tag": "latest",
+			"url": "http://driver-did-cy:8080/",
+			"propertiesEndpoint": "true",
 			"testIdentifiers": [ "did:cy:7PGGnRdvKKFftSXU3Jw75Vk5npfg" ]
 		}, {
 	  		"pattern": "^(did:bid:)([0-9a-f]{24})",
-	  		"image": "teleinfo/driver-did-bid",
-	  		"tag": "1.0.0",
+			"url": "http://driver-did-bid:8080/",
 	  		"testIdentifiers": [ "did:bid:6cc796b8d6e2fbebc9b3cf9e" ]
 	  	}, {
 			"pattern": "^(did:schema:.+)$",
-			"image": "51nodes/schema-registry-did-resolver",
-			"tag": "0.1.1",
+			"url": "http://schema-registry-did-resolver:8080/",
 			"testIdentifiers": [ "did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J", "did:schema:evan-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J" ]
 		}, {
-			"pattern": "^(did:ion:.+)$",
-			"image": "identityfoundation/driver-did-ion",
-			"tag": "v0.8.1",
-			"testIdentifiers": [ "did:ion:EiC5-1uBg-YC2DvQRbI6eihDvk7DOYaQ08OB0I3jCe9Ydg:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljX2tleXMiOlt7ImlkIjoiYW55U2lnbmluZ0tleUlkIiwiandrIjp7ImNydiI6InNlY3AyNTZrMSIsImt0eSI6IkVDIiwieCI6ImFHc01HMHU5Rlg2STU0cGVJS3FZb2tqblFQR2hMVVlUT1FOYzNuT3ZFMVEiLCJ5IjoiZmppbHFoZVdRWWtITkU3MHNoTVJ5TURyWnA4RUdDZkVfYUwzaC15Sm1RQSJ9LCJwdXJwb3NlIjpbImF1dGgiLCJnZW5lcmFsIl0sInR5cGUiOiJFY2RzYVNlY3AyNTZrMVZlcmlmaWNhdGlvbktleTIwMTkifV0sInNlcnZpY2VfZW5kcG9pbnRzIjpbeyJlbmRwb2ludCI6Imh0dHA6Ly9hbnkuZW5kcG9pbnQiLCJpZCI6ImFueVNlcnZpY2VFbmRwb2ludElkIiwidHlwZSI6ImFueVR5cGUifV19fV0sInVwZGF0ZV9jb21taXRtZW50IjoiRWlERkM2RE9Ed0JNeG5kX19oMTFSeDRObjFlOHpubFlPUjJhLVBqeUNva2NGZyJ9LCJzdWZmaXhfZGF0YSI6eyJkZWx0YV9oYXNoIjoiRWlBbExNMC1qem1DWi1FcElVZ0laQ2piWk5yMDFfVVBMbnd5MHdfT3I0Rks0dyIsInJlY292ZXJ5X2NvbW1pdG1lbnQiOiJFaUJDNGhTMVVHeVNnTmYzbWFMdnNKRUpxX05aQUlKa0pndTNKMTJMeGNESE93In19" ]
-		},
+            "pattern": "^(did:ion:test.+)$",
+            "url": "https://dev.discover.did.msidentity.com/",
+            "testIdentifiers": [ "did:ion:test:EiBEYjAmR8mLSBdiAv0tmASmpvQK8_BGe_p4O3s3fTHROA" ]
+       },
+          {
+            "pattern": "^(did:ion:(?!test).+)$",
+            "url": "http://driver-did-ion:8080/",
+            "testIdentifiers": [ "did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w" ]
+          },
 		{
-		  "pattern": "^(did:ace:.+)$",
-		  "image": "aceblock/ace-did-driver",
-		  "tag": "latest",
-		  "testIdentifiers": [ "did:ace:0xf81c16a78b257c10fddf87ed4324d433317169a005ddf36a3a1ba937ba9788e3" ]
+		  	"pattern": "^(did:ace:.+)$",
+			"url": "http://ace-did-driver:8080/",
+		  	"testIdentifiers": [ "did:ace:0xf81c16a78b257c10fddf87ed4324d433317169a005ddf36a3a1ba937ba9788e3" ]
 		},
 		{
 			"pattern": "^(did:gatc:.+)$",
-			"image": "gatacaid/universal-resolver-driver",
-			"tag": "1.0.0",
+			"url": "http://gataca-did-resolver-driver:8080/",
 			"testIdentifiers": [ "did:gatc:2xtSori9UQZdTqzxrkp7zqKM4Kj5B4C7" ]
-		  }
+		},
+		{
+			"pattern": "^(did:icon:02:.+)$",
+			"url": "http://driver-did-icon:8080/",
+			"testIdentifiers": [ "did:icon:02:6f7a00a29deb82cb36d501d687c18bad79a8f1c154ef0c78" ]
+		},
+		{
+			"pattern": "^(did:vaa:.+)$",
+			"url": "http://driver-did-vaa:8080/",
+			"testIdentifiers": [ "did:vaa:3wJVWDQWtDFx27FqvSqyo5xsTsxC" ]
+		},
+		{
+			"pattern": "^(did:unisot:.+)$",
+			"url": "http://unisot-did-driver:8080/",
+			"propertiesEndpoint": "true",
+			"testIdentifiers": [ "did:unisot:test:n1aAmTXAg4o44Z9k8YCQncEY91r3TV7WU4" ]
+		},
+		{
+			"pattern": "^(did:bitxhub:.+)$",
+			"url": "http://driver-did-bitxhub:8080/",
+			"propertiesEndpoint": "true",
+			"testIdentifiers": [ "did:bitxhub:appchain001:0xc7F999b83Af6DF9e67d0a37Ee7e900bF38b3D013" ]
+		},
+		{
+			"pattern": "^(did:sol:.+)$",
+			"url": "http://driver-did-sol:8080/",
+			"testIdentifiers": [ "did:sol:ygGfLvAyuRymPNv2fJDK1ZMpdy59m8cV5dak6A8uHKa" ]
+		},
+		{
+			"pattern": "^(did:lit:(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$",
+			"url": "http://driver-did-lit:8080/",
+			"testIdentifiers": [ "did:lit:AEZ87t1bi5bRxmVh3ksMUi" ]
+		},
+		{
+			"pattern": "^(did:ebsi:.+)$",
+			"url": "https://api.preprod.ebsi.eu/did-registry/v2/identifiers/$1",
+			"testIdentifiers": [ "did:ebsi:DfPaUdYwuzcqFoiMDSrUX8aQyZnr2SesH3vDVASYv8PE" ]
+		},
+		{
+			"pattern": "^(did:emtrust:.+)$",
+			"url": "http://driver-did-emtrust:8080/",
+			"testIdentifiers": [ "did:emtrust:0x242a5ac36676462bd58a" ]
+		},
+		{
+			"pattern": "^(did:meta:.+)$",
+			"url": "https://resolver.metadium.com/1.0/identifiers/$1",
+			"testIdentifiers": [ "did:meta:0000000000000000000000000000000000000000000000000000000000005e65" ]
+		},
+		{
+			"pattern": "^did:(?:tz:|pkh:|web:|key:(?:z6Mk|zQ3s|zDna)).+$",
+			"url": "http://driver-didkit:8080/identifiers/$1",
+			"testIdentifiers": [
+				"did:tz:tz1YwA1FwpgLtc1G8DKbbZ6e6PTb1dQMRn5x",
+				"did:tz:delphinet:tz1WvvbEGpBXGeTVbLiR6DYBe1izmgiYuZbq",
+				"did:web:identity.foundation",
+				"did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH",
+				"did:key:zQ3shokFTS3brHcDQrn82RUDfCZESWL1ZdCEJwekUDPQiYBme",
+				"did:key:zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169",
+				"did:pkh:tz:tz2BFTyPeYRzxd5aiBchbXN3WCZhx7BqbMBq"
+			]
+		},
+		{
+			"pattern": "^(did:orb:.+)$",
+			"url": "http://orb-did-driver:8121/resolveDID?did=$1",
+			"testIdentifiers": [ "did:orb:ipfs:bafkreifco5fp7ztvqnnvv4aqnnbktuvzhlh5tofr65ahyy37euafoscn7m:EiClaNSwhKSP6tQe36bYc5w41oRpCi1xv89MkUnNBm8agw" ]
+		}
 	]
 }

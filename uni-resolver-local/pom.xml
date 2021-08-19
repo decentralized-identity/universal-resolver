@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>uni-resolver-local</artifactId>
+	<packaging>jar</packaging>
+	<name>uni-resolver-local</name>
+
+	<parent>
+		<groupId>decentralized-identity</groupId>
+		<artifactId>uni-resolver</artifactId>
+		<version>0.3-SNAPSHOT</version>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>decentralized-identity</groupId>
+			<artifactId>uni-resolver-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>decentralized-identity</groupId>
+			<artifactId>uni-resolver-driver</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>decentralized-identity</groupId>
+			<artifactId>uni-resolver-driver-http</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>
