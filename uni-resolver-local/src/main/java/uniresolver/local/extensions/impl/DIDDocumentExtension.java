@@ -52,7 +52,7 @@ public class DIDDocumentExtension implements DereferencerExtension {
 
         dereferenceResult.setContentType(resolveRepresentationResult.getContentType());
         dereferenceResult.setContentStream(resolveRepresentationResult.getDidDocumentStream());
-        dereferenceResult.setContentMetadata(resolveResult.getDidDocumentMetadata());
+        dereferenceResult.setContentMetadata(resolveRepresentationResult.getDidDocumentMetadata());
 
         // done
 

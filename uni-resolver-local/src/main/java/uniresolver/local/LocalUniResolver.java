@@ -20,10 +20,13 @@ import java.util.*;
 
 public class LocalUniResolver implements UniResolver {
 
+	public static final List<ResolverExtension> DEFAULT_EXTENSIONS = List.of(
+	);
+
 	private static final Logger log = LoggerFactory.getLogger(LocalUniResolver.class);
 
 	private List<Driver> drivers = new ArrayList<>();
-	private List<ResolverExtension> extensions = new ArrayList<>();
+	private List<ResolverExtension> extensions = new ArrayList<>(DEFAULT_EXTENSIONS);
 
 	public LocalUniResolver() {
 

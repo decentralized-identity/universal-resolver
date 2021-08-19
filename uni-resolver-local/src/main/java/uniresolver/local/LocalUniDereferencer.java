@@ -11,6 +11,7 @@ import uniresolver.UniResolver;
 import uniresolver.local.configuration.LocalUniResolverConfigurator;
 import uniresolver.local.extensions.DereferencerExtension;
 import uniresolver.local.extensions.ExtensionStatus;
+import uniresolver.local.extensions.impl.DIDDocumentExtension;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
 
@@ -22,11 +23,15 @@ import java.util.Map;
 
 public class LocalUniDereferencer implements UniDereferencer {
 
+    public static final List<DereferencerExtension> DEFAULT_EXTENSIONS = List.of(
+            new DIDDocumentExtension()
+    );
+
     private static final Logger log = LoggerFactory.getLogger(LocalUniDereferencer.class);
 
     private UniResolver uniResolver;
 
-    private List<DereferencerExtension> extensions = new ArrayList<>();
+    private List<DereferencerExtension> extensions = new ArrayList<>(DEFAULT_EXTENSIONS);
 
     public LocalUniDereferencer() {
 
