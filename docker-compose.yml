@@ -119,10 +119,6 @@ services:
     image: blobaa/bba-did-driver:0.2.2
     ports:
       - "8107:8080"
-  driver-did-cy:
-    image: chainyard/driver-did-cy:latest
-    ports:
-      - "8108:8080"
   driver-did-bid:
     image: teleinfo/driver-did-bid:1.0.0
     ports:

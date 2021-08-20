@@ -124,19 +124,14 @@
 			"pattern": "^(did:io:.+)$",
 			"url": "http://uni-resolver-driver-did-io:8080/",
 			"testIdentifiers": [ "did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A" ]
-        	}, {
-            		"pattern": "^(did:bba:.+)$",
-			"url": "http://bba-did-driver:8080/",
-            		"testIdentifiers": [ "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf", "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044" ]
-        	}, {
-			"pattern": "^(did:cy:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,29}))$",
-			"url": "http://driver-did-cy:8080/",
-			"propertiesEndpoint": "true",
-			"testIdentifiers": [ "did:cy:7PGGnRdvKKFftSXU3Jw75Vk5npfg" ]
 		}, {
-	  		"pattern": "^(did:bid:)([0-9a-f]{24})",
+					"pattern": "^(did:bba:.+)$",
+			"url": "http://bba-did-driver:8080/",
+					"testIdentifiers": [ "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf", "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044" ]
+		}, {
+			"pattern": "^(did:bid:)([0-9a-f]{24})",
 			"url": "http://driver-did-bid:8080/",
-	  		"testIdentifiers": [ "did:bid:6cc796b8d6e2fbebc9b3cf9e" ]
+			"testIdentifiers": [ "did:bid:6cc796b8d6e2fbebc9b3cf9e" ]
 	  	}, {
 			"pattern": "^(did:schema:.+)$",
 			"url": "http://schema-registry-did-resolver:8080/",
@@ -145,12 +140,11 @@
             "pattern": "^(did:ion:test.+)$",
             "url": "https://dev.discover.did.msidentity.com/",
             "testIdentifiers": [ "did:ion:test:EiBEYjAmR8mLSBdiAv0tmASmpvQK8_BGe_p4O3s3fTHROA" ]
-       },
-          {
+        }, {
             "pattern": "^(did:ion:(?!test).+)$",
             "url": "http://driver-did-ion:8080/",
             "testIdentifiers": [ "did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w" ]
-          },
+		},
 		{
 		  	"pattern": "^(did:ace:.+)$",
 			"url": "http://ace-did-driver:8080/",

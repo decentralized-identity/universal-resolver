@@ -51,7 +51,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:trust:cert.EiDi8NEZVyvqmHeWRB5kUagWo3sDSQlCtl1nZ1vVgLdozw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf
-	curl -X GET http://localhost:8080/1.0/identifiers/did:cy:2nnn7H7RJLLhFPoGyzxPCLzuhrzJ
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bid:6cc796b8d6e2fbebc9b3cf9e
 	curl -X GET http://localhost:8080/1.0/identifiers/did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w
@@ -103,7 +102,6 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-trust](https://github.com/bjwswang/uni-resolver-driver-did-trust) | 0.1 | [0.1](http://did.360.cn/doc/) | [bjwswang/driver-did-trust](https://hub.docker.com/repository/docker/bjwswang/driver-did-trust)
 | [did-io](https://github.com/iotexproject/uni-resolver-driver-did-io) | 0.1.0 | (missing) | [iotex/uni-resolver-driver-did-io](iotex/uni-resolver-driver-did-io:latest) | IoTeX Network
 | [did-bba](https://github.com/blobaa/bba-did-driver) | 0.2.2 | [1.0](https://github.com/blobaa/bba-did-method-specification/blob/master/docs/markdown/spec.md) | [blobaa/bba-did-driver](https://hub.docker.com/repository/docker/blobaa/bba-did-driver) | Blobaa blockchain-based authentication on the Ardor blockchain
-| [did-cy] | 0.1.0 |  | [](chainyard/driver-did-cy:latest)
 | [did-bid](https://github.com/teleinfo-bif/bid-resolver) | 1.0.0 | [1.0.1](https://github.com/teleinfo-bif/bid/tree/master/doc/en) | [teleinfo/driver-did-bid](https://hub.docker.com/repository/docker/teleinfo/driver-did-bid) | BIF (Blockchain Identifier Infrastructure)
 | [did-schema](https://github.com/51nodes/schema-registry-did-resolver) | 0.1.1 | [0.1](https://github.com/51nodes/schema-registry-did-method) | [51nodes/schema-registry-did-resolver](https://hub.docker.com/repository/docker/51nodes/schema-registry-did-resolver) | Identify and address schema definitions in a schema registry
 | [did-ion](https://github.com/decentralized-identity/uni-resolver-driver-did-ion) | 0.8.1 | [0.1](https://github.com/decentralized-identity/ion) | [identityfoundation/driver-did-ion](https://hub.docker.com/r/identityfoundation/driver-did-ion) | ION network (Sidetree implementation on top of Bitcoin)
