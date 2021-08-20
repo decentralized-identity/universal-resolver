@@ -23,7 +23,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
 	curl -X GET http://localhost:8080/1.0/identifiers/did:v1:test:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR
 	curl -X GET http://localhost:8080/1.0/identifiers/did:key:z6Mkfriq1MqLBoPWecGoDLjguo1sB9brj6wT3qZ5BxkKpuP6
-	curl -X GET http://localhost:8080/1.0/identifiers/did:ipid:QmYA7p467t4BGgBL4NmyHtsXMoPrYH9b3kSG6dbgFYskJm
 	curl -X GET http://localhost:8080/1.0/identifiers/did:web:did.actor:alice
 	curl -X GET http://localhost:8080/1.0/identifiers/did:web:did.actor:bob
 	curl -X GET http://localhost:8080/1.0/identifiers/did:web:did.actor:mike
@@ -92,7 +91,6 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-eosio](https://github.com/Gimly-Blockchain/eosio-did-universal-resolver-driver) | 0.1.3 | [0.1](https://github.com/Gimly-Blockchain/eosio-did-spec) | [gimlyblockchain/eosio-universal-resolver-driver](https://hub.docker.com/r/gimlyblockchain/eosio-universal-resolver-driver) | EOSIO blockchain platform
 | [did-web](https://github.com/uport-project/uport-did-driver) | 2.1.0 | [3.0.0](https://w3c-ccg.github.io/did-method-web/) | [uport/uni-resolver-driver-did-uport](https://hub.docker.com/r/uport/uni-resolver-driver-did-uport/) | Domain name
 | [did-v1](https://github.com/veres-one/uni-resolver-did-v1-driver) | 0.1 | [1.0](https://w3c-ccg.github.io/did-method-v1/) | [veresone/uni-resolver-did-v1-driver](https://hub.docker.com/r/veresone/uni-resolver-did-v1-driver) | Veres One Blockchain
-| did-ipid |  | [0.1](https://github.com/jonnycrunch/ipid) |  | InterPlanetary File System
 | [did-jolo](https://github.com/jolocom/jolo-did-method/tree/master/jolocom-did-driver) | 0.1 | [0.1](https://github.com/jolocom/jolocom-did-driver/blob/master/jolocom-did-method-specification.md) | [jolocomgmbh/jolocom-did-driver](https://hub.docker.com/r/jolocomgmbh/jolocom-did-driver) | Jolocom identity management
 | [did-hacera](https://github.com/hacera/hacera-did-driver) | 0.1 | (missing) | [hacera/hacera-did-driver](https://hub.docker.com/r/hacera/hacera-did-driver) | HACERA autonomous data exchange network
 | [did-elem](https://github.com/decentralized-identity/element) | 0.1 | (missing) | | Experimental Sidetree protocol (Ethereum and IPFS)
