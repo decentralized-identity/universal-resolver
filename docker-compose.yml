@@ -155,10 +155,6 @@ services:
     image: unisot/unisot-did-driver:latest
     ports:
       - "8116:8080"
-  driver-did-bitxhub:
-    image: meshplus/driver-did-bitxhub:latest
-    ports:
-      - "8117:8080"
   driver-did-sol:
     image: identitydotcom/driver-did-sol:0.1.1
     ports:

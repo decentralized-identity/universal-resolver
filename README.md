@@ -59,7 +59,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:icon:01:64aa0a2a479cb47afbf2d18d6f9f216bcdcbecdda27ccba3
 	curl -X GET http://localhost:8080/1.0/identifiers/did:vaa:3wJVWDQWtDFx27FqvSqyo5xsTsxC
 	curl -X GET http://localhost:8080/1.0/identifiers/did:unisot:1EjHm7VtgsqNzCkvA8XRgGXZ1UKo1txSM4
-	curl -X GET http://localhost:8080/1.0/identifiers/did:bitxhub:appchain001:0xc7F999b83Af6DF9e67d0a37Ee7e900bF38b3D013
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sol:ygGfLvAyuRymPNv2fJDK1ZMpdy59m8cV5dak6A8uHKa
 	curl -X GET http://localhost:8080/1.0/identifiers/did:lit:AEZ87t1bi5bRxmVh3ksMUi
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ebsi:DfPaUdYwuzcqFoiMDSrUX8aQyZnr2SesH3vDVASYv8PE
@@ -109,7 +108,6 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-icon-zzeung](https://github.com/amuyu/uni-resolver-driver-did-icon) | 0.1.2 | [1.0 WD](https://github.com/icon-project/icon-DID/blob/master/docs/ICON-DID-method.md) | [amuyu/driver-did-icon](https://hub.docker.com/r/amuyu/driver-did-icon) | ICON decentralized network
 | [did-vaa](https://github.com/caict-develop-zhangbo/uni-resolver-driver-did-vaa)|1.0.0|[1.0 WD](https://github.com/caict-develop-zhangbo/vaa-method)|[caict/driver-did-vaa](https://hub.docker.com/repository/docker/caictdevelop/driver-did-vaa) | BIF blockchain
 | [did-unisot](https://gitlab.com/unisot-did/unisot-did-driver)|1.0.0|[1.0.0](https://gitlab.com/unisot-did/unisot-did-method-specification)|[unisot/unisot-did-driver](https://hub.docker.com/r/unisot/unisot-did-driver) | UNISOT distributed identity system (atop Bitcoin SV blockchain)
-| [did-bitxhub](https://github.com/meshplus/driver-did-bitxhub) | 1.0.0 | (missing) | [meshplus/driver-did-bitxhub](https://hub.docker.com/repository/docker/meshplus/driver-did-bitxhub) |
 | [did-sol](https://github.com/identity-com/sol-did)|1.0.0|[1.0.0](https://github.com/identity-com/sol-did/)|[identitydotcom/driver-did-sol](https://hub.docker.com/r/identitydotcom/driver-did-sol) | Solana blockchain
 | [did-lit](https://github.com/ibct-dev/lit-resolver) | 0.1.1 | [0.1.1](https://github.com/ibct-dev/lit-DID/blob/main/docs/did:lit-method-spec_eng_v0.1.1.md) | [ibct/driver-did-lit](https://hub.docker.com/r/ibct/driver-did-lit) | LEDGIS blockchain
 | [did-ebsi](https://api.preprod.ebsi.eu/docs/#/DID%20Registry) | 2.0.0 | 2.0.0 | [URL](https://api.preprod.ebsi.eu/did-registry/v2/identifiers/) | EBSI Platform (European Blockchain Services Infrastructure)
