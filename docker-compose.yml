@@ -119,10 +119,6 @@ services:
     image: blobaa/bba-did-driver:0.2.2
     ports:
       - "8107:8080"
-  driver-did-bid:
-    image: teleinfo/driver-did-bid:1.0.0
-    ports:
-      - "8109:8080"
   schema-registry-did-resolver:
     image: 51nodes/schema-registry-did-resolver:0.1.1
     ports:
