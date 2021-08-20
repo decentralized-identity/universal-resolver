@@ -83,10 +83,6 @@ services:
     image: universalresolver/driver-did-key:latest
     ports:
       - "8098:8080"
-  dock-did-driver:
-    image: docknetwork/dock-did-driver:latest
-    ports:
-      - "8099:8080"
   uni-resolver-did-v1-driver:
     image: veresone/uni-resolver-did-v1-driver:latest
     ports:
