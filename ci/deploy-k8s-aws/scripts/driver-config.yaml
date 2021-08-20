@@ -20,14 +20,6 @@ driver-did-trustbloc:
       value: 'true'
     - name: DID_METHOD_MODE
       value: resolver
-uni-resolver-driver-did-echo:
-  env:
-    - name: uniresolver_driver_did_echo_mainnet_rpc_url
-      value: http://127.0.0.1:8090/rpc
-    - name: uniresolver_driver_did_echo_testnet_rpc_url
-      value: http://testnet.echo-dev.io
-    - name: uniresolver_driver_did_echo_devnet_rpc_url
-      value: http://127.0.0.1:8090/rpc
 driver-did-btcr:
   env:
     - name: uniresolver_driver_did_btcr_bitcoinConnection
