@@ -36,14 +36,6 @@ services:
     image: universalresolver/driver-did-stack:latest
     ports:
       - "8084:8080"
-  driver-did-erc725:
-    image: universalresolver/driver-did-erc725:latest
-    environment:
-      uniresolver_driver_did_erc725_ethereumConnections: ${uniresolver_driver_did_erc725_ethereumConnections}
-      uniresolver_driver_did_erc725_rpcUrls: ${uniresolver_driver_did_erc725_rpcUrls}
-      uniresolver_driver_did_erc725_etherscanApis: ${uniresolver_driver_did_erc725_etherscanApis}
-    ports:
-      - "8085:8080"
   driver-dns:
     image: universalresolver/driver-dns:latest
     environment:
