@@ -121,10 +121,6 @@ services:
     ports:
       - "8102:8102"
     command: start
-  tsjs-did-sirius-id-driver:
-    image: proximax/tsjs-did-sirius-id-driver:latest
-    ports:
-      - "8105:8080"
   driver-did-mpg:
     image: mpgshankr/driver-did-mpg:latest
     ports:
