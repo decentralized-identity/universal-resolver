@@ -36,14 +36,6 @@ services:
     image: universalresolver/driver-did-stack:latest
     ports:
       - "8084:8080"
-  driver-did-erc725:
-    image: universalresolver/driver-did-erc725:latest
-    environment:
-      uniresolver_driver_did_erc725_ethereumConnections: ${uniresolver_driver_did_erc725_ethereumConnections}
-      uniresolver_driver_did_erc725_rpcUrls: ${uniresolver_driver_did_erc725_rpcUrls}
-      uniresolver_driver_did_erc725_etherscanApis: ${uniresolver_driver_did_erc725_etherscanApis}
-    ports:
-      - "8085:8080"
   driver-dns:
     image: universalresolver/driver-dns:latest
     environment:
@@ -83,14 +75,6 @@ services:
     image: evannetwork/evan-did-driver:latest
     ports:
       - "8095:8080"
-  uni-resolver-driver-did-echo:
-    image: echoprotocol/uni-resolver-driver-did-echo:latest
-    environment:
-      uniresolver_driver_did_echo_mainnet_rpc_url: ${uniresolver_driver_did_echo_mainnet_rpc_url}
-      uniresolver_driver_did_echo_testnet_rpc_url: ${uniresolver_driver_did_echo_testnet_rpc_url}
-      uniresolver_driver_did_echo_devnet_rpc_url: ${uniresolver_driver_did_echo_devnet_rpc_url}
-    ports:
-      - "8096:8080"
   uni-resolver-driver-did-factom:
     image: sphereon/uni-resolver-driver-did-factom:latest
     ports:
@@ -99,41 +83,14 @@ services:
     image: universalresolver/driver-did-key:latest
     ports:
       - "8098:8080"
-  dock-did-driver:
-    image: docknetwork/dock-did-driver:latest
-    ports:
-      - "8099:8080"
   uni-resolver-did-v1-driver:
     image: veresone/uni-resolver-did-v1-driver:latest
     ports:
       - "8100:8080"
-  driver-did-abt:
-    image: arcblock/driver-did-abt:latest
-    ports:
-      - "8101:8080"
-  driver-did-trustbloc:
-    container_name: driver-did-trustbloc
-    image: ghcr.io/trustbloc/driver-did-trustbloc:0.1.5
-    environment:
-      DID_METHOD_HOST_URL: ${DID_METHOD_HOST_URL}
-      DID_METHOD_TLS_SYSTEMCERTPOOL: ${DID_METHOD_TLS_SYSTEMCERTPOOL}
-      DID_METHOD_MODE: ${DID_METHOD_MODE}
-    ports:
-      - "8102:8102"
-    command: start
-  tsjs-did-sirius-id-driver:
-    image: proximax/tsjs-did-sirius-id-driver:latest
-    ports:
-      - "8105:8080"
   driver-did-mpg:
     image: mpgshankr/driver-did-mpg:latest
     ports:
       - "8103:8080"
-  driver-did-trust:
-    container_name: driver-did-trust
-    image: bjwswang/driver-did-trust:latest
-    ports:
-      - "8106:8080"
   uni-resolver-driver-did-io:
     image: iotex/uni-resolver-driver-did-io:latest
     ports:
@@ -143,14 +100,6 @@ services:
     image: blobaa/bba-did-driver:0.2.2
     ports:
       - "8107:8080"
-  driver-did-cy:
-    image: chainyard/driver-did-cy:latest
-    ports:
-      - "8108:8080"
-  driver-did-bid:
-    image: teleinfo/driver-did-bid:1.0.0
-    ports:
-      - "8109:8080"
   schema-registry-did-resolver:
     image: 51nodes/schema-registry-did-resolver:0.1.1
     ports:
@@ -187,10 +136,6 @@ services:
     image: unisot/unisot-did-driver:latest
     ports:
       - "8116:8080"
-  driver-did-bitxhub:
-    image: meshplus/driver-did-bitxhub:latest
-    ports:
-      - "8117:8080"
   driver-did-sol:
     image: identitydotcom/driver-did-sol:0.1.1
     ports:
@@ -213,15 +158,6 @@ services:
       HOST: 0.0.0.0
     ports:
       - "8121:8080"
-  orb-did-driver:
-    container_name: orb-did-driver
-    image: ghcr.io/trustbloc-cicd/orb-did-driver:v0.1.0-snapshot-894f273
-    environment:
-      ORB_DRIVER_HOST_URL: ${ORB_DRIVER_HOST_URL}
-      ORB_DRIVER_TLS_SYSTEMCERTPOOL: ${ORB_DRIVER_TLS_SYSTEMCERTPOOL}
-    ports:
-      - "8122:8121"
-    command: start
   eosio-driver:
     container_name: eosio-driver
     image: gimlyblockchain/eosio-universal-resolver-driver
