@@ -49,13 +49,14 @@ public class HttpBindingUtil {
         }
 
         if (resolveRepresentationResult.getContentType() == null) {
-            String contentType;
+            String contentType = null;
             if (httpContentType != null) {
-                if (log.isDebugEnabled()) log.debug("No content type in resolution result. Assuming HTTP header is content type " + httpContentType);
                 contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
-            } else {
-                if (log.isDebugEnabled()) log.debug("No content type in resolution result or HTTP header. Assuming default content type " + Representations.DEFAULT_MEDIA_TYPE);
+                if (log.isDebugEnabled()) log.debug("No content type in resolution result. Assuming HTTP header is content type " + httpContentType + ", which corresponds to DID document representation media type " + contentType);
+            }
+            if (contentType == null) {
                 contentType = Representations.DEFAULT_MEDIA_TYPE;
+                if (log.isDebugEnabled()) log.debug("No (valid) content type in resolution result or HTTP header. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
             }
             resolveRepresentationResult.setContentType(contentType);
         }
@@ -90,13 +91,14 @@ public class HttpBindingUtil {
         }
 
         if (dereferenceResult.getContentType() == null) {
-            String contentType;
+            String contentType = null;
             if (httpContentType != null) {
-                if (log.isDebugEnabled()) log.debug("No content type in dereference result. Assuming HTTP header is content type " + httpContentType);
                 contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
-            } else {
-                if (log.isDebugEnabled()) log.debug("No content type in dereference result or HTTP header. Assuming default content type " + Representations.DEFAULT_MEDIA_TYPE);
+                if (log.isDebugEnabled()) log.debug("No content type in dereference result. Assuming HTTP header is content type " + httpContentType + ", which corresponds to DID document representation media type " + contentType);
+            }
+            if (contentType == null) {
                 contentType = Representations.DEFAULT_MEDIA_TYPE;
+                if (log.isDebugEnabled()) log.debug("No (valid) content type in dereference result or HTTP header. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
             }
             dereferenceResult.setContentType(contentType);
         }
@@ -110,13 +112,14 @@ public class HttpBindingUtil {
 
         ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
 
-        String contentType;
+        String contentType = null;
         if (httpContentType != null) {
-            if (log.isDebugEnabled()) log.debug("No content type. Assuming HTTP header is content type " + httpContentType);
             contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
-        } else {
-            if (log.isDebugEnabled()) log.debug("No content type in HTTP header. Assuming default content type " + Representations.DEFAULT_MEDIA_TYPE);
+            if (log.isDebugEnabled()) log.debug("No content type. Assuming HTTP header is content type " + httpContentType + ", which corresponds to DID document representation media type " + contentType);
+        }
+        if (contentType == null) {
             contentType = Representations.DEFAULT_MEDIA_TYPE;
+            if (log.isDebugEnabled()) log.debug("No (valid) content type in HTTP header. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
         }
         resolveRepresentationResult.setContentType(contentType);
 
