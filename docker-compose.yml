@@ -91,16 +91,6 @@ services:
     image: arcblock/driver-did-abt:latest
     ports:
       - "8101:8080"
-  driver-did-trustbloc:
-    container_name: driver-did-trustbloc
-    image: ghcr.io/trustbloc/driver-did-trustbloc:0.1.5
-    environment:
-      DID_METHOD_HOST_URL: ${DID_METHOD_HOST_URL}
-      DID_METHOD_TLS_SYSTEMCERTPOOL: ${DID_METHOD_TLS_SYSTEMCERTPOOL}
-      DID_METHOD_MODE: ${DID_METHOD_MODE}
-    ports:
-      - "8102:8102"
-    command: start
   driver-did-mpg:
     image: mpgshankr/driver-did-mpg:latest
     ports:
