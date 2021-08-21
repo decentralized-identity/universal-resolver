@@ -87,10 +87,6 @@ services:
     image: veresone/uni-resolver-did-v1-driver:latest
     ports:
       - "8100:8080"
-  driver-did-abt:
-    image: arcblock/driver-did-abt:latest
-    ports:
-      - "8101:8080"
   driver-did-mpg:
     image: mpgshankr/driver-did-mpg:latest
     ports:
