@@ -73,7 +73,7 @@ jobs:
         with:
           token: ${{ env.WORKFLOW_DISPATCH_TOKEN }}
           repo: danubetech/danubetech-uni-resolver-web
-          workflow: Docker build/deploy image to Danubetech Nexus
+          workflow: 12455759 # Docker latest image
       - name: Slack notification
         uses: 8398a7/action-slack@v3
         with:
