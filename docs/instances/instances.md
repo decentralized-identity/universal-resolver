@@ -31,3 +31,7 @@ These instances may differ in terms of performance, security hardening, supporte
 ### https://resolver.danubetech.com/ — hosted by Danube Tech
 
 (this space can contain specific information about this instance of the Universal Resolver)
+
+### https://resolver.spruceid.com/ — hosted by Spruce Systems
+
+(this space can contain specific information about this instance of the Universal Resolver)
