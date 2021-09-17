@@ -163,3 +163,12 @@ services:
     image: gimlyblockchain/eosio-universal-resolver-driver
     ports:
       - "8123:8080"
+  orb-did-driver:
+    container_name: orb-did-driver
+    image: ghcr.io/trustbloc/orb-did-driver:v0.1.3
+    environment:
+      ORB_DRIVER_HOST_URL: ${ORB_DRIVER_HOST_URL}
+      ORB_DRIVER_TLS_SYSTEMCERTPOOL: ${ORB_DRIVER_TLS_SYSTEMCERTPOOL}
+    ports:
+      - "8121:8121"
+    command: start
