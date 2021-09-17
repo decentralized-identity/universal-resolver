@@ -4,6 +4,13 @@ driver-didkit:
       value: "8080"
     - name: HOST
       value: 0.0.0.0
+orb-did-driver:
+  args: ["start"]
+  env:
+    - name: ORB_DRIVER_HOST_URL
+      value: 0.0.0.0:8121
+    - name: ORB_DRIVER_TLS_SYSTEMCERTPOOL
+      value: "true"
 driver-did-btcr:
   env:
     - name: uniresolver_driver_did_btcr_bitcoinConnection
