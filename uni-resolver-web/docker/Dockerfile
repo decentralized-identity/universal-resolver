@@ -7,12 +7,12 @@ MAINTAINER Markus Sabadello <markus@danubetech.com>
 
 ADD . /opt/universal-resolver
 ADD config.json /opt/universal-resolver/uni-resolver-web/
-RUN cd /opt/universal-resolver && mvn clean install -N -DskipTests
-RUN cd /opt/universal-resolver/uni-resolver-core && mvn clean install -N -DskipTests
-RUN cd /opt/universal-resolver/driver && mvn clean install -N -DskipTests
-RUN cd /opt/universal-resolver/driver-http && mvn clean install -N -DskipTests
-RUN cd /opt/universal-resolver/uni-resolver-local && mvn clean install -N -DskipTests
-RUN cd /opt/universal-resolver/uni-resolver-web && mvn clean install package -N -DskipTests
+RUN cd /opt/universal-resolver && mvn clean install -N
+RUN cd /opt/universal-resolver/uni-resolver-core && mvn clean install -N
+RUN cd /opt/universal-resolver/driver && mvn clean install -N
+RUN cd /opt/universal-resolver/driver-http && mvn clean install -N
+RUN cd /opt/universal-resolver/uni-resolver-local && mvn clean install -N
+RUN cd /opt/universal-resolver/uni-resolver-web && mvn clean install package -N
 
 # build image
 
