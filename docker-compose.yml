@@ -137,7 +137,7 @@ services:
     ports:
       - "8116:8080"
   driver-did-sol:
-    image: identitydotcom/driver-did-sol:0.1.1
+    image: identitydotcom/driver-did-sol:1.0.0
     ports:
       - "8118:8080"
   driver-did-lit:
@@ -172,6 +172,10 @@ services:
     ports:
       - "8121:8121"
     command: start
+  driver-did-oyd:
+    image: oydeu/oydid-resolver
+    ports:
+      - "8124:3000"
   dock-did-driver:
     image: docknetwork/dock-did-driver:latest
     ports:
