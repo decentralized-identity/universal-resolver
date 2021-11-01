@@ -170,7 +170,7 @@ services:
       ORB_DRIVER_HOST_URL: ${ORB_DRIVER_HOST_URL}
       ORB_DRIVER_TLS_SYSTEMCERTPOOL: ${ORB_DRIVER_TLS_SYSTEMCERTPOOL}
     ports:
-      - "8121:8121"
+      - "8122:8121"
     command: start
   driver-did-oyd:
     image: oydeu/oydid-resolver
