@@ -176,3 +176,7 @@ services:
     image: oydeu/oydid-resolver
     ports:
       - "8124:3000"
+  driver-did-moncon:
+    image: camicasii/didresolver-g
+    ports:
+      - "8125:8080"
