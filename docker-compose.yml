@@ -176,3 +176,7 @@ services:
     image: oydeu/oydid-resolver
     ports:
       - "8124:3000"
+  dock-did-driver:
+    image: docknetwork/dock-did-driver:latest
+    ports:
+      - "8099:8080"
