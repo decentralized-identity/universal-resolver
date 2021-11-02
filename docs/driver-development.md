@@ -44,7 +44,7 @@ Create a PR that edits the following files in the Universal Resolver root direct
   * url - endpoint of your Docker image
   * testIdentifier - list of example DIDs that your driver can resolve
 - `docker-compose.yml` (add your driver)
-  * image - your Docker image name 
+  * image - your Docker image name
   * ports - incremented port number exposed by your Docker image
   * environment - optional environment variables supported by your Docker image
 - `README.md` (insert a line to the driver table)
@@ -97,7 +97,7 @@ To do so, follow these steps:
 - Build uni-resolver-web locally:
 
   ```bash
-  docker build -f ./resolver/java/uni-resolver-web/docker/Dockerfile . -t universalresolver/uni-resolver-web
+  docker build -f ./uni-resolver-web/docker/Dockerfile . -t universalresolver/uni-resolver-web
   ```
 
 - Run the uni-resolver-web locally:
