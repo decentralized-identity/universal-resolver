@@ -173,6 +173,6 @@ services:
       - "8121:8121"
     command: start
   driver-did-oyd:
-    image: oydeu/oydid-resolver
+    image: oydeu/oydid-resolver:v0.4.1
     ports:
       - "8124:3000"

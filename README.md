@@ -118,7 +118,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-tz](https://github.com/spruceid/ssi/tree/main/did-tezos/) | 0.1.0 | [0.1](https://did-tezos.spruceid.com/) | [ghcr.io/spruceid/didkit-http](https://github.com/orgs/spruceid/packages/container/package/didkit-http) | Tezos DID method
 | [did-pkh](https://github.com/spruceid/ssi/tree/main/did-pkh/) | 0.0.1 | [0.1](https://github.com/spruceid/ssi/blob/main/did-pkh/did-pkh-method-draft.md) | [ghcr.io/spruceid/didkit-http](https://github.com/orgs/spruceid/packages/container/package/didkit-http) | Public Key Hash DID method
 | [did-orb](https://github.com/trustbloc/orb/releases/tag/v0.1.3) | 0.1.3 | [0.2](https://trustbloc.github.io/did-method-orb/) | [trustbloc/orb-did-driver](https://github.com/orgs/trustbloc-cicd/packages/container/package/orb-did-driver) | 
-| [did-oyd](https://github.com/OwnYourData/did-cmd) | 0.4 | [0.3](https://github.com/OwnYourData/did-cmd/blob/main/docs/did-spec.md) | [oydeu/oydid-resolver](https://hub.docker.com/repository/docker/oydeu/oydid-resolver) | 
+| [did-oyd](https://github.com/OwnYourData/did-cmd) | 0.4.1 | [0.3](https://github.com/OwnYourData/did-cmd/blob/main/docs/did-spec.md) | [oydeu/oydid-resolver](https://hub.docker.com/repository/docker/oydeu/oydid-resolver) | 
 
 
 ## More Information
