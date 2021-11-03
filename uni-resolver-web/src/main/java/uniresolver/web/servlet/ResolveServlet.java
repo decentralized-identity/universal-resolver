@@ -49,7 +49,7 @@ public class ResolveServlet extends WebUniResolver {
 		String didString = null;
 		Map<String, Object> resolutionOptions = new HashMap<>();
 
-		if (path.contains("%")) {
+		if (path.startsWith("did%3A")) {
 			didString = URLDecoder.decode(path, StandardCharsets.UTF_8);
 			if (request.getParameterMap() != null) {
 				resolutionOptions.putAll(request.getParameterMap());
