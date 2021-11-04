@@ -173,7 +173,7 @@ services:
       - "8122:8121"
     command: start
   driver-did-oyd:
-    image: oydeu/oydid-resolver
+    image: oydeu/oydid-resolver:v0.4.1
     ports:
       - "8124:3000"
   driver-did-moncon:
