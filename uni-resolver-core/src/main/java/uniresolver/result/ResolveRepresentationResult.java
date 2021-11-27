@@ -50,9 +50,8 @@ public class ResolveRepresentationResult extends ResolveResult implements Result
 		return new ResolveRepresentationResult(new LinkedHashMap<>(), new byte[0], new LinkedHashMap<>());
 	}
 
-	public static ResolveRepresentationResult makeErrorResult(String error, String errorMessage, Map<String, Object> didResolutionMetadata, String contentType) {
+	public static ResolveRepresentationResult makeErrorResult(String error, String errorMessage, String contentType) {
 		ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
-		if (didResolutionMetadata != null) resolveRepresentationResult.getDidResolutionMetadata().putAll(didResolutionMetadata);
 		resolveRepresentationResult.setError(error == null ? ERROR_INTERNALERROR : error);
 		if (errorMessage != null) resolveRepresentationResult.setErrorMessage(errorMessage);
 		resolveRepresentationResult.setContentType(contentType);
@@ -65,7 +64,7 @@ public class ResolveRepresentationResult extends ResolveResult implements Result
 		if (ex.getResolveRepresentationResult() != null && contentType.equals(ex.getResolveRepresentationResult().getContentType())) {
 			return ex.getResolveRepresentationResult();
 		}
-		return makeErrorResult(ex.getError(), ex.getMessage(), ex.getDidResolutionMetadata(), contentType);
+		return makeErrorResult(ex.getError(), ex.getMessage(), contentType);
 	}
 
 	/*

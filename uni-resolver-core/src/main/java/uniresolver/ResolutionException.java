@@ -8,7 +8,6 @@ import java.util.Map;
 public class ResolutionException extends Exception {
 
 	private String error = null;
-	private Map<String, Object> didResolutionMetadata = null;
 
 	private ResolveRepresentationResult resolveRepresentationResult;
 
@@ -17,37 +16,17 @@ public class ResolutionException extends Exception {
 		this.error = error;
 	}
 
-	public ResolutionException(String error, String message, Map<String, Object> didResolutionMetadata) {
-		super(message);
-		this.error = error;
-		this.didResolutionMetadata = didResolutionMetadata;
-	}
-
 	public ResolutionException(String error, String message, Throwable ex) {
 		super(message, ex);
 		this.error = error;
-	}
-
-	public ResolutionException(String error, String message, Map<String, Object> didResolutionMetadata, Throwable ex) {
-		super(message, ex);
-		this.error = error;
-		this.didResolutionMetadata = didResolutionMetadata;
 	}
 
 	public ResolutionException(String message) {
 		this(ResolveResult.ERROR_INTERNALERROR, message);
 	}
 
-	public ResolutionException(String message, Map<String, Object> didResolutionMetadata) {
-		this(ResolveResult.ERROR_INTERNALERROR, message, didResolutionMetadata);
-	}
-
 	public ResolutionException(String message, Throwable ex) {
 		this(ResolveResult.ERROR_INTERNALERROR, message, ex);
-	}
-
-	public ResolutionException(String message, Map<String, Object> didResolutionMetadata, Throwable ex) {
-		this(ResolveResult.ERROR_INTERNALERROR, message, didResolutionMetadata, ex);
 	}
 
 	public ResolutionException(ResolveRepresentationResult resolveRepresentationResult) {
@@ -66,14 +45,6 @@ public class ResolutionException extends Exception {
 
 	public void setError(String error) {
 		this.error = error;
-	}
-
-	public Map<String, Object> getDidResolutionMetadata() {
-		return didResolutionMetadata;
-	}
-
-	public void setDidResolutionMetadata(Map<String, Object> didResolutionMetadata) {
-		this.didResolutionMetadata = didResolutionMetadata;
 	}
 
 	public ResolveRepresentationResult getResolveRepresentationResult() {
