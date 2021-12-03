@@ -87,7 +87,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
             String errorMessage = ex.getMessage();
             if (log.isWarnEnabled()) log.warn(errorMessage);
-            throw new DereferencingException(DereferenceResult.ERROR_INVALIDDIDURL, errorMessage, ex);
+            throw new DereferencingException(DereferencingException.ERROR_INVALIDDIDURL, errorMessage, ex);
         }
 
         // [before dereference]
@@ -159,7 +159,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         if (! dereferenceResult.isComplete()) {
             if (log.isInfoEnabled()) log.info("Dereference result is incomplete: " + dereferenceResult);
-            throw new DereferencingException(DereferenceResult.ERROR_NOTFOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
+            throw new DereferencingException(DereferencingException.ERROR_NOTFOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
         }
 
         // done

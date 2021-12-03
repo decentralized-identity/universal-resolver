@@ -80,16 +80,13 @@ public class ResolveServlet extends WebUniResolver {
 		try {
 
 			resolveRepresentationResult = this.resolveRepresentation(didString, resolutionOptions);
-			if (resolveRepresentationResult == null) throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, "No resolve result for " + didString);
+			if (resolveRepresentationResult == null) throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "No resolve result for " + didString);
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolve problem for " + didString + ": " + ex.getMessage(), ex);
 
-			if (! (ex instanceof ResolutionException)) {
-				ex = new ResolutionException(ResolveResult.ERROR_INTERNALERROR, "Resolve problem for " + didString + ": " + ex.getMessage());
-			}
-
-			resolveRepresentationResult = ResolveRepresentationResult.makeErrorResult((ResolutionException) ex, accept);
+			if (! (ex instanceof ResolutionException)) ex = new ResolutionException("Resolve problem for " + didString + ": " + ex.getMessage());
+			resolveRepresentationResult = ((ResolutionException) ex).toErrorResult(accept);
 		}
 
 		if (log.isInfoEnabled()) log.info("Resolve result for " + didString + ": " + resolveRepresentationResult);

@@ -1,7 +1,6 @@
 package uniresolver.result;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import org.slf4j.Logger;
@@ -15,11 +14,6 @@ import java.util.Map;
 public abstract class ResolveResult implements Result {
 
     public static final String MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
-
-    public static final String ERROR_INVALIDDID = "invalidDid";
-    public static final String ERROR_NOTFOUND = "notFound";
-    public static final String ERROR_REPRESENTATIONNOTSUPPORTED = "representationNotSupported";
-    public static final String ERROR_INTERNALERROR = "internalError";
 
     private static final Logger log = LoggerFactory.getLogger(ResolveResult.class);
 
@@ -38,6 +32,20 @@ public abstract class ResolveResult implements Result {
     }
 
     public abstract boolean isComplete();
+
+    /*
+     * Metadata methods
+     */
+
+    @Override
+    public Map<String, Object> getFunctionProcessMetadata() {
+        return this.getDidResolutionMetadata();
+    }
+
+    @Override
+    public Map<String, Object> getFunctionContentMetadata() {
+        return this.getDidDocumentMetadata();
+    }
 
     /*
      * Conversion
@@ -77,48 +85,6 @@ public abstract class ResolveResult implements Result {
     }
 
     public abstract void updateConversion() throws ResolutionException;
-
-    /*
-     * Error methods
-     */
-
-    @Override
-    @JsonIgnore
-    public boolean isErrorResult() {
-        return this.getError() != null;
-    }
-
-    @Override
-    @JsonIgnore
-    public String getError() {
-        return this.getDidResolutionMetadata() == null ? null : (String) this.getDidResolutionMetadata().get("error");
-    }
-
-    @Override
-    @JsonIgnore
-    public void setError(String error) {
-        if (this.getDidResolutionMetadata() == null) this.setDidResolutionMetadata(new LinkedHashMap<>());
-        if (error != null)
-            this.getDidResolutionMetadata().put("error", error);
-        else
-            this.getDidResolutionMetadata().remove("error");
-    }
-
-    @Override
-    @JsonIgnore
-    public String getErrorMessage() {
-        return this.getDidResolutionMetadata() == null ? null : (String) this.getDidResolutionMetadata().get("errorMessage");
-    }
-
-    @Override
-    @JsonIgnore
-    public void setErrorMessage(String errorMessage) {
-        if (this.getDidResolutionMetadata() == null) this.setDidResolutionMetadata(new LinkedHashMap<>());
-        if (errorMessage != null)
-            this.getDidResolutionMetadata().put("errorMessage", errorMessage);
-        else
-            this.getDidResolutionMetadata().remove("errorMessage");
-    }
 
     /*
      * Getters and setters

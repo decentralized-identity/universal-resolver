@@ -80,16 +80,13 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 		try {
 
 			resolveRepresentationResult = InitServlet.getDriver().resolveRepresentation(DID.fromString(didString), resolutionOptions);
-			if (resolveRepresentationResult == null) throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, "Driver: No resolve result for " + didString);
+			if (resolveRepresentationResult == null) throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "Driver: No resolve result for " + didString);
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Driver: Resolve problem for " + didString + ": " + ex.getMessage(), ex);
 
-			if (! (ex instanceof ResolutionException)) {
-				ex = new ResolutionException(ResolveResult.ERROR_INTERNALERROR, "Driver: Resolve problem for " + didString + ": " + ex.getMessage());
-			}
-
-			resolveRepresentationResult = ResolveRepresentationResult.makeErrorResult((ResolutionException) ex, accept);
+			if (! (ex instanceof ResolutionException)) ex = new ResolutionException("Driver: Resolve problem for " + didString + ": " + ex.getMessage());
+			resolveRepresentationResult = ((ResolutionException) ex).toErrorResult(accept);
 		}
 
 		if (log.isInfoEnabled()) log.info("Driver: Resolve result for " + didString + ": " + resolveRepresentationResult);

@@ -9,6 +9,8 @@ import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import uniresolver.DereferencingException;
+import uniresolver.ResolutionException;
 import uniresolver.result.*;
 import uniresolver.util.HttpBindingUtil;
 
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
 
 public class HttpBindingServerUtil {
 
@@ -95,11 +98,11 @@ public class HttpBindingServerUtil {
     }
 
     public static int httpStatusCodeForResult(Result result) {
-        if (ResolveResult.ERROR_NOTFOUND.equals(result.getError()))
+        if (ResolutionException.ERROR_NOTFOUND.equals(result.getError()))
             return HttpStatus.SC_NOT_FOUND;
-        else if (ResolveResult.ERROR_INVALIDDID.equals(result.getError()))
+        else if (ResolutionException.ERROR_INVALIDDID.equals(result.getError()) || DereferencingException.ERROR_INVALIDDIDURL.equals(result.getError()))
             return HttpStatus.SC_BAD_REQUEST;
-        else if (ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED.equals(result.getError()))
+        else if (ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED.equals(result.getError()))
             return HttpStatus.SC_NOT_ACCEPTABLE;
         else if (result.isErrorResult())
             return HttpStatus.SC_INTERNAL_SERVER_ERROR;
