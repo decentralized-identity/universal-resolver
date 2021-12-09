@@ -184,3 +184,7 @@ services:
     image: docknetwork/dock-did-driver:latest
     ports:
       - "8099:8080"
+  mydata-did-driver:
+    image: igrantio/uni-resolver-driver-did-mydata:1.0
+    ports:
+      - "8126:8080"

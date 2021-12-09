@@ -66,6 +66,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:orb:hl:uEiDI6sZJnp44sC_BG2XekWA4TN2m0Wtwv8AI71UER3vCHw:uoQ-BeEJpcGZzOi8vYmFma3JlaWdpNWxkZXRodTZoY3ljN3FpM214cGpjeWJ5anRvMm51bGxvYzc0YWNocGt1Y2VvNjZjZDQ:EiClaNSwhKSP6tQe36bYc5w41oRpCi1xv89MkUnNBm8agw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dock:5EAp6DB2pkKuAfbhQiqAXFY4XPZkJrvtWKad4ChDmWwDrC8n
+	curl -X GET http://localhost:8080/1.0/identifiers/did:mydata:z6MkjNiGktLUrNrwMW6obMR85UsjYmLPFmcXc9qaiAGqPaJT
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -123,6 +124,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-oyd](https://github.com/OwnYourData/did-cmd) | 0.4.1 | [0.3](https://github.com/OwnYourData/did-cmd/blob/main/docs/did-spec.md) | [oydeu/oydid-resolver](https://hub.docker.com/repository/docker/oydeu/oydid-resolver) |
 | [did-moncon](https://github.com/LedgerProject/moncon) | 0.4 | [0.3](https://github.com/LedgerProject/moncon) | [camicasii/didresolver-g](https://hub.docker.com/r/camicasii/didresolver-g) |
 | [did-dock](https://github.com/docknetwork/dock-did-driver) | 1.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/docknetwork/dock-did-driver/blob/master/Dock%20DID%20method%20specification.md) | [docknetwork/dock-did-driver](https://hub.docker.com/r/docknetwork/dock-did-driver) |
+| [did-mydata](https://github.com/decentralised-dataexchange/mydata-did-driver) | 1.0 | [1.1 WD](https://github.com/decentralised-dataexchange/automated-data-agreements/blob/main/docs/did-spec.md) | [igrantio/uni-resolver-driver-did-mydata](https://hub.docker.com/repository/docker/igrantio/uni-resolver-driver-did-mydata) | [iGrant.io](https://igrant.io/) |
 
 
 
