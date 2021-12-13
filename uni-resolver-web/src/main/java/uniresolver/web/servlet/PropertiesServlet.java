@@ -1,28 +1,24 @@
 package uniresolver.web.servlet;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import uniresolver.UniResolver;
 import uniresolver.web.WebUniResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
+
 public class PropertiesServlet extends WebUniResolver {
 
-	protected static Logger log = LoggerFactory.getLogger(PropertiesServlet.class);
+	protected static final Logger log = LoggerFactory.getLogger(PropertiesServlet.class);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		// read request
 
@@ -43,7 +39,7 @@ public class PropertiesServlet extends WebUniResolver {
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolver reported: " + ex.getMessage(), ex);
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolver reported: " + ex.getMessage());
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolver reported: " + ex.getMessage());
 			return;
 		}
 
@@ -53,12 +49,12 @@ public class PropertiesServlet extends WebUniResolver {
 
 		if (properties == null) {
 
-			WebUniResolver.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No properties.");
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No properties.");
 			return;
 		}
 
 		// write result
 
-		WebUniResolver.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.PROPERTIES_MIME_TYPE, propertiesString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.PROPERTIES_MIME_TYPE, propertiesString);
 	}
 }

@@ -2,49 +2,78 @@ package uniresolver.local.extensions;
 
 public class ExtensionStatus {
 
-	public static final ExtensionStatus DEFAULT = new ExtensionStatus(false, false, false);
+	public static final ExtensionStatus DEFAULT = new ExtensionStatus();
 
-	public static final ExtensionStatus SKIP_EXTENSION_BEFORE = new ExtensionStatus(true, false, false);
-	public static final ExtensionStatus SKIP_DRIVER = new ExtensionStatus(false, true, false);
-	public static final ExtensionStatus SKIP_EXTENSIONS_AFTER = new ExtensionStatus(false, false, true);
+	public static final ExtensionStatus SKIP_BEFORE_RESOLVE = new ExtensionStatus(true, false, false, false, false, false, false);
+	public static final ExtensionStatus SKIP_RESOLVE = new ExtensionStatus(false, true, false, false, false, false, false);
+	public static final ExtensionStatus SKIP_AFTER_RESOLVE = new ExtensionStatus(false, false, true, false, false, false, false);
+	public static final ExtensionStatus SKIP_BEFORE_DEREFERENCE = new ExtensionStatus(false, false, false, true, false, false, false);
+	public static final ExtensionStatus SKIP_DEREFERENCE_PRIMARY = new ExtensionStatus(false, false, false, false, true, false, false);
+	public static final ExtensionStatus SKIP_DEREFERENCE_SECONDARY = new ExtensionStatus(false, false, false, false, false, true, false);
+	public static final ExtensionStatus SKIP_AFTER_DEREFERENCE = new ExtensionStatus(false, false, false, false, false, false, true);
 
-	private boolean skipExtensionsBefore;
-	private boolean skipDriver;
-	private boolean skipExtensionsAfter;
+	private boolean skipBeforeResolve;
+	private boolean skipResolve;
+	private boolean skipAfterResolve;
+	private boolean skipBeforeDereference;
+	private boolean skipDereferencePrimary;
+	private boolean skipDereferenceSecondary;
+	private boolean skipAfterDereference;
 
-	public ExtensionStatus(boolean skipExtensionsBefore, boolean skipDriver, boolean skipExtensionsAfter) {
+	public ExtensionStatus(boolean skipBeforeResolve, boolean skipResolve, boolean skipAfterResolve, boolean skipBeforeDereference, boolean skipDereferencePrimary, boolean skipDereferenceSecondary, boolean skipAfterDereference) {
 
-		this.skipExtensionsBefore = skipExtensionsBefore;
-		this.skipDriver = skipDriver;
-		this.skipExtensionsAfter = skipExtensionsAfter;
+		this.skipBeforeResolve = skipBeforeResolve;
+		this.skipResolve = skipResolve;
+		this.skipAfterResolve = skipAfterResolve;
+		this.skipBeforeDereference = skipBeforeDereference;
+		this.skipDereferencePrimary = skipDereferencePrimary;
+		this.skipDereferenceSecondary = skipDereferenceSecondary;
+		this.skipAfterDereference = skipAfterDereference;
 	}
 
 	public ExtensionStatus() {
 
-		this(false, false, false);
+		this(false, false, false, false, false, false, false);
 	}
 
 	public void or(ExtensionStatus extensionStatus) {
 
 		if (extensionStatus == null) return;
 
-		this.skipExtensionsBefore |= extensionStatus.skipExtensionsBefore;
-		this.skipDriver |= extensionStatus.skipDriver;
-		this.skipExtensionsAfter |= extensionStatus.skipExtensionsAfter;
+		this.skipBeforeResolve |= extensionStatus.skipBeforeResolve;
+		this.skipResolve |= extensionStatus.skipResolve;
+		this.skipAfterResolve |= extensionStatus.skipAfterResolve;
+		this.skipBeforeDereference |= extensionStatus.skipBeforeDereference;
+		this.skipDereferencePrimary |= extensionStatus.skipDereferencePrimary;
+		this.skipDereferenceSecondary |= extensionStatus.skipDereferenceSecondary;
+		this.skipAfterDereference |= extensionStatus.skipAfterDereference;
 	}
 
-	public boolean skipExtensionsBefore() {
-
-		return this.skipExtensionsBefore;
+	public boolean skipBeforeResolve() {
+		return this.skipBeforeResolve;
 	}
 
-	public boolean skipDriver() {
-
-		return this.skipDriver;
+	public boolean skipResolve() {
+		return this.skipResolve;
 	}
 
-	public boolean skipExtensionsAfter() {
+	public boolean skipAfterResolve() {
+		return this.skipAfterResolve;
+	}
 
-		return this.skipExtensionsAfter;
+	public boolean skipBeforeDereference() {
+		return skipBeforeDereference;
+	}
+
+	public boolean skipDereferencePrimary() {
+		return skipDereferencePrimary;
+	}
+
+	public boolean skipDereferenceSecondary() {
+		return skipDereferenceSecondary;
+	}
+
+	public boolean skipAfterDereference() {
+		return skipAfterDereference;
 	}
 }

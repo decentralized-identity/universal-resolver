@@ -7,12 +7,6 @@
 
 	<bean name="UniResolver" class="uniresolver.local.LocalUniResolver" factory-method="fromConfigFile">
 		<constructor-arg value="./config.json" />
-		<property name="extensions">
-			<util:list>
-				<bean class="uniresolver.local.extensions.impl.ServiceParameterExtension" />
-				<bean class="uniresolver.local.extensions.impl.RedirectExtension" />
-			</util:list>
-		</property>
 	</bean>
 
 	<bean name="ResolveServlet" class="uniresolver.web.servlet.ResolveServlet">

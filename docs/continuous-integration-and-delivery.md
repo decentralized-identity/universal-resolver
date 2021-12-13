@@ -14,14 +14,14 @@ After every code change the CI/CD pipeline builds all software packages/Docker c
 
 ## Building Blocks
 
-The CI/CD pipeline is constructed by using GitHub Actions. The workflow (workflow file https://github.com/philpotisk/universal-resolver/blob/master/.github/workflows/universal-resolver-ws.yml ) is run after every push to the master and on ever PR against master.
-The workflow consists of several steps. Each step is implemented as Docker container that performs the relevant actions. Currently, the two main steps are: 
+The CI/CD pipeline is constructed by using GitHub Actions. The workflows are run after every push to the `main` branch and on ever PR against the `main` branch.
+The workflows consist of several steps. Currently, the two main steps are:
 
-1. Building the resolver
-2. Deploying the resolver
+1. Building the resolver (workflow file https://github.com/decentralized-identity/universal-resolver/blob/main/.github/workflows/docker-build-and-deploy-image.yml)
+2. Deploying the resolver (workflow file https://github.com/decentralized-identity/universal-resolver/blob/main/.github/workflows/kubernetes-deploy-to-cluster.yml)
 
-The build-step uses this container https://github.com/philpotisk/github-action-docker-build-push, which generically builds a Docker image and pushes it to Docker Hub at https://hub.docker.com/u/universalresolver
-The second step takes the image and deploys it (create or update) to the configured Kubernetes cluster. The Docker container fulfilling this step can be found here: https://github.com/philpotisk/github-action-deploy-eks
+The first step builds a Docker image and pushes it to Docker Hub at https://hub.docker.com/u/universalresolver.
+The second step takes the image and deploys it (create or update) to the configured Kubernetes cluster.
 
 ## Steps of the CI/CD Workflow
 
@@ -37,9 +37,7 @@ The second step takes the image and deploys it (create or update) to the configu
 
 ## Open Issues regarding CI/CD
 
-* Use httpS for the dev-environment at http://dev.uniresolver.io
 * Make all drivers accessible via sub-domains eg. elem.dev.uniresolver.io
 * Bundle new release for resolver.identity.foundation (only working drivers)
 * Render Smoke Test results as HTML-page and host it via gh-pages
 * Update documentation
-

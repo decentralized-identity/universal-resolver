@@ -21,6 +21,10 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: {{containerPort}}
+        securityContext:
+          capabilities:
+            drop:
+              - NET_RAW
 ---
 apiVersion: v1
 kind: Service

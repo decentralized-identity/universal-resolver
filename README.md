@@ -2,11 +2,11 @@
 
 # Universal Resolver
 
-A Universal Resolver is an identifier resolver that works with any decentralized identifier system, including Decentralized Identifiers (DIDs).
+The Universal Resolver resolves Decentralized Identifiers (DIDs) across many different DID methods, based on the [W3C DID Core 1.0](https://www.w3.org/TR/did-core/) and [DID Resolution](https://w3c-ccg.github.io/did-resolution/) specifications. It is a work item of the [DIF Identifiers&Discovery Working Group](https://github.com/decentralized-identity/identifiers-discovery/).
 
 See this [blog post](https://medium.com/decentralized-identity/a-universal-resolver-for-self-sovereign-identifiers-48e6b4a5cc3c) and this [webinar](https://ssimeetup.org/did-resolution-given-did-how-do-retrieve-document-markus-sabadello-webinar-13/) for an introduction.
 
-See https://resolver.identity.foundation/ for a stable version or https://dev.uniresolver.io/ for a test instance of a Universal Resolver.
+See https://dev.uniresolver.io/ for a DIF-hosted instance of the Universal Resolver that can be used for testing purposes. See [Docker Hub](https://hub.docker.com/u/universalresolver) for images.
 
 ## Quick Start
 
@@ -23,7 +23,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
 	curl -X GET http://localhost:8080/1.0/identifiers/did:v1:test:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR
 	curl -X GET http://localhost:8080/1.0/identifiers/did:key:z6Mkfriq1MqLBoPWecGoDLjguo1sB9brj6wT3qZ5BxkKpuP6
-	curl -X GET http://localhost:8080/1.0/identifiers/did:ipid:QmYA7p467t4BGgBL4NmyHtsXMoPrYH9b3kSG6dbgFYskJm
 	curl -X GET http://localhost:8080/1.0/identifiers/did:web:did.actor:alice
 	curl -X GET http://localhost:8080/1.0/identifiers/did:web:did.actor:bob
 	curl -X GET http://localhost:8080/1.0/identifiers/did:web:did.actor:mike
@@ -31,10 +30,11 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ethr:0x4:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ethr:0x02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ethr:0x1e:0x02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71
+	curl -X GET http://localhost:8080/1.0/identifiers/did:eosio:eos:eoscanadacom
+	curl -X GET http://localhost:8080/1.0/identifiers/did:eosio:4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11:caleosblocks
 	curl -X GET http://localhost:8080/1.0/identifiers/did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI
 	curl -X GET http://localhost:8080/1.0/identifiers/did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21
 	curl -X GET http://localhost:8080/1.0/identifiers/did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0
-	curl -X GET http://localhost:8080/1.0/identifiers/did:erc725:ropsten:2F2B37C890824242Cb9B0FE5614fA2221B79901E
 	curl -X GET http://localhost:8080/1.0/identifiers/did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de
 	curl -X GET http://localhost:8080/1.0/identifiers/did:neoid:priv:b4eeeb80d20bfb38b23001d0659ce0c1d96be0aa
 	curl -X GET http://localhost:8080/1.0/identifiers/did:elem:EiAS3mqC4OLMKOwcz3ItIL7XfWduPT7q3Fa4vHgiCfSG2A
@@ -44,17 +44,10 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ont:AN5g6gz9EoQ3sCNu7514GEghZurrktCMiH
 	curl -X GET http://localhost:8080/1.0/identifiers/did:kilt:5CqJa4Ct7oMeMESzehTiN9fwYdGLd7tqeirRMpGDh2XxYYyx
 	curl -X GET http://localhost:8080/1.0/identifiers/did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734
-	curl -X GET http://localhost:8080/1.0/identifiers/did:echo:1.1.25.0
 	curl -X GET http://localhost:8080/1.0/identifiers/did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764
-	curl -X GET http://localhost:8080/1.0/identifiers/did:dock:5FXqofpV7dsuki925U1dSzDvBuQbaci5yWTQGVWRQ7bdQP5p
-	curl -X GET http://localhost:8080/1.0/identifiers/did:abt:z116ygT18P67xBp3scBtZLU6xVoDy268bgnY
-	curl -X GET http://localhost:8080/1.0/identifiers/did:trustbloc:testnet.trustbloc.dev:EiBLTZcCj6u_XsufSuLVh2zbPEREjDcu8bnPgs0XyKkfPQ
-	curl -X GET http://localhost:8080/1.0/identifiers/did:sirius:2VhYrbauc2cCx9ZpCp5wrDtK7HKf7jrsvgoKBD4KgK
 	curl -X GET http://localhost:8080/1.0/identifiers/did:mpg:7PGGnRdvKKFftSXU3Jw75Vk5npfg
-	curl -X GET http://localhost:8080/1.0/identifiers/did:trust:cert.EiDi8NEZVyvqmHeWRB5kUagWo3sDSQlCtl1nZ1vVgLdozw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf
-	curl -X GET http://localhost:8080/1.0/identifiers/did:cy:2nnn7H7RJLLhFPoGyzxPCLzuhrzJ
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bid:6cc796b8d6e2fbebc9b3cf9e
 	curl -X GET http://localhost:8080/1.0/identifiers/did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w
@@ -66,8 +59,25 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bitxhub:appchain001:0xc7F999b83Af6DF9e67d0a37Ee7e900bF38b3D013
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sol:DSb8Guj9tB1jvsyqrsE3Yi44hwnzrVVQc2gcS1J1dUxy
 	curl -X GET http://localhost:8080/1.0/identifiers/did:lit:AEZ87t1bi5bRxmVh3ksMUi
+	curl -X GET http://localhost:8080/1.0/identifiers/did:ebsi:DfPaUdYwuzcqFoiMDSrUX8aQyZnr2SesH3vDVASYv8PE
+	curl -X GET http://localhost:8080/1.0/identifiers/did:emtrust:0x242a5ac36676462bd58a
+	curl -X GET http://localhost:8080/1.0/identifiers/did:meta:0000000000000000000000000000000000000000000000000000000000005e65
+	curl -X GET http://localhost:8080/1.0/identifiers/did:tz:tz1YwA1FwpgLtc1G8DKbbZ6e6PTb1dQMRn5x
+	curl -X GET http://localhost:8080/1.0/identifiers/did:pkh:tz:tz2BFTyPeYRzxd5aiBchbXN3WCZhx7BqbMBq
+	curl -X GET http://localhost:8080/1.0/identifiers/did:orb:hl:uEiDI6sZJnp44sC_BG2XekWA4TN2m0Wtwv8AI71UER3vCHw:uoQ-BeEJpcGZzOi8vYmFma3JlaWdpNWxkZXRodTZoY3ljN3FpM214cGpjeWJ5anRvMm51bGxvYzc0YWNocGt1Y2VvNjZjZDQ:EiClaNSwhKSP6tQe36bYc5w41oRpCi1xv89MkUnNBm8agw
+	curl -X GET http://localhost:8080/1.0/identifiers/did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA
+	curl -X GET http://localhost:8080/1.0/identifiers/did:dock:5EAp6DB2pkKuAfbhQiqAXFY4XPZkJrvtWKad4ChDmWwDrC8n
+	curl -X GET http://localhost:8080/1.0/identifiers/did:mydata:z6MkjNiGktLUrNrwMW6obMR85UsjYmLPFmcXc9qaiAGqPaJT
+
+You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
+
+	curl -H "Accept: application/did+ld+json" https://dev.uniresolver.io/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
+	curl -H "Accept: application/did+json" https://dev.uniresolver.io/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
+	curl -H "Accept: application/did+cbor" https://dev.uniresolver.io/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
+
+Note that there is also a [Universal Resolver frontend](https://github.com/decentralized-identity/universal-resolver-frontend/) that can optionally be installed separately.
 
 ## Drivers
 
@@ -130,12 +140,12 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 
 ## About
 
-<img align="left" src="https://raw.githubusercontent.com/decentralized-identity/universal-resolver/master/docs/logo-dif.png" width="115">
+<img align="left" src="https://raw.githubusercontent.com/decentralized-identity/universal-resolver/main/docs/logo-dif.png" width="115">
 
-Decentralized Identity Foundation - http://identity.foundation/
+Decentralized Identity Foundation - https://identity.foundation/
 
 <br clear="left" />
 
-<img align="left" src="https://raw.githubusercontent.com/decentralized-identity/universal-resolver/master/docs/logo-ngi0pet.png" width="115">
+<img align="left" src="https://raw.githubusercontent.com/decentralized-identity/universal-resolver/main/docs/logo-ngi0pet.png" width="115">
 
 Supported by [NLnet](https://nlnet.nl/) and [NGI0 PET](https://nlnet.nl/PET/#NGI), which is made possible with financial support from the European Commission's [Next Generation Internet](https://ngi.eu/) programme.

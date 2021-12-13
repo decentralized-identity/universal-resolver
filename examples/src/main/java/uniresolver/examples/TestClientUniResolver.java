@@ -1,21 +1,26 @@
 package uniresolver.examples;
-import did.DIDDocument;
+
 import uniresolver.client.ClientUniResolver;
+import uniresolver.result.ResolveDataModelResult;
+import uniresolver.result.ResolveRepresentationResult;
+import uniresolver.result.ResolveResult;
+
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestClientUniResolver {
 
 	public static void main(String[] args) throws Exception {
 
+		Map<String, Object> resolveOptions = new HashMap<>();
+		resolveOptions.put("accept", "application/did+ld+json");
+
 		ClientUniResolver uniResolver = new ClientUniResolver();
-		uniResolver.setResolveUri("https://uniresolver.io/1.0/identifiers/");
+		uniResolver.setResolveUri("http://localhost:8080/1.0/identifiers/");
 
-		DIDDocument didDocument1 = uniResolver.resolve("did:sov:WRfXPg8dantKVubE3HX8pw").getDidDocument();
-		System.out.println(didDocument1.toJson());
-
-		DIDDocument didDocument2 = uniResolver.resolve("did:btcr:xz35-jzv2-qqs2-9wjt").getDidDocument();
-		System.out.println(didDocument2.toJson());
-
-		DIDDocument didDocument3 = uniResolver.resolve("did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0").getDidDocument();
-		System.out.println(didDocument3.toJson());
+		ResolveRepresentationResult resolveRepresentationResult = uniResolver.resolveRepresentation("did:sov:WRfXPg8dantKVubE3HX8pw", resolveOptions);
+		System.out.println(resolveRepresentationResult.toJson());
+		System.out.println(new String(resolveRepresentationResult.getDidDocumentStream(), StandardCharsets.UTF_8));
 	}
 }

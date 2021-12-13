@@ -1,0 +1,89 @@
+name: Docker release image
+
+on:
+  workflow_dispatch:
+
+env:
+  GLOBAL_TAG: v0.4.0
+  GLOBAL_IMAGE_NAME: universalresolver/uni-resolver-web
+  GLOBAL_REPO_NAME: docker.io
+  GLOBAL_PATH_TO_DOCKERFILE: ./uni-resolver-web/docker/Dockerfile
+
+jobs:
+
+  build-context:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: danubetech/github-action-log-build-context@v0.1.0
+
+  validate-pom:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Import Secrets
+        uses: hashicorp/vault-action@v2.3.0
+        with:
+          url: ${{ secrets.VAULT_ADDR }}
+          token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
+          caCertificate: ${{ secrets.VAULTCA }}
+          secrets: |
+            ci/data/gh-workflows/deployment-status slack-webhook-url | SLACK_WEBHOOK_URL
+
+      - uses: actions/checkout@master
+        with:
+          ref: ${{ env.GLOBAL_TAG }}
+
+      - name: Validate pom.xml
+        run: mvn validate -P ci
+
+      - name: Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,commit,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
+        if: failure()
+
+  publish-image:
+    needs: validate-pom
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Import Secrets
+        uses: hashicorp/vault-action@v2.3.0
+        with:
+          url: ${{ secrets.VAULT_ADDR }}
+          token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
+          caCertificate: ${{ secrets.VAULTCA }}
+          secrets: |
+            ci/data/gh-workflows/dockerhub username | DOCKER_USERNAME ;
+            ci/data/gh-workflows/dockerhub password | DOCKER_PASSWORD ;
+            ci/data/gh-workflows/deployment-status slack-webhook-url | SLACK_WEBHOOK_URL
+
+      - uses: actions/checkout@master
+        with:
+          ref: ${{ env.GLOBAL_TAG }}
+
+      - name: Set SHORT_SHA env variable
+        id: short_sha
+        run: echo "::set-output name=SHORT_SHA::$(git rev-parse --short HEAD)"
+
+      - name: Build image
+        run: docker build . -f "${{ env.GLOBAL_PATH_TO_DOCKERFILE }}" -t "${{ env.GLOBAL_REPO_NAME }}/${{ env.GLOBAL_IMAGE_NAME }}:${{ env.GLOBAL_TAG }}-${{ steps.short_sha.outputs.SHORT_SHA }}"
+
+      - name: Login user to repo
+        run: echo "${{ env.DOCKER_PASSWORD }}" | docker login "${{ env.GLOBAL_REPO_NAME }}" -u "${{ env.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Push image
+        run: docker push "${{ env.GLOBAL_REPO_NAME }}/${{ env.GLOBAL_IMAGE_NAME }}:${{ env.GLOBAL_TAG }}-${{ steps.short_sha.outputs.SHORT_SHA }}"
+
+      - name: Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,commit,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
+        if: failure()

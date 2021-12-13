@@ -1,26 +1,21 @@
 package uniresolver.web;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.springframework.web.HttpRequestHandler;
+import uniresolver.ResolutionException;
+import uniresolver.UniResolver;
+import uniresolver.result.ResolveDataModelResult;
+import uniresolver.result.ResolveRepresentationResult;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.HttpRequestHandler;
-
-import uniresolver.ResolutionException;
-import uniresolver.UniResolver;
-import uniresolver.result.ResolveResult;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class WebUniResolver extends HttpServlet implements HttpRequestHandler, UniResolver {
-
-	private static final long serialVersionUID = -7802449707979028536L;
 
 	private UniResolver uniResolver;
 
@@ -31,7 +26,6 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		if ("GET".equals(request.getMethod())) this.doGet(request, response);
 		if ("POST".equals(request.getMethod())) this.doPost(request, response);
 		if ("PUT".equals(request.getMethod())) this.doPut(request, response);
@@ -40,74 +34,35 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	}
 
 	@Override
-	protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+	protected void doOptions(HttpServletRequest request, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		response.setHeader("Access-Control-Allow-Headers", "Accept, Content-Type");
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
 	@Override
-	public ResolveResult resolve(String identifier) throws ResolutionException {
-
-		return this.getUniResolver() == null ? null : this.getUniResolver().resolve(identifier);
+	public ResolveDataModelResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+		return this.getUniResolver() == null ? null : this.getUniResolver().resolve(didString, resolutionOptions);
 	}
 
 	@Override
-	public ResolveResult resolve(String identifier, Map<String, String> options) throws ResolutionException {
-
-		return this.getUniResolver() == null ? null : this.getUniResolver().resolve(identifier, options);
+	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+		return this.getUniResolver() == null ? null : this.getUniResolver().resolveRepresentation(didString, resolutionOptions);
 	}
 
 	@Override
 	public Map<String, Map<String, Object>> properties() throws ResolutionException {
-
 		return this.getUniResolver() == null ? null : this.getUniResolver().properties();
 	}
 
 	@Override
 	public Set<String> methods() throws ResolutionException {
-
 		return this.getUniResolver() == null ? null : this.getUniResolver().methods();
 	}
 
 	@Override
 	public Map<String, List<String>> testIdentifiers() throws ResolutionException {
-
 		return this.getUniResolver() == null ? null : this.getUniResolver().testIdentifiers();
-	}
-
-	/*
-	 * Helper methods
-	 */
-
-	protected static void sendResponse(HttpServletResponse response, int status, String contentType, Object body) throws IOException {
-
-		response.setStatus(status);
-
-		if (contentType != null) response.setContentType(contentType);
-
-		response.setHeader("Access-Control-Allow-Origin", "*");
-
-		if (body instanceof String) {
-
-			PrintWriter printWriter = response.getWriter();
-			printWriter.write((String) body);
-			printWriter.flush();
-			printWriter.close();
-		} else if (body instanceof byte[]) {
-
-			OutputStream outputStream = response.getOutputStream();
-			outputStream.write((byte[]) body);
-			outputStream.flush();
-			outputStream.close();
-		} else {
-
-			PrintWriter printWriter = response.getWriter();
-			printWriter.write(body.toString());
-			printWriter.flush();
-			printWriter.close();
-		}
 	}
 
 	/*
@@ -115,12 +70,10 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	 */
 
 	public UniResolver getUniResolver() {
-
 		return this.uniResolver;
 	}
 
 	public void setUniResolver(UniResolver uniResolver) {
-
 		this.uniResolver = uniResolver;
 	}
 }

@@ -1,184 +1,146 @@
 package uniresolver.result;
 
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import foundation.identity.did.DIDDocument;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uniresolver.ResolutionException;
 
-import java.io.IOException;
-import java.io.Reader;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-@JsonPropertyOrder({ "didDocument", "content", "contentType", "didResolutionMetadata", "didDocumentMetadata" })
-@JsonIgnoreProperties(ignoreUnknown=true)
-public class ResolveResult {
+public abstract class ResolveResult implements Result {
 
-	public static final String MIME_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
+    public static final String MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+    public static final String ERROR_INVALIDDID = "invalidDid";
+    public static final String ERROR_NOTFOUND = "notFound";
+    public static final String ERROR_REPRESENTATIONNOTSUPPORTED = "representationNotSupported";
+    public static final String ERROR_INTERNALERROR = "internalError";
 
-	@JsonProperty
-	private DIDDocument didDocument;
+    private static final Logger log = LoggerFactory.getLogger(ResolveResult.class);
 
-	@JsonProperty
-	private Object content;
+    protected ResolveDataModelResult resolveDataModelResult = null;
+    protected Map<String, ResolveRepresentationResult> resolveRepresentationResults = new HashMap<>();
 
-	@JsonProperty
-	private String contentType;
+    @JsonProperty("didResolutionMetadata")
+    private Map<String, Object> didResolutionMetadata;
 
-	@JsonProperty
-	private Map<String, Object> didResolutionMetadata;
+    @JsonProperty("didDocumentMetadata")
+    private Map<String, Object> didDocumentMetadata;
 
-	@JsonProperty
-	private Map<String, Object> didDocumentMetadata;
+    protected ResolveResult(Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {
+        this.didResolutionMetadata = didResolutionMetadata != null ? didResolutionMetadata : new LinkedHashMap<>();
+        this.didDocumentMetadata = didDocumentMetadata != null ? didDocumentMetadata : new LinkedHashMap<>();
+    }
 
-	private ResolveResult(DIDDocument didDocument, Object content, String contentType, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {
+    public abstract boolean isComplete();
 
-		this.didDocument = didDocument;
-		this.content = content;
-		this.contentType = contentType;
-		this.didResolutionMetadata = didResolutionMetadata;
-		this.didDocumentMetadata = didDocumentMetadata;
-	}
+    /*
+     * Conversion
+     */
 
-	/*
-	 * Factory methods
-	 */
+    public ResolveDataModelResult toResolveDataModelResult() throws ResolutionException {
+        if (this.resolveDataModelResult == null) {
+            if (this instanceof ResolveDataModelResult) {
+                this.resolveDataModelResult = (ResolveDataModelResult) this;
+            } else if (this instanceof ResolveRepresentationResult) {
+                ResolveDataModelResult resolveDataModelResult = Conversion.convertToResolveDataModelResult((ResolveRepresentationResult) this);
+                this.resolveDataModelResult = resolveDataModelResult;
+            }
+        }
+        return this.resolveDataModelResult;
+    }
 
-	@JsonCreator
-	public static ResolveResult build(@JsonProperty(value="didDocument", required=true) DIDDocument didDocument, @JsonProperty(value="content", required=false) Object content, @JsonProperty(value="contentType", required=false) String contentType, @JsonProperty(value="resolverMetadata", required=false) Map<String, Object> resolverMetadata, @JsonProperty(value="methodMetadata", required=false) Map<String, Object> methodMetadata) {
+    public ResolveRepresentationResult toResolveRepresentationResult(String representationMediaType) throws ResolutionException {
+        if (representationMediaType == null) throw new NullPointerException();
+        if (! this.resolveRepresentationResults.containsKey(representationMediaType)) {
+            if (this instanceof ResolveRepresentationResult) {
+                if (representationMediaType.equals(((ResolveRepresentationResult) this).getContentType())) {
+                    this.resolveRepresentationResults.put(representationMediaType, (ResolveRepresentationResult) this);
+                } else {
+                    ResolveDataModelResult resolveDataModelResult = this.toResolveDataModelResult();
+                    ResolveRepresentationResult resolveRepresentationResult = Conversion.convertToResolveRepresentationResult(resolveDataModelResult, representationMediaType);
+                    resolveRepresentationResult.getDidResolutionMetadata().put("convertedFrom", ((ResolveRepresentationResult) this).getContentType());
+                    resolveRepresentationResult.getDidResolutionMetadata().put("convertedTo", representationMediaType);
+                    this.resolveRepresentationResults.put(representationMediaType, resolveRepresentationResult);
+                }
+            } else if (this instanceof ResolveDataModelResult) {
+                ResolveRepresentationResult resolveRepresentationResult = Conversion.convertToResolveRepresentationResult((ResolveDataModelResult) this, representationMediaType);
+                this.resolveRepresentationResults.put(representationMediaType, resolveRepresentationResult);
+            }
+        }
+        return this.resolveRepresentationResults.get(representationMediaType);
+    }
 
-		return new ResolveResult(didDocument, content, contentType, resolverMetadata, methodMetadata);
-	}
+    public abstract void updateConversion() throws ResolutionException;
 
-	public static ResolveResult build(DIDDocument didDocument, Map<String, Object> resolverMetadata, Map<String, Object> methodMetadata) {
+    /*
+     * Error methods
+     */
 
-		return new ResolveResult(didDocument, null, null, resolverMetadata, methodMetadata);
-	}
+    @Override
+    @JsonIgnore
+    public boolean isErrorResult() {
+        return this.getError() != null;
+    }
 
-	public static ResolveResult build(DIDDocument didDocument) {
+    @Override
+    @JsonIgnore
+    public String getError() {
+        return this.getDidResolutionMetadata() == null ? null : (String) this.getDidResolutionMetadata().get("error");
+    }
 
-		return new ResolveResult(didDocument, null, null, new HashMap<String, Object> (), new HashMap<String, Object> ());
-	}
+    @Override
+    @JsonIgnore
+    public void setError(String error) {
+        if (this.getDidResolutionMetadata() == null) this.setDidResolutionMetadata(new LinkedHashMap<>());
+        if (error != null)
+            this.getDidResolutionMetadata().put("error", error);
+        else
+            this.getDidResolutionMetadata().remove("error");
+    }
 
-	public static ResolveResult build() {
+    @Override
+    @JsonIgnore
+    public String getErrorMessage() {
+        return this.getDidResolutionMetadata() == null ? null : (String) this.getDidResolutionMetadata().get("errorMessage");
+    }
 
-		return new ResolveResult(null, null, null, new HashMap<String, Object> (), new HashMap<String, Object> ());
-	}
+    @Override
+    @JsonIgnore
+    public void setErrorMessage(String errorMessage) {
+        if (this.getDidResolutionMetadata() == null) this.setDidResolutionMetadata(new LinkedHashMap<>());
+        if (errorMessage != null)
+            this.getDidResolutionMetadata().put("errorMessage", errorMessage);
+        else
+            this.getDidResolutionMetadata().remove("errorMessage");
+    }
 
-	public ResolveResult copy() {
+    /*
+     * Getters and setters
+     */
 
-		return new ResolveResult(this.getDidDocument(), this.getContent(), this.getContentType(), this.getDidResolutionMetadata(), this.getDidDocumentMetadata());
-	}
+    @JsonGetter
+    public final Map<String, Object> getDidResolutionMetadata() {
+        return this.didResolutionMetadata;
+    }
 
-	public void reset() {
+    @JsonSetter
+    public final void setDidResolutionMetadata(Map<String, Object> didResolutionMetadata) {
+        this.didResolutionMetadata = didResolutionMetadata;
+    }
 
-		this.setDidDocument(null);
-		this.setContent(null);
-		this.setContentType(null);
-		this.setDidResolutionMetadata(new HashMap<String, Object> ());
-		this.setDidDocumentMetadata(new HashMap<String, Object> ());
-	}
+    @JsonGetter
+    public final Map<String, Object> getDidDocumentMetadata() {
+        return this.didDocumentMetadata;
+    }
 
-	/*
-	 * Serialization
-	 */
-
-	public static ResolveResult fromJson(String json) throws JsonParseException, JsonMappingException, IOException {
-
-		return objectMapper.readValue(json, ResolveResult.class);
-	}
-
-	public static ResolveResult fromJson(Reader reader) throws JsonParseException, JsonMappingException, IOException {
-
-		return objectMapper.readValue(reader, ResolveResult.class);
-	}
-
-	public String toJson() throws JsonProcessingException {
-
-		return objectMapper.writeValueAsString(this);
-	}
-
-	/*
-	 * Getters and setters
-	 */
-
-	@JsonRawValue
-	public final DIDDocument getDidDocument() {
-
-		return this.didDocument;
-	}
-
-	@JsonSetter
-	public final void setDidDocument(DIDDocument didDocument) {
-
-		this.didDocument = didDocument;
-	}
-
-	@JsonGetter
-	public Object getContent() {
-
-		return this.content;
-	}
-
-	@JsonSetter
-	public void setContent(Object content) {
-
-		this.content = content;
-	}
-
-	@JsonGetter
-	public String getContentType() {
-
-		return this.contentType;
-	}
-
-	@JsonSetter
-	public void setContentType(String contentType) {
-
-		this.contentType = contentType;
-	}
-
-	@JsonGetter
-	public final Map<String, Object> getDidResolutionMetadata() {
-
-		return this.didResolutionMetadata;
-	}
-
-	@JsonSetter
-	public final void setDidResolutionMetadata(Map<String, Object> didResolutionMetadata) {
-
-		this.didResolutionMetadata = didResolutionMetadata;
-	}
-
-	@JsonGetter
-	public final Map<String, Object> getDidDocumentMetadata() {
-
-		return this.didDocumentMetadata;
-	}
-
-	@JsonSetter
-	public final void setDidDocumentMetadata(Map<String, Object> didDocumentMetadata) {
-
-		this.didDocumentMetadata = didDocumentMetadata;
-	}
-
-	/*
-	 * Object methods
-	 */
-
-	@Override
-	public String toString() {
-
-		try {
-
-			return this.toJson();
-		} catch (JsonProcessingException ex) {
-
-			return ex.getMessage();
-		}
-	}
+    @JsonSetter
+    public final void setDidDocumentMetadata(Map<String, Object> didDocumentMetadata) {
+        this.didDocumentMetadata = didDocumentMetadata;
+    }
 }
