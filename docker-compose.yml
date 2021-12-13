@@ -121,7 +121,7 @@ services:
     ports:
       - "8113:8080"
   driver-did-icon:
-    image: amuyu/driver-did-icon:0.1.2
+    image: amuyu/driver-did-icon:0.1.3
     environment:
       uniresolver_driver_did_icon_node_url: ${uniresolver_driver_did_icon_node_url}
       uniresolver_driver_did_icon_score_addr: ${uniresolver_driver_did_icon_score_addr}
@@ -137,7 +137,7 @@ services:
     ports:
       - "8116:8080"
   driver-did-sol:
-    image: identitydotcom/driver-did-sol:0.1.1
+    image: identitydotcom/driver-did-sol:1.0.0
     ports:
       - "8118:8080"
   driver-did-lit:
@@ -170,5 +170,21 @@ services:
       ORB_DRIVER_HOST_URL: ${ORB_DRIVER_HOST_URL}
       ORB_DRIVER_TLS_SYSTEMCERTPOOL: ${ORB_DRIVER_TLS_SYSTEMCERTPOOL}
     ports:
-      - "8121:8121"
+      - "8122:8121"
     command: start
+  driver-did-oyd:
+    image: oydeu/oydid-resolver:v0.4.1
+    ports:
+      - "8124:3000"
+  driver-did-moncon:
+    image: camicasii/didresolver-g
+    ports:
+      - "8125:8080"
+  dock-did-driver:
+    image: docknetwork/dock-did-driver:latest
+    ports:
+      - "8099:8080"
+  mydata-did-driver:
+    image: igrantio/uni-resolver-driver-did-mydata:1.0
+    ports:
+      - "8126:8080"

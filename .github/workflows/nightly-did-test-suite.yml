@@ -24,12 +24,12 @@ jobs:
           host: https://dev.uniresolver.io
           out_folder: /home/runner/work/universal-resolver/universal-resolver/driver-status-reports
           keep_result: true
-      - name: Run did-test-suite
-        uses: ./ci/run-did-test-suite
-        with:
-          host: https://did-test-suite.uniresolver.io/test-suite-manager/generate-report
-          driver_status_report: ${{ env.driver_status_report }}
-          reports_folder: ${{ env.reports_folder }}
+#       - name: Run did-test-suite
+#         uses: ./ci/run-did-test-suite
+#         with:
+#           host: https://did-test-suite.uniresolver.io/test-suite-manager/generate-report
+#           driver_status_report: ${{ env.driver_status_report }}
+#           reports_folder: ${{ env.reports_folder }}
       - name: Slack notification
         uses: 8398a7/action-slack@v3
         with:

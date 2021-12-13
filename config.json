@@ -136,9 +136,9 @@
 			"testIdentifiers": [ "did:gatc:2xtSori9UQZdTqzxrkp7zqKM4Kj5B4C7" ]
 		},
 		{
-			"pattern": "^(did:icon:02:.+)$",
+			"pattern": "^(did:icon:.+)$",
 			"url": "http://driver-did-icon:8080/",
-			"testIdentifiers": [ "did:icon:02:6f7a00a29deb82cb36d501d687c18bad79a8f1c154ef0c78" ]
+			"testIdentifiers": [ "did:icon:01:64aa0a2a479cb47afbf2d18d6f9f216bcdcbecdda27ccba3" ]
 		},
 		{
 			"pattern": "^(did:vaa:.+)$",
@@ -154,7 +154,7 @@
 		{
 			"pattern": "^(did:sol:.+)$",
 			"url": "http://driver-did-sol:8080/",
-			"testIdentifiers": [ "did:sol:ygGfLvAyuRymPNv2fJDK1ZMpdy59m8cV5dak6A8uHKa" ]
+			"testIdentifiers": [ "did:sol:devnet:2eK2DKs6vdzTEoj842Gfcs6DdtffPpw1iF6JbzQL4TuK" ]
 		},
 		{
 			"pattern": "^(did:lit:(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$",
@@ -193,6 +193,26 @@
 			"pattern": "^(did:orb:.+)$",
 			"url": "http://orb-did-driver:8121/resolveDID?did=$1",
 			"testIdentifiers": [ "did:orb:hl:uEiDI6sZJnp44sC_BG2XekWA4TN2m0Wtwv8AI71UER3vCHw:uoQ-BeEJpcGZzOi8vYmFma3JlaWdpNWxkZXRodTZoY3ljN3FpM214cGpjeWJ5anRvMm51bGxvYzc0YWNocGt1Y2VvNjZjZDQ:EiClaNSwhKSP6tQe36bYc5w41oRpCi1xv89MkUnNBm8agw" ]
+		},
+		{
+			"pattern": "^(did:oyd:.+)$",
+			"url": "https://oydid-resolver.data-container.net/1.0/identifiers/$1",
+			"testIdentifiers": [ "did:oyd:zQmZ8DEGQtJcpoQDMKYJkTiQn9dQLM2QzvmDQXuj8vCfvdj", "did:oyd:zQmbbgEXLq96rHSRfydhsSQ9HCs6p7Cf4R98Qn7NdXig1Vk%40https%3A%2F%2Fdid2.data-container.net" ]
+		},
+		{
+			"pattern": "^(did:moncon:.+)$",
+			"url": "https://did.driver.moncon.co/1.0/identifiers/$1",
+			"testIdentifiers": [ "did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA"]
+    		},
+		{
+			"pattern": "^(did:dock:.+)$",
+			"url": "http://dock-did-driver:8080/1.0/identifiers/$1",
+			"testIdentifiers": [ "did:dock:5EAp6DB2pkKuAfbhQiqAXFY4XPZkJrvtWKad4ChDmWwDrC8n", "did:dock:5CDsD8HZa6TeSfgmMcxAkbSXYWeob4jFQmtU6sxr4XWTZzUA" ]
+		},
+		{
+			"pattern": "^(did:mydata:.+)$",
+			"url": "http://mydata-did-driver:8080/1.0/identifiers/$1",
+			"testIdentifiers": [ "did:mydata:z6MkjNiGktLUrNrwMW6obMR85UsjYmLPFmcXc9qaiAGqPaJT", "did:mydata:z6MkscL1kQFhsAQdmXWVQrT6d8AiSwupTxshsreQnjhjVBzu" ]
 		}
 	]
 }

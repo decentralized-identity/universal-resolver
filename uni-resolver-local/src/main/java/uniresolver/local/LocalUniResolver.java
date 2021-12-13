@@ -140,7 +140,7 @@ public class LocalUniResolver implements UniResolver {
 
 		if (! resolveResult.isComplete()) {
 			if (log.isInfoEnabled()) log.info("Resolve result is incomplete: " + resolveResult);
-			throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, "No resolve result for " + didString, resolveResult.getDidResolutionMetadata());
+			throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, "No resolve result for " + didString);
 		}
 
 		// done
