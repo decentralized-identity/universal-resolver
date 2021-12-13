@@ -149,7 +149,7 @@ def generate_ingress(containers, outputdir):
         fout.write('            pathType: ImplementationSpecific\n')
         fout.write('            backend:\n')
         fout.write('              service:\n')
-        fout.write('                name: ' + container_name + '\n')
+        fout.write('                name: ' + container + '\n')
         fout.write('                port:\n')
         fout.write('                  number: ' + container_port + '\n')
 
