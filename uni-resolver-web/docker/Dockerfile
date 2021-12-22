@@ -22,6 +22,8 @@ MAINTAINER Markus Sabadello <markus@danubetech.com>
 COPY --from=build /opt/universal-resolver/uni-resolver-web/target/*.war /var/lib/jetty/webapps/ROOT.war
 COPY --from=build /opt/universal-resolver/uni-resolver-web/config.json /var/lib/jetty/
 
+ENV universal_resolver_web_spring_profiles_active=default
+
 # done
 
 EXPOSE 8080
