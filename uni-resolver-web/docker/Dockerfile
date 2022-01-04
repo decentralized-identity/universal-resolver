@@ -16,15 +16,17 @@ RUN cd /opt/universal-resolver/uni-resolver-web && mvn clean install package -N
 
 # build image
 
-FROM jetty:9.4-jre11
+FROM openjdk:11-jre-slim
 MAINTAINER Markus Sabadello <markus@danubetech.com>
 
-COPY --from=build /opt/universal-resolver/uni-resolver-web/target/*.war /var/lib/jetty/webapps/ROOT.war
-COPY --from=build /opt/universal-resolver/uni-resolver-web/config.json /var/lib/jetty/
+WORKDIR /opt/universal-resolver/uni-resolver-web/
+
+COPY --from=build /opt/universal-resolver/uni-resolver-web/target/*.jar ./
+COPY --from=build /opt/universal-resolver/uni-resolver-web/config.json ./
 
 ENV uniresolver_web_spring_profiles_active=default
 
 # done
 
 EXPOSE 8080
-CMD java -Djetty.http.port=8080 -jar /usr/local/jetty/start.jar
+CMD java -jar *.jar
