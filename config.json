@@ -217,6 +217,12 @@
 			"pattern": "^(did:mydata:.+)$",
 			"url": "http://mydata-did-driver:8080/1.0/identifiers/$1",
 			"testIdentifiers": [ "did:mydata:z6MkjNiGktLUrNrwMW6obMR85UsjYmLPFmcXc9qaiAGqPaJT", "did:mydata:z6MkscL1kQFhsAQdmXWVQrT6d8AiSwupTxshsreQnjhjVBzu" ]
+		},
+		{
+			"pattern": "^(did:dns:.+)$",
+			"url": "http://driver-did-dns:8080/",
+			"propertiesEndpoint": "true",
+			"testIdentifiers": [ "did:dns:danubetech.com" ]
 		}
 	]
 }
