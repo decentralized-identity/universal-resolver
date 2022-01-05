@@ -21,7 +21,7 @@ MAINTAINER Markus Sabadello <markus@danubetech.com>
 
 WORKDIR /opt/universal-resolver/uni-resolver-web/
 
-COPY --from=build /opt/universal-resolver/uni-resolver-web/target/*.jar ./
+COPY --from=build /opt/universal-resolver/uni-resolver-web/target/*-exec.jar ./
 COPY --from=build /opt/universal-resolver/uni-resolver-web/config.json ./
 
 ENV uniresolver_web_spring_profiles_active=default
