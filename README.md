@@ -42,7 +42,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ccp:ceNobbK6Me9F5zwyE3MKY88QZLw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:work:2UUHQCd4psvkPLZGnWY33L
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ont:AN5g6gz9EoQ3sCNu7514GEghZurrktCMiH
-	curl -X GET http://localhost:8080/1.0/identifiers/did:kilt:5CqJa4Ct7oMeMESzehTiN9fwYdGLd7tqeirRMpGDh2XxYYyx
+	curl -X GET http://localhost:8080/1.0/identifiers/did:kilt:4rNTX3ihuxyWkB7wG3oLgUWSBLa2gva1NBKJsBFm7jJZUYfc
 	curl -X GET http://localhost:8080/1.0/identifiers/did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734
 	curl -X GET http://localhost:8080/1.0/identifiers/did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764
 	curl -X GET http://localhost:8080/1.0/identifiers/did:mpg:7PGGnRdvKKFftSXU3Jw75Vk5npfg
@@ -102,7 +102,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-ccp](https://github.com/decentralized-identity/uni-resolver-driver-did-ccp/) | 0.1-SNAPSHOT | [0.1](https://did.baidu.com/did-spec/) | [hello2mao/driver-did-ccp](https://hub.docker.com/r/hello2mao/driver-did-ccp/) | Baidu Cloud
 | [did-work](https://github.com/decentralized-identity/uni-resolver-driver-did-work/) | 0.2  | [1.0](https://workday.github.io/work-did-method-spec/) | [didwork/work-did-driver](https://hub.docker.com/r/didwork/work-did-driver)| Workday Credentials
 | [did-ont](https://github.com/ontio/ontid-driver) | 0.1 | [1.0](https://github.com/ontio/ontology-DID/blob/master/docs/en/DID-ONT-method.md) |  [ontio/ontid-driver](https://hub.docker.com/r/ontio/ontid-driver) | Ontology ONT ID
-| [did-kilt](https://github.com/KILTprotocol/kilt-did-driver) | 1.2.1 | [1.0](https://github.com/KILTprotocol/kilt-did-driver/blob/master/DID%20Method%20Specification.md) | [kiltprotocol/kilt-did-driver](https://hub.docker.com/r/kiltprotocol/kilt-did-driver)| KILT Protocol (SSI credentials)
+| [did-kilt](https://github.com/KILTprotocol/kilt-did-driver) | 2.2.0 | [1.1](https://github.com/KILTprotocol/kilt-did-driver/blob/master/docs/did-spec/spec.md) | [kiltprotocol/kilt-did-driver](https://hub.docker.com/r/kiltprotocol/kilt-did-driver)| KILT Protocol
 | [did-evan](https://github.com/evannetwork/did-driver) | 0.1 | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | [evannetwork/evan-did-driver](https://hub.docker.com/r/evannetwork/evan-did-driver) | evan.network
 | [did-factom](https://github.com/Sphereon-Opensource/uni-resolver-driver-did-factom) | 0.2.0-SNAPSHOT | [1.0](https://github.com/bi-foundation/FIS/blob/feature/DID/FIS/DID.md) | [sphereon/uni-resolver-driver-did-factom](https://hub.docker.com/r/sphereon/uni-resolver-driver-did-factom) | Factom Protocol
 | [did-key](https://github.com/decentralized-identity/uni-resolver-driver-did-key) | 1.0.0 | [0.7](https://w3c-ccg.github.io/did-method-key/) | [universalresolver/driver-did-key](https://hub.docker.com/r/universalresolver/driver-did-key) | Public keys (in general)
