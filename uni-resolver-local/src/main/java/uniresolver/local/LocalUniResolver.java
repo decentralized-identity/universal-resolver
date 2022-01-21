@@ -89,7 +89,7 @@ public class LocalUniResolver implements UniResolver {
 
 			String errorMessage = ex.getMessage();
 			if (log.isWarnEnabled()) log.warn(errorMessage);
-			throw new ResolutionException(ResolveResult.ERROR_INVALIDDID, errorMessage);
+			throw new ResolutionException(ResolutionException.ERROR_INVALIDDID, errorMessage);
 		}
 
 		// check options
@@ -140,7 +140,7 @@ public class LocalUniResolver implements UniResolver {
 
 		if (! resolveResult.isComplete()) {
 			if (log.isInfoEnabled()) log.info("Resolve result is incomplete: " + resolveResult);
-			throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, "No resolve result for " + didString);
+			throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "No resolve result for " + didString);
 		}
 
 		// done

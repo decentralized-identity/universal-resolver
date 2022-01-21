@@ -118,15 +118,15 @@ public class ClientUniResolver implements UniResolver {
 			}
 
 			if (httpStatusCode == 404 && resolveRepresentationResult == null) {
-				throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode == 406 && resolveRepresentationResult == null) {
-				throw new ResolutionException(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode != 200 && resolveRepresentationResult == null) {
-				throw new ResolutionException(ResolveResult.ERROR_INTERNALERROR, "Cannot retrieve result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_INTERNALERROR, "Cannot retrieve result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (resolveRepresentationResult != null && resolveRepresentationResult.isErrorResult()) {

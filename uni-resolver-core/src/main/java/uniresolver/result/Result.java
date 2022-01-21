@@ -1,5 +1,10 @@
 package uniresolver.result;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public interface Result {
@@ -12,12 +17,79 @@ public interface Result {
     public String toJson();
 
     /*
+     * Metadata methods
+     */
+
+    public Map<String, Object> getFunctionProcessMetadata();
+    public Map<String, Object> getFunctionContentMetadata();
+
+    /*
      * Error methods
      */
 
-    public boolean isErrorResult();
-    public String getError();
-    public void setError(String error);
-    public String getErrorMessage();
-    public void setErrorMessage(String errorMessage);
+    @JsonIgnore
+    default public boolean isErrorResult() {
+        return this.getError() != null;
+    }
+
+    @JsonIgnore
+    default public String getError() {
+        if (this.getFunctionProcessMetadata() == null) throw new NullPointerException();
+        return (String) this.getFunctionProcessMetadata().get("error");
+    }
+
+    @JsonIgnore
+    default public void setError(String error) {
+        if (this.getFunctionProcessMetadata() == null) throw new NullPointerException();
+        if (error != null)
+            this.getFunctionProcessMetadata().put("error", error);
+        else
+            this.getFunctionProcessMetadata().remove("error");
+    }
+
+    @JsonIgnore
+    default public String getErrorMessage() {
+        if (this.getFunctionProcessMetadata() == null) throw new NullPointerException();
+        return (String) this.getFunctionProcessMetadata().get("errorMessage");
+    }
+
+    @JsonIgnore
+    default public void setErrorMessage(String error) {
+        if (this.getFunctionProcessMetadata() == null) throw new NullPointerException();
+        if (error != null)
+            this.getFunctionProcessMetadata().put("errorMessage", error);
+        else
+            this.getFunctionProcessMetadata().remove("errorMessage");
+    }
+
+    /*
+     * Problem/warning methods
+     */
+
+    @JsonIgnore
+    default public boolean hasWarnings() {
+        return this.getWarnings() != null && this.getWarnings().size() > 0;
+    }
+
+    @JsonIgnore
+    default public List<Map<String, Object>> getWarnings() {
+        return this.getFunctionContentMetadata() == null ? null : (List<Map<String, Object>>) this.getFunctionContentMetadata().get("warnings");
+    }
+
+    @JsonIgnore
+    default public void addWarning(String message, Map<String, Object> warningMetadata) {
+        if (message == null) throw new NullPointerException();
+        if (this.getFunctionContentMetadata() == null) throw new NullPointerException();
+        List<Map<String, Object>> warnings = (List<Map<String, Object>>) this.getFunctionContentMetadata().get("warnings");
+        if (warnings == null) { warnings = new ArrayList<>(); this.getFunctionContentMetadata().put("warnings", warnings); }
+        Map<String, Object> warning = new LinkedHashMap<>();
+        if (message != null) warning.put("message", message);
+        if (warningMetadata != null) warning.putAll(warningMetadata);
+        warnings.add(warning);
+    }
+
+    @JsonIgnore
+    default public void addWarning(String message) {
+        this.addWarning(message, null);
+    }
 }

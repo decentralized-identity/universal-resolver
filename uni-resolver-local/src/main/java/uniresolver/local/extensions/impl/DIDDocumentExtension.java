@@ -41,7 +41,7 @@ public class DIDDocumentExtension implements DereferencerExtension {
         // dereference
 
         if (! Representations.isRepresentationMediaType(accept)) {
-            throw new DereferencingException(DereferenceResult.ERROR_CONTENTTYEPNOTSUPPORTED, "Content type not supported: " + accept);
+            throw new DereferencingException(DereferencingException.ERROR_CONTENTTYEPNOTSUPPORTED, "Content type not supported: " + accept);
         }
 
         ResolveRepresentationResult resolveRepresentationResult = resolveResult.toResolveRepresentationResult(accept);
