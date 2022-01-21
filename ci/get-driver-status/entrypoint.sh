@@ -39,7 +39,6 @@ if "$INPUT_KEEP_RESULT";
     git config --global user.email "admin@danubetech.com"
     git config --global user.name "Get driver status workflow"
     git add .
-    git checkout driver-status-reports
     # Pass driver_status_report to next step in github action
     echo "driver_status_report=$(git diff --name-only --staged)" >> "$GITHUB_ENV"
     echo "reports_folder=$REPORTS_FOLDER" >> "$GITHUB_ENV"
