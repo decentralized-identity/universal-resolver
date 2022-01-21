@@ -1,14 +1,15 @@
 package uniresolver.driver;
 
 import foundation.identity.did.DID;
+import foundation.identity.did.representations.Representations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
-import uniresolver.UniResolver;
-import uniresolver.result.ResolveResult;
-import uniresolver.util.ResolveResultUtil;
+import uniresolver.result.ResolveDataModelResult;
+import uniresolver.result.ResolveRepresentationResult;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,32 +19,28 @@ public interface Driver {
 
 	static final Logger log = LoggerFactory.getLogger(Driver.class);
 
-	default public ResolveResult resolve(DID did, Map<String, Object> resolutionOptions) throws ResolutionException {
-		if (log.isDebugEnabled()) log.debug("Driver: resolveRepresentation(" + did + ")  with options: " + resolutionOptions);
-		ResolveResult resolveRepresentationResult = null;
-		try {
-			resolveRepresentationResult = this.resolveRepresentation(did, resolutionOptions);
-		} catch (ResolutionException ex) {
-			if (ex.getResolveResult() != null) ex.setResolveResult(ResolveResultUtil.convertToResolveResult(ex.getResolveResult()));
-			throw ex;
-		}
-		ResolveResult resolveResult = resolveRepresentationResult == null ? null : ResolveResultUtil.convertToResolveResult(resolveRepresentationResult);
-		return resolveResult;
+	default public ResolveDataModelResult resolve(DID did, Map<String, Object> resolutionOptions) throws ResolutionException {
+		if (log.isDebugEnabled()) log.debug("Driver: resolve(" + did + ")  with options: " + resolutionOptions);
+
+		String accept = (String) resolutionOptions.get("accept");
+		if (accept != null) throw new ResolutionException("Driver: Unexpected 'accept' provided in 'resolutionOptions' for resolve().");
+
+		Map<String, Object> resolveRepresentationResolutionOptions = Map.of("accept", Representations.DEFAULT_MEDIA_TYPE);
+		ResolveRepresentationResult resolveRepresentationResult = this.resolveRepresentation(did, resolveRepresentationResolutionOptions);
+
+		return resolveRepresentationResult == null ? null : resolveRepresentationResult.toResolveDataModelResult();
 	}
 
-	default public ResolveResult resolveRepresentation(DID did, Map<String, Object> resolutionOptions) throws ResolutionException {
+	default public ResolveRepresentationResult resolveRepresentation(DID did, Map<String, Object> resolutionOptions) throws ResolutionException {
 		if (log.isDebugEnabled()) log.debug("Driver: resolveRepresentation(" + did + ")  with options: " + resolutionOptions);
+
 		String accept = (String) resolutionOptions.get("accept");
-		if (accept == null) throw new ResolutionException("Driver: No 'accept' provided in 'resolutionOptions' for resolveRepresentation().");
-		ResolveResult resolveResult;
-		try {
-			resolveResult = this.resolve(did, resolutionOptions);
-		} catch (ResolutionException ex) {
-			if (ex.getResolveResult() != null) ex.setResolveResult(ResolveResultUtil.convertToResolveRepresentationResult(ex.getResolveResult(), accept));
-			throw ex;
-		}
-		ResolveResult resolveRepresentationResult = resolveResult == null ? null : ResolveResultUtil.convertToResolveRepresentationResult(resolveResult, accept);
-		return resolveRepresentationResult;
+
+		Map<String, Object> resolveDataModelResolutionOptions = new HashMap<>(resolutionOptions);
+		resolveDataModelResolutionOptions.remove("accept");
+		ResolveDataModelResult resolveDataModelResult = this.resolve(did, resolveDataModelResolutionOptions);
+
+		return resolveDataModelResult == null ? null : resolveDataModelResult.toResolveRepresentationResult(accept);
 	}
 
 	default public Map<String, Object> properties() throws ResolutionException {

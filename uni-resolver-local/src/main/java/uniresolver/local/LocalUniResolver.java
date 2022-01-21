@@ -1,9 +1,5 @@
 package uniresolver.local;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import foundation.identity.did.DID;
 import foundation.identity.did.parser.ParserException;
 import org.slf4j.Logger;
@@ -12,23 +8,25 @@ import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.driver.Driver;
 import uniresolver.driver.http.HttpDriver;
-import uniresolver.local.extensions.Extension;
+import uniresolver.local.configuration.LocalUniResolverConfigurator;
 import uniresolver.local.extensions.ExtensionStatus;
+import uniresolver.local.extensions.ResolverExtension;
+import uniresolver.result.ResolveDataModelResult;
+import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.net.URI;
 import java.util.*;
 
 public class LocalUniResolver implements UniResolver {
 
+	public static final List<ResolverExtension> DEFAULT_EXTENSIONS = List.of(
+	);
+
 	private static final Logger log = LoggerFactory.getLogger(LocalUniResolver.class);
 
-	private List<Driver> drivers = new ArrayList<Driver> ();
-	private List<Extension> extensions = new ArrayList<Extension> ();
+	private List<Driver> drivers = new ArrayList<>();
+	private List<ResolverExtension> extensions = new ArrayList<>(DEFAULT_EXTENSIONS);
 
 	public LocalUniResolver() {
 
@@ -38,76 +36,32 @@ public class LocalUniResolver implements UniResolver {
 		this.drivers = drivers;
 	}
 
+	/*
+	 * Factory methods
+	 */
+
 	public static LocalUniResolver fromConfigFile(String filePath) throws IOException {
 
-		final Gson gson = new Gson();
-
-		List<Driver> drivers = new ArrayList<Driver> ();
-
-		try (Reader reader = new FileReader(new File(filePath))) {
-
-			JsonObject jsonObjectRoot  = gson.fromJson(reader, JsonObject.class);
-			JsonArray jsonArrayDrivers = jsonObjectRoot.getAsJsonArray("drivers");
-
-			int i = 0;
-
-			for (Iterator<JsonElement> jsonElementsDrivers = jsonArrayDrivers.iterator(); jsonElementsDrivers.hasNext(); ) {
-
-				i++;
-
-				JsonObject jsonObjectDriver = (JsonObject) jsonElementsDrivers.next();
-
-				String pattern = jsonObjectDriver.has("pattern") ? jsonObjectDriver.get("pattern").getAsString() : null;
-				String url = jsonObjectDriver.has("url") ? jsonObjectDriver.get("url").getAsString() : null;
-				String propertiesEndpoint = jsonObjectDriver.has("propertiesEndpoint") ? jsonObjectDriver.get("propertiesEndpoint").getAsString() : null;
-				JsonArray testIdentifiers = jsonObjectDriver.has("testIdentifiers") ? jsonObjectDriver.get("testIdentifiers").getAsJsonArray() : null;
-
-				if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
-				if (url == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
-
-				// construct HTTP driver
-
-				HttpDriver driver = new HttpDriver();
-
-				driver.setPattern(pattern);
-
-				if (url.contains("$1") || url.contains("$2")) {
-
-					driver.setResolveUri(url);
-					driver.setPropertiesUri((URI) null);
-				} else {
-
-					if (! url.endsWith("/")) url = url + "/";
-
-					driver.setResolveUri(url + "1.0/identifiers/");
-					if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(url + "1.0/properties");
-				}
-
-				driver.setTestIdentifiers(readTestIdentifiers(testIdentifiers));
-
-				// done
-
-				drivers.add(driver);
-				if (log.isInfoEnabled()) log.info("Added driver for pattern '" + pattern + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
-			}
-		}
-
 		LocalUniResolver localUniResolver = new LocalUniResolver();
-		localUniResolver.setDrivers(drivers);
+		LocalUniResolverConfigurator.configureLocalUniResolver(filePath, localUniResolver);
 
 		return localUniResolver;
 	}
 
+	/*
+	 * Resolver methods
+	 */
+
 	@Override
-	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	public ResolveDataModelResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
-		return this.resolveOrResolveRepresentation(didString, resolutionOptions, false);
+		return (ResolveDataModelResult) this.resolveOrResolveRepresentation(didString, resolutionOptions, false);
 	}
 
 	@Override
-	public ResolveResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
-		return this.resolveOrResolveRepresentation(didString, resolutionOptions, true);
+		return (ResolveRepresentationResult) this.resolveOrResolveRepresentation(didString, resolutionOptions, true);
 	}
 
 	private ResolveResult resolveOrResolveRepresentation(String didString, Map<String, Object> resolutionOptions, boolean resolveRepresentation) throws ResolutionException {
@@ -121,12 +75,11 @@ public class LocalUniResolver implements UniResolver {
 
 		// prepare resolve result
 
-		ResolveResult resolveResult = ResolveResult.build();
+		DID did = null;
+		ResolveResult resolveResult = resolveRepresentation ? ResolveRepresentationResult.build() : ResolveDataModelResult.build();
 		ExtensionStatus extensionStatus = new ExtensionStatus();
 
-		// parse DID
-
-		DID did = null;
+		// parse
 
 		try {
 
@@ -134,67 +87,68 @@ public class LocalUniResolver implements UniResolver {
 			if (log.isDebugEnabled()) log.debug("DID " + didString + " is valid: " + did);
 		} catch (IllegalArgumentException | ParserException ex) {
 
-			String errorMessage = "DID " + didString + " is not valid: " + ex.getMessage();
+			String errorMessage = ex.getMessage();
 			if (log.isWarnEnabled()) log.warn(errorMessage);
+			throw new ResolutionException(ResolveResult.ERROR_INVALIDDID, errorMessage);
+		}
 
-			if (resolveRepresentation) {
-				throw new ResolutionException(ResolveResult.makeErrorResult(ResolveResult.Error.invalidDid, errorMessage, (String) resolutionOptions.get("accept")));
-			} else {
-				throw new ResolutionException(ResolveResult.makeErrorResult(ResolveResult.Error.invalidDid, errorMessage, null));
+		// check options
+
+		String accept = (String) resolutionOptions.get("accept");
+
+		// [before resolve]
+
+		if (! extensionStatus.skipBeforeResolve()) {
+			for (ResolverExtension resolverExtension : this.getExtensions()) {
+				extensionStatus.or(resolverExtension.beforeResolve(did, resolutionOptions, resolveResult, resolveRepresentation, this));
+				if (extensionStatus.skipBeforeResolve()) break;
 			}
 		}
 
-		// execute extensions (before)
+		// [resolve]
 
-		if (! extensionStatus.skipExtensionsBefore()) {
+		if (! extensionStatus.skipResolve()) {
 
-			for (Extension extension : this.getExtensions()) {
+			if (log.isInfoEnabled()) log.info("Resolving DID: " + did);
 
-				extensionStatus.or(extension.beforeResolve(didString, null, did, resolutionOptions, resolveResult, resolveRepresentation, this));
-				if (extensionStatus.skipExtensionsBefore()) break;
+			ResolveResult driverResolveResult = this.resolveOrResolveRepresentationWithDrivers(did, resolutionOptions, resolveRepresentation);
+
+			if (driverResolveResult != null) {
+				resolveResult.getDidResolutionMetadata().putAll(driverResolveResult.getDidResolutionMetadata());
+				if (resolveResult instanceof ResolveDataModelResult) ((ResolveDataModelResult) resolveResult).setDidDocument(((ResolveDataModelResult) driverResolveResult).getDidDocument());
+				if (resolveResult instanceof ResolveRepresentationResult) ((ResolveRepresentationResult) resolveResult).setDidDocumentStream(((ResolveRepresentationResult) driverResolveResult).getDidDocumentStream());
+				resolveResult.getDidDocumentMetadata().putAll(driverResolveResult.getDidDocumentMetadata());
 			}
 		}
 
-		// try all drivers
+		// [after resolve]
 
-		if (! extensionStatus.skipDriver()) {
-
-			if (log.isDebugEnabled()) log.debug("Resolving DID: " + did);
-
-			ResolveResult driverResolveResult = ResolveResult.build();
-			this.resolveOrResolveRepresentationWithDrivers(did, resolutionOptions, driverResolveResult, resolveRepresentation);
-
-			resolveResult.setDidDocument(driverResolveResult.getDidDocument());
-			resolveResult.setDidDocumentStream(driverResolveResult.getDidDocumentStream());
-			resolveResult.setDidDocumentMetadata(driverResolveResult.getDidDocumentMetadata());
-
-			resolveResult.getDidResolutionMetadata().putAll(driverResolveResult.getDidResolutionMetadata());
-		}
-
-		// execute extensions (after)
-
-		if (! extensionStatus.skipExtensionsAfter()) {
-
-			for (Extension extension : this.getExtensions()) {
-
-				extensionStatus.or(extension.afterResolve(null, null, did, resolutionOptions, resolveResult, resolveRepresentation, this));
-				if (extensionStatus.skipExtensionsAfter()) break;
+		if (! extensionStatus.skipAfterResolve()) {
+			for (ResolverExtension resolverExtension : this.getExtensions()) {
+				extensionStatus.or(resolverExtension.afterResolve(did, resolutionOptions, resolveResult, resolveRepresentation, this));
+				if (extensionStatus.skipAfterResolve()) break;
 			}
 		}
 
-		// stop time
+		// additional metadata
 
 		long stop = System.currentTimeMillis();
-
+		resolveResult.getDidResolutionMetadata().put("duration", stop - start);
 		resolveResult.getDidResolutionMetadata().put("did", did.toMap(false));
-		resolveResult.getDidResolutionMetadata().put("duration", Long.valueOf(stop - start));
+
+		// nothing found?
+
+		if (! resolveResult.isComplete()) {
+			if (log.isInfoEnabled()) log.info("Resolve result is incomplete: " + resolveResult);
+			throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, "No resolve result for " + didString);
+		}
 
 		// done
 
-		return resolveResult;
+		return resolveRepresentation ? resolveResult.toResolveRepresentationResult(accept) : resolveResult.toResolveDataModelResult();
 	}
 
-	public void resolveOrResolveRepresentationWithDrivers(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation) throws ResolutionException {
+	public ResolveResult resolveOrResolveRepresentationWithDrivers(DID did, Map<String, Object> resolutionOptions, boolean resolveRepresentation) throws ResolutionException {
 
 		ResolveResult driverResolveResult = null;
 		Driver usedDriver = null;
@@ -210,10 +164,6 @@ public class LocalUniResolver implements UniResolver {
 
 			if (driverResolveResult != null) {
 				usedDriver = driver;
-				if (driverResolveResult.getDidResolutionMetadata() != null) resolveResult.setDidResolutionMetadata(new HashMap<>(driverResolveResult.getDidResolutionMetadata()));
-				resolveResult.setDidDocument(driverResolveResult.getDidDocument());
-				resolveResult.setDidDocumentStream(driverResolveResult.getDidDocumentStream());
-				if (driverResolveResult.getDidDocumentMetadata() != null) resolveResult.setDidDocumentMetadata(new HashMap<>(driverResolveResult.getDidDocumentMetadata()));
 				break;
 			}
 		}
@@ -222,18 +172,20 @@ public class LocalUniResolver implements UniResolver {
 
 			if (usedDriver instanceof HttpDriver) {
 
-				resolveResult.getDidResolutionMetadata().put("pattern", ((HttpDriver) usedDriver).getPattern().pattern());
-				resolveResult.getDidResolutionMetadata().put("driverUrl", ((HttpDriver) usedDriver).getResolveUri());
+				driverResolveResult.getDidResolutionMetadata().put("pattern", ((HttpDriver) usedDriver).getPattern().pattern());
+				driverResolveResult.getDidResolutionMetadata().put("driverUrl", ((HttpDriver) usedDriver).getResolveUri());
 
-				if (log.isDebugEnabled()) log.debug("Resolved " + did + " with driver " + drivers.getClass().getSimpleName() + " and pattern " + ((HttpDriver) usedDriver).getPattern().pattern());
+				if (log.isDebugEnabled()) log.debug("Resolved " + did + " with driver " + usedDriver.getClass().getSimpleName() + " and pattern " + ((HttpDriver) usedDriver).getPattern().pattern());
 			} else {
 
-				if (log.isDebugEnabled()) log.debug("Resolved " + did + " with driver " + drivers.getClass().getSimpleName());
+				if (log.isDebugEnabled()) log.debug("Resolved " + did + " with driver " + usedDriver.getClass().getSimpleName());
 			}
 		} else {
 
 			if (log.isDebugEnabled()) log.debug("No result with " + this.getDrivers().size() + " drivers.");
 		}
+
+		return driverResolveResult;
 	}
 
 	@Override
@@ -315,17 +267,6 @@ public class LocalUniResolver implements UniResolver {
 	}
 
 	/*
-	 * Helper methods
-	 */
-
-	private static List<String> readTestIdentifiers(JsonArray jsonTestIdentifiers) {
-
-		List<String> testIdentifiers = new ArrayList<String> (jsonTestIdentifiers.size());
-		for (JsonElement jsonTestIdentifier : jsonTestIdentifiers) testIdentifiers.add(jsonTestIdentifier.getAsString());
-		return testIdentifiers;
-	}
-
-	/*
 	 * Getters and setters
 	 */
 
@@ -345,11 +286,11 @@ public class LocalUniResolver implements UniResolver {
 		this.drivers = drivers;
 	}
 
-	public List<Extension> getExtensions() {
+	public List<ResolverExtension> getExtensions() {
 		return this.extensions;
 	}
 
-	public void setExtensions(List<Extension> extensions) {
+	public void setExtensions(List<ResolverExtension> extensions) {
 		this.extensions = extensions;
 	}
 }

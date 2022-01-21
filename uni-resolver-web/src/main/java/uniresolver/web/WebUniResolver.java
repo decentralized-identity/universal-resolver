@@ -1,11 +1,15 @@
 package uniresolver.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.HttpRequestHandler;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
-import uniresolver.result.ResolveResult;
+import uniresolver.result.ResolveDataModelResult;
+import uniresolver.result.ResolveRepresentationResult;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,9 +17,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+@WebServlet
 public abstract class WebUniResolver extends HttpServlet implements HttpRequestHandler, UniResolver {
 
+	@Autowired
+	@Qualifier("UniResolver")
 	private UniResolver uniResolver;
 
 	protected WebUniResolver() {
@@ -33,19 +39,19 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	}
 
 	@Override
-	protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doOptions(HttpServletRequest request, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Headers", "Accept, Content-Type");
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
 	@Override
-	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	public ResolveDataModelResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 		return this.getUniResolver() == null ? null : this.getUniResolver().resolve(didString, resolutionOptions);
 	}
 
 	@Override
-	public ResolveResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 		return this.getUniResolver() == null ? null : this.getUniResolver().resolveRepresentation(didString, resolutionOptions);
 	}
 

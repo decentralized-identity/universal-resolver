@@ -1,20 +1,16 @@
-driver-did-trustbloc:
-  command: ['sh', '-c', 'did-method start']
+driver-didkit:
   env:
-    - name: DID_METHOD_HOST_URL
-      value: 0.0.0.0:8102
-    - name: DID_METHOD_TLS_SYSTEMCERTPOOL
-      value: 'true'
-    - name: DID_METHOD_MODE
-      value: resolver
-uni-resolver-driver-did-echo:
+    - name: PORT
+      value: "8080"
+    - name: HOST
+      value: 0.0.0.0
+orb-did-driver:
+  args: ["start"]
   env:
-    - name: uniresolver_driver_did_echo_mainnet_rpc_url
-      value: http://127.0.0.1:8090/rpc
-    - name: uniresolver_driver_did_echo_testnet_rpc_url
-      value: http://testnet.echo-dev.io
-    - name: uniresolver_driver_did_echo_devnet_rpc_url
-      value: http://127.0.0.1:8090/rpc
+    - name: ORB_DRIVER_HOST_URL
+      value: 0.0.0.0:8121
+    - name: ORB_DRIVER_TLS_SYSTEMCERTPOOL
+      value: "true"
 driver-did-btcr:
   env:
     - name: uniresolver_driver_did_btcr_bitcoinConnection

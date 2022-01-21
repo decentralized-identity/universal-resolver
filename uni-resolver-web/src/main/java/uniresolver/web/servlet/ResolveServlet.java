@@ -1,16 +1,14 @@
 package uniresolver.web.servlet;
 
-import foundation.identity.did.representations.Representations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import uniresolver.ResolutionException;
+import uniresolver.driver.util.HttpBindingServerUtil;
+import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
-import uniresolver.util.HttpBindingUtil;
-import uniresolver.util.ResolveResultUtil;
 import uniresolver.web.WebUniResolver;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,7 +23,7 @@ public class ResolveServlet extends WebUniResolver {
 	protected static final Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		// read request
 
@@ -36,85 +34,102 @@ public class ResolveServlet extends WebUniResolver {
 		String servletPath = request.getServletPath();
 		String requestPath = request.getRequestURI();
 
-		String identifier = requestPath.substring(contextPath.length() + servletPath.length());
-		if (identifier.startsWith("/")) identifier = identifier.substring(1);
-		identifier = URLDecoder.decode(identifier, StandardCharsets.UTF_8);
+		String path = requestPath.substring(contextPath.length() + servletPath.length());
+		if (path.startsWith("/")) path = path.substring(1);
 
-		if (log.isInfoEnabled()) log.info("Incoming resolve request for identifier: " + identifier);
+		if (log.isDebugEnabled()) log.debug("Incoming resolve request: " + requestPath);
 
-		if (identifier == null) {
-
+		if (path.isEmpty()) {
 			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "No identifier found in resolve request.");
 			return;
 		}
 
-		// assume identifier is a DID
+		// look at path
 
-		String didString = identifier;
+		String didString = null;
+		Map<String, Object> resolutionOptions = new HashMap<>();
+
+		if (path.startsWith("did%3A")) {
+			didString = URLDecoder.decode(path, StandardCharsets.UTF_8);
+			if (request.getParameterMap() != null) {
+				resolutionOptions.putAll(request.getParameterMap());
+			}
+		} else {
+			didString = path;
+		}
+
+		if (log.isInfoEnabled()) log.info("Incoming DID string: " + didString);
 
 		// prepare resolution options
 
-		String acceptHeaderString = request.getHeader("Accept");
-		if (log.isDebugEnabled()) log.info("Incoming Accept: header string: " + acceptHeaderString);
-		List<MediaType> acceptMediaTypes = MediaType.parseMediaTypes(acceptHeaderString != null ? acceptHeaderString : "*/*");
-		MediaType.sortBySpecificityAndQuality(acceptMediaTypes);
+		String httpAcceptHeader = request.getHeader("Accept");
+		if (log.isInfoEnabled()) log.info("Incoming Accept: header string: " + httpAcceptHeader);
 
-		String accept = acceptMediaTypes.size() > 0 ? acceptMediaTypes.get(0).toString() : null;
-		if (accept == null || ! Representations.MEDIA_TYPES.contains(accept)) accept = Representations.DEFAULT_MEDIA_TYPE;
+		List<MediaType> httpAcceptMediaTypes = MediaType.parseMediaTypes(httpAcceptHeader != null ? httpAcceptHeader : ResolveResult.MEDIA_TYPE);
+		MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
 
-		Map<String, Object> resolutionOptions = new HashMap<>();
+		String accept = HttpBindingServerUtil.acceptForHttpAcceptMediaTypes(httpAcceptMediaTypes);
 		resolutionOptions.put("accept", accept);
+
+		if (log.isDebugEnabled()) log.debug("Using resolution options: " + resolutionOptions);
 
 		// execute the request
 
-		ResolveResult resolveResult;
+		ResolveRepresentationResult resolveRepresentationResult;
 
 		try {
 
-			resolveResult = this.resolveRepresentation(didString, resolutionOptions);
+			resolveRepresentationResult = this.resolveRepresentation(didString, resolutionOptions);
+			if (resolveRepresentationResult == null) throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, "No resolve result for " + didString);
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolve problem for " + didString + ": " + ex.getMessage(), ex);
 
-			if (ex instanceof ResolutionException && ((ResolutionException) ex).getResolveResult() != null) {
-				resolveResult = ((ResolutionException) ex).getResolveResult();
-			} else {
-				resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.internalError, "Resolve problem for " + didString + ": " + ex.getMessage(), accept);
+			if (! (ex instanceof ResolutionException)) {
+				ex = new ResolutionException(ResolveResult.ERROR_INTERNALERROR, "Resolve problem for " + didString + ": " + ex.getMessage());
 			}
 
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
-			return;
+			resolveRepresentationResult = ResolveRepresentationResult.makeErrorResult((ResolutionException) ex, accept);
 		}
 
-		if (log.isInfoEnabled()) log.info("Resolve result for " + didString + ": " + resolveResult);
-
-		// no resolve result?
-
-		if (resolveResult == null || resolveResult.getDidDocumentStream() == null) {
-
-			resolveResult = ResolveResult.makeErrorResult(ResolveResult.Error.notFound, "No resolve result for " + didString, accept);
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null,  HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
-			return;
-		}
+		if (log.isInfoEnabled()) log.info("Resolve result for " + didString + ": " + resolveRepresentationResult);
 
 		// write resolve result
 
-		for (MediaType acceptMediaType : acceptMediaTypes) {
+		for (MediaType acceptMediaType : httpAcceptMediaTypes) {
 
-			String contentType = (String) resolveResult.getDidResolutionMetadata().get("contentType");
-			if (log.isDebugEnabled()) log.debug("Trying to find content for media type " + acceptMediaType + " to satisfy " + contentType);
+			if (HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, ResolveResult.MEDIA_TYPE)) {
 
-			if (acceptMediaType.includes(MediaType.valueOf(ResolveResult.MEDIA_TYPE))) {
+				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + acceptMediaType + " via content type " + ResolveResult.MEDIA_TYPE);
 
-				ServletUtil.sendResponse(response, HttpBindingUtil.httpStatusCodeForResolveResult(resolveResult), ResolveResult.MEDIA_TYPE, HttpBindingUtil.toHttpBodyResolveResult(resolveResult));
+				ServletUtil.sendResponse(
+						response,
+						HttpBindingServerUtil.httpStatusCodeForResult(resolveRepresentationResult),
+						ResolveResult.MEDIA_TYPE,
+						HttpBindingServerUtil.toHttpBodyResolveRepresentationResult(resolveRepresentationResult));
 				return;
-			} else if (contentType != null && acceptMediaType.includes(MediaType.valueOf(contentType))) {
+			} else {
 
-				ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, contentType, resolveResult.getDidDocumentStream());
+				// determine representation media type
+
+				if (HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, resolveRepresentationResult.getContentType())) {
+					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + acceptMediaType + " via content type " + resolveRepresentationResult.getContentType());
+				} else {
+					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + acceptMediaType);
+					continue;
+				}
+
+				ServletUtil.sendResponse(
+						response,
+						HttpBindingServerUtil.httpStatusCodeForResult(resolveRepresentationResult),
+						resolveRepresentationResult.getContentType(),
+						resolveRepresentationResult.getDidDocumentStream()
+				);
 				return;
 			}
 		}
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_ACCEPTABLE, null, "Not acceptable media type " + acceptHeaderString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_ACCEPTABLE, null, "Not acceptable media types " + httpAcceptHeader);
+		return;
 	}
 }

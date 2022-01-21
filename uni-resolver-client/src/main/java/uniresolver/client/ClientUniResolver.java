@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
+import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 import uniresolver.util.HttpBindingUtil;
 
@@ -53,11 +54,12 @@ public class ClientUniResolver implements UniResolver {
 	}
 
 	@Override
-	public ResolveResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 
 		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
 
 		if (didString == null) throw new NullPointerException();
+		if (resolutionOptions == null) resolutionOptions = new HashMap<>();
 
 		// URL-encode DID
 
@@ -77,52 +79,63 @@ public class ClientUniResolver implements UniResolver {
 		List<String> acceptMediaTypes = Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
 
+		if (log.isDebugEnabled()) log.debug("Setting Accept: header to " + acceptMediaTypesString);
+
 		// prepare HTTP request
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
 		httpGet.addHeader("Accept", acceptMediaTypesString);
 
-		// execute HTTP request
+		// execute HTTP request and read response
 
-		ResolveResult resolveResult = null;
+		ResolveRepresentationResult resolveRepresentationResult = null;
 
-		if (log.isDebugEnabled()) log.debug("Request for DID " + didString + " to: " + uriString);
+		if (log.isDebugEnabled()) log.debug("Request for DID " + didString + " to " + uriString + " with Accept: header " + acceptMediaTypesString);
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
 			// execute HTTP request
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
-			ContentType contentType = ContentType.get(httpResponse.getEntity());
-			Charset charset = (contentType != null && contentType.getCharset() != null) ? contentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
+			int httpStatusCode = httpResponse.getStatusLine().getStatusCode();
+			String httpStatusMessage = httpResponse.getStatusLine().getReasonPhrase();
+			ContentType httpContentType = ContentType.get(httpResponse.getEntity());
+			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
 
-			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
-			if (log.isDebugEnabled()) log.debug("Response content type from " + uriString + ": " + contentType + " / " + charset);
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + httpStatusCode + " " + httpStatusMessage);
+			if (log.isDebugEnabled()) log.debug("Response content type from " + uriString + ": " + httpContentType + " / " + httpCharset);
 
 			// read result
 
 			byte[] httpBodyBytes = EntityUtils.toByteArray(httpEntity);
-			String httpBodyString = new String(httpBodyBytes, charset);
+			String httpBodyString = new String(httpBodyBytes, httpCharset);
 			EntityUtils.consume(httpEntity);
 
 			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBodyString);
 
-			if ((contentType != null && HttpBindingUtil.isResolveResultContentType(contentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
-				resolveResult = HttpBindingUtil.fromHttpBodyResolveResult(httpBodyString);
+			if ((httpContentType != null && HttpBindingUtil.isResolveResultContentType(httpContentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
+				resolveRepresentationResult = HttpBindingUtil.fromHttpBodyResolveRepresentationResult(httpBodyString, httpContentType);
 			}
 
-			if (statusCode != 200 && resolveResult == null) {
-				throw new ResolutionException("Cannot retrieve result for " + didString + ": " + statusCode + " " + statusMessage + " (" + httpBodyString + ")");
+			if (httpStatusCode == 404 && resolveRepresentationResult == null) {
+				throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
-			if (resolveResult != null && resolveResult.isErrorResult()) {
-				throw new ResolutionException(resolveResult);
+			if (httpStatusCode == 406 && resolveRepresentationResult == null) {
+				throw new ResolutionException(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
-			if (resolveResult == null) {
-				resolveResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, contentType);
+			if (httpStatusCode != 200 && resolveRepresentationResult == null) {
+				throw new ResolutionException(ResolveResult.ERROR_INTERNALERROR, "Cannot retrieve result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			}
+
+			if (resolveRepresentationResult != null && resolveRepresentationResult.isErrorResult()) {
+				if (log.isWarnEnabled()) log.warn(resolveRepresentationResult.getError() + " -> " + resolveRepresentationResult.getErrorMessage());
+				throw new ResolutionException(resolveRepresentationResult);
+			}
+
+			if (resolveRepresentationResult == null) {
+				resolveRepresentationResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
 			}
 		} catch (ResolutionException ex) {
 
@@ -132,11 +145,11 @@ public class ClientUniResolver implements UniResolver {
 			throw new ResolutionException("Cannot retrieve resolve result for " + didString + " from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved resolve result for " + didString + " (" + uriString + "): " + resolveResult);
+		if (log.isDebugEnabled()) log.debug("Retrieved resolve result for " + didString + " (" + uriString + "): " + resolveRepresentationResult);
 
 		// done
 
-		return resolveResult;
+		return resolveRepresentationResult.toResolveRepresentationResult(accept);
 	}
 
 	@Override
