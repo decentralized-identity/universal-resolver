@@ -75,6 +75,7 @@ public class ResolutionException extends Exception {
 			ResolveDataModelResult resolveDataModelResult = ResolveDataModelResult.build();
 			if (this.getError() != null) resolveDataModelResult.setError(this.getError());
 			if (this.getMessage() != null) resolveDataModelResult.setErrorMessage(this.getMessage());
+			if (this.getDidResolutionMetadata() != null) resolveDataModelResult.setDidResolutionMetadata(this.getDidResolutionMetadata());
 			resolveDataModelResult.setDidDocument(null);
 			if (log.isDebugEnabled()) log.debug("Created error resolve result: " + resolveDataModelResult);
 			return resolveDataModelResult;
@@ -92,6 +93,7 @@ public class ResolutionException extends Exception {
 			ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
 			if (this.getError() != null) resolveRepresentationResult.setError(this.getError());
 			if (this.getMessage() != null) resolveRepresentationResult.setErrorMessage(this.getMessage());
+			if (this.getDidResolutionMetadata() != null) resolveRepresentationResult.setDidResolutionMetadata(this.getDidResolutionMetadata());
 			resolveRepresentationResult.setDidDocumentStream(new byte[0]);
 			resolveRepresentationResult.setContentType(contentType);
 			if (log.isDebugEnabled()) log.debug("Created error resolve result: " + resolveRepresentationResult);
