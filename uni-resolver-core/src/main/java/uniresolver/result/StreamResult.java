@@ -8,7 +8,10 @@ public interface StreamResult extends Result {
      * Content stream methods
      */
 
+    @JsonIgnore
     public byte[] getFunctionContentStream();
+
+    @JsonIgnore
     public void setFunctionContentStream(byte[] functionContentStream);
 
     /*

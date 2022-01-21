@@ -20,7 +20,10 @@ public interface Result {
      * Metadata methods
      */
 
+    @JsonIgnore
     public Map<String, Object> getFunctionProcessMetadata();
+
+    @JsonIgnore
     public Map<String, Object> getFunctionContentMetadata();
 
     /*
