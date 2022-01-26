@@ -121,6 +121,13 @@ public class LocalUniResolver implements UniResolver {
 			}
 		}
 
+		// nothing found?
+
+		if (! resolveResult.isComplete()) {
+			if (log.isInfoEnabled()) log.info("Resolve result is incomplete: " + resolveResult);
+			throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "No resolve result for " + didString);
+		}
+
 		// [after resolve]
 
 		if (! extensionStatus.skipAfterResolve()) {
@@ -135,13 +142,6 @@ public class LocalUniResolver implements UniResolver {
 		long stop = System.currentTimeMillis();
 		resolveResult.getDidResolutionMetadata().put("duration", stop - start);
 		resolveResult.getDidResolutionMetadata().put("did", did.toMap(false));
-
-		// nothing found?
-
-		if (! resolveResult.isComplete()) {
-			if (log.isInfoEnabled()) log.info("Resolve result is incomplete: " + resolveResult);
-			throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "No resolve result for " + didString);
-		}
 
 		// done
 
