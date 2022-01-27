@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,11 @@ public class ResolveServlet extends WebUniResolver {
 		if (path.startsWith("did%3A")) {
 			didString = URLDecoder.decode(path, StandardCharsets.UTF_8);
 			if (request.getParameterMap() != null) {
-				resolutionOptions.putAll(request.getParameterMap());
+				for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
+					String parameterName = e.nextElement();
+					String parameterValue = request.getParameter(parameterName);
+					resolutionOptions.put(parameterName, parameterValue);
+				}
 			}
 		} else {
 			didString = path;
