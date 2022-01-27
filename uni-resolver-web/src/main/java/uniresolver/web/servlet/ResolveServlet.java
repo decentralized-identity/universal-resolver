@@ -69,7 +69,9 @@ public class ResolveServlet extends WebUniResolver {
 		MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
 
 		String accept = HttpBindingServerUtil.acceptForHttpAcceptMediaTypes(httpAcceptMediaTypes);
-		resolutionOptions.put("accept", accept);
+		if (!resolutionOptions.containsKey("accept")) {
+			resolutionOptions.put("accept", accept);
+		}
 
 		if (log.isDebugEnabled()) log.debug("Using resolution options: " + resolutionOptions);
 
