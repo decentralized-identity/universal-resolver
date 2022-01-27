@@ -89,30 +89,30 @@ public class ResolveServlet extends WebUniResolver {
 			resolveRepresentationResult = ((ResolutionException) ex).toErrorResult(accept);
 		}
 
-		if (log.isInfoEnabled()) log.info("Resolve result for " + didString + ": " + resolveRepresentationResult);
+		if (log.isInfoEnabled()) log.info("Resolve representation result for " + didString + ": " + resolveRepresentationResult);
 
 		// write resolve result
 
-		for (MediaType acceptMediaType : httpAcceptMediaTypes) {
+		for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
-			if (HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, ResolveResult.MEDIA_TYPE)) {
+			if (HttpBindingServerUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
 
-				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + acceptMediaType + " via content type " + ResolveResult.MEDIA_TYPE);
+				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + ResolveResult.MEDIA_TYPE);
 
 				ServletUtil.sendResponse(
 						response,
 						HttpBindingServerUtil.httpStatusCodeForResult(resolveRepresentationResult),
 						ResolveResult.MEDIA_TYPE,
-						HttpBindingServerUtil.toHttpBodyResolveRepresentationResult(resolveRepresentationResult));
+						HttpBindingServerUtil.toHttpBodyStreamResult(resolveRepresentationResult));
 				return;
 			} else {
 
 				// determine representation media type
 
-				if (HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, resolveRepresentationResult.getContentType())) {
-					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + acceptMediaType + " via content type " + resolveRepresentationResult.getContentType());
+				if (HttpBindingServerUtil.isMediaTypeAcceptable(httpAcceptMediaType, resolveRepresentationResult.getContentType())) {
+					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + resolveRepresentationResult.getContentType());
 				} else {
-					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + acceptMediaType);
+					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + httpAcceptMediaType);
 					continue;
 				}
 

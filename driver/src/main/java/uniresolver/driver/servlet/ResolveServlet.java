@@ -101,7 +101,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 						response,
 						HttpBindingServerUtil.httpStatusCodeForResult(resolveRepresentationResult),
 						ResolveResult.MEDIA_TYPE,
-						HttpBindingServerUtil.toHttpBodyResolveRepresentationResult(resolveRepresentationResult));
+						HttpBindingServerUtil.toHttpBodyStreamResult(resolveRepresentationResult));
 				return;
 			} else {
 

@@ -96,7 +96,7 @@ public class DereferenceResult implements Result, StreamResult {
 	 */
 
 	@Override
-	public Map<String, Object> getFunctionProcessMetadata() {
+	public Map<String, Object> getFunctionMetadata() {
 		return this.getDereferencingMetadata();
 	}
 

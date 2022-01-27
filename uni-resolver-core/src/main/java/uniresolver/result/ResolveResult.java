@@ -3,15 +3,19 @@ package uniresolver.result;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import foundation.identity.did.jsonld.DIDContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class ResolveResult implements Result {
+
+    public static final URI DEFAULT_JSONLD_CONTEXT = URI.create("https://w3id.org/did-resolution/v1");
 
     public static final String MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
 
@@ -38,7 +42,7 @@ public abstract class ResolveResult implements Result {
      */
 
     @Override
-    public Map<String, Object> getFunctionProcessMetadata() {
+    public Map<String, Object> getFunctionMetadata() {
         return this.getDidResolutionMetadata();
     }
 

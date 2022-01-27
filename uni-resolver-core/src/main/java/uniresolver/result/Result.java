@@ -21,7 +21,7 @@ public interface Result {
      */
 
     @JsonIgnore
-    public Map<String, Object> getFunctionProcessMetadata();
+    public Map<String, Object> getFunctionMetadata();
 
     @JsonIgnore
     public Map<String, Object> getFunctionContentMetadata();
@@ -37,32 +37,32 @@ public interface Result {
 
     @JsonIgnore
     default public String getError() {
-        if (this.getFunctionProcessMetadata() == null) throw new NullPointerException();
-        return (String) this.getFunctionProcessMetadata().get("error");
+        if (this.getFunctionMetadata() == null) throw new NullPointerException();
+        return (String) this.getFunctionMetadata().get("error");
     }
 
     @JsonIgnore
     default public void setError(String error) {
-        if (this.getFunctionProcessMetadata() == null) throw new NullPointerException();
+        if (this.getFunctionMetadata() == null) throw new NullPointerException();
         if (error != null)
-            this.getFunctionProcessMetadata().put("error", error);
+            this.getFunctionMetadata().put("error", error);
         else
-            this.getFunctionProcessMetadata().remove("error");
+            this.getFunctionMetadata().remove("error");
     }
 
     @JsonIgnore
     default public String getErrorMessage() {
-        if (this.getFunctionProcessMetadata() == null) throw new NullPointerException();
-        return (String) this.getFunctionProcessMetadata().get("errorMessage");
+        if (this.getFunctionMetadata() == null) throw new NullPointerException();
+        return (String) this.getFunctionMetadata().get("errorMessage");
     }
 
     @JsonIgnore
     default public void setErrorMessage(String error) {
-        if (this.getFunctionProcessMetadata() == null) throw new NullPointerException();
+        if (this.getFunctionMetadata() == null) throw new NullPointerException();
         if (error != null)
-            this.getFunctionProcessMetadata().put("errorMessage", error);
+            this.getFunctionMetadata().put("errorMessage", error);
         else
-            this.getFunctionProcessMetadata().remove("errorMessage");
+            this.getFunctionMetadata().remove("errorMessage");
     }
 
     /*

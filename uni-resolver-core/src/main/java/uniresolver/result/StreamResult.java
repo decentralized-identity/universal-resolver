@@ -20,14 +20,14 @@ public interface StreamResult extends Result {
 
     @JsonIgnore
     default public String getContentType() {
-        return (String) this.getFunctionProcessMetadata().get("contentType");
+        return (String) this.getFunctionMetadata().get("contentType");
     }
 
     @JsonIgnore
     default public void setContentType(String contentType) {
         if (contentType != null)
-            this.getFunctionProcessMetadata().put("contentType", contentType);
+            this.getFunctionMetadata().put("contentType", contentType);
         else
-            this.getFunctionProcessMetadata().remove("contentType");
+            this.getFunctionMetadata().remove("contentType");
     }
 }
