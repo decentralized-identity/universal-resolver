@@ -52,6 +52,10 @@ public class ResolutionException extends Exception {
 		this(ERROR_INTERNALERROR, message);
 	}
 
+	public ResolutionException(Throwable ex) {
+		this(ex.getMessage(), ex);
+	}
+
 	public ResolutionException(ResolveResult resolveResult) {
 		super(resolveResult.getErrorMessage());
 		if (! resolveResult.isErrorResult()) throw new IllegalArgumentException("No error result: " + resolveResult);
