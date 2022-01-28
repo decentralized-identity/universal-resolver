@@ -47,7 +47,7 @@ public class ResolveServlet extends WebUniResolver {
 
 		// look at path
 
-		String didString = null;
+		String didString;
 		Map<String, Object> resolutionOptions = new HashMap<>();
 
 		if (path.startsWith("did%3A")) {
@@ -61,6 +61,7 @@ public class ResolveServlet extends WebUniResolver {
 			}
 		} else {
 			didString = path;
+			if (request.getQueryString() != null) didString += "?" + request.getQueryString();
 		}
 
 		if (log.isInfoEnabled()) log.info("Incoming DID string: " + didString);
