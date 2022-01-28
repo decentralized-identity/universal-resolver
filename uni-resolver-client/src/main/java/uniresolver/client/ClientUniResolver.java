@@ -61,15 +61,12 @@ public class ClientUniResolver implements UniResolver {
 		if (didString == null) throw new NullPointerException();
 		if (resolutionOptions == null) resolutionOptions = new HashMap<>();
 
-		// URL-encode DID
-
-		String urlEncodedDid = URLEncoder.encode(didString, StandardCharsets.UTF_8);
-
 		// set HTTP URI
 
 		String uriString = this.getResolveUri().toString();
+
 		if (! uriString.endsWith("/")) uriString += "/";
-		uriString += urlEncodedDid;
+		uriString += didString;
 
 		// set Accept header
 
