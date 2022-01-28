@@ -134,7 +134,10 @@ public class ResolveServlet extends WebUniResolver {
 			}
 		}
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_ACCEPTABLE, null, "Not acceptable media types " + httpAcceptHeader);
-		return;
+		ServletUtil.sendResponse(
+				response,
+				HttpServletResponse.SC_NOT_ACCEPTABLE,
+				null,
+				"Not acceptable media types " + httpAcceptHeader);
 	}
 }
