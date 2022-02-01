@@ -192,3 +192,7 @@ services:
     image: universalresolver/driver-did-dns:latest
     ports:
       - "8127:8080"
+  indy-did-driver:
+    image: ghcr.io/idunion/indy-did-resolver/indy-did-driver:latest
+    ports:
+      - "8128:8080"
