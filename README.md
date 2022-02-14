@@ -37,7 +37,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0
 	curl -X GET http://localhost:8080/1.0/identifiers/did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de
 	curl -X GET http://localhost:8080/1.0/identifiers/did:neoid:priv:b4eeeb80d20bfb38b23001d0659ce0c1d96be0aa
-	curl -X GET http://localhost:8080/1.0/identifiers/did:elem:EiAS3mqC4OLMKOwcz3ItIL7XfWduPT7q3Fa4vHgiCfSG2A
+	curl -X GET http://localhost:8080/1.0/identifiers/did:elem:ropsten:EiCtwD11AV9e1oISQRHnMJsBC3OBdYDmx8xeKeASrKaw6A
 	curl -X GET http://localhost:8080/1.0/identifiers/did:github:gjgd
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ccp:ceNobbK6Me9F5zwyE3MKY88QZLw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:work:2UUHQCd4psvkPLZGnWY33L
@@ -97,7 +97,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-v1](https://github.com/veres-one/uni-resolver-did-v1-driver) | 0.1 | [1.0](https://w3c-ccg.github.io/did-method-v1/) | [veresone/uni-resolver-did-v1-driver](https://hub.docker.com/r/veresone/uni-resolver-did-v1-driver) | Veres One Blockchain
 | [did-jolo](https://github.com/jolocom/jolo-did-method) | 0.1 | [0.1](https://github.com/jolocom/jolocom-did-driver/blob/master/jolocom-did-method-specification.md) | [jolocomgmbh/jolocom-did-driver](https://hub.docker.com/r/jolocomgmbh/jolocom-did-driver) | Jolocom identity management
 | [did-hacera](https://github.com/hacera/hacera-did-driver) | 0.1 | (missing) | [hacera/hacera-did-driver](https://hub.docker.com/r/hacera/hacera-did-driver) | HACERA autonomous data exchange network
-| [did-elem](https://github.com/decentralized-identity/element) | 0.1 | (missing) | | Experimental Sidetree protocol (Ethereum and IPFS)
+| [did-elem](https://github.com/transmute-industries/sidetree.js/tree/main/packages/did-method-element) | 1.0.0 | 1.0 | | Sidetree protocol (Ethereum and IPFS)
 | [did-seraphid](https://github.com/swisscom-blockchain/seraph-id-did-driver) | 0.1 | (missing) |  [swisscomblockchainag/seraph-id-did-driver](https://hub.docker.com/r/swisscomblockchainag/seraph-id-did-driver) | Seraph ID (SSI  solution on the NEO blockchain platform)
 | [did-github](https://github.com/decentralized-identity/github-did) | 0.1 | (missing) | | Github
 | [did-ccp](https://github.com/decentralized-identity/uni-resolver-driver-did-ccp/) | 0.1-SNAPSHOT | [0.1](https://did.baidu.com/did-spec/) | [hello2mao/driver-did-ccp](https://hub.docker.com/r/hello2mao/driver-did-ccp/) | Baidu Cloud
