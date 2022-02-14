@@ -69,9 +69,9 @@
 			"url": "http://hacera-did-driver:8080/",
 			"testIdentifiers": [ "did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de" ]
 		}, {
-			"pattern": "^did:elem:(.+)$",
-			"url": "https://element-did.com/api/v1/sidetree/$1",
-			"testIdentifiers": [ "did:elem:EiAS3mqC4OLMKOwcz3ItIL7XfWduPT7q3Fa4vHgiCfSG2A" ]
+			"pattern": "^(did:elem:ropsten:.+)$",
+			"url": "https://ropsten.element.transmute.industries/api/1.0/identifiers/$1",
+			"testIdentifiers": ["did:elem:ropsten:EiCtwD11AV9e1oISQRHnMJsBC3OBdYDmx8xeKeASrKaw6A"]
 		}, {
 			"pattern": "^(did:github:.+)$",
 			"url": "https://github-did.com/api/v1/did/$1",
