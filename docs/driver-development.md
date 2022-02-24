@@ -18,6 +18,8 @@ Your driver will receive an `Accept` header with the value `application/ld+json`
 
 A Swagger API definition is available [here](https://github.com/decentralized-identity/universal-resolver/blob/main/swagger/api-driver.yml).
 
+For more information about this interface, see the [DID Resolution](https://w3c-ccg.github.io/did-resolution/) specification.
+
 ## Driver Rules
 
 - The DID method implemented by the driver must have a specification that is registered in the
