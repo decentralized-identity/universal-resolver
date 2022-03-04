@@ -103,6 +103,8 @@ public class HttpBindingServerUtil {
             return HttpStatus.SC_NOT_ACCEPTABLE;
         else if (result.isErrorResult())
             return HttpStatus.SC_INTERNAL_SERVER_ERROR;
+        else if (result.getFunctionContentMetadata() != null && Boolean.TRUE.equals(result.getFunctionContentMetadata().get("deactivated")))
+            return HttpStatus.SC_GONE;
         else
             return HttpStatus.SC_OK;
     }
