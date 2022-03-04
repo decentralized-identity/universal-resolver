@@ -93,9 +93,11 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		// write resolve result
 
-		for (MediaType acceptMediaType : httpAcceptMediaTypes) {
+		for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
-			if (HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, ResolveResult.MEDIA_TYPE)) {
+			if (HttpBindingServerUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
+
+				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + ResolveResult.MEDIA_TYPE);
 
 				ServletUtil.sendResponse(
 						response,
@@ -107,11 +109,11 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 				// determine representation media type
 
-				String representationMediaType = HttpBindingUtil.representationMediaTypeForMediaType(acceptMediaType.toString());
+				String representationMediaType = HttpBindingUtil.representationMediaTypeForMediaType(httpAcceptMediaType.toString());
 				if (representationMediaType != null) {
-					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + acceptMediaType + " via DID document representation media type " + representationMediaType);
+					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via DID document representation media type " + representationMediaType);
 				} else {
-					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + acceptMediaType);
+					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + httpAcceptMediaType);
 					continue;
 				}
 
