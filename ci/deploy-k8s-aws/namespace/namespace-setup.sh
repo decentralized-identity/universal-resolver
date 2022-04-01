@@ -7,3 +7,5 @@ USER_NAME=$(kubectl config view -o=jsonpath='{.users[0].name}')
 kubectl config set-context uni-resolver --namespace=uni-resolver \
   --cluster="$CLUSTER_NAME" \
   --user="$USER_NAME"
+
+kubectl apply -f limit-range.yml
