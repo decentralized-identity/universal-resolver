@@ -12,7 +12,8 @@ paths:
     get:
       summary: Resolve a DID.
       description:
-        <p>This endpoint resolves a DID. As input it takes the DID plus resolution options. The output is a DID
+        <p>This endpoint resolves a DID. As input it takes the DID, plus DID resolution
+        <a href="https://www.w3.org/TR/did-core/#did-resolution-options">options</a>. The output is a DID
         document
         in one of the supported representations, plus metadata.</p>
         <p>See the <a href="https://w3c-ccg.github.io/did-resolution/">DID Resolution</a>
