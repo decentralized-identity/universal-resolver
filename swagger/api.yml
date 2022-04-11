@@ -35,17 +35,17 @@ paths:
           name: Accept
           schema:
             type: string
-          description: The requested media type of the DID document representation or DID resolution result.
+          description: The requested media type of the DID document representation or DID resolution result. See <a href="https://www.w3.org/TR/did-core/#representations">https://www.w3.org/TR/did-core/#representations</a> and <a href="https://w3c-ccg.github.io/did-resolution/#did-resolution-result">https://w3c-ccg.github.io/did-resolution/#did-resolution-result</a>.
           examples:
             application/did+json:
               value: application/json
-              description: Media type of a DID document (JSON representation). See <a href="https://www.w3.org/TR/did-core/#json">https://www.w3.org/TR/did-core/#json</a>.
+              description: Media type of a DID document (JSON representation).
             application/did+ld+json:
               value: application/did+ld+json
-              description: Media type of a DID document (JSON-LD representation). See <a href="https://www.w3.org/TR/did-core/#json-ld">https://www.w3.org/TR/did-core/#json-ld</a>.
+              description: Media type of a DID document (JSON-LD representation).
             application/ld+json;profile="https://w3c-ccg.github.io/did-resolution/":
               value: application/ld+json;profile="https://w3c-ccg.github.io/did-resolution/"
-              description: Media type of a DID resolution result (JSON-LD representation). See <a href="https://w3c-ccg.github.io/did-resolution/#did-resolution-result">https://w3c-ccg.github.io/did-resolution/#did-resolution-result</a>.
+              description: Media type of a DID resolution result (JSON-LD representation).
       responses:
         '200':
           description: successfully resolved!
