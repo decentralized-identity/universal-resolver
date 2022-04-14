@@ -17,7 +17,7 @@ public class DummyDereferencerExtension implements DereferencerExtension {
 	private static Logger log = LoggerFactory.getLogger(DummyDereferencerExtension.class);
 
 	@Override
-	public ExtensionStatus afterDereference(DIDURL didUrl, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionStatus, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
+	public ExtensionStatus afterDereference(DIDURL didUrl, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionState, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
 
 		if (log.isDebugEnabled()) log.debug("Dummy extension called!");
 		return ExtensionStatus.DEFAULT;

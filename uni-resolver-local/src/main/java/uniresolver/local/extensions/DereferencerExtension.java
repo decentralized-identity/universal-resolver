@@ -14,19 +14,19 @@ import java.util.Map;
 
 public interface DereferencerExtension {
 
-	default ExtensionStatus beforeDereference(DIDURL didUrl, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionStatus, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
+	default ExtensionStatus beforeDereference(DIDURL didUrl, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionState, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
 		return null;
 	}
 
-	default ExtensionStatus dereferencePrimary(DIDURL didUrlWithoutFragment, Map<String, Object> dereferenceOptions, ResolveResult resolveResult, DereferenceResult dereferenceResult, Map<String, Object> executionStatus, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
+	default ExtensionStatus dereferencePrimary(DIDURL didUrlWithoutFragment, Map<String, Object> dereferenceOptions, ResolveResult resolveResult, DereferenceResult dereferenceResult, Map<String, Object> executionState, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
 		return null;
 	}
 
-	default ExtensionStatus dereferenceSecondary(DIDURL didUrlWithoutFragment, String didUrlFragment, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionStatus, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
+	default ExtensionStatus dereferenceSecondary(DIDURL didUrlWithoutFragment, String didUrlFragment, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionState, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
 		return null;
 	}
 
-	default ExtensionStatus afterDereference(DIDURL didUrl, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionStatus, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
+	default ExtensionStatus afterDereference(DIDURL didUrl, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionState, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
 		return null;
 	}
 
