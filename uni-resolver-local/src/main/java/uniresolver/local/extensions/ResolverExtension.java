@@ -9,11 +9,11 @@ import java.util.Map;
 
 public interface ResolverExtension {
 
-	public default ExtensionStatus beforeResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, LocalUniResolver localUniResolver) throws ResolutionException {
+	public default ExtensionStatus beforeResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, Map<String, Object> executionStatus, LocalUniResolver localUniResolver) throws ResolutionException {
 		return null;
 	}
 
-	public default ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, LocalUniResolver localUniResolver) throws ResolutionException {
+	public default ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, Map<String, Object> executionStatus, LocalUniResolver localUniResolver) throws ResolutionException {
 		return null;
 	}
 

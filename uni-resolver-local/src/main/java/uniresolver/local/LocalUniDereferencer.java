@@ -75,6 +75,10 @@ public class LocalUniDereferencer implements UniDereferencer {
         DereferenceResult dereferenceResult = DereferenceResult.build();
         ExtensionStatus extensionStatus = new ExtensionStatus();
 
+        // prepare execution state
+
+        Map<String, Object> executionState = new HashMap<>();
+
         // parse
 
         try {
@@ -94,7 +98,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         if (! extensionStatus.skipBeforeDereference()) {
             for (DereferencerExtension extension : this.getExtensions()) {
-                extensionStatus.or(extension.beforeDereference(didUrl, dereferenceOptions, dereferenceResult, this));
+                extensionStatus.or(extension.beforeDereference(didUrl, dereferenceOptions, dereferenceResult, executionState, this));
                 if (extensionStatus.skipBeforeDereference()) break;
             }
         }
@@ -127,7 +131,7 @@ public class LocalUniDereferencer implements UniDereferencer {
         if (! extensionStatus.skipDereferencePrimary()) {
             if (log.isInfoEnabled()) log.info("Dereferencing (primary): " + didUrlWithoutFragment);
             for (DereferencerExtension extension : this.getExtensions()) {
-                extensionStatus.or(extension.dereferencePrimary(didUrlWithoutFragment, dereferenceOptions, resolveResult, dereferenceResult, this));
+                extensionStatus.or(extension.dereferencePrimary(didUrlWithoutFragment, dereferenceOptions, resolveResult, dereferenceResult, executionState, this));
                 if (extensionStatus.skipDereferencePrimary()) break;
             }
         }
@@ -144,7 +148,7 @@ public class LocalUniDereferencer implements UniDereferencer {
         if (! extensionStatus.skipDereferenceSecondary()) {
             if (log.isInfoEnabled()) log.info("Dereferencing (secondary): " + didUrlWithoutFragment + ", " + didUrlFragment);
             for (DereferencerExtension extension : this.getExtensions()) {
-                extensionStatus.or(extension.dereferenceSecondary(didUrlWithoutFragment, didUrlFragment, dereferenceOptions, dereferenceResult, this));
+                extensionStatus.or(extension.dereferenceSecondary(didUrlWithoutFragment, didUrlFragment, dereferenceOptions, dereferenceResult, executionState, this));
                 if (extensionStatus.skipDereferenceSecondary()) break;
             }
         }
@@ -160,7 +164,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         if (! extensionStatus.skipAfterDereference()) {
             for (DereferencerExtension extension : this.getExtensions()) {
-                extensionStatus.or(extension.afterDereference(didUrl, dereferenceOptions, dereferenceResult, this));
+                extensionStatus.or(extension.afterDereference(didUrl, dereferenceOptions, dereferenceResult, executionState, this));
                 if (extensionStatus.skipAfterDereference()) break;
             }
         }

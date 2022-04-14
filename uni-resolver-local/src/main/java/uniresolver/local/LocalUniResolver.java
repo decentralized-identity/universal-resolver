@@ -73,6 +73,10 @@ public class LocalUniResolver implements UniResolver {
 
 		long start = System.currentTimeMillis();
 
+		// prepare execution state
+
+		Map<String, Object> executionState = new HashMap<>();
+
 		// prepare resolve result
 
 		DID did = null;
@@ -100,7 +104,7 @@ public class LocalUniResolver implements UniResolver {
 
 		if (! extensionStatus.skipBeforeResolve()) {
 			for (ResolverExtension resolverExtension : this.getExtensions()) {
-				extensionStatus.or(resolverExtension.beforeResolve(did, resolutionOptions, resolveResult, resolveRepresentation, this));
+				extensionStatus.or(resolverExtension.beforeResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this));
 				if (extensionStatus.skipBeforeResolve()) break;
 			}
 		}
@@ -132,7 +136,7 @@ public class LocalUniResolver implements UniResolver {
 
 		if (! extensionStatus.skipAfterResolve()) {
 			for (ResolverExtension resolverExtension : this.getExtensions()) {
-				extensionStatus.or(resolverExtension.afterResolve(did, resolutionOptions, resolveResult, resolveRepresentation, this));
+				extensionStatus.or(resolverExtension.afterResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this));
 				if (extensionStatus.skipAfterResolve()) break;
 			}
 		}
