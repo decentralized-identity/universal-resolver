@@ -70,6 +70,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:mydata:z6MkjNiGktLUrNrwMW6obMR85UsjYmLPFmcXc9qaiAGqPaJT
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dns:danubetech.com
 	curl -X GET http://localhost:8080/1.0/identifiers/did:indy:idunion:BDrEcHc8Tb4Lb2VyQZWEDE
+	curl -X GET http://localhost:8080/1.0/identifiers/did:everscale:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -130,6 +131,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-mydata](https://github.com/decentralised-dataexchange/mydata-did-driver) | 1.0 | [1.1 WD](https://github.com/decentralised-dataexchange/automated-data-agreements/blob/main/docs/did-spec.md) | [igrantio/uni-resolver-driver-did-mydata](https://hub.docker.com/repository/docker/igrantio/uni-resolver-driver-did-mydata) | [iGrant.io](https://igrant.io/) |
 | [did-dns](https://github.com/danubetech/uni-resolver-driver-did-dns) | 0.1-SNAPSHOT | [0.1](https://danubetech.github.io/did-method-dns/) | [universalresolver/driver-did-dns](https://hub.docker.com/r/universalresolver/driver-did-dns/) | Domain name |
 | [did-indy](https://github.com/IDunion/indy-did-resolver) | 0.0.1 | [0.1](https://hyperledger.github.io/indy-did-method/) | [ghcr.io/idunion/indy-did-resolver/indy-did-driver](https://github.com/IDunion/indy-did-resolver/pkgs/container/indy-did-resolver%2Findy-did-driver) | Hyperledger Indy |
+| [did-everscale](https://git.defispace.com/ssi-4/everscale-resolver-driver) | 0.1 | [0.1](https://git.defispace.com/ssi-4/everscale-did-registry/-/blob/master/docs/documentation.md) | [radianceteamssi/everscale-did-resolver-driver](https://hub.docker.com/r/radianceteamssi/everscale-did-resolver-driver) | Everscale Blockchain |
 
 ## More Information
 
