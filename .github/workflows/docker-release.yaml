@@ -10,6 +10,7 @@ jobs:
     with:
       GLOBAL_IMAGE_NAME: universalresolver/uni-resolver-web
       GLOBAL_REPO_NAME: repo.danubetech.com:5000
+      GLOBAL_FRAMEWORK: maven
       PATH_TO_DOCKERFILE: uni-resolver-web/docker/Dockerfile
     secrets:
       VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
