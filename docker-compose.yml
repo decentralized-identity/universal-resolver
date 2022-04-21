@@ -200,3 +200,7 @@ services:
     image: radianceteamssi/everscale-did-resolver-driver:latest
     ports:
       - "8129:8080"
+  alastria-did-driver-mvp2:
+    image: alastria/uni-resolver-driver-did-alastria:mvp2
+    ports:
+      - "8130:8080"
