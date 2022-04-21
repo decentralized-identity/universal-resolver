@@ -225,6 +225,15 @@
 			"pattern": "^(did:indy:.+)$",
 			"url": "http://indy-did-driver:8080/1.0/identifiers/$1",
 			"testIdentifiers": [ "did:indy:idunion:BDrEcHc8Tb4Lb2VyQZWEDE", "did:indy:sovrin:staging:6cgbu8ZPoWTnR5Rv5JcSMB", "did:indy:eesdi:H1iHEynabfar9mp4uprW6W" ]
+		},
+		{
+			"pattern": "^(did:everscale:.+)$",
+			"url": "http://everscale-did-driver:8080/",
+			"testIdentifiers": [
+				"did:everscale:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e",
+				"did:everscale:mainnet:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e",
+				"did:everscale:testnet:d760f69f830dfa0668f2e7923392217589ec8d62dcb90f2c06656665dba7fb4d"
+			]
 		}
 	]
 }

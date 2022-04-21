@@ -196,3 +196,7 @@ services:
     image: ghcr.io/idunion/indy-did-resolver/indy-did-driver:latest
     ports:
       - "8128:8080"
+  everscale-did-driver:
+    image: radianceteamssi/everscale-did-resolver-driver:latest
+    ports:
+      - "8129:8080"
