@@ -33,8 +33,8 @@ paths:
             application/did+ld+json:
               value: application/did+ld+json
               description: MIME type of a DID document (JSON-LD representation)
-            application/ld+json;profile=\"https://w3c-ccg.github.io/did-resolution/\":
-              value: application/ld+json;profile=\"https://w3c-ccg.github.io/did-resolution/\"
+            application/ld+json;profile=\"https://w3id.org/did-resolution/\":
+              value: application/ld+json;profile=\"https://w3id.org/did-resolution/\"
               description: MIME type of a DID resolution result
       responses:
         '200':
@@ -69,7 +69,7 @@ paths:
     }
   ]
 }
-            application/ld+json;profile=\"https://w3c-ccg.github.io/did-resolution/\":
+            application/ld+json;profile=\"https://w3id.org/did-resolution/\":
               schema:
                 $ref: '#/components/schemas/ResolutionResult'
         '400':
