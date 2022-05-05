@@ -33,8 +33,8 @@ paths:
             application/did+ld+json:
               value: application/did+ld+json
               description: MIME type of a DID document (JSON-LD representation)
-            application/ld+json;profile=\"https://w3id.org/did-resolution/\":
-              value: application/ld+json;profile=\"https://w3id.org/did-resolution/\"
+            application/ld+json;profile="https://w3id.org/did-resolution":
+              value: application/ld+json;profile="https://w3id.org/did-resolution"
               description: MIME type of a DID resolution result
       responses:
         '200':
@@ -45,35 +45,49 @@ paths:
                 type: object
                 description: The DID document (JSON representation).
                 example: {
-  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
-  "verificationMethod": [
-    {
-      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
-      "type": "Ed25519VerificationKey2018",
-      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
-    }
-  ]
-}
+                  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
+                  "verificationMethod": [
+                    {
+                      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
+                      "type": "Ed25519VerificationKey2018",
+                      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                    }
+                  ]
+                }
             application/did+ld+json:
               schema:
                 type: object
                 description: The DID document (JSON-LD representation).
                 example: {
-  "@context": "https://www.w3.org/ns/did/v1",
-  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
-  "verificationMethod": [
-    {
-      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
-      "type": "Ed25519VerificationKey2018",
-      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
-    }
-  ]
-}
-            application/ld+json;profile=\"https://w3id.org/did-resolution/\":
+                  "@context": "https://www.w3.org/ns/did/v1",
+                  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
+                  "verificationMethod": [
+                    {
+                      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
+                      "type": "Ed25519VerificationKey2018",
+                      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                    }
+                  ]
+                }
+            application/ld+json;profile="https://w3id.org/did-resolution":
               schema:
                 $ref: '#/components/schemas/ResolutionResult'
         '400':
           description: invalid input!
+        '410':
+          description: successfully resolved (deactivated)!
+          content:
+            application/did+json:
+              schema:
+                type: object
+                description: The deactivated DID document (JSON representation).
+            application/did+ld+json:
+              schema:
+                type: object
+                description: The deactivated DID document (JSON-LD representation).
+            application/ld+json;profile="https://w3id.org/did-resolution":
+              schema:
+                $ref: '#/components/schemas/ResolutionResult'
         '500':
           description: error!
 components:
@@ -85,17 +99,6 @@ components:
       properties:
         didDocument:
           type: object
-          example: {
-  "@context": "https://www.w3.org/ns/did/v1",
-  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
-  "verificationMethod": [
-    {
-      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
-      "type": "Ed25519VerificationKey2018",
-      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
-    }
-  ]
-}
         didResolutionMetadata:
           type: object
         didDocumentMetadata:

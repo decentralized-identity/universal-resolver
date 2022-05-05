@@ -43,8 +43,8 @@ paths:
             application/did+ld+json:
               value: application/did+ld+json
               description: Media type of a DID document (JSON-LD representation).
-            application/ld+json;profile="https://w3c-ccg.github.io/did-resolution/":
-              value: application/ld+json;profile="https://w3c-ccg.github.io/did-resolution/"
+            application/ld+json;profile="https://w3id.org/did-resolution":
+              value: application/ld+json;profile="https://w3id.org/did-resolution"
               description: Media type of a DID resolution result (JSON-LD representation).
       responses:
         '200':
@@ -55,27 +55,13 @@ paths:
                 type: object
                 description: The DID document (JSON representation).
                 example: {
-                  "id": "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx",
+                  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
                   "verificationMethod": [
                     {
+                      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
                       "type": "Ed25519VerificationKey2018",
-                      "id": "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx#key-1",
-                      "publicKeyBase58": "GasrpJqMo3W9KApN4Dh62cGhYG24xhwNnCgqEKEiTKe6"
-                    },
-                    {
-                      "type": "X25519KeyAgreementKey2019",
-                      "id": "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx#key-agreement-1",
-                      "publicKeyBase58": "DUmxMDUXFTZLLdxupWFzStfdzh31XgpeoGLFL4ke8AZK"
+                      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
                     }
-                  ],
-                  "authentication": [
-                    "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx#key-1"
-                  ],
-                  "assertionMethod": [
-                    "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx#key-1"
-                  ],
-                  "keyAgreement": [
-                    "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx#key-agreement-1"
                   ]
                 }
             application/did+ld+json:
@@ -83,35 +69,17 @@ paths:
                 type: object
                 description: The DID document (JSON-LD representation).
                 example: {
-                  "@context": [
-                    "https://www.w3.org/ns/did/v1",
-                    "https://w3id.org/security/suites/ed25519-2018/v1",
-                    "https://w3id.org/security/suites/x25519-2019/v1"
-                  ],
-                  "id": "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx",
+                  "@context": "https://www.w3.org/ns/did/v1",
+                  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
                   "verificationMethod": [
                     {
+                      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
                       "type": "Ed25519VerificationKey2018",
-                      "id": "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx#key-1",
-                      "publicKeyBase58": "GasrpJqMo3W9KApN4Dh62cGhYG24xhwNnCgqEKEiTKe6"
-                    },
-                    {
-                      "type": "X25519KeyAgreementKey2019",
-                      "id": "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx#key-agreement-1",
-                      "publicKeyBase58": "DUmxMDUXFTZLLdxupWFzStfdzh31XgpeoGLFL4ke8AZK"
+                      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
                     }
-                  ],
-                  "authentication": [
-                    "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx#key-1"
-                  ],
-                  "assertionMethod": [
-                    "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx#key-1"
-                  ],
-                  "keyAgreement": [
-                    "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx#key-agreement-1"
                   ]
                 }
-            application/ld+json;profile="https://w3c-ccg.github.io/did-resolution/":
+            application/ld+json;profile="https://w3id.org/did-resolution":
               schema:
                 $ref: '#/components/schemas/ResolutionResult'
         '400':
@@ -127,7 +95,7 @@ paths:
               schema:
                 type: object
                 description: The deactivated DID document (JSON-LD representation).
-            application/ld+json;profile="https://w3c-ccg.github.io/did-resolution/":
+            application/ld+json;profile="https://w3id.org/did-resolution":
               schema:
                 $ref: '#/components/schemas/ResolutionResult'
         '500':
@@ -181,17 +149,6 @@ components:
       properties:
         didDocument:
           type: object
-          example: {
-  "@context": "https://www.w3.org/ns/did/v1",
-  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
-  "verificationMethod": [
-    {
-      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
-      "type": "Ed25519VerificationKey2018",
-      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
-    }
-  ]
-}
         didResolutionMetadata:
           type: object
         didDocumentMetadata:
