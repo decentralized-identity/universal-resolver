@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+
+    - uses: azure/setup-kubectl@v2.0
+      with:
+        version: 'v1.23.6' # default is latest stable
+      id: install
+
     - name: Import Secrets
       uses: hashicorp/vault-action@v2.3.0
       with:
@@ -26,6 +32,7 @@ jobs:
           ci/data/gh-workflows/universal-resolver-cluster rpc-url-testnet | RPC_URL_TESTNET ;
           ci/data/gh-workflows/universal-resolver-cluster rpc-cert-testnet | RPC_CERT_TESTNET ;
           ci/data/gh-workflows/deployment-status slack-webhook-url | SLACK_WEBHOOK_URL
+
     - name: Deploy to AWS
       uses: ./ci/deploy-k8s-aws
       env:
@@ -34,6 +41,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{env.AWS_SECRET_ACCESS_KEY}}
         RPC_URL_TESTNET: ${{env.RPC_URL_TESTNET}}
         RPC_CERT_TESTNET: ${{env.RPC_CERT_TESTNET}}
+
     - name: Slack notification
       uses: 8398a7/action-slack@v3
       with:
