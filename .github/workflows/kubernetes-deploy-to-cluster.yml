@@ -14,11 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@master
 
-    - uses: azure/setup-kubectl@v2.0
-      with:
-        version: 'v1.23.6' # default is latest stable
-      id: install
-
     - name: Import Secrets
       uses: hashicorp/vault-action@v2.3.0
       with:
