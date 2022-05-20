@@ -179,6 +179,8 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         // done
 
+        if (log.isInfoEnabled()) log.info("Final dereference result: " + dereferenceResult);
+
         return dereferenceResult;
     }
 

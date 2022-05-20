@@ -151,6 +151,8 @@ public class LocalUniResolver implements UniResolver {
 
 		// done
 
+		if (log.isInfoEnabled()) log.info("Final resolve result: " + resolveResult);
+
 		return resolveRepresentation ? resolveResult.toResolveRepresentationResult(accept) : resolveResult.toResolveDataModelResult();
 	}
 
