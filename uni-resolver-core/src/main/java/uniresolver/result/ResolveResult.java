@@ -58,8 +58,10 @@ public abstract class ResolveResult implements Result {
     public ResolveDataModelResult toResolveDataModelResult() throws ResolutionException {
         if (this.resolveDataModelResult == null) {
             if (this instanceof ResolveDataModelResult) {
+                if (log.isDebugEnabled()) log.debug("toResolveDataModelResult(): this=ResolveDataModelResult");
                 this.resolveDataModelResult = (ResolveDataModelResult) this;
             } else if (this instanceof ResolveRepresentationResult) {
+                if (log.isDebugEnabled()) log.debug("toResolveDataModelResult(): this=ResolveRepresentationResult");
                 ResolveDataModelResult resolveDataModelResult = Conversion.convertToResolveDataModelResult((ResolveRepresentationResult) this);
                 this.resolveDataModelResult = resolveDataModelResult;
             }
@@ -71,6 +73,7 @@ public abstract class ResolveResult implements Result {
         if (representationMediaType == null) throw new NullPointerException();
         if (! this.resolveRepresentationResults.containsKey(representationMediaType)) {
             if (this instanceof ResolveRepresentationResult) {
+                if (log.isDebugEnabled()) log.debug("toResolveRepresentationResult(): this=ResolveRepresentationResult, representationMediaType=" + representationMediaType + ", this.contentType=" + ((ResolveRepresentationResult) this).getContentType());
                 if (representationMediaType.equals(((ResolveRepresentationResult) this).getContentType())) {
                     this.resolveRepresentationResults.put(representationMediaType, (ResolveRepresentationResult) this);
                 } else {
@@ -81,6 +84,7 @@ public abstract class ResolveResult implements Result {
                     this.resolveRepresentationResults.put(representationMediaType, resolveRepresentationResult);
                 }
             } else if (this instanceof ResolveDataModelResult) {
+                if (log.isDebugEnabled()) log.debug("toResolveRepresentationResult(): this=ResolveDataModelResult");
                 ResolveRepresentationResult resolveRepresentationResult = Conversion.convertToResolveRepresentationResult((ResolveDataModelResult) this, representationMediaType);
                 this.resolveRepresentationResults.put(representationMediaType, resolveRepresentationResult);
             }
