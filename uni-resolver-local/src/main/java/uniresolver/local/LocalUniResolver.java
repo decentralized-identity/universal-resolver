@@ -151,9 +151,13 @@ public class LocalUniResolver implements UniResolver {
 
 		// done
 
-		if (log.isInfoEnabled()) log.info("Final resolve result: " + resolveResult);
+		if (log.isInfoEnabled()) log.info("Current resolve result: " + resolveResult + " (" + resolveRepresentation + ", " + resolveResult.getClass().getSimpleName() + ")");
 
-		return resolveRepresentation ? resolveResult.toResolveRepresentationResult(accept) : resolveResult.toResolveDataModelResult();
+		resolveResult = resolveRepresentation ? resolveResult.toResolveRepresentationResult(accept) : resolveResult.toResolveDataModelResult();
+
+		if (log.isInfoEnabled()) log.info("Final resolve result: " + resolveResult + " (" + resolveRepresentation + ", " + resolveResult.getClass().getSimpleName() + ")");
+
+		return resolveResult;
 	}
 
 	public ResolveResult resolveOrResolveRepresentationWithDrivers(DID did, Map<String, Object> resolutionOptions, boolean resolveRepresentation) throws ResolutionException {
