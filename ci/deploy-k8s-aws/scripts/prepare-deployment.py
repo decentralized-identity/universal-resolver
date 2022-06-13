@@ -90,7 +90,7 @@ def generate_ingress(containers, outputdir):
     fout.write('kind: Ingress\n')
     fout.write('metadata:\n')
     fout.write('  name: \"uni-resolver-web\"\n')
-    fout.write('  namespace: \"uni-resolver\"\n')
+    fout.write('  namespace: \"uni-resolver-dev\"\n')
     fout.write('  annotations:\n')
     fout.write('    kubernetes.io/ingress.class: alb\n')
     fout.write('    alb.ingress.kubernetes.io/scheme: internet-facing\n')
