@@ -11,6 +11,7 @@ import pathlib
 # CONSTANTS you may need to change:
 DEFAULT_DOMAIN_NAME = 'dev.uniresolver.io'
 UNIVERSAL_RESOLVER_FRONTEND_TAG = "universalresolver/uni-resolver-frontend:latest;"
+NAMESPACE = "uni-resolver-dev"
 
 
 def init_deployment_dir(outputdir):
@@ -19,16 +20,16 @@ def init_deployment_dir(outputdir):
     if not os.path.exists(outputdir):
         os.makedirs(outputdir)
     fout = open(outputdir + '/' + 'deploy.sh', "a+")
-    fout.write('kubectl delete all --all -n uni-resolver\n')
+    fout.write(f'kubectl delete all --all -n {NAMESPACE}\n')
     fout.write('./namespace-setup.sh\n')
-    fout.write('kubectl apply -n uni-resolver -f uni-resolver-ingress.yaml\n')
+    fout.write(f'kubectl apply -n {NAMESPACE} -f uni-resolver-ingress.yaml\n')
     fout.close()
     subprocess.call(['chmod', "a+x", outputdir + '/' + 'deploy.sh'])
 
 
 def add_deployment(deployment_file, outputdir):
     fout = open(outputdir + '/' + 'deploy.sh', "a+")
-    fout.write('kubectl apply -n uni-resolver -f %s \n' % deployment_file)
+    fout.write(f'kubectl apply -n {NAMESPACE} -f %s \n' % deployment_file)
     fout.close()
 
 
@@ -90,7 +91,7 @@ def generate_ingress(containers, outputdir):
     fout.write('kind: Ingress\n')
     fout.write('metadata:\n')
     fout.write('  name: \"uni-resolver-web\"\n')
-    fout.write('  namespace: \"uni-resolver-dev\"\n')
+    fout.write(f'  namespace: \"{NAMESPACE}\"\n')
     fout.write('  annotations:\n')
     fout.write('    kubernetes.io/ingress.class: alb\n')
     fout.write('    alb.ingress.kubernetes.io/scheme: internet-facing\n')
