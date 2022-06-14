@@ -87,7 +87,7 @@ def generate_ingress(containers, outputdir):
     global DEFAULT_DOMAIN_NAME
     print("Generating uni-resolver-ingress.yaml")
     fout = open(outputdir + '/uni-resolver-ingress.yaml', "wt")
-    fout.write('apiVersion: extensions/v1beta1\n')
+    fout.write('apiVersion: networking.k8s.io/v1\n')
     fout.write('kind: Ingress\n')
     fout.write('metadata:\n')
     fout.write('  name: \"uni-resolver-web\"\n')
