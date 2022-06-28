@@ -37,11 +37,11 @@ For more information about this interface, see the [DID Resolution](https://w3c-
 
 ### How to contribute a driver
 
-Create a PR that edits the following files in the Universal Resolver root directory:
+Create a PR that edits the following files in the Universal Resolver root directory and uni-resolver-web's [`application.yml`](https://github.com/decentralized-identity/universal-resolver/blob/main/uni-resolver-web/src/main/resources/application.yml):
 
 - `.env`
   * list environment variables (if any) with default values
-- `config.json` (add your driver)
+- [`application.yml`](https://github.com/decentralized-identity/universal-resolver/blob/main/uni-resolver-web/src/main/resources/application.yml) (add your driver)
   * pattern - regular expression for matching your DID method
   * url - endpoint of your Docker image
   * testIdentifier - list of example DIDs that your driver can resolve
@@ -94,7 +94,7 @@ To do so, follow these steps:
   cd universal-resolver/
   ```
 
-- Make the required changes mentioned above ("How to contribute a driver") to the `.env`, `config.json` and `docker-compose.yml` files.
+- Make the required changes mentioned above ("How to contribute a driver") to the `.env`, [`application.yml`](https://github.com/decentralized-identity/universal-resolver/blob/main/uni-resolver-web/src/main/resources/application.yml) and `docker-compose.yml` files.
 
 - Build uni-resolver-web locally:
 
