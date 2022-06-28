@@ -44,7 +44,7 @@ Create a PR that edits the following files in the Universal Resolver root direct
 - [`application.yml`](https://github.com/decentralized-identity/universal-resolver/blob/main/uni-resolver-web/src/main/resources/application.yml) (add your driver)
   * pattern - regular expression for matching your DID method
   * url - endpoint of your Docker image
-  * testIdentifier - list of example DIDs that your driver can resolve
+  * testIdentifiers - list of example DIDs that your driver can resolve
 - `docker-compose.yml` (add your driver)
   * image - your Docker image name
   * ports - incremented port number exposed by your Docker image
