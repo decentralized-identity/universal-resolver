@@ -74,6 +74,7 @@ public class WebAppConfig {
 	}
 
 	public static String fixWildcardPattern(String s) {
+		if(s == null) return "";
 		if (s.endsWith("*")) return s;
 		if (s.endsWith("/")) return s + "*";
 		return s + "/*";
