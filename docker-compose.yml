@@ -200,3 +200,9 @@ services:
     image: alastria/uni-resolver-driver-did-alastria:mvp2
     ports:
       - "8130:8080"
+  driver-did-com:
+    image: ghcr.io/commercionetwork/uni-resolver-driver-did-com:latest
+    environment:
+      uniresolver_driver_did_com_network: ${uniresolver_driver_did_com_network}
+    ports:
+      - "8131:8080"
