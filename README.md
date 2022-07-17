@@ -135,7 +135,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-indy](https://github.com/IDunion/indy-did-resolver) | 0.0.1 | [0.1](https://hyperledger.github.io/indy-did-method/) | [ghcr.io/idunion/indy-did-resolver/indy-did-driver](https://github.com/IDunion/indy-did-resolver/pkgs/container/indy-did-resolver%2Findy-did-driver) | Hyperledger Indy |
 | [did-everscale](https://git.defispace.com/ssi-4/everscale-resolver-driver) | 0.1 | [0.1](https://git.defispace.com/ssi-4/everscale-did-registry/-/blob/master/docs/documentation.md) | [radianceteamssi/everscale-did-resolver-driver](https://hub.docker.com/r/radianceteamssi/everscale-did-resolver-driver) | Everscale Blockchain |
 | [did-alastria-mvp2](https://github.com/alastria/uni-resolver-driver-did-alastria) | 1.0.0 | [MVP2](https://github.com/alastria/alastria-identity/wiki) | [alastria/universal-resolver](https://hub.docker.com/r/alastria/uni-resolver-driver-did-alastria) | AlastriaID MVP2 |
-| [did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/) | 1.0.0 | [1.0](https://docs.commercio.network/modules/did/) | [ghcr.io/commercionetwork/uni-resolver-driver-did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/pkgs/container/uni-resolver-driver-did-com) | Commercio public ledger |
+| [did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/) | 1.0.0 | [(missing)](https://docs.commercio.network/modules/did/) | [ghcr.io/commercionetwork/uni-resolver-driver-did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/pkgs/container/uni-resolver-driver-did-com) | Commercio public ledger |
 
 ## More Information
 
