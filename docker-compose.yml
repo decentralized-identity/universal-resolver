@@ -200,3 +200,7 @@ services:
     image: alastria/uni-resolver-driver-did-alastria:mvp2
     ports:
       - "8130:8080"
+  cheqd-did-driver:
+    image: ghcr.io/cheqd/did-resolver:v1.1.0
+    ports:
+      - "8131:1313"
