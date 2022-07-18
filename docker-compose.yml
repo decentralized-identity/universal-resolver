@@ -204,3 +204,9 @@ services:
     image: ghcr.io/cheqd/did-resolver:v1.1.0
     ports:
       - "8131:1313"
+  driver-did-com:
+    image: ghcr.io/commercionetwork/uni-resolver-driver-did-com:latest
+    environment:
+      uniresolver_driver_did_com_network: ${uniresolver_driver_did_com_network}
+    ports:
+      - "8132:8080"
