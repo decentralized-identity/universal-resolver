@@ -10,11 +10,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.api/name: uni-resolver-frontend
+      app: uni-resolver-frontend
   template:
     metadata:
       labels:
-        app.kubernetes.api/name: uni-resolver-frontend
+        app: uni-resolver-frontend
     spec:
       containers:
       - name: uni-resolver-frontend
@@ -37,7 +37,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app.kubernetes.io/name: uni-resolver-frontend
+    app: uni-resolver-frontend
   ports:
     - protocol: TCP
       port: 7081
