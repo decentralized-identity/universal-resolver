@@ -4,11 +4,11 @@ inputs:
   host:
     description: 'Host of Uni-Resolver deployment'
     required: false
-    default: http://dev.uniresolver.io
+    default: https://dev.uniresolver.io
   config:
     description: 'Uni-Resolver configuration file'
     required: false
-    default: /github/workspace/config.json
+    default: /github/workspace/uni-resolver-web/src/main/resources/application.yml
   out_folder:
     description: 'Folder location of driver-status-result-<timestamp> file'
     required: false

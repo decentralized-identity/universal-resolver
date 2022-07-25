@@ -6,6 +6,7 @@ import re
 import json
 import getopt
 import asyncio
+import yaml
 from aiohttp import ClientSession
 
 
@@ -24,7 +25,7 @@ logging.getLogger("chardet.charsetprober").disabled = True
 # Create Test Data START
 def parse_json_to_dict(path):
     with open(path) as file:
-        raw_config = json.load(file)
+        raw_config = yaml.safe_load(file)
         return raw_config
 
 
@@ -100,7 +101,7 @@ def main(argv):
     help_text = './get-driver-status.py -host <uni-resolver-host> -config <uni-resolver-config> -out <out-folder> ' \
                 '--write200 <True/False>'
     host = 'https://dev.uniresolver.io'
-    config = '/github/workspace/config.json'
+    config = '/github/workspace/uni-resolver-web/src/main/resources/application.yml'
     out_folder = './'
     try:
         opts, args = getopt.getopt(argv, "h:c:o:w", ["host=", "config=", "out=", "write200="])
@@ -128,7 +129,7 @@ def main(argv):
 
     # build test data
     config_dict = parse_json_to_dict(config)
-    test_data = create_test_data(config_dict["drivers"], uni_resolver_path)
+    test_data = create_test_data(config_dict["uniresolver"]["drivers"], uni_resolver_path)
 
     # run tests
     results = asyncio.run(run_tests(test_data=test_data))

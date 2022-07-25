@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
         with:
-          ref: driver-status-reports
+          ref: fix-get-driver-status
       - name: Import Secrets
         uses: hashicorp/vault-action@v2.3.0
         with:
