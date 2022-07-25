@@ -7,7 +7,6 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uniresolver.DereferencingException;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -20,11 +19,6 @@ import java.util.Map;
 public class DereferenceResult implements Result, StreamResult {
 
 	public static final String MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
-
-	public static final String ERROR_INVALIDDIDURL = "invalidDidUrl";
-	public static final String ERROR_NOTFOUND = "notFound";
-	public static final String ERROR_CONTENTTYEPNOTSUPPORTED = "contentTypeNotSupported";
-	public static final String ERROR_INTERNALERROR = "internalError";
 
 	private static final Logger log = LoggerFactory.getLogger(ResolveRepresentationResult.class);
 
@@ -63,24 +57,6 @@ public class DereferenceResult implements Result, StreamResult {
 		return new DereferenceResult(new LinkedHashMap<>(), new byte[0], new LinkedHashMap<>());
 	}
 
-	public static DereferenceResult makeErrorResult(String error, String errorMessage, Map<String, Object> dereferencingMetadata, String contentType) {
-		DereferenceResult dereferenceResult = DereferenceResult.build();
-		if (dereferencingMetadata != null) dereferenceResult.getDereferencingMetadata().putAll(dereferencingMetadata);
-		dereferenceResult.setError(error == null ? ERROR_INTERNALERROR : error);
-		if (errorMessage != null) dereferenceResult.setErrorMessage(errorMessage);
-		dereferenceResult.setContentType(contentType);
-		dereferenceResult.setContentStream(new byte[0]);
-		if (log.isDebugEnabled()) log.debug("Created error dereference result: " + dereferenceResult);
-		return dereferenceResult;
-	}
-
-	public static DereferenceResult makeErrorResult(DereferencingException ex, String contentType) {
-		if (ex.getDereferenceResult() != null && contentType.equals(ex.getDereferenceResult().getContentType())) {
-			return ex.getDereferenceResult();
-		}
-		return makeErrorResult(ex.getError(), ex.getMessage(), ex.getDereferencingMetadata(), contentType);
-	}
-
 	/*
 	 * Serialization
 	 */
@@ -116,6 +92,34 @@ public class DereferenceResult implements Result, StreamResult {
 	}
 
 	/*
+	 * Metadata methods
+	 */
+
+	@Override
+	public Map<String, Object> getFunctionMetadata() {
+		return this.getDereferencingMetadata();
+	}
+
+	@Override
+	public Map<String, Object> getFunctionContentMetadata() {
+		return this.getContentMetadata();
+	}
+
+	/*
+	 * Content stream methods
+	 */
+
+	@Override
+	public byte[] getFunctionContentStream() {
+		return this.getContentStream();
+	}
+
+	@Override
+	public void setFunctionContentStream(byte[] functionContentStream) {
+		this.setContentStream(functionContentStream);
+	}
+
+	/*
 	 * Conversion
 	 */
 
@@ -125,68 +129,6 @@ public class DereferenceResult implements Result, StreamResult {
 		resolveRepresentationResult.setDidDocumentStream(this.getContentStream());
 		resolveRepresentationResult.getDidDocumentMetadata().putAll(this.getContentMetadata());
 		return resolveRepresentationResult;
-	}
-
-	/*
-	 * Content type methods
-	 */
-
-	@Override
-	@JsonIgnore
-	public String getContentType() {
-		return this.getDereferencingMetadata() == null ? null : (String) this.getDereferencingMetadata().get("contentType");
-	}
-
-	@Override
-	@JsonIgnore
-	public void setContentType(String contentType) {
-		if (this.getDereferencingMetadata() == null) this.setDereferencingMetadata(new LinkedHashMap<>());
-		if (contentType != null)
-			this.getDereferencingMetadata().put("contentType", contentType);
-		else
-			this.getDereferencingMetadata().remove("contentType");
-	}
-
-	/*
-	 * Error methods
-	 */
-
-	@Override
-	@JsonIgnore
-	public boolean isErrorResult() {
-		return this.getError() != null;
-	}
-
-	@Override
-	@JsonIgnore
-	public String getError() {
-		return this.getDereferencingMetadata() == null ? null : (String) this.getDereferencingMetadata().get("error");
-	}
-
-	@Override
-	@JsonIgnore
-	public void setError(String error) {
-		if (this.getDereferencingMetadata() == null) this.setDereferencingMetadata(new LinkedHashMap<>());
-		if (error != null)
-			this.getDereferencingMetadata().put("error", error);
-		else
-			this.getDereferencingMetadata().remove("error");
-	}
-
-	@Override
-	@JsonIgnore
-	public String getErrorMessage() {
-		return this.getDereferencingMetadata() == null ? null : (String) this.getDereferencingMetadata().get("errorMessage");
-	}
-
-	@Override
-	@JsonIgnore
-	public void setErrorMessage(String errorMessage) {
-		if (this.getDereferencingMetadata() == null) this.setDereferencingMetadata(new LinkedHashMap<>());
-		if (errorMessage != null)
-			this.getDereferencingMetadata().put("errorMessage", errorMessage);
-		else
-			this.getDereferencingMetadata().remove("errorMessage");
 	}
 
 	/*
@@ -203,7 +145,6 @@ public class DereferenceResult implements Result, StreamResult {
 		this.dereferencingMetadata = dereferencingMetadata;
 	}
 
-	@Override
 	@JsonIgnore
 	public final byte[] getContentStream() {
 		return this.contentStream;
@@ -222,7 +163,6 @@ public class DereferenceResult implements Result, StreamResult {
 		}
 	}
 
-	@Override
 	@JsonIgnore
 	public final void setContentStream(byte[] contentStream) {
 		this.contentStream = contentStream;

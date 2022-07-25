@@ -46,8 +46,11 @@ public class InitServlet extends HttpServlet implements Servlet {
 		}
 	}
 
-	static Driver getDriver() {
+	public static Driver getDriver() {
+		return InitServlet.driver;
+	}
 
-		return driver;
+	public static void setDriver(Driver driver) {
+		InitServlet.driver = driver;
 	}
 }

@@ -29,7 +29,7 @@ services:
     ports:
       - "8082:8080"
   uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:2.2.0
+    image: uport/uni-resolver-driver-did-uport:2.4.0
     ports:
       - "8083:8081"
   driver-did-stack:
@@ -66,23 +66,15 @@ services:
     ports:
       - "8093:8080"
   kilt-did-driver:
-    image: kiltprotocol/kilt-did-driver:2.2.0
+    image: kiltprotocol/kilt-did-driver:2.4.1
     environment:
       KILT_BLOCKCHAIN_NODE: ${uniresolver_driver_kilt_blockchain_node}
     ports:
       - "8094:8080"
-  evan-did-driver:
-    image: evannetwork/evan-did-driver:latest
-    ports:
-      - "8095:8080"
   uni-resolver-driver-did-factom:
     image: sphereon/uni-resolver-driver-did-factom:latest
     ports:
       - "8097:8080"
-  driver-did-key:
-    image: universalresolver/driver-did-key:latest
-    ports:
-      - "8098:8080"
   uni-resolver-did-v1-driver:
     image: veresone/uni-resolver-did-v1-driver:latest
     ports:
@@ -192,3 +184,25 @@ services:
     image: universalresolver/driver-did-dns:latest
     ports:
       - "8127:8080"
+  indy-did-driver:
+    image: ghcr.io/idunion/indy-did-resolver/indy-did-driver:latest
+    ports:
+      - "8128:8080"
+  everscale-did-driver:
+    image: radianceteamssi/everscale-did-resolver-driver:latest
+    ports:
+      - "8129:8080"
+  alastria-did-driver-mvp2:
+    image: alastria/uni-resolver-driver-did-alastria:mvp2
+    ports:
+      - "8130:8080"
+  cheqd-did-driver:
+    image: ghcr.io/cheqd/did-resolver:v1.1.0
+    ports:
+      - "8131:1313"
+  driver-did-com:
+    image: ghcr.io/commercionetwork/uni-resolver-driver-did-com:latest
+    environment:
+      uniresolver_driver_did_com_network: ${uniresolver_driver_did_com_network}
+    ports:
+      - "8132:8080"

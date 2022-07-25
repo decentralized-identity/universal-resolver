@@ -6,45 +6,14 @@ on:
 jobs:
 
   maven-release:
-    runs-on: ubuntu-latest
-    steps:
-
-      - uses: actions/checkout@master
-      - name: Import Secrets
-        uses: hashicorp/vault-action@v2.3.0
-        with:
-          url: ${{ secrets.VAULT_ADDR }}
-          token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
-          caCertificate: ${{ secrets.VAULTCA }}
-          secrets: |
-            ci/data/gh-workflows/maven-danubetech-nexus username | MAVEN_USERNAME ;
-            ci/data/gh-workflows/maven-danubetech-nexus password | MAVEN_PASSWORD ;
-            ci/data/gh-workflows/maven-release-workflow token | TOKEN ;
-            ci/data/gh-workflows/deployment-status slack-webhook-url | SLACK_WEBHOOK_URL
-
-      - name: Release to Danubetech Nexus
-        uses: qcastel/github-actions-maven-release@v1.12.31
-        with:
-          release-branch-name: main
-          maven-repo-server-id: danubetech-maven-releases
-          maven-repo-server-username: ${{ env.MAVEN_USERNAME }}
-          maven-repo-server-password: ${{ env.MAVEN_PASSWORD }}
-          access-token: ${{ env.TOKEN }}
-          version-minor: true
-          maven-development-version-number: ${parsedVersion.majorVersion}.${parsedVersion.nextMinorVersion}-SNAPSHOT
-          maven-release-version-number: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.0
-          git-release-bot-name: "admin-bot"
-          git-release-bot-email: "admin@danubetech.com"
-          maven-args: "-Dmaven.javadoc.skip=true -DskipTests -DskipITs"
-
-      - name: Slack notification
-        if: failure()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,commit,action,eventName,ref,workflow
-        env:
-          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
+    uses: danubetech/workflows/.github/workflows/maven-release.yml@main
+    with:
+      GLOBAL_MAVEN_REPO_SERVER_ID: danubetech-maven-releases
+    secrets:
+      VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+      CI_SECRET_READER_PERIODIC_TOKEN: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
+      VAULTCA: ${{ secrets.VAULTCA }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   trigger-related-workflows:
     needs: [ maven-release ]
