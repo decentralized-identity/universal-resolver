@@ -101,7 +101,7 @@ def main(argv):
     help_text = './get-driver-status.py -host <uni-resolver-host> -config <uni-resolver-config> -out <out-folder> ' \
                 '--write200 <True/False>'
     host = 'https://dev.uniresolver.io'
-    config = '/github/workspace/config.json'
+    config = '/github/workspace/uni-resolver-web/src/main/resources/application.yml'
     out_folder = './'
     try:
         opts, args = getopt.getopt(argv, "h:c:o:w", ["host=", "config=", "out=", "write200="])
