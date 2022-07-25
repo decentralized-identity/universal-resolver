@@ -43,7 +43,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:work:2UUHQCd4psvkPLZGnWY33L
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ont:AN5g6gz9EoQ3sCNu7514GEghZurrktCMiH
 	curl -X GET http://localhost:8080/1.0/identifiers/did:kilt:4rNTX3ihuxyWkB7wG3oLgUWSBLa2gva1NBKJsBFm7jJZUYfc
-	curl -X GET http://localhost:8080/1.0/identifiers/did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734
 	curl -X GET http://localhost:8080/1.0/identifiers/did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764
 	curl -X GET http://localhost:8080/1.0/identifiers/did:mpg:7PGGnRdvKKFftSXU3Jw75Vk5npfg
 	curl -X GET http://localhost:8080/1.0/identifiers/did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A
@@ -72,6 +71,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:indy:idunion:BDrEcHc8Tb4Lb2VyQZWEDE
 	curl -X GET http://localhost:8080/1.0/identifiers/did:everscale:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15
+	curl -X GET http://localhost:8080/1.0/identifiers/did:cheqd:mainnet:zF7rhDBfUt9d1gJPjx7s1JXfUY7oVWkY
+        curl -X GET http://localhost:8080/1.0/identifiers/did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -93,9 +94,9 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-sov](https://github.com/decentralized-identity/uni-resolver-driver-did-sov/) | 0.1-SNAPSHOT | [0.1](https://sovrin-foundation.github.io/sovrin/spec/did-method-spec-template.html) | [universalresolver/driver-did-sov](https://hub.docker.com/r/universalresolver/driver-did-sov/) | Sovrin public ledger
 | [did-stack](https://github.com/decentralized-identity/uni-resolver-driver-did-stack/) | 0.1 | [1.0](https://github.com/blockstack/stacks-blockchain/blob/stacks-1.0/docs/blockstack-did-spec.md) | [universalresolver/driver-did-stack](https://hub.docker.com/r/universalresolver/driver-did-stack/)
 | [did-dom](https://github.com/decentralized-identity/uni-resolver-driver-did-dom/) | 0.1-SNAPSHOT | (missing) | [universalresolver/driver-did-dom](https://hub.docker.com/r/universalresolver/driver-did-dom/)
-| [did-ethr](https://github.com/uport-project/uport-did-driver) | 2.2.0 | [4.3.4](https://github.com/decentralized-identity/ethr-did-resolver/blob/master/doc/did-method-spec.md) | [uport/uni-resolver-driver-did-uport](https://hub.docker.com/r/uport/uni-resolver-driver-did-uport/) | Ethereum addresses or secp256k1 publicKeys
+| [did-ethr](https://github.com/uport-project/uport-did-driver) | 2.4.0 | [6.0.1](https://github.com/decentralized-identity/ethr-did-resolver/blob/master/doc/did-method-spec.md) | [uport/uni-resolver-driver-did-uport](https://hub.docker.com/r/uport/uni-resolver-driver-did-uport/) | Ethereum addresses or secp256k1 publicKeys
 | [did-eosio](https://github.com/Gimly-Blockchain/eosio-did-universal-resolver-driver) | 0.1.3 | [0.1](https://github.com/Gimly-Blockchain/eosio-did-spec) | [gimlyblockchain/eosio-universal-resolver-driver](https://hub.docker.com/r/gimlyblockchain/eosio-universal-resolver-driver) | EOSIO blockchain platform
-| [did-web](https://github.com/uport-project/uport-did-driver) | 2.2.0 | [3.0.0](https://w3c-ccg.github.io/did-method-web/) | [uport/uni-resolver-driver-did-uport](https://hub.docker.com/r/uport/uni-resolver-driver-did-uport/) | Domain name
+| [did-web](https://github.com/uport-project/uport-did-driver) | 2.4.0 | [3.0.0](https://w3c-ccg.github.io/did-method-web/) | [uport/uni-resolver-driver-did-uport](https://hub.docker.com/r/uport/uni-resolver-driver-did-uport/) | Domain name
 | [did-v1](https://github.com/veres-one/uni-resolver-did-v1-driver) | 0.1 | [1.0](https://w3c-ccg.github.io/did-method-v1/) | [veresone/uni-resolver-did-v1-driver](https://hub.docker.com/r/veresone/uni-resolver-did-v1-driver) | Veres One Blockchain
 | [did-jolo](https://github.com/jolocom/jolo-did-method) | 0.1 | [0.1](https://github.com/jolocom/jolocom-did-driver/blob/master/jolocom-did-method-specification.md) | [jolocomgmbh/jolocom-did-driver](https://hub.docker.com/r/jolocomgmbh/jolocom-did-driver) | Jolocom identity management
 | [did-hacera](https://github.com/hacera/hacera-did-driver) | 0.1 | (missing) | [hacera/hacera-did-driver](https://hub.docker.com/r/hacera/hacera-did-driver) | HACERA autonomous data exchange network
@@ -106,7 +107,6 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-work](https://github.com/decentralized-identity/uni-resolver-driver-did-work/) | 0.2  | [1.0](https://workday.github.io/work-did-method-spec/) | [didwork/work-did-driver](https://hub.docker.com/r/didwork/work-did-driver)| Workday Credentials
 | [did-ont](https://github.com/ontio/ontid-driver) | 0.1 | [1.0](https://github.com/ontio/ontology-DID/blob/master/docs/en/DID-ONT-method.md) |  [ontio/ontid-driver](https://hub.docker.com/r/ontio/ontid-driver) | Ontology ONT ID
 | [did-kilt](https://github.com/KILTprotocol/kilt-did-driver) | 2.4.1 | [1.2](https://github.com/KILTprotocol/kilt-did-driver/blob/master/docs/did-spec/spec.md) | [kiltprotocol/kilt-did-driver](https://hub.docker.com/r/kiltprotocol/kilt-did-driver)| KILT Protocol
-| [did-evan](https://github.com/evannetwork/did-driver) | 0.1 | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | [evannetwork/evan-did-driver](https://hub.docker.com/r/evannetwork/evan-did-driver) | evan.network
 | [did-factom](https://github.com/Sphereon-Opensource/uni-resolver-driver-did-factom) | 0.2.0-SNAPSHOT | [1.0](https://github.com/bi-foundation/FIS/blob/feature/DID/FIS/DID.md) | [sphereon/uni-resolver-driver-did-factom](https://hub.docker.com/r/sphereon/uni-resolver-driver-did-factom) | Factom Protocol
 | [did-key](https://github.com/decentralized-identity/uni-resolver-driver-did-key) | 1.0.0 | [0.7](https://w3c-ccg.github.io/did-method-key/) | [universalresolver/driver-did-key](https://hub.docker.com/r/universalresolver/driver-did-key) | Public keys (in general)
 | [did-io](https://github.com/iotexproject/uni-resolver-driver-did-io) | 0.1.0 | (missing) | [iotex/uni-resolver-driver-did-io](iotex/uni-resolver-driver-did-io:latest) | IoTeX Network
@@ -134,6 +134,8 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-indy](https://github.com/IDunion/indy-did-resolver) | 0.0.1 | [0.1](https://hyperledger.github.io/indy-did-method/) | [ghcr.io/idunion/indy-did-resolver/indy-did-driver](https://github.com/IDunion/indy-did-resolver/pkgs/container/indy-did-resolver%2Findy-did-driver) | Hyperledger Indy |
 | [did-everscale](https://git.defispace.com/ssi-4/everscale-resolver-driver) | 0.1 | [0.1](https://git.defispace.com/ssi-4/everscale-did-registry/-/blob/master/docs/documentation.md) | [radianceteamssi/everscale-did-resolver-driver](https://hub.docker.com/r/radianceteamssi/everscale-did-resolver-driver) | Everscale Blockchain |
 | [did-alastria-mvp2](https://github.com/alastria/uni-resolver-driver-did-alastria) | 1.0.0 | [MVP2](https://github.com/alastria/alastria-identity/wiki) | [alastria/universal-resolver](https://hub.docker.com/r/alastria/uni-resolver-driver-did-alastria) | AlastriaID MVP2 |
+| [did-cheqd](https://github.com/cheqd/did-resolver) | 1.1.0 | [1.0](https://github.com/cheqd/node-docs/blob/main/architecture/adr-list/adr-002-cheqd-did-method.md) | [ghcr.io/cheqd/did-resolver](https://github.com/cheqd/did-resolver/pkgs/container/did-resolver) | Cheqd identity ledger |
+| [did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/) | 1.0.0 | [1.0](https://docs.commercio.network/modules/did/) | [ghcr.io/commercionetwork/uni-resolver-driver-did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/pkgs/container/uni-resolver-driver-did-com) | Commercio public ledger |
 
 ## More Information
 

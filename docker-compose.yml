@@ -29,7 +29,7 @@ services:
     ports:
       - "8082:8080"
   uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:2.3.0
+    image: uport/uni-resolver-driver-did-uport:2.4.0
     ports:
       - "8083:8081"
   driver-did-stack:
@@ -71,10 +71,6 @@ services:
       KILT_BLOCKCHAIN_NODE: ${uniresolver_driver_kilt_blockchain_node}
     ports:
       - "8094:8080"
-  evan-did-driver:
-    image: evannetwork/evan-did-driver:latest
-    ports:
-      - "8095:8080"
   uni-resolver-driver-did-factom:
     image: sphereon/uni-resolver-driver-did-factom:latest
     ports:
@@ -200,3 +196,13 @@ services:
     image: alastria/uni-resolver-driver-did-alastria:mvp2
     ports:
       - "8130:8080"
+  cheqd-did-driver:
+    image: ghcr.io/cheqd/did-resolver:v1.1.0
+    ports:
+      - "8131:1313"
+  driver-did-com:
+    image: ghcr.io/commercionetwork/uni-resolver-driver-did-com:latest
+    environment:
+      uniresolver_driver_did_com_network: ${uniresolver_driver_did_com_network}
+    ports:
+      - "8132:8080"
