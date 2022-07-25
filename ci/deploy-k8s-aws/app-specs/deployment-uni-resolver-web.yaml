@@ -14,7 +14,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: uni-resolver-web
+        app: uni-resolver-web
     spec:
       containers:
       - name: uni-resolver-web
@@ -31,7 +31,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app.kubernetes.io/name: uni-resolver-web
+    app: uni-resolver-web
   ports:
     - protocol: TCP
       port: 8080
