@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-        with:
-          ref: driver-status-reports
       - name: Import Secrets
         uses: hashicorp/vault-action@v2.3.0
         with:

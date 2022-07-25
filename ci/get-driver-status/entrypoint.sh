@@ -42,7 +42,8 @@ if "$INPUT_KEEP_RESULT";
     # Pass driver_status_report to next step in github action
     echo "driver_status_report=$(git diff --name-only --staged)" >> "$GITHUB_ENV"
     echo "reports_folder=$REPORTS_FOLDER" >> "$GITHUB_ENV"
-    git commit -m "Get driver status results" && git push
+    git commit -m "Get driver status results"
+    git push origin driver-status-reports:driver-status-reports
   else
     cat -b /driver-status-reports/driver-status-*.json
 fi
