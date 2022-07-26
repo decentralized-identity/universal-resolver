@@ -35,7 +35,7 @@ python /get-driver-status/get-driver-status.py --host "$INPUT_HOST" --config "$I
 
 echo "Switch to drivers-status-reports branch"
 git fetch
-git switch drivers-status-reports --force
+git checkout drivers-status-reports
 git status
 
 if "$INPUT_KEEP_RESULT";
