@@ -52,10 +52,57 @@ def generate_deployment_specs(containers, outputdir):
         print('Writing file: ' + outputdir + '/' + deployment_file + ' for container: ' + container)
         for line in fin:
             fout.write(line.replace('{{containerName}}', container).replace('{{containerTag}}', container_tag).replace('{{containerPort}}', container_port))
-        add_deployment(deployment_file, outputdir)
+        
         fin.close()
         fout.close()
+        # If there is a configmap-<driver>.yaml file, create a ConfigMap for it and add a volumeMounts mapping for it:
+        add_driver_configmap_volume(outputdir, container)
+        add_deployment(deployment_file, outputdir)
 
+def add_driver_configmap_volume(outputdir, container):
+    """
+    If there is a file named /app-specs/configmap-<container>.yaml for this driver,
+    add a 'kubectl apply' command for it, 
+    and add a 'volume' descriptor to the Deployment yaml, referencing the configmap.
+    NOTE: This currently only supports volumes, not environment variables. 
+    """
+
+    deployment_file = "deployment-%s.yaml" % container
+    with open(outputdir + '/' + deployment_file, 'r') as infile:
+        input_deployment_contents = infile.read()
+
+    configmap_filename = 'configmap-%s.yaml' % container
+    configmap_path = '/app-specs/%s' % configmap_filename
+
+    if not os.path.exists(configmap_path):
+        print('No configmap file found for driver ' + container)
+        output_deployment_contents = input_deployment_contents.replace('{{configMapVolume}}', '')
+    else:
+        print('Configmap found for driver ' + container + ' . Adding configmap volume to the deployment yaml.')
+        # Copy the configmap definition and add a 'kubectl apply' command for it:
+        copy(configmap_path, outputdir + '/' + configmap_filename)
+        add_deployment(configmap_filename, outputdir)
+        
+        # Write the volume mapping definition to the driver Deployment spec:
+        volume_name = 'configmap-volume-%s' % container
+        configmap_name = 'configmap-%s' % container
+
+        configmap_txt = '  volumeMounts:\n'
+        configmap_txt += '          - mountPath: /usr/src/app/config\n'
+        configmap_txt += '            name: ' + volume_name + '\n'
+        configmap_txt += '      volumes:\n'
+        configmap_txt += '        - configMap:\n'
+        configmap_txt += '            name: ' + configmap_name + '\n'
+        configmap_txt += '          name: ' + volume_name + '\n'
+
+        print(configmap_txt)
+
+        output_deployment_contents = input_deployment_contents.replace('{{configMapVolume}}', configmap_txt)
+
+    with open(outputdir + '/' + deployment_file, 'w') as outfile:
+        outfile.write(output_deployment_contents)
+    
+    
 
 def find_in_dir(key, dictionary):
     for k, v in dictionary.items():
@@ -168,7 +215,6 @@ def copy_app_deployment_specs(outputdir):
     copy('/app-specs/deployment-uni-resolver-web.yaml', outputdir + '/deployment-uni-resolver-web.yaml')
     add_deployment('deployment-uni-resolver-web.yaml', outputdir)
 
-
 def main(argv):
     print('#### Current python script path')
     absolute_path = pathlib.Path(__file__).parent.absolute()
@@ -201,6 +247,10 @@ def main(argv):
 
     generate_ingress(containers, outputdir)
 
+    # Payer key for the sol did driver:
+    # NOTE: Before running this, the real key should be put into the yaml file.
+    copy('/app-specs/secret-driver-did-sol.yaml', outputdir)
+    add_deployment('secret-driver-did-sol.yaml', outputdir)
     # generate driver specs
     generate_deployment_specs(containers, outputdir)
 
