@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-driver-did-sol
+data:
+  config.json: |
+    {
+      "solanaRpcNodes": {
+        "mainnet-beta": "https://rough-misty-night.solana-mainnet.quiknode.pro/b57300ff234c12e95763e9b8cda67e9d86772a0d",
+        "devnet": "https://rough-misty-night.solana-devnet.quiknode.pro/b57300ff234c12e95763e9b8cda67e9d86772a0d" 
+      }
+    }
