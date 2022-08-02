@@ -245,3 +245,7 @@ uniresolver:
       testIdentifiers:
         - did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3
         - did:com:17rhmdzlv0zjuahw4mvpfhf3u5tuwyjhr4m06dr
+    - pattern: "^(did:dyne:.+)$"
+      url: https://did.dyne.org/api/W3C-DID-resolve-did?data=%7B%22id%22%3A%22did%3Adyne%3Aid%3A$2%22%7D
+      testIdentifiers:
+        - did:dyne:QLmtgCdk11QXVgDPwomPShEZhPX1gwQ3Kf1SJfbQNdgTjgbQYrcT9GW9fz8vWcMZauPAgD5UVqvsUqHDeaNc7Yv6
