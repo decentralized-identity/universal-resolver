@@ -10,7 +10,14 @@ info:
 paths:
   /identifiers/{identifier}:
     get:
-      summary: Resolve a DID or other identifier.
+      summary: Resolve a DID.
+      description:
+        <p>This endpoint resolves a DID. As input it takes the DID, plus DID resolution
+        <a href="https://www.w3.org/TR/did-core/#did-resolution-options">options</a>. The output is a DID
+        document
+        in one of the supported representations, plus metadata.</p>
+        <p>See the <a href="https://w3c-ccg.github.io/did-resolution/">DID Resolution</a>
+        specification for additional details.</p>
       operationId: resolve
       parameters:
         - in: path
@@ -18,24 +25,33 @@ paths:
           name: identifier
           schema:
             type: string
-          description: A DID or other identifier to be resolved.
-          example: did:sov:WRfXPg8dantKVubE3HX8pw
+          description: The DID to be resolved.
+          examples:
+            example1:
+              value: did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx
+              description: A DID using the `sov` method.
+            example2:
+              value: did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w
+              description: A DID using the `ion` method.
+            example3:
+              value: did:ebsi:z25ZZFS7FweHsm9MX2Qvc6gc
+              description: A DID using the `ebsi` method.
         - in: header
           required: false
           name: Accept
           schema:
             type: string
-          description: The requested MIME type of the DID document or DID resolution result.
+          description: The requested media type of the DID document representation or DID resolution result. See <a href="https://www.w3.org/TR/did-core/#representations">https://www.w3.org/TR/did-core/#representations</a> and <a href="https://w3c-ccg.github.io/did-resolution/#did-resolution-result">https://w3c-ccg.github.io/did-resolution/#did-resolution-result</a>.
           examples:
             application/did+json:
               value: application/json
-              description: MIME type of a DID document (JSON representation)
+              description: Media type of a DID document (JSON representation).
             application/did+ld+json:
               value: application/did+ld+json
-              description: MIME type of a DID document (JSON-LD representation)
-            application/ld+json;profile=\"https://w3c-ccg.github.io/did-resolution/\":
-              value: application/ld+json;profile=\"https://w3c-ccg.github.io/did-resolution/\"
-              description: MIME type of a DID resolution result
+              description: Media type of a DID document (JSON-LD representation).
+            application/ld+json;profile="https://w3id.org/did-resolution":
+              value: application/ld+json;profile="https://w3id.org/did-resolution"
+              description: Media type of a DID resolution result (JSON-LD representation).
       responses:
         '200':
           description: successfully resolved!
@@ -45,35 +61,49 @@ paths:
                 type: object
                 description: The DID document (JSON representation).
                 example: {
-  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
-  "verificationMethod": [
-    {
-      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
-      "type": "Ed25519VerificationKey2018",
-      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
-    }
-  ]
-}
+                  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
+                  "verificationMethod": [
+                    {
+                      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
+                      "type": "Ed25519VerificationKey2018",
+                      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                    }
+                  ]
+                }
             application/did+ld+json:
               schema:
                 type: object
                 description: The DID document (JSON-LD representation).
                 example: {
-  "@context": "https://www.w3.org/ns/did/v1",
-  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
-  "verificationMethod": [
-    {
-      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
-      "type": "Ed25519VerificationKey2018",
-      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
-    }
-  ]
-}
-            application/ld+json;profile=\"https://w3c-ccg.github.io/did-resolution/\":
+                  "@context": "https://www.w3.org/ns/did/v1",
+                  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
+                  "verificationMethod": [
+                    {
+                      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
+                      "type": "Ed25519VerificationKey2018",
+                      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                    }
+                  ]
+                }
+            application/ld+json;profile="https://w3id.org/did-resolution":
               schema:
                 $ref: '#/components/schemas/ResolutionResult'
         '400':
           description: invalid input!
+        '410':
+          description: successfully resolved (deactivated)!
+          content:
+            application/did+json:
+              schema:
+                type: object
+                description: The deactivated DID document (JSON representation).
+            application/did+ld+json:
+              schema:
+                type: object
+                description: The deactivated DID document (JSON-LD representation).
+            application/ld+json;profile="https://w3id.org/did-resolution":
+              schema:
+                $ref: '#/components/schemas/ResolutionResult'
         '500':
           description: error!
 components:
@@ -85,17 +115,6 @@ components:
       properties:
         didDocument:
           type: object
-          example: {
-  "@context": "https://www.w3.org/ns/did/v1",
-  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
-  "verificationMethod": [
-    {
-      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
-      "type": "Ed25519VerificationKey2018",
-      "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
-    }
-  ]
-}
         didResolutionMetadata:
           type: object
         didDocumentMetadata:

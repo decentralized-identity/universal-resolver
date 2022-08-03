@@ -73,10 +73,6 @@ public class HttpDriver implements Driver {
 		if (matchedString == null) matchedString = did.getDidString();
 		if (log.isDebugEnabled()) log.debug("Matched string: " + matchedString);
 
-		// URL-encode DID
-
-		String urlEncodedDid = URLEncoder.encode(matchedString, StandardCharsets.UTF_8);
-
 		// set HTTP URI
 
 		String uriString = this.getResolveUri().toString();
@@ -86,7 +82,7 @@ public class HttpDriver implements Driver {
 			uriString = uriString.replace("$1", matchedString);
 		} else if (uriString.contains("$2")) {
 
-			uriString = uriString.replace("$2", urlEncodedDid);
+			uriString = uriString.replace("$2", URLEncoder.encode(matchedString, StandardCharsets.UTF_8));
 		} else {
 
 			if (! uriString.endsWith("/")) uriString += "/";
@@ -140,15 +136,15 @@ public class HttpDriver implements Driver {
 			}
 
 			if (httpStatusCode == 404 && resolveRepresentationResult == null) {
-				throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode == 406 && resolveRepresentationResult == null) {
-				throw new ResolutionException(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode != 200 && resolveRepresentationResult == null) {
-				throw new ResolutionException(ResolveResult.ERROR_INTERNALERROR, "Driver cannot retrieve result for " + did + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_INTERNALERROR, "Driver cannot retrieve result for " + did + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (resolveRepresentationResult != null && resolveRepresentationResult.isErrorResult()) {

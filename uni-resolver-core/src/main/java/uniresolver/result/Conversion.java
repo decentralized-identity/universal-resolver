@@ -40,7 +40,7 @@ class Conversion {
             byte[] didDocumentStream = resolveRepresentationResult.getDidDocumentStream();
 
             representationConsumer = Representations.getConsumer(contentType);
-            if (representationConsumer == null) throw new ResolutionException(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, "No consumer for " + contentType);
+            if (representationConsumer == null) throw new ResolutionException(ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED, "No consumer for " + contentType);
 
             try {
                 RepresentationConsumer.Result result = representationConsumer.consume(didDocumentStream);
@@ -95,7 +95,7 @@ class Conversion {
             DIDDocument didDocument = resolveDataModelResult.getDidDocument();
 
             representationProducer = Representations.getProducer(mediaType);
-            if (representationProducer == null) throw new ResolutionException(ResolveResult.ERROR_REPRESENTATIONNOTSUPPORTED, "No producer for " + mediaType);
+            if (representationProducer == null) throw new ResolutionException(ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED, "No producer for " + mediaType);
 
             try {
                 RepresentationProducer.Result result = representationProducer.produce(didDocument.toMap(), null);
