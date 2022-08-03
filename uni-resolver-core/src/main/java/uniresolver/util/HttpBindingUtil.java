@@ -14,6 +14,7 @@ import uniresolver.result.ResolveResult;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -41,8 +42,8 @@ public class HttpBindingUtil {
                 didDocumentStream = new byte[0];
             } else {
                 try {
-                    didDocumentStream = Hex.decodeHex((String) didDocument);
-                } catch (DecoderException ex) {
+                    didDocumentStream = Base64.getDecoder().decode((String) didDocument);
+                } catch (IllegalArgumentException ex) {
                     didDocumentStream = ((String) didDocument).getBytes(StandardCharsets.UTF_8);
                 }
             }
@@ -138,9 +139,8 @@ public class HttpBindingUtil {
         return representationMediaType;
     }
 
-    private static final ContentType RESOLVE_RESULT_CONTENT_TYPE = ContentType.parse(ResolveResult.MEDIA_TYPE);
-
     public static boolean isResolveResultContentType(ContentType contentType) {
+        final ContentType RESOLVE_RESULT_CONTENT_TYPE = ContentType.parse(ResolveResult.MEDIA_TYPE);
         boolean isResolveResultMimeTypeEquals = RESOLVE_RESULT_CONTENT_TYPE.getMimeType().equals(contentType.getMimeType());
         boolean isResolveResultProfileEquals = RESOLVE_RESULT_CONTENT_TYPE.getParameter("profile").equals(contentType.getParameter("profile"));
         return isResolveResultMimeTypeEquals && isResolveResultProfileEquals;

@@ -16,7 +16,7 @@ public class DummyResolverExtension implements ResolverExtension {
 	private static Logger log = LoggerFactory.getLogger(DummyResolverExtension.class);
 
 	@Override
-	public ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, LocalUniResolver localUniResolver) throws ResolutionException {
+	public ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, Map<String, Object> executionState, LocalUniResolver localUniResolver) throws ResolutionException {
 
 		if (log.isDebugEnabled()) log.debug("Dummy extension called!");
 		return ExtensionStatus.DEFAULT;

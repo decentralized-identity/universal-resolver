@@ -20,7 +20,7 @@ public class DIDDocumentExtension implements DereferencerExtension {
     private static final Logger log = LoggerFactory.getLogger(DIDDocumentExtension.class);
 
     @Override
-    public ExtensionStatus dereferencePrimary(DIDURL didUrlWithoutFragment, Map<String, Object> dereferenceOptions, ResolveResult resolveResult, DereferenceResult dereferenceResult, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
+    public ExtensionStatus dereferencePrimary(DIDURL didUrlWithoutFragment, Map<String, Object> dereferenceOptions, ResolveResult resolveResult, DereferenceResult dereferenceResult, Map<String, Object> executionState, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
 
         // check inputs
 
@@ -41,7 +41,7 @@ public class DIDDocumentExtension implements DereferencerExtension {
         // dereference
 
         if (! Representations.isRepresentationMediaType(accept)) {
-            throw new DereferencingException(DereferenceResult.ERROR_CONTENTTYEPNOTSUPPORTED, "Content type not supported: " + accept);
+            throw new DereferencingException(DereferencingException.ERROR_CONTENTTYEPNOTSUPPORTED, "Content type not supported: " + accept);
         }
 
         ResolveRepresentationResult resolveRepresentationResult = resolveResult.toResolveRepresentationResult(accept);
