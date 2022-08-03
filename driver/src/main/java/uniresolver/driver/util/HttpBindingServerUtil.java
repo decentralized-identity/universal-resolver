@@ -95,6 +95,8 @@ public class HttpBindingServerUtil {
     }
 
     public static int httpStatusCodeForResult(Result result) {
+        if (result.getFunctionMetadata() != null && result.getFunctionMetadata().containsKey("_http_code"))
+            return (Integer) result.getFunctionMetadata().get("_http_code");
         if (ResolutionException.ERROR_NOTFOUND.equals(result.getError()))
             return HttpStatus.SC_NOT_FOUND;
         else if (ResolutionException.ERROR_INVALIDDID.equals(result.getError()) || DereferencingException.ERROR_INVALIDDIDURL.equals(result.getError()))
