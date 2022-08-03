@@ -73,6 +73,10 @@ public class LocalUniResolver implements UniResolver {
 
 		long start = System.currentTimeMillis();
 
+		// prepare execution state
+
+		Map<String, Object> executionState = new HashMap<>();
+
 		// prepare resolve result
 
 		DID did = null;
@@ -89,7 +93,7 @@ public class LocalUniResolver implements UniResolver {
 
 			String errorMessage = ex.getMessage();
 			if (log.isWarnEnabled()) log.warn(errorMessage);
-			throw new ResolutionException(ResolveResult.ERROR_INVALIDDID, errorMessage);
+			throw new ResolutionException(ResolutionException.ERROR_INVALIDDID, errorMessage);
 		}
 
 		// check options
@@ -99,8 +103,9 @@ public class LocalUniResolver implements UniResolver {
 		// [before resolve]
 
 		if (! extensionStatus.skipBeforeResolve()) {
-			for (ResolverExtension resolverExtension : this.getExtensions()) {
-				extensionStatus.or(resolverExtension.beforeResolve(did, resolutionOptions, resolveResult, resolveRepresentation, this));
+			for (ResolverExtension extension : this.getExtensions()) {
+				if (log.isDebugEnabled()) log.debug("Executing extension (beforeResolve) " + extension.getClass().getSimpleName() + " with resolution options " + resolutionOptions + " and resolve result " + resolveResult + " and execution state " + executionState);
+				extensionStatus.or(extension.beforeResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this));
 				if (extensionStatus.skipBeforeResolve()) break;
 			}
 		}
@@ -121,11 +126,19 @@ public class LocalUniResolver implements UniResolver {
 			}
 		}
 
+		// nothing found?
+
+		if (! resolveResult.isComplete()) {
+			if (log.isInfoEnabled()) log.info("Resolve result is incomplete: " + resolveResult);
+			throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "No resolve result for " + didString);
+		}
+
 		// [after resolve]
 
 		if (! extensionStatus.skipAfterResolve()) {
-			for (ResolverExtension resolverExtension : this.getExtensions()) {
-				extensionStatus.or(resolverExtension.afterResolve(did, resolutionOptions, resolveResult, resolveRepresentation, this));
+			for (ResolverExtension extension : this.getExtensions()) {
+				if (log.isDebugEnabled()) log.debug("Executing extension (afterResolve) " + extension.getClass().getSimpleName() + " with resolution options " + resolutionOptions + " and resolve result " + resolveResult + " and execution state " + executionState);
+				extensionStatus.or(extension.afterResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this));
 				if (extensionStatus.skipAfterResolve()) break;
 			}
 		}
@@ -136,16 +149,15 @@ public class LocalUniResolver implements UniResolver {
 		resolveResult.getDidResolutionMetadata().put("duration", stop - start);
 		resolveResult.getDidResolutionMetadata().put("did", did.toMap(false));
 
-		// nothing found?
-
-		if (! resolveResult.isComplete()) {
-			if (log.isInfoEnabled()) log.info("Resolve result is incomplete: " + resolveResult);
-			throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, "No resolve result for " + didString);
-		}
-
 		// done
 
-		return resolveRepresentation ? resolveResult.toResolveRepresentationResult(accept) : resolveResult.toResolveDataModelResult();
+		if (log.isInfoEnabled()) log.info("Current resolve result: " + resolveResult + " (" + resolveRepresentation + ", " + resolveResult.getClass().getSimpleName() + ")");
+
+		resolveResult = resolveRepresentation ? resolveResult.toResolveRepresentationResult(accept) : resolveResult.toResolveDataModelResult();
+
+		if (log.isInfoEnabled()) log.info("Final resolve result: " + resolveResult + " (" + resolveRepresentation + ", " + resolveResult.getClass().getSimpleName() + ")");
+
+		return resolveResult;
 	}
 
 	public ResolveResult resolveOrResolveRepresentationWithDrivers(DID did, Map<String, Object> resolutionOptions, boolean resolveRepresentation) throws ResolutionException {

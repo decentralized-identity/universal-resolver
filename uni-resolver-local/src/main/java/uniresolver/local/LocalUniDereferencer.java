@@ -75,6 +75,10 @@ public class LocalUniDereferencer implements UniDereferencer {
         DereferenceResult dereferenceResult = DereferenceResult.build();
         ExtensionStatus extensionStatus = new ExtensionStatus();
 
+        // prepare execution state
+
+        Map<String, Object> executionState = new HashMap<>();
+
         // parse
 
         try {
@@ -87,14 +91,15 @@ public class LocalUniDereferencer implements UniDereferencer {
 
             String errorMessage = ex.getMessage();
             if (log.isWarnEnabled()) log.warn(errorMessage);
-            throw new DereferencingException(DereferenceResult.ERROR_INVALIDDIDURL, errorMessage, ex);
+            throw new DereferencingException(DereferencingException.ERROR_INVALIDDIDURL, errorMessage, ex);
         }
 
         // [before dereference]
 
         if (! extensionStatus.skipBeforeDereference()) {
             for (DereferencerExtension extension : this.getExtensions()) {
-                extensionStatus.or(extension.beforeDereference(didUrl, dereferenceOptions, dereferenceResult, this));
+                if (log.isDebugEnabled()) log.debug("Executing extension (beforeDereference) " + extension.getClass().getSimpleName() + " with dereference options " + dereferenceOptions + " and dereference result " + dereferenceResult + " and execution state " + executionState);
+                extensionStatus.or(extension.beforeDereference(didUrl, dereferenceOptions, dereferenceResult, executionState, this));
                 if (extensionStatus.skipBeforeDereference()) break;
             }
         }
@@ -127,9 +132,17 @@ public class LocalUniDereferencer implements UniDereferencer {
         if (! extensionStatus.skipDereferencePrimary()) {
             if (log.isInfoEnabled()) log.info("Dereferencing (primary): " + didUrlWithoutFragment);
             for (DereferencerExtension extension : this.getExtensions()) {
-                extensionStatus.or(extension.dereferencePrimary(didUrlWithoutFragment, dereferenceOptions, resolveResult, dereferenceResult, this));
+                if (log.isDebugEnabled()) log.debug("Executing extension (dereferencePrimary) " + extension.getClass().getSimpleName() + " with dereference options " + dereferenceOptions + " and resolve result " + resolveResult + " and dereference result " + dereferenceResult + " and execution state " + executionState);
+                extensionStatus.or(extension.dereferencePrimary(didUrlWithoutFragment, dereferenceOptions, resolveResult, dereferenceResult, executionState, this));
                 if (extensionStatus.skipDereferencePrimary()) break;
             }
+        }
+
+        // nothing found?
+
+        if (! dereferenceResult.isComplete()) {
+            if (log.isInfoEnabled()) log.info("Primary dereference result is incomplete: " + dereferenceResult);
+            throw new DereferencingException(DereferencingException.ERROR_NOTFOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
         }
 
         // [dereference secondary]
@@ -137,16 +150,25 @@ public class LocalUniDereferencer implements UniDereferencer {
         if (! extensionStatus.skipDereferenceSecondary()) {
             if (log.isInfoEnabled()) log.info("Dereferencing (secondary): " + didUrlWithoutFragment + ", " + didUrlFragment);
             for (DereferencerExtension extension : this.getExtensions()) {
-                extensionStatus.or(extension.dereferenceSecondary(didUrlWithoutFragment, didUrlFragment, dereferenceOptions, dereferenceResult, this));
+                if (log.isDebugEnabled()) log.debug("Executing extension (dereferenceSecondary) " + extension.getClass().getSimpleName() + " with dereference options " + dereferenceOptions + " and dereference result " + dereferenceResult + " and execution state " + executionState);
+                extensionStatus.or(extension.dereferenceSecondary(didUrlWithoutFragment, didUrlFragment, dereferenceOptions, dereferenceResult, executionState, this));
                 if (extensionStatus.skipDereferenceSecondary()) break;
             }
+        }
+
+        // nothing found?
+
+        if (! dereferenceResult.isComplete()) {
+            if (log.isInfoEnabled()) log.info("Secondary dereference result is incomplete: " + dereferenceResult);
+            throw new DereferencingException(DereferencingException.ERROR_NOTFOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
         }
 
         // [after dereference]
 
         if (! extensionStatus.skipAfterDereference()) {
             for (DereferencerExtension extension : this.getExtensions()) {
-                extensionStatus.or(extension.afterDereference(didUrl, dereferenceOptions, dereferenceResult, this));
+                if (log.isDebugEnabled()) log.debug("Executing extension (afterDereference) " + extension.getClass().getSimpleName() + " with dereference options " + dereferenceOptions + " and dereference result " + dereferenceResult + " and execution state " + executionState);
+                extensionStatus.or(extension.afterDereference(didUrl, dereferenceOptions, dereferenceResult, executionState, this));
                 if (extensionStatus.skipAfterDereference()) break;
             }
         }
@@ -155,14 +177,9 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         dereferenceResult.getDereferencingMetadata().put("didUrl", didUrl.toMap(false));
 
-        // nothing found?
-
-        if (! dereferenceResult.isComplete()) {
-            if (log.isInfoEnabled()) log.info("Dereference result is incomplete: " + dereferenceResult);
-            throw new DereferencingException(DereferenceResult.ERROR_NOTFOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
-        }
-
         // done
+
+        if (log.isInfoEnabled()) log.info("Final dereference result: " + dereferenceResult);
 
         return dereferenceResult;
     }

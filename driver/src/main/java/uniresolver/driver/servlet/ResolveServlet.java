@@ -80,41 +80,40 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 		try {
 
 			resolveRepresentationResult = InitServlet.getDriver().resolveRepresentation(DID.fromString(didString), resolutionOptions);
-			if (resolveRepresentationResult == null) throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, "Driver: No resolve result for " + didString);
+			if (resolveRepresentationResult == null) throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "Driver: No resolve result for " + didString);
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Driver: Resolve problem for " + didString + ": " + ex.getMessage(), ex);
 
-			if (! (ex instanceof ResolutionException)) {
-				ex = new ResolutionException(ResolveResult.ERROR_INTERNALERROR, "Driver: Resolve problem for " + didString + ": " + ex.getMessage());
-			}
-
-			resolveRepresentationResult = ResolveRepresentationResult.makeErrorResult((ResolutionException) ex, accept);
+			if (! (ex instanceof ResolutionException)) ex = new ResolutionException("Driver: Resolve problem for " + didString + ": " + ex.getMessage());
+			resolveRepresentationResult = ((ResolutionException) ex).toErrorResult(accept);
 		}
 
 		if (log.isInfoEnabled()) log.info("Driver: Resolve result for " + didString + ": " + resolveRepresentationResult);
 
 		// write resolve result
 
-		for (MediaType acceptMediaType : httpAcceptMediaTypes) {
+		for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
-			if (HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, ResolveResult.MEDIA_TYPE)) {
+			if (HttpBindingServerUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
+
+				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + ResolveResult.MEDIA_TYPE);
 
 				ServletUtil.sendResponse(
 						response,
 						HttpBindingServerUtil.httpStatusCodeForResult(resolveRepresentationResult),
 						ResolveResult.MEDIA_TYPE,
-						HttpBindingServerUtil.toHttpBodyResolveRepresentationResult(resolveRepresentationResult));
+						HttpBindingServerUtil.toHttpBodyStreamResult(resolveRepresentationResult));
 				return;
 			} else {
 
 				// determine representation media type
 
-				String representationMediaType = HttpBindingUtil.representationMediaTypeForMediaType(acceptMediaType.toString());
+				String representationMediaType = HttpBindingUtil.representationMediaTypeForMediaType(httpAcceptMediaType.toString());
 				if (representationMediaType != null) {
-					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + acceptMediaType + " via DID document representation media type " + representationMediaType);
+					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via DID document representation media type " + representationMediaType);
 				} else {
-					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + acceptMediaType);
+					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + httpAcceptMediaType);
 					continue;
 				}
 

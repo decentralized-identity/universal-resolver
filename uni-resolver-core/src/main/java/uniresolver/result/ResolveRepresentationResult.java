@@ -50,23 +50,6 @@ public class ResolveRepresentationResult extends ResolveResult implements Result
 		return new ResolveRepresentationResult(new LinkedHashMap<>(), new byte[0], new LinkedHashMap<>());
 	}
 
-	public static ResolveRepresentationResult makeErrorResult(String error, String errorMessage, String contentType) {
-		ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
-		resolveRepresentationResult.setError(error == null ? ERROR_INTERNALERROR : error);
-		if (errorMessage != null) resolveRepresentationResult.setErrorMessage(errorMessage);
-		resolveRepresentationResult.setContentType(contentType);
-		resolveRepresentationResult.setDidDocumentStream(new byte[0]);
-		if (log.isDebugEnabled()) log.debug("Created error resolve result: " + resolveRepresentationResult);
-		return resolveRepresentationResult;
-	}
-
-	public static ResolveRepresentationResult makeErrorResult(ResolutionException ex, String contentType) {
-		if (ex.getResolveRepresentationResult() != null && contentType.equals(ex.getResolveRepresentationResult().getContentType())) {
-			return ex.getResolveRepresentationResult();
-		}
-		return makeErrorResult(ex.getError(), ex.getMessage(), contentType);
-	}
-
 	/*
 	 * Serialization
 	 */
@@ -77,14 +60,6 @@ public class ResolveRepresentationResult extends ResolveResult implements Result
 
 	public static ResolveRepresentationResult fromJson(Reader reader) throws IOException {
 		return objectMapper.readValue(reader, ResolveRepresentationResult.class);
-	}
-
-	private static boolean isJson(byte[] bytes) {
-		try {
-			return objectMapper.getFactory().createParser(bytes).readValueAsTree() != null;
-		} catch (IOException ex) {
-			return false;
-		}
 	}
 
 	@Override
@@ -99,6 +74,20 @@ public class ResolveRepresentationResult extends ResolveResult implements Result
 		} catch (JsonProcessingException ex) {
 			throw new RuntimeException("Cannot write JSON: " + ex.getMessage(), ex);
 		}
+	}
+
+	/*
+	 * Content stream methods
+	 */
+
+	@Override
+	public byte[] getFunctionContentStream() {
+		return this.getDidDocumentStream();
+	}
+
+	@Override
+	public void setFunctionContentStream(byte[] functionContentStream) {
+		this.setDidDocumentStream(functionContentStream);
 	}
 
 	/*
@@ -124,23 +113,15 @@ public class ResolveRepresentationResult extends ResolveResult implements Result
 	}
 
 	/*
-	 * Content type methods
+	 * Helper methods
 	 */
 
-	@Override
-	@JsonIgnore
-	public String getContentType() {
-		return this.getDidResolutionMetadata() == null ? null : (String) this.getDidResolutionMetadata().get("contentType");
-	}
-
-	@Override
-	@JsonIgnore
-	public void setContentType(String contentType) {
-		if (this.getDidResolutionMetadata() == null) this.setDidResolutionMetadata(new LinkedHashMap<>());
-		if (contentType != null)
-			this.getDidResolutionMetadata().put("contentType", contentType);
-		else
-			this.getDidResolutionMetadata().remove("contentType");
+	private static boolean isJson(byte[] bytes) {
+		try {
+			return objectMapper.getFactory().createParser(bytes).readValueAsTree() != null;
+		} catch (IOException ex) {
+			return false;
+		}
 	}
 
 	/*
@@ -181,18 +162,6 @@ public class ResolveRepresentationResult extends ResolveResult implements Result
 				this.setDidDocumentStream(didDocumentStream.getBytes(StandardCharsets.UTF_8));
 			}
 		}
-	}
-
-	@Override
-	@JsonIgnore
-	public final byte[] getContentStream() {
-		return this.getDidDocumentStream();
-	}
-
-	@Override
-	@JsonIgnore
-	public final void setContentStream(byte[] stream) {
-		this.setDidDocumentStream(stream);
 	}
 
 	/*
