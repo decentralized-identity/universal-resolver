@@ -9,7 +9,7 @@ from shutil import copy
 import pathlib
 
 # CONSTANTS you may need to change:
-DEFAULT_DOMAIN_NAME = 'resolver.identity.foundation'
+DEFAULT_DOMAIN_NAME = 'dev.uniresolver.io'
 UNIVERSAL_RESOLVER_FRONTEND_TAG = "universalresolver/uni-resolver-frontend:latest;"
 NAMESPACE = "uni-resolver-dev"
 
@@ -94,7 +94,7 @@ def generate_ingress(containers, outputdir):
     fout.write('  namespace: \"uni-resolver-dev\"\n')
     fout.write('  annotations:\n')
     fout.write('    alb.ingress.kubernetes.io/scheme: internet-facing\n')
-    fout.write('    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:332553390353:certificate/59fa30ca-de05-4024-8f80-fea9ab9ab8bf\n')
+    fout.write('    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:332553390353:certificate/925fce37-d446-4af3-828e-f803b3746af0\n')
     fout.write('    alb.ingress.kubernetes.io/listen-ports: \'[{"HTTP": 80}, {"HTTPS":443}]\'\n')
     fout.write('    alb.ingress.kubernetes.io/ssl-redirect: \'443\'\n')
     fout.write('  labels:\n')
