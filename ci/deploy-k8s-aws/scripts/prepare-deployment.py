@@ -9,7 +9,7 @@ from shutil import copy
 import pathlib
 
 # CONSTANTS you may need to change:
-DEFAULT_DOMAIN_NAME = 'uniresolver.identity.foundation'
+DEFAULT_DOMAIN_NAME = 'resolver.identity.foundation'
 UNIVERSAL_RESOLVER_FRONTEND_TAG = "universalresolver/uni-resolver-frontend:latest;"
 NAMESPACE = "uni-resolver-dev"
 
