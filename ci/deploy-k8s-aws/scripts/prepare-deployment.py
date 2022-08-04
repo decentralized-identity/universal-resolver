@@ -94,7 +94,7 @@ def generate_ingress(containers, outputdir):
     fout.write('  namespace: \"uni-resolver-dev\"\n')
     fout.write('  annotations:\n')
     fout.write('    alb.ingress.kubernetes.io/scheme: internet-facing\n')
-    fout.write('    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:332553390353:certificate/5c7326af-9822-4edb-a4c8-de1328b6ec5a\n')
+    fout.write('    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:332553390353:certificate/59fa30ca-de05-4024-8f80-fea9ab9ab8bf\n')
     fout.write('    alb.ingress.kubernetes.io/listen-ports: \'[{"HTTP": 80}, {"HTTPS":443}]\'\n')
     fout.write('    alb.ingress.kubernetes.io/ssl-redirect: \'443\'\n')
     fout.write('  labels:\n')
