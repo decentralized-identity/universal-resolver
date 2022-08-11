@@ -102,7 +102,7 @@ def main(argv):
                 '--write200 <True/False>'
     host = 'https://dev.uniresolver.io'
     config = '/github/workspace/uni-resolver-web/src/main/resources/application.yml'
-    out_folder = './'
+    out = './'
     try:
         opts, args = getopt.getopt(argv, "h:c:o:w", ["host=", "config=", "out=", "write200="])
     except getopt.GetoptError:
@@ -118,7 +118,7 @@ def main(argv):
             config = arg
         elif opt in ("-o", "--out"):
             print("ARG:" + arg)
-            out_folder = arg + '/'
+            out = arg + '/'
         elif opt in ("-w", "--write200"):
             global WRITE_SUCCESS
             if arg.lower() == 'false':
@@ -136,8 +136,8 @@ def main(argv):
 
     results_timestamp = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
     filename = "driver-status-" + results_timestamp + ".json"
-    print('Out folder: ' + out_folder)
-    out_path = out_folder + filename
+    print('Out folder: ' + out)
+    out_path = out + filename
     print('Writing to path: ' + out_path)
     with open(out_path, "a") as f:
         f.write(json.dumps(results, indent=4, sort_keys=True))
