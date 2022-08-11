@@ -1,4 +1,4 @@
-FROM python:3.8.3-buster
+FROM python:3.10-buster
 
 LABEL "com.github.actions.name"="Get driver status"
 LABEL "com.github.actions.description"="Get driver status for a Universal Resolver deplyoment"
