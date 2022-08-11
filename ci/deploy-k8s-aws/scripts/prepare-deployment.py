@@ -11,6 +11,7 @@ import pathlib
 # CONSTANTS you may need to change:
 DEFAULT_DOMAIN_NAME = 'dev.uniresolver.io'
 UNIVERSAL_RESOLVER_FRONTEND_TAG = "universalresolver/uni-resolver-frontend:latest;"
+NAMESPACE = "uni-resolver-dev"
 
 
 def init_deployment_dir(outputdir):
@@ -19,16 +20,16 @@ def init_deployment_dir(outputdir):
     if not os.path.exists(outputdir):
         os.makedirs(outputdir)
     fout = open(outputdir + '/' + 'deploy.sh', "a+")
-    fout.write('kubectl delete all --all -n uni-resolver\n')
+    fout.write(f'kubectl delete all --all -n {NAMESPACE}\n')
     fout.write('./namespace-setup.sh\n')
-    fout.write('kubectl apply -n uni-resolver -f uni-resolver-ingress.yaml\n')
+    fout.write(f'kubectl apply -n {NAMESPACE} -f uni-resolver-ingress.yaml\n')
     fout.close()
     subprocess.call(['chmod', "a+x", outputdir + '/' + 'deploy.sh'])
 
 
 def add_deployment(deployment_file, outputdir):
     fout = open(outputdir + '/' + 'deploy.sh', "a+")
-    fout.write('kubectl apply -n uni-resolver -f %s \n' % deployment_file)
+    fout.write(f'kubectl apply -n {NAMESPACE} -f %s \n' % deployment_file)
     fout.close()
 
 
@@ -86,51 +87,39 @@ def generate_ingress(containers, outputdir):
     global DEFAULT_DOMAIN_NAME
     print("Generating uni-resolver-ingress.yaml")
     fout = open(outputdir + '/uni-resolver-ingress.yaml', "wt")
-    fout.write('apiVersion: extensions/v1beta1\n')
+    fout.write('apiVersion: networking.k8s.io/v1\n')
     fout.write('kind: Ingress\n')
     fout.write('metadata:\n')
-    fout.write('  name: \"uni-resolver-web\"\n')
-    fout.write('  namespace: \"uni-resolver\"\n')
+    fout.write('  name: \"uni-resolver-ingress\"\n')
+    fout.write('  namespace: \"uni-resolver-dev\"\n')
     fout.write('  annotations:\n')
-    fout.write('    kubernetes.io/ingress.class: alb\n')
     fout.write('    alb.ingress.kubernetes.io/scheme: internet-facing\n')
     fout.write('    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:332553390353:certificate/925fce37-d446-4af3-828e-f803b3746af0\n')
     fout.write('    alb.ingress.kubernetes.io/listen-ports: \'[{"HTTP": 80}, {"HTTPS":443}]\'\n')
-    fout.write('    alb.ingress.kubernetes.io/actions.ssl-redirect: \'{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}\'\n')
+    fout.write('    alb.ingress.kubernetes.io/ssl-redirect: \'443\'\n')
     fout.write('  labels:\n')
     fout.write('    app: \"uni-resolver-web\"\n')
     fout.write('spec:\n')
+    fout.write('  ingressClassName: alb\n')
     fout.write('  rules:\n')
     fout.write('    - host: ' + DEFAULT_DOMAIN_NAME + '\n')
     fout.write('      http:\n')
     fout.write('        paths:\n')
-    fout.write('          - path: /*\n')
-    fout.write('            backend:\n')
-    fout.write('              serviceName: ssl-redirect\n')
-    fout.write('              servicePort: use-annotation\n')
     fout.write('          - path: /1.0/*\n')
+    fout.write('            pathType: ImplementationSpecific\n')
     fout.write('            backend:\n')
-    fout.write('              serviceName: uni-resolver-web\n')
-    fout.write('              servicePort: 8080\n')
+    fout.write('              service:\n')
+    fout.write('                name: uni-resolver-web\n')
+    fout.write('                port:\n')
+    fout.write('                  number: 8080\n')
     fout.write('          - path: /*\n')
+    fout.write('            pathType: ImplementationSpecific\n')
     fout.write('            backend:\n')
-    fout.write('              serviceName: uni-resolver-frontend\n')
-    fout.write('              servicePort: 7081\n')
-    fout.write('    - host: resolver.identity.foundation\n')
-    fout.write('      http:\n')
-    fout.write('        paths:\n')
-    fout.write('          - path: /*\n')
-    fout.write('            backend:\n')
-    fout.write('              serviceName: ssl-redirect\n')
-    fout.write('              servicePort: use-annotation\n')
-    fout.write('          - path: /1.0/*\n')
-    fout.write('            backend:\n')
-    fout.write('              serviceName: uni-resolver-web\n')
-    fout.write('              servicePort: 8080\n')
-    fout.write('          - path: /*\n')
-    fout.write('            backend:\n')
-    fout.write('              serviceName: uni-resolver-frontend\n')
-    fout.write('              servicePort: 7081\n')
+    fout.write('              service:\n')
+    fout.write('                name: uni-resolver-frontend\n')
+    fout.write('                port:\n')
+    fout.write('                  number: 7081\n')
+    
 
     for container in containers:
         print(container)
@@ -146,9 +135,12 @@ def generate_ingress(containers, outputdir):
         fout.write('      http:\n')
         fout.write('        paths:\n')
         fout.write('          - path: /*\n')
+        fout.write('            pathType: ImplementationSpecific\n')
         fout.write('            backend:\n')
-        fout.write('              serviceName: ' + container + '\n')
-        fout.write('              servicePort: ' + container_port + '\n')
+        fout.write('              service:\n')
+        fout.write('                name: ' + container + '\n')
+        fout.write('                port:\n')
+        fout.write('                  number: ' + container_port + '\n')
 
     fout.close()
 

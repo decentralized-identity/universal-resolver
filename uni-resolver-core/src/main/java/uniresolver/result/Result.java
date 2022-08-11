@@ -76,15 +76,15 @@ public interface Result {
 
     @JsonIgnore
     default public List<Map<String, Object>> getWarnings() {
-        return this.getFunctionContentMetadata() == null ? null : (List<Map<String, Object>>) this.getFunctionContentMetadata().get("warnings");
+        return this.getFunctionMetadata() == null ? null : (List<Map<String, Object>>) this.getFunctionMetadata().get("warnings");
     }
 
     @JsonIgnore
     default public void addWarning(String message, Map<String, Object> warningMetadata) {
         if (message == null) throw new NullPointerException();
-        if (this.getFunctionContentMetadata() == null) throw new NullPointerException();
-        List<Map<String, Object>> warnings = (List<Map<String, Object>>) this.getFunctionContentMetadata().get("warnings");
-        if (warnings == null) { warnings = new ArrayList<>(); this.getFunctionContentMetadata().put("warnings", warnings); }
+        if (this.getFunctionMetadata() == null) throw new NullPointerException();
+        List<Map<String, Object>> warnings = (List<Map<String, Object>>) this.getFunctionMetadata().get("warnings");
+        if (warnings == null) { warnings = new ArrayList<>(); this.getFunctionMetadata().put("warnings", warnings); }
         Map<String, Object> warning = new LinkedHashMap<>();
         if (message != null) warning.put("message", message);
         if (warningMetadata != null) warning.putAll(warningMetadata);
