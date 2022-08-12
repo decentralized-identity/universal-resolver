@@ -69,7 +69,7 @@ public class DereferencingException extends Exception {
 			DereferenceResult dereferenceResult = DereferenceResult.build();
 			if (this.getError() != null) dereferenceResult.setError(this.getError());
 			if (this.getMessage() != null) dereferenceResult.setErrorMessage(this.getMessage());
-			if (this.getDereferencingMetadata() != null) dereferenceResult.setDereferencingMetadata(this.getDereferencingMetadata());
+			if (this.getDereferencingMetadata() != null) dereferenceResult.getDereferencingMetadata().putAll(this.getDereferencingMetadata());
 			dereferenceResult.setContentStream(new byte[0]);
 			dereferenceResult.setContentType(contentType);
 			if (log.isDebugEnabled()) log.debug("Created error dereference result: " + dereferenceResult);

@@ -24,7 +24,7 @@ jobs:
         uses: ./ci/get-driver-status
         with:
           host: https://dev.uniresolver.io
-          out_folder: /home/runner/work/universal-resolver/universal-resolver/driver-status-reports
+          out: /home/runner/work/universal-resolver/universal-resolver/driver-status-reports
           keep_result: true
 #       - name: Run did-test-suite
 #         uses: ./ci/run-did-test-suite

@@ -33,6 +33,12 @@ mkdir "$REPORTS_FOLDER"
 python --version
 python /get-driver-status/get-driver-status.py --host "$INPUT_HOST" --config "$INPUT_CONFIG" --out "$REPORTS_FOLDER"
 
+echo "Switch to drivers-status-reports branch"
+git version
+git fetch
+git checkout driver-status-reports
+git status
+
 if "$INPUT_KEEP_RESULT";
   then
     echo "Push result file to repo"
@@ -43,7 +49,7 @@ if "$INPUT_KEEP_RESULT";
     echo "driver_status_report=$(git diff --name-only --staged)" >> "$GITHUB_ENV"
     echo "reports_folder=$REPORTS_FOLDER" >> "$GITHUB_ENV"
     git commit -m "Get driver status results"
-    git push origin fix-get-driver-status:driver-status-reports
+    git push origin driver-status-reports:driver-status-reports
   else
     cat -b /driver-status-reports/driver-status-*.json
 fi
