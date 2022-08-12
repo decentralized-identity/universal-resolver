@@ -33,17 +33,9 @@ mkdir -p "$REPORTS_FOLDER"
 python --version
 python /get-driver-status/get-driver-status.py --host "$INPUT_HOST" --config "$INPUT_CONFIG" --out "$REPORTS_FOLDER"
 
-echo "###########################"
-ls -al /github/workspace/uni-resolver-web/
-echo "###########################"
-ls -al /github/workspace/uni-resolver-web/driver-status-reports/
-echo "###########################"
-git status
-echo "###########################"
 echo "Switch to drivers-status-reports branch"
 git fetch
 git checkout driver-status-reports
-git status
 
 if "$INPUT_KEEP_RESULT";
   then
@@ -53,7 +45,7 @@ if "$INPUT_KEEP_RESULT";
     # Pass driver_status_report to next step in github action
     echo "driver_status_report=$(git diff --name-only --staged)" >> "$GITHUB_ENV"
     echo "reports_folder=$REPORTS_FOLDER" >> "$GITHUB_ENV"
-    git add "$REPORTS_FOLDER"
+    git add .
     git commit -m "Get driver status results"
     git push origin driver-status-reports:driver-status-reports
   else
