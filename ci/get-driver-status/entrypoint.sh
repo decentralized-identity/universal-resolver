@@ -7,7 +7,7 @@ sh -c "echo $*"
 
 echo "host: $INPUT_HOST"
 echo "config: $INPUT_CONFIG"
-echo "out folder: $INPUT_OUT_FOLDER"
+echo "out folder: $INPUT_OUT"
 echo "debug: $INPUT_DEBUG"
 echo "keep result: $INPUT_KEEP_RESULT"
 
@@ -27,7 +27,7 @@ if "$INPUT_DEBUG"; then
 fi
 
 DATE_WITH_TIME=$(TZ=UTC date "+%Y-%m-%d_%H:%M:%S")
-REPORTS_FOLDER="$INPUT_OUT_FOLDER/nightly-run-$DATE_WITH_TIME"
+REPORTS_FOLDER="$INPUT_OUT/nightly-run-$DATE_WITH_TIME"
 mkdir "$REPORTS_FOLDER"
 
 python --version
