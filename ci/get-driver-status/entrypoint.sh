@@ -27,7 +27,7 @@ if "$INPUT_DEBUG"; then
 fi
 
 DATE_WITH_TIME=$(TZ=UTC date "+%Y-%m-%d_%H:%M:%S")
-REPORTS_FOLDER="/github/workspace/uni-resolver-web/driver-status-reports/nightly-run-$DATE_WITH_TIME"
+REPORTS_FOLDER="$INPUT_OUT/nightly-run-$DATE_WITH_TIME"
 mkdir -p "$REPORTS_FOLDER"
 
 python --version
