@@ -28,7 +28,7 @@ fi
 
 DATE_WITH_TIME=$(TZ=UTC date "+%Y-%m-%d_%H:%M:%S")
 REPORTS_FOLDER="/github/workspace/uni-resolver-web/driver-status-reports/nightly-run-$DATE_WITH_TIME"
-mkdir "$REPORTS_FOLDER"
+mkdir -p "$REPORTS_FOLDER"
 
 python --version
 python /get-driver-status/get-driver-status.py --host "$INPUT_HOST" --config "$INPUT_CONFIG" --out "$REPORTS_FOLDER"
