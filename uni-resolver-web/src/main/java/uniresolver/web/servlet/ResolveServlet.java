@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,16 +47,21 @@ public class ResolveServlet extends WebUniResolver {
 
 		// look at path
 
-		String didString = null;
+		String didString;
 		Map<String, Object> resolutionOptions = new HashMap<>();
 
 		if (path.startsWith("did%3A")) {
 			didString = URLDecoder.decode(path, StandardCharsets.UTF_8);
 			if (request.getParameterMap() != null) {
-				resolutionOptions.putAll(request.getParameterMap());
+				for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
+					String parameterName = e.nextElement();
+					String parameterValue = request.getParameter(parameterName);
+					resolutionOptions.put(parameterName, parameterValue);
+				}
 			}
 		} else {
 			didString = path;
+			if (request.getQueryString() != null) didString += "?" + request.getQueryString();
 		}
 
 		if (log.isInfoEnabled()) log.info("Incoming DID string: " + didString);
@@ -69,7 +75,9 @@ public class ResolveServlet extends WebUniResolver {
 		MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
 
 		String accept = HttpBindingServerUtil.acceptForHttpAcceptMediaTypes(httpAcceptMediaTypes);
-		resolutionOptions.put("accept", accept);
+		if (!resolutionOptions.containsKey("accept")) {
+			resolutionOptions.put("accept", accept);
+		}
 
 		if (log.isDebugEnabled()) log.debug("Using resolution options: " + resolutionOptions);
 
@@ -80,42 +88,39 @@ public class ResolveServlet extends WebUniResolver {
 		try {
 
 			resolveRepresentationResult = this.resolveRepresentation(didString, resolutionOptions);
-			if (resolveRepresentationResult == null) throw new ResolutionException(ResolveResult.ERROR_NOTFOUND, "No resolve result for " + didString);
+			if (resolveRepresentationResult == null) throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "No resolve result for " + didString);
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolve problem for " + didString + ": " + ex.getMessage(), ex);
 
-			if (! (ex instanceof ResolutionException)) {
-				ex = new ResolutionException(ResolveResult.ERROR_INTERNALERROR, "Resolve problem for " + didString + ": " + ex.getMessage());
-			}
-
-			resolveRepresentationResult = ResolveRepresentationResult.makeErrorResult((ResolutionException) ex, accept);
+			if (! (ex instanceof ResolutionException)) ex = new ResolutionException("Resolve problem for " + didString + ": " + ex.getMessage());
+			resolveRepresentationResult = ((ResolutionException) ex).toErrorResult(accept);
 		}
 
-		if (log.isInfoEnabled()) log.info("Resolve result for " + didString + ": " + resolveRepresentationResult);
+		if (log.isInfoEnabled()) log.info("Resolve representation result for " + didString + ": " + resolveRepresentationResult);
 
 		// write resolve result
 
-		for (MediaType acceptMediaType : httpAcceptMediaTypes) {
+		for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
-			if (HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, ResolveResult.MEDIA_TYPE)) {
+			if (HttpBindingServerUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
 
-				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + acceptMediaType + " via content type " + ResolveResult.MEDIA_TYPE);
+				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + ResolveResult.MEDIA_TYPE);
 
 				ServletUtil.sendResponse(
 						response,
 						HttpBindingServerUtil.httpStatusCodeForResult(resolveRepresentationResult),
 						ResolveResult.MEDIA_TYPE,
-						HttpBindingServerUtil.toHttpBodyResolveRepresentationResult(resolveRepresentationResult));
+						HttpBindingServerUtil.toHttpBodyStreamResult(resolveRepresentationResult));
 				return;
 			} else {
 
 				// determine representation media type
 
-				if (HttpBindingServerUtil.isMediaTypeAcceptable(acceptMediaType, resolveRepresentationResult.getContentType())) {
-					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + acceptMediaType + " via content type " + resolveRepresentationResult.getContentType());
+				if (HttpBindingServerUtil.isMediaTypeAcceptable(httpAcceptMediaType, resolveRepresentationResult.getContentType())) {
+					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + resolveRepresentationResult.getContentType());
 				} else {
-					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + acceptMediaType);
+					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + httpAcceptMediaType);
 					continue;
 				}
 
@@ -129,7 +134,10 @@ public class ResolveServlet extends WebUniResolver {
 			}
 		}
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_ACCEPTABLE, null, "Not acceptable media types " + httpAcceptHeader);
-		return;
+		ServletUtil.sendResponse(
+				response,
+				HttpServletResponse.SC_NOT_ACCEPTABLE,
+				null,
+				"Not acceptable media types " + httpAcceptHeader);
 	}
 }
