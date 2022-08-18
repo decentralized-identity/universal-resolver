@@ -147,7 +147,7 @@ def generate_ingress(containers, outputdir):
             continue
         sub_domain_name = container.replace('did', '').replace('driver', '').replace('uni-resolver', '').replace('-',
                                                                                                                    '')
-        print('Adding domains: ' + sub_domain_name + '.' + PROD_DOMAIN_NAME ' and ' + sub_domain_name + '.' + DEV_DOMAIN_NAME )
+        print('Adding domains: ' + sub_domain_name + '.' + PROD_DOMAIN_NAME + ' and ' + sub_domain_name + '.' + DEV_DOMAIN_NAME )
 
         fout.write('    - host: ' + sub_domain_name + '.' + PROD_DOMAIN_NAME + '\n')
         fout.write('      http:\n')
