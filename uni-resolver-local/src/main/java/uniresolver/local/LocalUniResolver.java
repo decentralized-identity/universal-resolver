@@ -180,21 +180,21 @@ public class LocalUniResolver implements UniResolver {
 			}
 		}
 
-		if (usedDriver != null) {
+		if (usedDriver == null) {
 
-			if (usedDriver instanceof HttpDriver) {
+			if (log.isInfoEnabled()) log.info("Method not supported: " + did.getMethodName());
+			throw new ResolutionException(ResolutionException.ERROR_METHODNOTSUPPORTED, "Method not supported: " + did.getMethodName());
+		}
 
-				driverResolveResult.getDidResolutionMetadata().put("pattern", ((HttpDriver) usedDriver).getPattern().pattern());
-				driverResolveResult.getDidResolutionMetadata().put("driverUrl", ((HttpDriver) usedDriver).getResolveUri());
+		if (usedDriver instanceof HttpDriver) {
 
-				if (log.isDebugEnabled()) log.debug("Resolved " + did + " with driver " + usedDriver.getClass().getSimpleName() + " and pattern " + ((HttpDriver) usedDriver).getPattern().pattern());
-			} else {
+			driverResolveResult.getDidResolutionMetadata().put("pattern", ((HttpDriver) usedDriver).getPattern().pattern());
+			driverResolveResult.getDidResolutionMetadata().put("driverUrl", ((HttpDriver) usedDriver).getResolveUri());
 
-				if (log.isDebugEnabled()) log.debug("Resolved " + did + " with driver " + usedDriver.getClass().getSimpleName());
-			}
+			if (log.isDebugEnabled()) log.debug("Resolved " + did + " with driver " + usedDriver.getClass().getSimpleName() + " and pattern " + ((HttpDriver) usedDriver).getPattern().pattern());
 		} else {
 
-			if (log.isDebugEnabled()) log.debug("No result with " + this.getDrivers().size() + " drivers.");
+			if (log.isDebugEnabled()) log.debug("Resolved " + did + " with driver " + usedDriver.getClass().getSimpleName());
 		}
 
 		return driverResolveResult;

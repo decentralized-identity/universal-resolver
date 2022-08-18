@@ -10,9 +10,19 @@ import java.util.Map;
 
 public class ResolutionException extends Exception {
 
+	/*
+	 * From DID Core
+	 */
+
 	public static final String ERROR_INVALIDDID = "invalidDid";
 	public static final String ERROR_NOTFOUND = "notFound";
 	public static final String ERROR_REPRESENTATIONNOTSUPPORTED = "representationNotSupported";
+
+	/*
+	 * From DID Resolution
+	 */
+
+	public static final String ERROR_METHODNOTSUPPORTED = "methodNotSupported";
 	public static final String ERROR_INTERNALERROR = "internalError";
 
 	private static final Logger log = LoggerFactory.getLogger(ResolutionException.class);

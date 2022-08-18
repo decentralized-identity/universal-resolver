@@ -8,8 +8,17 @@ import java.util.Map;
 
 public class DereferencingException extends Exception {
 
+	/*
+	 * From DID Core
+	 */
+
 	public static final String ERROR_INVALIDDIDURL = "invalidDidUrl";
 	public static final String ERROR_NOTFOUND = "notFound";
+
+	/*
+	 * From DID Resolution
+	 */
+
 	public static final String ERROR_CONTENTTYEPNOTSUPPORTED = "contentTypeNotSupported";
 	public static final String ERROR_INTERNALERROR = "internalError";
 

@@ -101,8 +101,10 @@ public class HttpBindingServerUtil {
             return HttpStatus.SC_NOT_FOUND;
         else if (ResolutionException.ERROR_INVALIDDID.equals(result.getError()) || DereferencingException.ERROR_INVALIDDIDURL.equals(result.getError()))
             return HttpStatus.SC_BAD_REQUEST;
-        else if (ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED.equals(result.getError()))
+        else if (ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED.equals(result.getError()) || DereferencingException.ERROR_CONTENTTYEPNOTSUPPORTED.equals(result.getError()))
             return HttpStatus.SC_NOT_ACCEPTABLE;
+        else if (ResolutionException.ERROR_METHODNOTSUPPORTED.equals(result.getError()))
+            return HttpStatus.SC_NOT_IMPLEMENTED;
         else if (result.isErrorResult())
             return HttpStatus.SC_INTERNAL_SERVER_ERROR;
         else if (result.getFunctionContentMetadata() != null && Boolean.TRUE.equals(result.getFunctionContentMetadata().get("deactivated")))
