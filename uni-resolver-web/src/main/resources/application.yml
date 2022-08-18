@@ -128,6 +128,10 @@ uniresolver:
       testIdentifiers:
         - did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J
         - did:schema:evan-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J
+    - pattern: "^(did:ion:test.+)$"
+      url: http://11347-05.root.nessus.at:3000/identifiers/$1
+      testIdentifiers:
+        - did:ion:test:EiBEYjAmR8mLSBdiAv0tmASmpvQK8_BGe_p4O3s3fTHROA
     - pattern: "^(did:ion:(?!test).+)$"
       url: http://driver-did-ion:8080/
       testIdentifiers:
