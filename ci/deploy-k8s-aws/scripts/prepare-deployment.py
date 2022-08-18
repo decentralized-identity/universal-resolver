@@ -9,7 +9,8 @@ from shutil import copy
 import pathlib
 
 # CONSTANTS you may need to change:
-DEFAULT_DOMAIN_NAME = 'dev.uniresolver.io'
+PROD_DOMAIN_NAME = 'resolver.identity.foundation'
+DEV_DOMAIN_NAME = 'dev.uniresolver.io'
 UNIVERSAL_RESOLVER_FRONTEND_TAG = "universalresolver/uni-resolver-frontend:latest;"
 NAMESPACE = "uni-resolver-dev"
 
@@ -84,7 +85,7 @@ def get_container_tags(containers):
 
 
 def generate_ingress(containers, outputdir):
-    global DEFAULT_DOMAIN_NAME
+    global PROD_DOMAIN_NAME, DEV_DOMAIN_NAME
     print("Generating uni-resolver-ingress.yaml")
     fout = open(outputdir + '/uni-resolver-ingress.yaml', "wt")
     fout.write('apiVersion: networking.k8s.io/v1\n')
@@ -94,7 +95,7 @@ def generate_ingress(containers, outputdir):
     fout.write('  namespace: \"uni-resolver-dev\"\n')
     fout.write('  annotations:\n')
     fout.write('    alb.ingress.kubernetes.io/scheme: internet-facing\n')
-    fout.write('    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:332553390353:certificate/925fce37-d446-4af3-828e-f803b3746af0\n')
+    fout.write('    alb.ingress.kubernetes.io/certificate-arn: \"arn:aws:acm:us-east-2:332553390353:certificate/925fce37-d446-4af3-828e-f803b3746af0,arn:aws:acm:us-east-2:332553390353:certificate/59fa30ca-de05-4024-8f80-fea9ab9ab8bf\"\n')
     fout.write('    alb.ingress.kubernetes.io/listen-ports: \'[{"HTTP": 80}, {"HTTPS":443}]\'\n')
     fout.write('    alb.ingress.kubernetes.io/ssl-redirect: \'443\'\n')
     fout.write('  labels:\n')
@@ -102,7 +103,24 @@ def generate_ingress(containers, outputdir):
     fout.write('spec:\n')
     fout.write('  ingressClassName: alb\n')
     fout.write('  rules:\n')
-    fout.write('    - host: ' + DEFAULT_DOMAIN_NAME + '\n')
+    fout.write('    - host: ' + PROD_DOMAIN_NAME + '\n')
+    fout.write('      http:\n')
+    fout.write('        paths:\n')
+    fout.write('          - path: /1.0/*\n')
+    fout.write('            pathType: ImplementationSpecific\n')
+    fout.write('            backend:\n')
+    fout.write('              service:\n')
+    fout.write('                name: uni-resolver-web\n')
+    fout.write('                port:\n')
+    fout.write('                  number: 8080\n')
+    fout.write('          - path: /*\n')
+    fout.write('            pathType: ImplementationSpecific\n')
+    fout.write('            backend:\n')
+    fout.write('              service:\n')
+    fout.write('                name: uni-resolver-frontend\n')
+    fout.write('                port:\n')
+    fout.write('                  number: 7081\n')
+    fout.write('    - host: ' + DEV_DOMAIN_NAME + '\n')
     fout.write('      http:\n')
     fout.write('        paths:\n')
     fout.write('          - path: /1.0/*\n')
@@ -129,9 +147,9 @@ def generate_ingress(containers, outputdir):
             continue
         sub_domain_name = container.replace('did', '').replace('driver', '').replace('uni-resolver', '').replace('-',
                                                                                                                    '')
-        print('Adding domain: ' + sub_domain_name + '.' + DEFAULT_DOMAIN_NAME)
+        print('Adding domains: ' + sub_domain_name + '.' + PROD_DOMAIN_NAME ' and ' + sub_domain_name + '.' + DEV_DOMAIN_NAME )
 
-        fout.write('    - host: ' + sub_domain_name + '.' + DEFAULT_DOMAIN_NAME + '\n')
+        fout.write('    - host: ' + sub_domain_name + '.' + PROD_DOMAIN_NAME + '\n')
         fout.write('      http:\n')
         fout.write('        paths:\n')
         fout.write('          - path: /*\n')
@@ -141,7 +159,17 @@ def generate_ingress(containers, outputdir):
         fout.write('                name: ' + container + '\n')
         fout.write('                port:\n')
         fout.write('                  number: ' + container_port + '\n')
-
+        fout.write('    - host: ' + sub_domain_name + '.' + DEV_DOMAIN_NAME + '\n')
+        fout.write('      http:\n')
+        fout.write('        paths:\n')
+        fout.write('          - path: /*\n')
+        fout.write('            pathType: ImplementationSpecific\n')
+        fout.write('            backend:\n')
+        fout.write('              service:\n')
+        fout.write('                name: ' + container + '\n')
+        fout.write('                port:\n')
+        fout.write('                  number: ' + container_port + '\n')
+        
     fout.close()
 
 
