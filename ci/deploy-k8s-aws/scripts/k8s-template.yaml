@@ -14,6 +14,7 @@ spec:
     metadata:
       labels:
         app: {{containerName}}
+        fargate: "true"
     spec:
       containers:
       - name: {{containerName}}
