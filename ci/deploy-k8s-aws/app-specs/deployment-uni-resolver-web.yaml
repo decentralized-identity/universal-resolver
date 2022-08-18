@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         app: uni-resolver-web
+        fargate: "true"
     spec:
       containers:
       - name: uni-resolver-web
