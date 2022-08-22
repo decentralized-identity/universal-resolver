@@ -7,8 +7,15 @@ set -e
 echo "## Root folder ##"
 ls -al /
 
-echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
 export KUBECONFIG=/tmp/config
+chmod 600 $KUBECONFIG
+
+if [ "$ENVIRONMENT" == "Prod"]; then export CLUSTER="civic-prod"; else export CLUSTER="civic-dev"
+
+echo "ENVIRONMENT: $ENVIRONMENT"
+echo "CLUSTER: $CLUSTER"
+
+aws eks --region us-east-1 update-kubeconfig --name $CLUSTER
 
 echo "## Kubeconfig ##"
 kubectl config view
