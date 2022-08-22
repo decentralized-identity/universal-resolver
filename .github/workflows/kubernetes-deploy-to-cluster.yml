@@ -2,6 +2,15 @@ name: AWS Kubernetes deployment
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: 'Environment ( Dev / Prod )'
+        required: true
+        options:
+        - Dev
+        - Prod
+        default: 'Dev'
 
 env:
   IMAGE_NAME: universalresolver/uni-resolver-web
@@ -12,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: 
-      name: Dev
+      name: ${{ github.event.inputs.environment }}
     steps:
     - uses: actions/checkout@master
 
@@ -22,6 +31,7 @@ jobs:
         KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG_DATA}}
         AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
         AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        ENVIRONMENT: ${{github.event.inputs.environment}}
         RPC_URL_TESTNET: ${{env.RPC_URL_TESTNET}}
         RPC_CERT_TESTNET: ${{env.RPC_CERT_TESTNET}}
     - name: Slack notification
