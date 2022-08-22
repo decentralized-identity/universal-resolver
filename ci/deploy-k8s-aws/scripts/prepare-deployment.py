@@ -129,8 +129,7 @@ def get_container_tags(containers):
     return container_tags
 
 
-def generate_ingress(containers, outputdir):
-    global DEFAULT_DOMAIN_NAME
+def generate_ingress(containers, outputdir, deploymentdomain):
     print("Generating uni-resolver-ingress.yaml")
     fout = open(outputdir + '/uni-resolver-ingress.yaml', "wt")
     fout.write('apiVersion: networking.k8s.io/v1\n')
@@ -148,7 +147,7 @@ def generate_ingress(containers, outputdir):
     fout.write('    app: \"uni-resolver-web\"\n')
     fout.write('spec:\n')
     fout.write('  rules:\n')
-    fout.write('    - host: ' + DEFAULT_DOMAIN_NAME + '\n')
+    fout.write('    - host: ' + deploymentdomain + '\n')
     fout.write('      http:\n')
     fout.write('        paths:\n')
     fout.write('          - path: /()(1.0/.*)\n')
@@ -222,22 +221,26 @@ def main(argv):
 
     compose = 'docker-compose.yml'
     outputdir = './deploy'
+    deploymentdomain = DEFAULT_DOMAIN_NAME
     try:
-        opts, args = getopt.getopt(argv, "hi:o:", ["compose=", "outputdir="])
+        opts, args = getopt.getopt(argv, "hi:o:d:", ["compose=", "outputdir=", "deploymentdomain="])
     except getopt.GetoptError:
-        print('./prepare-deployment.py -i <inputfile> -o <outputdir>')
+        print('./prepare-deployment.py -i <inputfile> -o <outputdir> -d <deploymentdomain>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('./prepare-deployment.py -i <inputfile> -o <outputdir>')
+            print('./prepare-deployment.py -i <inputfile> -o <outputdir> -d <deploymentdomain>')
             sys.exit()
         elif opt in ("-i", "--compose"):
             compose = arg
         elif opt in ("-o", "--outputdir"):
             outputdir = arg
+        elif opt in ("-d", "--deploymentdomain"):
+            deploymentdomain = arg
 
     print('Input file is:', compose)
     print('Output dir is:', outputdir)
+    print('Deployment domain is:', deploymentdomain)
 
     init_deployment_dir(outputdir)
 
@@ -245,7 +248,7 @@ def main(argv):
     print("Containers:")
     print(containers)
 
-    generate_ingress(containers, outputdir)
+    generate_ingress(containers, outputdir, deploymentdomain)
 
     # Payer key for the sol did driver:
     # NOTE: Before running this, the real key should be put into the yaml file.

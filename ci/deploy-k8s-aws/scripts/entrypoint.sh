@@ -13,9 +13,12 @@ export KUBECONFIG=/tmp/kube/kubeconfig
 chmod 600 $KUBECONFIG
 
 if [ "$ENVIRONMENT" = Prod ]; then export CLUSTER="civic-prod"; else export CLUSTER="civic-dev"; fi
+if [ "$ENVIRONMENT" = Prod ]; then export DEPLOYMENT_DOMAIN="did.civic.com"; else export DEPLOYMENT_DOMAIN="did-dev.civic.com"; fi
+
 
 echo "ENVIRONMENT: $ENVIRONMENT"
 echo "CLUSTER: $CLUSTER"
+echo "DEPLOYMENT_DOMAIN: $DEPLOYMENT_DOMAIN"
 
 aws eks --region us-east-1 update-kubeconfig --name $CLUSTER
 
@@ -28,7 +31,7 @@ echo "Current workspace Folder"
 pwd
 ls -al .
 python --version
-python prepare-deployment.py
+python prepare-deployment.py -d $DEPLOYMENT_DOMAIN
 
 echo "Driver config script"
 python driver-config.py
