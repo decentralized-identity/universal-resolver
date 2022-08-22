@@ -2,6 +2,11 @@ name: AWS Kubernetes deployment
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment ( dev / prod )'
+        required: true
+        default: 'dev'
 
 env:
   IMAGE_NAME: universalresolver/uni-resolver-web
