@@ -4,9 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment ( dev / prod )'
+        type: choice
+        description: 'Environment ( Dev / Prod )'
         required: true
-        default: 'dev'
+        options:
+        - Dev
+        - Prod
+        default: 'Dev'
 
 env:
   IMAGE_NAME: universalresolver/uni-resolver-web
@@ -17,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: 
-      name: Dev
+      name: ${{ github.event.inputs.environment }}
     steps:
     - uses: actions/checkout@master
 
