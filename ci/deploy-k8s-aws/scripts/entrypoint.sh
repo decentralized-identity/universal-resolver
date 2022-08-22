@@ -12,7 +12,7 @@ touch /tmp/kube/kubeconfig
 export KUBECONFIG=/tmp/kube/kubeconfig
 chmod 600 $KUBECONFIG
 
-if [ "$ENVIRONMENT" == "Prod"]; then export CLUSTER="civic-prod"; else export CLUSTER="civic-dev"
+if [ "$ENVIRONMENT" == "Prod"]; then export CLUSTER="civic-prod"; else export CLUSTER="civic-dev"; fi
 
 echo "ENVIRONMENT: $ENVIRONMENT"
 echo "CLUSTER: $CLUSTER"
