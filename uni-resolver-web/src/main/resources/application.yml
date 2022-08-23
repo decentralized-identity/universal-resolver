@@ -26,9 +26,18 @@ uniresolver:
         - did:sov:WRfXPg8dantKVubE3HX8pw
         - did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx
         - did:sov:staging:6cgbu8ZPoWTnR5Rv5JcSMB
-        - did:sov:idunion:ScTdba9TrnZDAaNnuvBeB2
+        - did:sov:idunion:2GMSLg2A8JXcdYVsPC4Jui
         - did:sov:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
         - did:sov:indicio:test:5DiMymoHmgfCB2H2WbM7ZL
+    - pattern: "^(did:indy:.+)$"
+      url: http://indy-did-driver:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+        - did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx
+        - did:indy:sovrin:staging:6cgbu8ZPoWTnR5Rv5JcSMB
+        - did:indy:idunion:2GMSLg2A8JXcdYVsPC4Jui
+        - did:indy:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
+        - did:indy:indicio:test:5DiMymoHmgfCB2H2WbM7ZL
     - pattern: "^(did:v1:nym:.+)$"
       url: http://uni-resolver-did-v1-driver:8080/
       propertiesEndpoint: 'true'
@@ -214,15 +223,6 @@ uniresolver:
       propertiesEndpoint: 'true'
       testIdentifiers:
         - did:dns:danubetech.com
-    - pattern: "^(did:indy:.+)$"
-      url: http://indy-did-driver:8080/1.0/identifiers/$1
-      testIdentifiers:
-        - did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
-        - did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx
-        - did:indy:sovrin:staging:6cgbu8ZPoWTnR5Rv5JcSMB
-        - did:indy:idunion:ScTdba9TrnZDAaNnuvBeB2
-        - did:indy:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
-        - did:indy:indicio:test:5DiMymoHmgfCB2H2WbM7ZL
     - pattern: "^(did:everscale:.+)$"
       url: http://everscale-did-driver:8080/
       testIdentifiers:
