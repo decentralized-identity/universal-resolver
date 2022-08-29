@@ -137,7 +137,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-alastria-mvp2](https://github.com/alastria/uni-resolver-driver-did-alastria) | 1.0.0 | [MVP2](https://github.com/alastria/alastria-identity/wiki) | [alastria/universal-resolver](https://hub.docker.com/r/alastria/uni-resolver-driver-did-alastria) | AlastriaID MVP2 |
 | [did-cheqd](https://github.com/cheqd/did-resolver) | 1.1.0 | [1.0](https://github.com/cheqd/node-docs/blob/main/architecture/adr-list/adr-002-cheqd-did-method.md) | [ghcr.io/cheqd/did-resolver](https://github.com/cheqd/did-resolver/pkgs/container/did-resolver) | Cheqd identity ledger |
 | [did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/) | 1.0.0 | [1.0](https://docs.commercio.network/modules/did/) | [ghcr.io/commercionetwork/uni-resolver-driver-did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/pkgs/container/uni-resolver-driver-did-com) | Commercio public ledger |
-| [did-dyne](https://github.com/dyne/W3C-DID) | 0.1 | [1.0](https://dyne.github.io/W3C-DID/#/) | [dyne/w3c-did-driver](https://hub.docker.com/r/dyne/w3c-did-driver/) | Dyne Decentralized Identifiers |
+| [did-dyne](https://github.com/dyne/W3C-DID) | 0.1 | [1.0](https://dyne.github.io/W3C-DID/#/) | [dyne/w3c-did-driver](https://hub.docker.com/r/dyne/w3c-did-driver/) | Dyne.org Decentralized Identifiers |
 
 ## More Information
 
