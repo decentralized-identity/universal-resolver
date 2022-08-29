@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.6"
 
 networks:
   default:
@@ -207,3 +207,7 @@ services:
       uniresolver_driver_did_com_network: ${uniresolver_driver_did_com_network}
     ports:
       - "8132:8080"
+  did-driver-dyne:
+    image: dyne/w3c-did-driver:latest
+    ports:
+      - "8133:8080"

@@ -19,6 +19,7 @@ You can deploy the Universal Resolver on your local machine by cloning this Gith
 
 You should then be able to resolve identifiers locally using simple `curl` requests as follows:
 
+	curl -X GET http://localhost:8080/1.0/identifiers/did:dyne:id:nNer8S1CceT26TmBEA1u2kQSka6KTTRYMBqpwqhapQE
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
 	curl -X GET http://localhost:8080/1.0/identifiers/did:v1:test:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR
@@ -72,7 +73,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:everscale:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15
 	curl -X GET http://localhost:8080/1.0/identifiers/did:cheqd:mainnet:zF7rhDBfUt9d1gJPjx7s1JXfUY7oVWkY
-        curl -X GET http://localhost:8080/1.0/identifiers/did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3
+    curl -X GET http://localhost:8080/1.0/identifiers/did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -136,6 +137,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-alastria-mvp2](https://github.com/alastria/uni-resolver-driver-did-alastria) | 1.0.0 | [MVP2](https://github.com/alastria/alastria-identity/wiki) | [alastria/universal-resolver](https://hub.docker.com/r/alastria/uni-resolver-driver-did-alastria) | AlastriaID MVP2 |
 | [did-cheqd](https://github.com/cheqd/did-resolver) | 1.1.0 | [1.0](https://github.com/cheqd/node-docs/blob/main/architecture/adr-list/adr-002-cheqd-did-method.md) | [ghcr.io/cheqd/did-resolver](https://github.com/cheqd/did-resolver/pkgs/container/did-resolver) | Cheqd identity ledger |
 | [did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/) | 1.0.0 | [1.0](https://docs.commercio.network/modules/did/) | [ghcr.io/commercionetwork/uni-resolver-driver-did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/pkgs/container/uni-resolver-driver-did-com) | Commercio public ledger |
+| [did-dyne](https://github.com/dyne/W3C-DID) | 0.1 | [1.0](https://dyne.github.io/W3C-DID/#/) | [dyne/w3c-did-driver](https://hub.docker.com/r/dyne/w3c-did-driver/) | Dyne.org Decentralized Identifiers |
 
 ## More Information
 
