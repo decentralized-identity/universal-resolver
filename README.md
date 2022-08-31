@@ -63,7 +63,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:meta:0000000000000000000000000000000000000000000000000000000000005e65
 	curl -X GET http://localhost:8080/1.0/identifiers/did:tz:tz1YwA1FwpgLtc1G8DKbbZ6e6PTb1dQMRn5x
 	curl -X GET http://localhost:8080/1.0/identifiers/did:pkh:tz:tz2BFTyPeYRzxd5aiBchbXN3WCZhx7BqbMBq
-	curl -X GET http://localhost:8080/1.0/identifiers/did:orb:hl:uEiDI6sZJnp44sC_BG2XekWA4TN2m0Wtwv8AI71UER3vCHw:uoQ-BeEJpcGZzOi8vYmFma3JlaWdpNWxkZXRodTZoY3ljN3FpM214cGpjeWJ5anRvMm51bGxvYzc0YWNocGt1Y2VvNjZjZDQ:EiClaNSwhKSP6tQe36bYc5w41oRpCi1xv89MkUnNBm8agw
+	curl -X GET http://localhost:8080/1.0/identifiers/did:orb:hl:uEiBuxTFn4L_Hn8KsOWo8e9kqWP38MThBaToB_5yV3c5QTg:uoQ-BeEJpcGZzOi8vYmFma3JlaWRveXV5d3B5Zjd5NnA0Zmxiem5pNmh4d2prbGQ2N3ltanlpZnV0dWFwN3RzazUzdHNxank:EiD_igS1OSEftg5BGfisJGOS1rgcx5AkQhX0h1B4dHTUYA
 	curl -X GET http://localhost:8080/1.0/identifiers/did:oyd:zQmaBZTghndXTgxNwfbdpVLWdFf6faYE4oeuN2zzXdQt1kh
 	curl -X GET http://localhost:8080/1.0/identifiers/did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dock:5EAp6DB2pkKuAfbhQiqAXFY4XPZkJrvtWKad4ChDmWwDrC8n
@@ -126,7 +126,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-meta](https://github.com/METADIUM/meta-DID/blob/master/doc/DID-method-metadium.md) | 1.0 | 1.0 | [URL](https://resolver.metadium.com/1.0/identifiers/) | Metadium Decentralized Identifiers
 | [did-tz](https://github.com/spruceid/ssi/tree/main/did-tezos/) | 0.1.0 | [0.1](https://did-tezos.spruceid.com/) | [ghcr.io/spruceid/didkit-http](https://github.com/orgs/spruceid/packages/container/package/didkit-http) | Tezos DID method
 | [did-pkh](https://github.com/spruceid/ssi/tree/main/did-pkh/) | 0.0.1 | [0.1](https://github.com/spruceid/ssi/blob/main/did-pkh/did-pkh-method-draft.md) | [ghcr.io/spruceid/didkit-http](https://github.com/orgs/spruceid/packages/container/package/didkit-http) | Public Key Hash DID method
-| [did-orb](https://github.com/trustbloc/orb/releases/tag/v0.1.3) | 0.1.3 | [0.2](https://trustbloc.github.io/did-method-orb/) | [trustbloc/orb-did-driver](https://github.com/orgs/trustbloc-cicd/packages/container/package/orb-did-driver) |
+| [did-orb](https://github.com/trustbloc/orb/releases/tag/v1.0.0-rc3) | v1.0.0-rc3 | [0.2](https://trustbloc.github.io/did-method-orb/) | [trustbloc/orb-did-driver](https://github.com/trustbloc/orb/pkgs/container/orb-did-driver/39284011?tag=v1.0.0-rc3) | Orb DID method
 | [did-oyd](https://github.com/OwnYourData/oydid) | 0.4.5 | [0.4](https://ownyourdata.github.io/oydid/) | [oydeu/oydid-resolver](https://hub.docker.com/r/oydeu/oydid-resolver) | self-sustained environment for managing DIDs |
 | [did-moncon](https://github.com/LedgerProject/moncon) | 0.4 | [0.3](https://github.com/LedgerProject/moncon) | [camicasii/didresolver-g](https://hub.docker.com/r/camicasii/didresolver-g) |
 | [did-dock](https://github.com/docknetwork/dock-did-driver) | 1.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/docknetwork/dock-did-driver/blob/master/Dock%20DID%20method%20specification.md) | [docknetwork/dock-did-driver](https://hub.docker.com/r/docknetwork/dock-did-driver) |
