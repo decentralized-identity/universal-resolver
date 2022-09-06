@@ -19,6 +19,7 @@ You can deploy the Universal Resolver on your local machine by cloning this Gith
 
 You should then be able to resolve identifiers locally using simple `curl` requests as follows:
 
+  curl -X GET http://localhost:8080/1.0/identifiers/did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpGZk1iek9qTW1RNGVmVDZrdndUSUpqZWxUcWpsMHhqRUlXUTJxb2JzUk1NIiwia3R5IjoiT0tQIiwiY3J2IjoiRWQyNTUxOSIsImFsZyI6IkVkRFNBIiwieCI6IkFOUmpIX3p4Y0tCeHNqUlBVdHpSYnA3RlNWTEtKWFE5QVBYOU1QMWo3azQifQ
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dyne:id:nNer8S1CceT26TmBEA1u2kQSka6KTTRYMBqpwqhapQE
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
