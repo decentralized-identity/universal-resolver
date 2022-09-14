@@ -15,13 +15,11 @@ import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
-import uniresolver.util.HttpBindingUtil;
+import uniresolver.util.HttpBindingClientUtil;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ClientUniResolver implements UniResolver {
@@ -99,8 +97,8 @@ public class ClientUniResolver implements UniResolver {
 			ContentType httpContentType = ContentType.get(httpResponse.getEntity());
 			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
 
-			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + httpStatusCode + " " + httpStatusMessage);
-			if (log.isDebugEnabled()) log.debug("Response content type from " + uriString + ": " + httpContentType + " / " + httpCharset);
+			if (log.isDebugEnabled()) log.debug("Response HTTP status from " + uriString + ": " + httpStatusCode + " " + httpStatusMessage);
+			if (log.isDebugEnabled()) log.debug("Response HTTP content type from " + uriString + ": " + httpContentType + " / " + httpCharset);
 
 			// read result
 
@@ -108,10 +106,10 @@ public class ClientUniResolver implements UniResolver {
 			String httpBodyString = new String(httpBodyBytes, httpCharset);
 			EntityUtils.consume(httpEntity);
 
-			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBodyString);
+			if (log.isDebugEnabled()) log.debug("Response HTTP body from " + uriString + ": " + httpBodyString);
 
-			if ((httpContentType != null && HttpBindingUtil.isResolveResultContentType(httpContentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
-				resolveRepresentationResult = HttpBindingUtil.fromHttpBodyResolveRepresentationResult(httpBodyString, httpContentType);
+			if ((httpContentType != null && ResolveResult.isResolveResultMediaType(httpContentType)) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString)) {
+				resolveRepresentationResult = HttpBindingClientUtil.fromHttpBodyResolveRepresentationResult(httpBodyString, httpContentType);
 			}
 
 			if (httpStatusCode == 404 && resolveRepresentationResult == null) {
@@ -132,7 +130,7 @@ public class ClientUniResolver implements UniResolver {
 			}
 
 			if (resolveRepresentationResult == null) {
-				resolveRepresentationResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
+				resolveRepresentationResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
 			}
 		} catch (ResolutionException ex) {
 

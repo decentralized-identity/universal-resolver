@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveRepresentationResult;
-import uniresolver.result.ResolveResult;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -18,13 +17,18 @@ import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class HttpBindingUtil {
+public class HttpBindingClientUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(HttpBindingUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpBindingClientUtil.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
+    /*
+     * HTTP body
+     */
+
     public static ResolveRepresentationResult fromHttpBodyResolveRepresentationResult(String httpBody, ContentType httpContentType) throws IOException {
+
         if (log.isDebugEnabled()) log.debug("Deserializing resolve representation result from HTTP body.");
 
         ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
@@ -52,12 +56,12 @@ public class HttpBindingUtil {
         if (resolveRepresentationResult.getContentType() == null) {
             String contentType = null;
             if (httpContentType != null) {
-                contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
-                if (log.isDebugEnabled()) log.debug("No content type in resolution result. Assuming HTTP header is content type " + httpContentType + ", which corresponds to DID document representation media type " + contentType);
+                contentType = contentTypeForHttpContentTypeAndContent(httpContentType.getMimeType(), didDocumentStream);
+                if (log.isDebugEnabled()) log.debug("No contentType metadata property in resolution result. Based on HTTP Content-Type " + httpContentType + " and content, determined contentType: " + contentType);
             }
             if (contentType == null) {
                 contentType = Representations.DEFAULT_MEDIA_TYPE;
-                if (log.isDebugEnabled()) log.debug("No (valid) content type in resolution result or HTTP header. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
+                if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
             }
             resolveRepresentationResult.setContentType(contentType);
         }
@@ -94,12 +98,12 @@ public class HttpBindingUtil {
         if (dereferenceResult.getContentType() == null) {
             String contentType = null;
             if (httpContentType != null) {
-                contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
-                if (log.isDebugEnabled()) log.debug("No content type in dereference result. Assuming HTTP header is content type " + httpContentType + ", which corresponds to DID document representation media type " + contentType);
+                contentType = contentTypeForHttpContentTypeAndContent(httpContentType.getMimeType(), contentStream);
+                if (log.isDebugEnabled()) log.debug("No contentType metadata property in dereference result. Based on HTTP Content-Type " + httpContentType + " and content, determined contentType: " + contentType);
             }
             if (contentType == null) {
                 contentType = Representations.DEFAULT_MEDIA_TYPE;
-                if (log.isDebugEnabled()) log.debug("No (valid) content type in dereference result or HTTP header. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
+                if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
             }
             dereferenceResult.setContentType(contentType);
         }
@@ -111,48 +115,55 @@ public class HttpBindingUtil {
     public static ResolveRepresentationResult fromHttpBodyDidDocument(byte[] httpBodyBytes, ContentType httpContentType) {
         if (log.isDebugEnabled()) log.debug("Deserializing DID document from HTTP body.");
 
+        byte[] didDocumentStream = httpBodyBytes;
+
         ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
 
         String contentType = null;
         if (httpContentType != null) {
-            contentType = representationMediaTypeForMediaType(httpContentType.getMimeType());
-            if (log.isDebugEnabled()) log.debug("No content type. Assuming HTTP header is content type " + httpContentType + ", which corresponds to DID document representation media type " + contentType);
+            contentType = contentTypeForHttpContentTypeAndContent(httpContentType.getMimeType(), didDocumentStream);
+            if (log.isDebugEnabled()) log.debug("No contentType metadata property. Based on HTTP Content-Type " + httpContentType + " and content, determined contentType: " + contentType);
         }
         if (contentType == null) {
             contentType = Representations.DEFAULT_MEDIA_TYPE;
-            if (log.isDebugEnabled()) log.debug("No (valid) content type in HTTP header. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
+            if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
         }
         resolveRepresentationResult.setContentType(contentType);
 
-        resolveRepresentationResult.setDidDocumentStream(httpBodyBytes);
+        resolveRepresentationResult.setDidDocumentStream(didDocumentStream);
         return resolveRepresentationResult;
     }
 
-    public static String representationMediaTypeForMediaType(String mediaTypeString) {
-        if (mediaTypeString == null) throw new NullPointerException();
-        ContentType mediaType = mediaTypeString == null ? null : ContentType.parse(mediaTypeString);
-        String representationMediaType = null;
-        if ("application/ld+json".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_JSONLD;
-        if ("application/json".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_JSON;
-        if ("application/cbor".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_CBOR;
-        if (Representations.isRepresentationMediaType(mediaType.getMimeType())) representationMediaType = mediaType.getMimeType();
-        return representationMediaType;
-    }
-
-    public static boolean isResolveResultContentType(ContentType contentType) {
-        final ContentType RESOLVE_RESULT_CONTENT_TYPE = ContentType.parse(ResolveResult.MEDIA_TYPE);
-        boolean isResolveResultMimeTypeEquals = RESOLVE_RESULT_CONTENT_TYPE.getMimeType().equals(contentType.getMimeType());
-        boolean isResolveResultProfileEquals = RESOLVE_RESULT_CONTENT_TYPE.getParameter("profile").equals(contentType.getParameter("profile"));
-        return isResolveResultMimeTypeEquals && isResolveResultProfileEquals;
-     }
-
-    public static boolean isResolveResultContent(String contentString) throws IOException {
+    public static boolean isResolveResultHttpContent(String httpContentString) {
         try {
-            Map<String, Object> json = objectMapper.readValue(contentString, Map.class);
-            if (! json.containsKey("didDocument")) return false;
+            Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
+            return json.containsKey("didDocument");
         } catch (JsonProcessingException ex) {
             return false;
         }
-        return true;
+    }
+
+    public static boolean isJsonLdHttpContent(byte[] httpContentBytes) {
+        try {
+            Map<String, Object> json = objectMapper.readValue(httpContentBytes, Map.class);
+            return json.containsKey("@context");
+        } catch (IOException ex) {
+            return false;
+        }
+    }
+
+    /*
+     * HTTP headers
+     */
+
+    public static String contentTypeForHttpContentTypeAndContent(String mediaTypeString, byte[] contentBytes) {
+        if (mediaTypeString == null) throw new NullPointerException();
+        ContentType mediaType = ContentType.parse(mediaTypeString);
+        String representationMediaType = null;
+        if (Representations.isRepresentationMediaType(mediaType.getMimeType())) representationMediaType = mediaType.getMimeType();
+        else if ("application/ld+json".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_JSONLD;
+        else if ("application/json".equals(mediaType.getMimeType())) representationMediaType = isJsonLdHttpContent(contentBytes) ? Representations.MEDIA_TYPE_JSONLD : Representations.MEDIA_TYPE_JSON;
+        else if ("application/cbor".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_CBOR;
+        return representationMediaType;
     }
 }
