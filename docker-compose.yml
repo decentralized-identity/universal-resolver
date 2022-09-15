@@ -211,3 +211,7 @@ services:
     image: dyne/w3c-did-driver:latest
     ports:
       - "8133:8080"
+  did-jwk-driver:
+    image: transmute/restricted-resolver:latest
+    ports:
+      - "8134:8080"
