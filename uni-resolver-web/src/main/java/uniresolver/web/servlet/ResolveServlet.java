@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import uniresolver.ResolutionException;
 import uniresolver.driver.util.HttpBindingServerUtil;
+import uniresolver.driver.util.MediaTypeUtil;
 import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 import uniresolver.web.WebUniResolver;
@@ -74,7 +75,7 @@ public class ResolveServlet extends WebUniResolver {
 		List<MediaType> httpAcceptMediaTypes = MediaType.parseMediaTypes(httpAcceptHeader != null ? httpAcceptHeader : ResolveResult.MEDIA_TYPE);
 		MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
 
-		String accept = HttpBindingServerUtil.acceptForHttpAcceptMediaTypes(httpAcceptMediaTypes);
+		String accept = HttpBindingServerUtil.acceptForHttpAccepts(httpAcceptMediaTypes);
 		if (!resolutionOptions.containsKey("accept")) {
 			resolutionOptions.put("accept", accept);
 		}
@@ -103,7 +104,7 @@ public class ResolveServlet extends WebUniResolver {
 
 		for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
-			if (HttpBindingServerUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
+			if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
 
 				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + ResolveResult.MEDIA_TYPE);
 
@@ -117,7 +118,7 @@ public class ResolveServlet extends WebUniResolver {
 
 				// determine representation media type
 
-				if (HttpBindingServerUtil.isMediaTypeAcceptable(httpAcceptMediaType, resolveRepresentationResult.getContentType())) {
+				if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, resolveRepresentationResult.getContentType())) {
 					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + resolveRepresentationResult.getContentType());
 				} else {
 					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + httpAcceptMediaType);
