@@ -198,9 +198,9 @@ services:
     ports:
       - "8130:8080"
   cheqd-did-driver:
-    image: ghcr.io/cheqd/did-resolver:v1.1.0
+    image: ghcr.io/cheqd/did-resolver:1.4.2
     ports:
-      - "8131:1313"
+      - "8131:8080"
   driver-did-com:
     image: ghcr.io/commercionetwork/uni-resolver-driver-did-com:latest
     environment:
