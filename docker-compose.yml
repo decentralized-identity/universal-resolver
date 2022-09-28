@@ -216,3 +216,7 @@ services:
     image: transmute/restricted-resolver:latest
     ports:
       - "8134:8080"
+  did-kscirc-driver:
+    image: k4security/kschain-resolver:latest
+    ports: 
+      - "8135:8080"
