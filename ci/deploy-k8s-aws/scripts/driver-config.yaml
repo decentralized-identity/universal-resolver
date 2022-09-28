@@ -11,6 +11,8 @@ orb-did-driver:
       value: 0.0.0.0:8121
     - name: ORB_DRIVER_TLS_SYSTEMCERTPOOL
       value: "true"
+    - name: ORB_DRIVER_VERIFY_RESOLUTION_RESULT_TYPE
+      value: "all"
 driver-did-btcr:
   env:
     - name: uniresolver_driver_did_btcr_bitcoinConnection
