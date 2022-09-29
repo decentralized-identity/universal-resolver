@@ -19,6 +19,9 @@ You can deploy the Universal Resolver on your local machine by cloning this Gith
 
 You should then be able to resolve identifiers locally using simple `curl` requests as follows:
 
+
+	curl -X GET http://localhost:8080/1.0/identifiers/did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpGZk1iek9qTW1RNGVmVDZrdndUSUpqZWxUcWpsMHhqRUlXUTJxb2JzUk1NIiwia3R5IjoiT0tQIiwiY3J2IjoiRWQyNTUxOSIsImFsZyI6IkVkRFNBIiwieCI6IkFOUmpIX3p4Y0tCeHNqUlBVdHpSYnA3RlNWTEtKWFE5QVBYOU1QMWo3azQifQ
+	curl -X GET http://localhost:8080/1.0/identifiers/did:dyne:id:nNer8S1CceT26TmBEA1u2kQSka6KTTRYMBqpwqhapQE
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
 	curl -X GET http://localhost:8080/1.0/identifiers/did:v1:test:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR
@@ -62,7 +65,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:meta:0000000000000000000000000000000000000000000000000000000000005e65
 	curl -X GET http://localhost:8080/1.0/identifiers/did:tz:tz1YwA1FwpgLtc1G8DKbbZ6e6PTb1dQMRn5x
 	curl -X GET http://localhost:8080/1.0/identifiers/did:pkh:tz:tz2BFTyPeYRzxd5aiBchbXN3WCZhx7BqbMBq
-	curl -X GET http://localhost:8080/1.0/identifiers/did:orb:hl:uEiDI6sZJnp44sC_BG2XekWA4TN2m0Wtwv8AI71UER3vCHw:uoQ-BeEJpcGZzOi8vYmFma3JlaWdpNWxkZXRodTZoY3ljN3FpM214cGpjeWJ5anRvMm51bGxvYzc0YWNocGt1Y2VvNjZjZDQ:EiClaNSwhKSP6tQe36bYc5w41oRpCi1xv89MkUnNBm8agw
+	curl -X GET http://localhost:8080/1.0/identifiers/did:orb:hl:uEiBuxTFn4L_Hn8KsOWo8e9kqWP38MThBaToB_5yV3c5QTg:uoQ-BeEJpcGZzOi8vYmFma3JlaWRveXV5d3B5Zjd5NnA0Zmxiem5pNmh4d2prbGQ2N3ltanlpZnV0dWFwN3RzazUzdHNxank:EiD_igS1OSEftg5BGfisJGOS1rgcx5AkQhX0h1B4dHTUYA
 	curl -X GET http://localhost:8080/1.0/identifiers/did:oyd:zQmaBZTghndXTgxNwfbdpVLWdFf6faYE4oeuN2zzXdQt1kh
 	curl -X GET http://localhost:8080/1.0/identifiers/did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dock:5EAp6DB2pkKuAfbhQiqAXFY4XPZkJrvtWKad4ChDmWwDrC8n
@@ -72,7 +75,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:everscale:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15
 	curl -X GET http://localhost:8080/1.0/identifiers/did:cheqd:mainnet:zF7rhDBfUt9d1gJPjx7s1JXfUY7oVWkY
-        curl -X GET http://localhost:8080/1.0/identifiers/did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3
+	curl -X GET http://localhost:8080/1.0/identifiers/did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3
+
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -125,7 +129,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-meta](https://github.com/METADIUM/meta-DID/blob/master/doc/DID-method-metadium.md) | 1.0 | 1.0 | [URL](https://resolver.metadium.com/1.0/identifiers/) | Metadium Decentralized Identifiers
 | [did-tz](https://github.com/spruceid/ssi/tree/main/did-tezos/) | 0.1.0 | [0.1](https://did-tezos.spruceid.com/) | [ghcr.io/spruceid/didkit-http](https://github.com/orgs/spruceid/packages/container/package/didkit-http) | Tezos DID method
 | [did-pkh](https://github.com/spruceid/ssi/tree/main/did-pkh/) | 0.0.1 | [0.1](https://github.com/spruceid/ssi/blob/main/did-pkh/did-pkh-method-draft.md) | [ghcr.io/spruceid/didkit-http](https://github.com/orgs/spruceid/packages/container/package/didkit-http) | Public Key Hash DID method
-| [did-orb](https://github.com/trustbloc/orb/releases/tag/v0.1.3) | 0.1.3 | [0.2](https://trustbloc.github.io/did-method-orb/) | [trustbloc/orb-did-driver](https://github.com/orgs/trustbloc-cicd/packages/container/package/orb-did-driver) |
+| [did-orb](https://github.com/trustbloc/orb/releases/tag/v1.0.0-rc3) | v1.0.0-rc3 | [0.2](https://trustbloc.github.io/did-method-orb/) | [trustbloc/orb-did-driver](https://github.com/trustbloc/orb/pkgs/container/orb-did-driver/39284011?tag=v1.0.0-rc3) | Orb DID method
 | [did-oyd](https://github.com/OwnYourData/oydid) | 0.4.5 | [0.4](https://ownyourdata.github.io/oydid/) | [oydeu/oydid-resolver](https://hub.docker.com/r/oydeu/oydid-resolver) | self-sustained environment for managing DIDs |
 | [did-moncon](https://github.com/LedgerProject/moncon) | 0.4 | [0.3](https://github.com/LedgerProject/moncon) | [camicasii/didresolver-g](https://hub.docker.com/r/camicasii/didresolver-g) |
 | [did-dock](https://github.com/docknetwork/dock-did-driver) | 1.0.0 | [1.0 WD](https://w3c.github.io/did-core/) | [0.1](https://github.com/docknetwork/dock-did-driver/blob/master/Dock%20DID%20method%20specification.md) | [docknetwork/dock-did-driver](https://hub.docker.com/r/docknetwork/dock-did-driver) |
@@ -134,8 +138,10 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-indy](https://github.com/IDunion/indy-did-resolver) | 0.0.1 | [0.1](https://hyperledger.github.io/indy-did-method/) | [ghcr.io/idunion/indy-did-resolver/indy-did-driver](https://github.com/IDunion/indy-did-resolver/pkgs/container/indy-did-resolver%2Findy-did-driver) | Hyperledger Indy |
 | [did-everscale](https://git.defispace.com/ssi-4/everscale-resolver-driver) | 0.1 | [0.1](https://git.defispace.com/ssi-4/everscale-did-registry/-/blob/master/docs/documentation.md) | [radianceteamssi/everscale-did-resolver-driver](https://hub.docker.com/r/radianceteamssi/everscale-did-resolver-driver) | Everscale Blockchain |
 | [did-alastria-mvp2](https://github.com/alastria/uni-resolver-driver-did-alastria) | 1.0.0 | [MVP2](https://github.com/alastria/alastria-identity/wiki) | [alastria/universal-resolver](https://hub.docker.com/r/alastria/uni-resolver-driver-did-alastria) | AlastriaID MVP2 |
-| [did-cheqd](https://github.com/cheqd/did-resolver) | 1.1.0 | [1.0](https://github.com/cheqd/node-docs/blob/main/architecture/adr-list/adr-002-cheqd-did-method.md) | [ghcr.io/cheqd/did-resolver](https://github.com/cheqd/did-resolver/pkgs/container/did-resolver) | Cheqd identity ledger |
+| [did-cheqd](https://github.com/cheqd/did-resolver) | 1.4.2 | [1.0](https://github.com/cheqd/node-docs/blob/main/architecture/adr-list/adr-002-cheqd-did-method.md) | [ghcr.io/cheqd/did-resolver](https://github.com/cheqd/did-resolver/pkgs/container/did-resolver) | Cheqd identity ledger |
 | [did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/) | 1.0.0 | [1.0](https://docs.commercio.network/modules/did/) | [ghcr.io/commercionetwork/uni-resolver-driver-did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/pkgs/container/uni-resolver-driver-did-com) | Commercio public ledger |
+| [did-dyne](https://github.com/dyne/W3C-DID) | 0.1 | [1.0](https://dyne.github.io/W3C-DID/#/) | [dyne/w3c-did-driver](https://hub.docker.com/r/dyne/w3c-did-driver/) | Dyne.org Decentralized Identifiers |
+| [did-jwk](https://github.com/transmute-industries/restricted-resolver) | 0.1 | [1.0](https://github.com/quartzjer/did-jwk/blob/main/spec.md) | [transmute/restricted-resolver](https://hub.docker.com/repository/docker/transmute/restricted-resolver) | DID Json Web Key |
 
 ## More Information
 

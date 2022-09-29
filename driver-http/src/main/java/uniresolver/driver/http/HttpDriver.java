@@ -16,7 +16,7 @@ import uniresolver.ResolutionException;
 import uniresolver.driver.Driver;
 import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
-import uniresolver.util.HttpBindingUtil;
+import uniresolver.util.HttpBindingClientUtil;
 
 import java.io.IOException;
 import java.net.URI;
@@ -120,8 +120,8 @@ public class HttpDriver implements Driver {
 			ContentType httpContentType = ContentType.get(httpResponse.getEntity());
 			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
 
-			if (log.isDebugEnabled()) log.debug("Driver response status from " + uriString + ": " + httpStatusCode + " " + httpStatusMessage);
-			if (log.isDebugEnabled()) log.debug("Driver response content type from " + uriString + ": " + httpContentType + " / " + httpCharset);
+			if (log.isDebugEnabled()) log.debug("Driver response HTTP status from " + uriString + ": " + httpStatusCode + " " + httpStatusMessage);
+			if (log.isDebugEnabled()) log.debug("Driver response HTTP content type from " + uriString + ": " + httpContentType + " / " + httpCharset);
 
 			// read result
 
@@ -129,10 +129,10 @@ public class HttpDriver implements Driver {
 			String httpBodyString = new String(httpBodyBytes, httpCharset);
 			EntityUtils.consume(httpEntity);
 
-			if (log.isDebugEnabled()) log.debug("Driver response body from " + uriString + ": " + httpBodyString);
+			if (log.isDebugEnabled()) log.debug("Driver response HTTP body from " + uriString + ": " + httpBodyString);
 
-			if ((httpContentType != null && HttpBindingUtil.isResolveResultContentType(httpContentType)) || HttpBindingUtil.isResolveResultContent(httpBodyString)) {
-				resolveRepresentationResult = HttpBindingUtil.fromHttpBodyResolveRepresentationResult(httpBodyString, httpContentType);
+			if ((httpContentType != null && ResolveResult.isResolveResultMediaType(httpContentType)) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString)) {
+				resolveRepresentationResult = HttpBindingClientUtil.fromHttpBodyResolveRepresentationResult(httpBodyString, httpContentType);
 			}
 
 			if (httpStatusCode == 404 && resolveRepresentationResult == null) {
@@ -153,7 +153,7 @@ public class HttpDriver implements Driver {
 			}
 
 			if (resolveRepresentationResult == null) {
-				resolveRepresentationResult = HttpBindingUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
+				resolveRepresentationResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
 			}
 		} catch (ResolutionException ex) {
 

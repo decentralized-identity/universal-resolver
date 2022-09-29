@@ -39,17 +39,17 @@ For more information about this interface, see the [DID Resolution](https://w3c-
 
 Create a PR that edits the following files in the Universal Resolver root directory and uni-resolver-web's [`application.yml`](https://github.com/decentralized-identity/universal-resolver/blob/main/uni-resolver-web/src/main/resources/application.yml):
 
-- `.env`
-  * list environment variables (if any) with default values
-- [`application.yml`](https://github.com/decentralized-identity/universal-resolver/blob/main/uni-resolver-web/src/main/resources/application.yml) (add your driver)
-  * pattern - regular expression for matching your DID method
-  * url - endpoint of your Docker image
-  * testIdentifiers - list of example DIDs that your driver can resolve
-- `docker-compose.yml` (add your driver)
+- [`docker-compose.yml`](https://github.com/decentralized-identity/universal-resolver/blob/main/docker-compose.yml) (add your driver, if it has a Docker image)
   * image - your Docker image name
   * ports - incremented port number exposed by your Docker image
   * environment - optional environment variables supported by your Docker image
-- `README.md` (insert a line to the driver table)
+- [`application.yml`](https://github.com/decentralized-identity/universal-resolver/blob/main/uni-resolver-web/src/main/resources/application.yml) (add  your driver)
+  * pattern - regular expression for matching your DID method
+  * url - endpoint of your Docker image or external resolver endpoint
+  * testIdentifiers - list of example DIDs that your driver can resolve
+- [`.env`](https://github.com/decentralized-identity/universal-resolver/blob/main/.env)
+  * list environment variables (if any) with default values
+- [`README.md`](https://github.com/decentralized-identity/universal-resolver/blob/main/README.md) (insert a line to the driver table)
   * driver name (e.g. `did-example`), with link to driver source code
   * driver version (e.g. `0.1`), should match Docker image version
   * DID method spec version (e.g. `0.1`), with link to DID method spec (or mark "missing")

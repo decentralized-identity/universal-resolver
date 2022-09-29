@@ -26,9 +26,18 @@ uniresolver:
         - did:sov:WRfXPg8dantKVubE3HX8pw
         - did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx
         - did:sov:staging:6cgbu8ZPoWTnR5Rv5JcSMB
-        - did:sov:idunion:ScTdba9TrnZDAaNnuvBeB2
+        - did:sov:idunion:2GMSLg2A8JXcdYVsPC4Jui
         - did:sov:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
         - did:sov:indicio:test:5DiMymoHmgfCB2H2WbM7ZL
+    - pattern: "^(did:indy:.+)$"
+      url: http://indy-did-driver:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+        - did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx
+        - did:indy:sovrin:staging:6cgbu8ZPoWTnR5Rv5JcSMB
+        - did:indy:idunion:2GMSLg2A8JXcdYVsPC4Jui
+        - did:indy:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
+        - did:indy:indicio:test:5DiMymoHmgfCB2H2WbM7ZL
     - pattern: "^(did:v1:nym:.+)$"
       url: http://uni-resolver-did-v1-driver:8080/
       propertiesEndpoint: 'true'
@@ -187,9 +196,9 @@ uniresolver:
         - did:key:z4MXj1wBzi9jUstyPMS4jQqB6KdJaiatPkAtVtGc6bQEQEEsKTic4G7Rou3iBf9vPmT5dbkm9qsZsuVNjq8HCuW1w24nhBFGkRE4cd2Uf2tfrB3N7h4mnyPp1BF3ZttHTYv3DLUPi1zMdkULiow3M1GfXkoC6DoxDUm1jmN6GBj22SjVsr6dxezRVQc7aj9TxE7JLbMH1wh5X3kA58H3DFW8rnYMakFGbca5CB2Jf6CnGQZmL7o5uJAdTwXfy2iiiyPxXEGerMhHwhjTA1mKYobyk2CpeEcmvynADfNZ5MBvcCS7m3XkFCMNUYBS9NQ3fze6vMSUPsNa6GVYmKx2x6JrdEjCk3qRMMmyjnjCMfR4pXbRMZa3i
         - did:pkh:tz:tz2BFTyPeYRzxd5aiBchbXN3WCZhx7BqbMBq
     - pattern: "^(did:orb:.+)$"
-      url: http://orb-did-driver:8121/resolveDID?did=$1
+      url: http://orb-did-driver:8121/1.0/identifiers/$1
       testIdentifiers:
-        - did:orb:hl:uEiDI6sZJnp44sC_BG2XekWA4TN2m0Wtwv8AI71UER3vCHw:uoQ-BeEJpcGZzOi8vYmFma3JlaWdpNWxkZXRodTZoY3ljN3FpM214cGpjeWJ5anRvMm51bGxvYzc0YWNocGt1Y2VvNjZjZDQ:EiClaNSwhKSP6tQe36bYc5w41oRpCi1xv89MkUnNBm8agw
+        - did:orb:hl:uEiBuxTFn4L_Hn8KsOWo8e9kqWP38MThBaToB_5yV3c5QTg:uoQ-BeEJpcGZzOi8vYmFma3JlaWRveXV5d3B5Zjd5NnA0Zmxiem5pNmh4d2prbGQ2N3ltanlpZnV0dWFwN3RzazUzdHNxank:EiD_igS1OSEftg5BGfisJGOS1rgcx5AkQhX0h1B4dHTUYA
     - pattern: "^(did:oyd:.+)$"
       url: https://oydid-resolver.data-container.net/1.0/identifiers/$1
       testIdentifiers:
@@ -214,15 +223,6 @@ uniresolver:
       propertiesEndpoint: 'true'
       testIdentifiers:
         - did:dns:danubetech.com
-    - pattern: "^(did:indy:.+)$"
-      url: http://indy-did-driver:8080/1.0/identifiers/$1
-      testIdentifiers:
-        - did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
-        - did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx
-        - did:indy:sovrin:staging:6cgbu8ZPoWTnR5Rv5JcSMB
-        - did:indy:idunion:ScTdba9TrnZDAaNnuvBeB2
-        - did:indy:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
-        - did:indy:indicio:test:5DiMymoHmgfCB2H2WbM7ZL
     - pattern: "^(did:everscale:.+)$"
       url: http://everscale-did-driver:8080/
       testIdentifiers:
@@ -245,3 +245,17 @@ uniresolver:
       testIdentifiers:
         - did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3
         - did:com:17rhmdzlv0zjuahw4mvpfhf3u5tuwyjhr4m06dr
+    - pattern: "^(did:dyne:.+)$"
+      url: http://did-driver-dyne:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:dyne:controller:DwPLgTPBjVwDqoLQV8gbuCiTVEHrHMPmufn8T2DZwjRQ
+        - did:dyne:fabchain:DwPLgTPBjVwDqoLQV8gbuCiTVEHrHMPmufn8T2DZwjRQ
+        - did:dyne:id:nNer8S1CceT26TmBEA1u2kQSka6KTTRYMBqpwqhapQE
+    - pattern: "^(did:jwk:.+)$"
+      url: http://did-jwk-driver:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpGZk1iek9qTW1RNGVmVDZrdndUSUpqZWxUcWpsMHhqRUlXUTJxb2JzUk1NIiwia3R5IjoiT0tQIiwiY3J2IjoiRWQyNTUxOSIsImFsZyI6IkVkRFNBIiwieCI6IkFOUmpIX3p4Y0tCeHNqUlBVdHpSYnA3RlNWTEtKWFE5QVBYOU1QMWo3azQifQ
+        - did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1Njpnc0w0VTRxX1J6VFhRckpwQUNnZGkwb1lCdUV1QjNZNWZFanhDd1NPUFlBIiwia3R5IjoiRUMiLCJjcnYiOiJQLTM4NCIsImFsZyI6IkVTMzg0IiwieCI6ImEtRWV5T2hlRUNWcDJqRkdVRTNqR0RCNlAzVV80S0lyZHRzTU9RQXFQN0NBMlVvV3NERG1nOWdJUVhiOEthd0ciLCJ5Ijoib3cxWDJ6VFVRaG12elY4NnpHdGhKc0xLeDE2MmhmSmxmN1p0OTFYUnZBTzRScE4zR2RGaVl3Tmc0NXJWUmlUcSJ9
+    
+
+
