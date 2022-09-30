@@ -79,6 +79,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3
 	curl -X GET http://localhost:8080/1.0/identifiers/did:kscirc:k12NqvVM9BX6AaMjPK1hUTUkKBWPBAUXAszTxdx7jDZPv4iqCZ1D
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iscc:miagwptv4j2z57ci
+	curl -X GET http://localhost:8080/1.0/identifiers/did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -147,6 +148,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-jwk](https://github.com/transmute-industries/restricted-resolver) | 0.1            | [1.0](https://github.com/quartzjer/did-jwk/blob/main/spec.md)                                                  | [transmute/restricted-resolver](https://hub.docker.com/repository/docker/transmute/restricted-resolver) | DID Json Web Key |
 | [did-kscirc](https://github.com/sujiny-tech/kschain-resolver) | 0.1            | [1.0](https://tangy-gallium-b9b.notion.site/DID-Method-Specification-KSChain-7a77664f1eae47769692f4ff2d029fe0) | [k4security/kschain-resolver](https://hub.docker.com/r/k4security/kschain-resolver) | KSChain blockchain  |
 | [did-iscc](https://github.com/iscc/iscc-did-driver) | 0.1.0          | [0.1](https://ieps.iscc.codes/iep-0015/)                                                                       | [ghcr.io/iscc/iscc-did-driver](https://github.com/iscc/iscc-did-driver/pkgs/container/iscc-did-driver) | International Standard Content Code - [ISCC](https://iscc.codes) | 
+| [did-ev](https://github.com/KayTrust/driver-did-ev) | 1.0.0          | [0.1](https://github.com/KayTrust/did-method-ev)                                                               | [ghcr.io/kaytrust/driver-did-ev](http://ghcr.io/kaytrust/driver-did-ev) | KayTrust default method based on Ethereum smart contracts |
 
 ## More Information
 

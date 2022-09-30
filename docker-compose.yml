@@ -220,7 +220,17 @@ services:
     image: k4security/kschain-resolver:latest
     ports:
       - "8135:8080"
+<<<<<<< HEAD
   driver-did-iscc:
     image: ghcr.io/iscc/iscc-did-driver:main
     ports:
       - "8136:8080"
+=======
+  driver-did-ev:
+    image: ghcr.io/kaytrust/driver-did-ev:latest
+    environment:
+      NODE_HOST: ${uniresolver_driver_did_ev_node_url}
+      ADDRESS_IM: ${uniresolver_driver_did_ev_address_im}
+    ports:
+      - "8137:8080"
+>>>>>>> c94121f (Add did:ev driver)
