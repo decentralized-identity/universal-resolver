@@ -143,7 +143,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/) | 1.0.0 | [1.0](https://docs.commercio.network/modules/did/) | [ghcr.io/commercionetwork/uni-resolver-driver-did-com](https://github.com/commercionetwork/uni-resolver-driver-did-com/pkgs/container/uni-resolver-driver-did-com) | Commercio public ledger |
 | [did-dyne](https://github.com/dyne/W3C-DID) | 0.1 | [1.0](https://dyne.github.io/W3C-DID/#/) | [dyne/w3c-did-driver](https://hub.docker.com/r/dyne/w3c-did-driver/) | Dyne.org Decentralized Identifiers |
 | [did-jwk](https://github.com/transmute-industries/restricted-resolver) | 0.1 | [1.0](https://github.com/quartzjer/did-jwk/blob/main/spec.md) | [transmute/restricted-resolver](https://hub.docker.com/repository/docker/transmute/restricted-resolver) | DID Json Web Key |
-| [did-kscirc](https://github.com/sujiny-tech/kschain-resolver) | 0.1 | [1.0](https://tangy-gallium-b9b.notion.site/DID-Method-Specification-KSChain-7a77664f1eae47769692f4ff2d029fe0) | [k4security/kschain-resolver](https://hub.docker.com/r/k4security/kschain-resolver) | KSChain blockchain |
+| [did-kscirc](https://github.com/sujiny-tech/kschain-resolver) | 0.1 | [1.0](https://tangy-gallium-b9b.notion.site/DID-Method-Specification-KSChain-7a77664f1eae47769692f4ff2d029fe0) | [k4security/kschain-resolver](https://hub.docker.com/r/k4security/kschain-resolver) | KSChain blockchain  |
 
 
 ## More Information
