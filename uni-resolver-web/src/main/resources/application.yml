@@ -261,5 +261,7 @@ uniresolver:
       testIdentifiers:
         - did:kscirc:k12NqvVM9BX6AaMjPK1hUTUkKBWPBAUXAszTxdx7jDZPv4iqCZ1D
         - did:kscirc:k17qQYbApdfTdxsrS77k3sbFmJCWfJf7QrvZSfMaAmq6MWpbeGs
-
-
+    - pattern: "^(did:iscc:.+)$"
+      url: http://driver-did-iscc:8080/
+      testIdentifiers:
+        - did:iscc:miagwptv4j2z57ci

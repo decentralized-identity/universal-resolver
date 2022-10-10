@@ -218,5 +218,9 @@ services:
       - "8134:8080"
   did-kscirc-driver:
     image: k4security/kschain-resolver:latest
-    ports: 
+    ports:
       - "8135:8080"
+  driver-did-iscc:
+    image: ghcr.io/iscc/iscc-did-driver:main
+    ports:
+      - "8136:8080"
