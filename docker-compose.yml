@@ -224,3 +224,7 @@ services:
     image: ghcr.io/iscc/iscc-did-driver:main
     ports:
       - "8136:8080"
+  driver-did-iid:
+    image: zoeyian/driver-did-iid:latest
+    ports:
+      - "8137:8080"
