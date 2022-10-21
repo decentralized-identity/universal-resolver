@@ -23,3 +23,13 @@ driver-did-btcr:
       value:
     - name: uniresolver_driver_did_btcr_rpcCertTestnet
       value: RPC_CERT_TESTNET
+cheqd-did-driver:
+  env:
+    - name: MAINNET_ENDPOINT
+      value: "grpc.cheqd.net:443,true,5s"
+    - name: TESTNET_ENDPOINT
+      value: "grpc.cheqd.network:443,true,5s"
+    - name: LOG_LEVEL
+      value: "warn"
+    - name: RESOLVER_LISTNER
+      value: "0.0.0.0:8080"
