@@ -199,9 +199,14 @@ services:
     ports:
       - "8130:8080"
   cheqd-did-driver:
-    image: ghcr.io/cheqd/did-resolver:1.5.1
+    image: ghcr.io/cheqd/did-resolver:1.5.3
     ports:
       - "8131:8080"
+    environment:
+      MAINNET_ENDPOINT: "grpc.cheqd.net:443,true,5s"
+      TESTNET_ENDPOINT: "grpc.cheqd.network:443,true,5s"
+      LOG_LEVEL: "warn"
+      RESOLVER_LISTNER: "0.0.0.0:8080"
   driver-did-com:
     image: ghcr.io/commercionetwork/uni-resolver-driver-did-com:latest
     environment:
