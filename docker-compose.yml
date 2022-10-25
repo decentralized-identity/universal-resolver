@@ -229,3 +229,11 @@ services:
     image: ghcr.io/iscc/iscc-did-driver:main
     ports:
       - "8136:8080"
+  driver-did-ev:
+    image: ghcr.io/kaytrust/driver-did-ev:latest
+    environment:
+      NODE_HOST: ${uniresolver_driver_did_ev_node_url}
+      ADDRESS_IM: ${uniresolver_driver_did_ev_address_im}
+      BASE_BLOCKS: ${uniresolver_driver_did_ev_base_blocks}
+    ports:
+      - "8137:8000"

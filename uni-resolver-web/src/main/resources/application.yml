@@ -265,3 +265,8 @@ uniresolver:
       url: http://driver-did-iscc:8080/
       testIdentifiers:
         - did:iscc:miagwptv4j2z57ci
+    - pattern: "^(did:ev:.+)$"
+      url: http://driver-did-ev:8000/1.0/identifiers/$1
+      testIdentifiers:
+        - did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9
+        - did:ev:bmM8MpeJAGF2ky7YUnwgJGKxyHdCL6DGAUmEW
