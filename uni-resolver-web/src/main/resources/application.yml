@@ -68,8 +68,8 @@ uniresolver:
         - did:ethr:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
         - did:ethr:0x1:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736
         - did:ethr:0x1:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
-        - did:ethr:rinkeby:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
-        - did:ethr:0x4:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+        - did:ethr:goerli:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+        - did:ethr:0x5:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
         - did:ethr:rsk:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
         - did:ethr:0x1e:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
         - did:ethr:ewc:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
@@ -236,7 +236,7 @@ uniresolver:
         - did:ala:quor:redT:3729a1872356dd5c5ac377c85d539fe63cb561d8
         - did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15
     - pattern: "^(did:cheqd:.+)$"
-      url: https://resolver.cheqd.net/1.0/identifiers/$1
+      url: http://cheqd-did-driver:8080/1.0/identifiers/$1
       testIdentifiers:
         - did:cheqd:mainnet:zF7rhDBfUt9d1gJPjx7s1JXfUY7oVWkY
         - did:cheqd:testnet:MTMxDQKMTMxDQKMT
@@ -265,6 +265,11 @@ uniresolver:
       url: http://driver-did-iscc:8080/
       testIdentifiers:
         - did:iscc:miagwptv4j2z57ci
+    - pattern: "^(did:ev:.+)$"
+      url: http://driver-did-ev:8000/1.0/identifiers/$1
+      testIdentifiers:
+        - did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9
+        - did:ev:bmM8MpeJAGF2ky7YUnwgJGKxyHdCL6DGAUmEW
     - pattern: "^(did:iid:.+)$"
       url: http://driver-did-iid:8080/1.0/identifiers/$1
       testIdentifiers:

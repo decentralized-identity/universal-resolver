@@ -30,7 +30,7 @@ services:
     ports:
       - "8082:8080"
   uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:2.4.0
+    image: uport/uni-resolver-driver-did-uport:3.0.0
     ports:
       - "8083:8081"
   driver-did-stack:
@@ -199,9 +199,14 @@ services:
     ports:
       - "8130:8080"
   cheqd-did-driver:
-    image: ghcr.io/cheqd/did-resolver:1.4.2
+    image: ghcr.io/cheqd/did-resolver:1.5.3
     ports:
       - "8131:8080"
+    environment:
+      MAINNET_ENDPOINT: "grpc.cheqd.net:443,true,5s"
+      TESTNET_ENDPOINT: "grpc.cheqd.network:443,true,5s"
+      LOG_LEVEL: "warn"
+      RESOLVER_LISTNER: "0.0.0.0:8080"
   driver-did-com:
     image: ghcr.io/commercionetwork/uni-resolver-driver-did-com:latest
     environment:
@@ -224,6 +229,14 @@ services:
     image: ghcr.io/iscc/iscc-did-driver:main
     ports:
       - "8136:8080"
+  driver-did-ev:
+    image: ghcr.io/kaytrust/driver-did-ev:latest
+    environment:
+      NODE_HOST: ${uniresolver_driver_did_ev_node_url}
+      ADDRESS_IM: ${uniresolver_driver_did_ev_address_im}
+      BASE_BLOCKS: ${uniresolver_driver_did_ev_base_blocks}
+    ports:
+      - "8137:8000"
   driver-did-iid:
     image: zoeyian/driver-did-iid:latest
     ports:
