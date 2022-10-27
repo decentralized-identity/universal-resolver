@@ -237,3 +237,7 @@ services:
       BASE_BLOCKS: ${uniresolver_driver_did_ev_base_blocks}
     ports:
       - "8137:8000"
+  driver-did-iid:
+    image: zoeyian/driver-did-iid:latest
+    ports:
+      - "8137:8080"

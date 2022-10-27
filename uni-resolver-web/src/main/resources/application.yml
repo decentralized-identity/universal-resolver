@@ -270,6 +270,10 @@ uniresolver:
       testIdentifiers:
         - did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9
         - did:ev:bmM8MpeJAGF2ky7YUnwgJGKxyHdCL6DGAUmEW
+    - pattern: "^(did:iid:.+)$"
+      url: http://driver-did-iid:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:iid:3QUs61mk7a9CdCpckriQbA5emw8pubj6RMtHXP6gD66YbcungS6w2sa
     - pattern: "^(did:evan:.+)$"
       url: http://evan-did-driver:8080/
       testIdentifiers:
