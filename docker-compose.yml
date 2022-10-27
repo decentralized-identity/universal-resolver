@@ -72,6 +72,10 @@ services:
       KILT_BLOCKCHAIN_NODE: ${uniresolver_driver_kilt_blockchain_node}
     ports:
       - "8094:8080"
+  evan-did-driver:
+    image: evannetwork/evan-did-driver:latest
+    ports:
+      - "8095:8080"
   uni-resolver-driver-did-factom:
     image: sphereon/uni-resolver-driver-did-factom:latest
     ports:
