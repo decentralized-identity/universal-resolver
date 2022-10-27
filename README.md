@@ -79,7 +79,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3
 	curl -X GET http://localhost:8080/1.0/identifiers/did:kscirc:k12NqvVM9BX6AaMjPK1hUTUkKBWPBAUXAszTxdx7jDZPv4iqCZ1D
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iscc:miagwptv4j2z57ci
-  curl -X GET http://localhost:8080/1.0/identifiers/did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9
+    curl -X GET http://localhost:8080/1.0/identifiers/did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iid:3QUs61mk7a9CdCpckriQbA5emw8pubj6RMtHXP6gD66YbcungS6w2sa
 
 
