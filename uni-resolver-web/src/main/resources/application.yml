@@ -1,0 +1,284 @@
+server:
+  servlet:
+    contextPath: /
+    mappings:
+      properties: "/1.0/properties"
+      resolve: "/1.0/identifiers"
+      methods: "/1.0/methods"
+      testIdentifiers: "/1.0/testIdentifiers"
+  port: '8080'
+spring:
+  profiles:
+    active: ${uniresolver_web_spring_profiles_active}
+uniresolver:
+  drivers:
+    - pattern: "^(did:btcr:.+)$"
+      url: http://driver-did-btcr:8080/
+      propertiesEndpoint: 'true'
+      testIdentifiers:
+        - did:btcr:xz35-jznz-q9yu-ply
+        - did:btcr:xkrn-xz7q-qsye-28p
+        - did:btcr:x705-jznz-q3nl-srs
+    - pattern: "^(did:sov:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$"
+      url: http://driver-did-sov:8080/
+      propertiesEndpoint: 'true'
+      testIdentifiers:
+        - did:sov:WRfXPg8dantKVubE3HX8pw
+        - did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx
+        - did:sov:staging:6cgbu8ZPoWTnR5Rv5JcSMB
+        - did:sov:idunion:2GMSLg2A8JXcdYVsPC4Jui
+        - did:sov:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
+        - did:sov:indicio:test:5DiMymoHmgfCB2H2WbM7ZL
+    - pattern: "^(did:indy:.+)$"
+      url: http://indy-did-driver:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+        - did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx
+        - did:indy:sovrin:staging:6cgbu8ZPoWTnR5Rv5JcSMB
+        - did:indy:idunion:2GMSLg2A8JXcdYVsPC4Jui
+        - did:indy:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
+        - did:indy:indicio:test:5DiMymoHmgfCB2H2WbM7ZL
+    - pattern: "^(did:v1:nym:.+)$"
+      url: http://uni-resolver-did-v1-driver:8080/
+      propertiesEndpoint: 'true'
+      testIdentifiers:
+        - did:v1:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR
+    - pattern: "^(did:v1:test:nym:.+)$"
+      url: http://uni-resolver-did-v1-driver:8080/
+      propertiesEndpoint: 'true'
+      testIdentifiers:
+        - did:v1:test:nym:z6MkgF4uJbLMoUin2uKaBf4Jb1F7SHzuALE8Ldq8FPPpHE9t
+        - did:v1:test:nym:z6MkmWLiAt5FtfwgFJwMDGS1GiFn1KpUXsd7bn1v2hLyXvud
+    - pattern: "^(did:stack:.+)$"
+      url: http://driver-did-stack:8080/
+      propertiesEndpoint: 'true'
+      testIdentifiers:
+        - did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0
+    - pattern: "^(did:web:.+)$"
+      url: http://uni-resolver-driver-did-uport:8081/
+      testIdentifiers:
+        - did:web:did.actor:alice
+        - did:web:did.actor:bob
+        - did:web:did.actor:carol
+        - did:web:did.actor:mike
+    - pattern: "^(did:ethr:.+)$"
+      url: http://uni-resolver-driver-did-uport:8081/
+      testIdentifiers:
+        - did:ethr:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736
+        - did:ethr:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+        - did:ethr:0x1:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736
+        - did:ethr:0x1:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+        - did:ethr:goerli:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+        - did:ethr:0x5:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+        - did:ethr:rsk:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+        - did:ethr:0x1e:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+        - did:ethr:ewc:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+        - did:ethr:volta:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+    - pattern: "^(did:eosio:.+)$"
+      url: http://eosio-driver:8080/
+      testIdentifiers:
+        - did:eosio:eos:eoscanadacom
+        - did:eosio:4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11:caleosblocks
+    - pattern: "^(did:nacl:.+)$"
+      url: http://uni-resolver-driver-did-uport:8081/
+      testIdentifiers:
+        - did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI
+    - pattern: "^(did:jolo:.+)$"
+      url: http://jolocom-did-driver:8080/
+      testIdentifiers:
+        - did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21
+    - pattern: "^(did:hcr:.+)$"
+      url: http://hacera-did-driver:8080/
+      testIdentifiers:
+        - did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de
+    - pattern: "^(did:elem:ropsten:.+)$"
+      url: https://ropsten.element.transmute.industries/api/1.0/identifiers/$1
+      testIdentifiers:
+        - did:elem:ropsten:EiCtwD11AV9e1oISQRHnMJsBC3OBdYDmx8xeKeASrKaw6A
+    - pattern: "^(did:github:.+)$"
+      url: https://github-did.com/api/v1/did/$1
+      testIdentifiers:
+        - did:github:gjgd
+    - pattern: "^(did:ccp:.+)$"
+      url: http://driver-did-ccp:8080/
+      testIdentifiers:
+        - did:ccp:ceNobbK6Me9F5zwyE3MKY88QZLw
+        - did:ccp:3CzQLF3qfFVQ1CjGVzVRZaFXrjAd
+    - pattern: "^(did:work:.+)$"
+      url: http://work-did-driver:8080/
+      testIdentifiers:
+        - did:work:2UUHQCd4psvkPLZGnWY33L
+    - pattern: "^(did:ont:.+)$"
+      url: http://ontid-driver:8080/
+      testIdentifiers:
+        - did:ont:AN5g6gz9EoQ3sCNu7514GEghZurrktCMiH
+    - pattern: "^(did:kilt:.+)$"
+      url: http://kilt-did-driver:8080/
+      testIdentifiers:
+        - did:kilt:4rNTX3ihuxyWkB7wG3oLgUWSBLa2gva1NBKJsBFm7jJZUYfc
+        - did:kilt:light:004pqDzaWi3w7TzYzGnQDyrasK6UnyNnW6JQvWRrq6r8HzNNGy
+        - did:kilt:light:004pqDzaWi3w7TzYzGnQDyrasK6UnyNnW6JQvWRrq6r8HzNNGy:z14mMLbhZGB6YYU7ud2eFvUiHz3Mwo6UdttffCxB5s4hB3pxV2UgTQrgTyV6MZ8FAvqqKZQpxsJTFRYHzYhjzDUbxMtyxQtTrBu4F9YZx99AuEHuNSPCCd8RqpLeczkuDTGMP7eBDmmNbPbiXhKv5hb6ibYPCpZjUtjPBDqUQ1wXmBv3
+    - pattern: "^(did:factom:.+)$"
+      url: http://uni-resolver-driver-did-factom:8080/
+      testIdentifiers:
+        - did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764
+        - did:factom:testnet:c2d5aa15943c93db313f140e7ed87ec9891d02acbde748932db583aa3080af08
+    - pattern: "^(did:io:.+)$"
+      url: http://uni-resolver-driver-did-io:8080/
+      testIdentifiers:
+        - did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A
+    - pattern: "^(did:bba:.+)$"
+      url: http://bba-did-driver:8080/
+      testIdentifiers:
+        - did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf
+        - did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044
+    - pattern: "^(did:schema:.+)$"
+      url: http://schema-registry-did-resolver:8080/
+      testIdentifiers:
+        - did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J
+        - did:schema:evan-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J
+    - pattern: "^(did:ion:(?!test).+)$"
+      url: http://driver-did-ion:8080/
+      testIdentifiers:
+        - did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w
+    - pattern: "^(did:ace:.+)$"
+      url: http://ace-did-driver:8080/
+      testIdentifiers:
+        - did:ace:0xf81c16a78b257c10fddf87ed4324d433317169a005ddf36a3a1ba937ba9788e3
+    - pattern: "^(did:gatc:.+)$"
+      url: http://gataca-did-resolver-driver:8080/
+      testIdentifiers:
+        - did:gatc:2xtSori9UQZdTqzxrkp7zqKM4Kj5B4C7
+        - did:gatc:acYseLtTEVeqF8oBhJEejbCVHJ8auVupaRuo6gw4hmXjcc77uCKqyM3imEJH
+        - did:gatc:MDU2OGVjYTViNGUzYmM2OGJiMGE1ZGM3
+    - pattern: "^(did:icon:.+)$"
+      url: http://driver-did-icon:8080/
+      testIdentifiers:
+        - did:icon:01:64aa0a2a479cb47afbf2d18d6f9f216bcdcbecdda27ccba3
+    - pattern: "^(did:vaa:.+)$"
+      url: http://driver-did-vaa:8080/
+      testIdentifiers:
+        - did:vaa:3wJVWDQWtDFx27FqvSqyo5xsTsxC
+    - pattern: "^(did:unisot:.+)$"
+      url: http://unisot-did-driver:8080/
+      propertiesEndpoint: 'true'
+      testIdentifiers:
+        - did:unisot:test:n1aAmTXAg4o44Z9k8YCQncEY91r3TV7WU4
+    - pattern: "^(did:sol:.+)$"
+      url: http://driver-did-sol:8080/
+      testIdentifiers:
+        - did:sol:devnet:2eK2DKs6vdzTEoj842Gfcs6DdtffPpw1iF6JbzQL4TuK
+    - pattern: "^(did:lit:(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$"
+      url: http://driver-did-lit:8080/
+      testIdentifiers:
+        - did:lit:AEZ87t1bi5bRxmVh3ksMUi
+    - pattern: "^(did:ebsi:.+)$"
+      url: https://api.preprod.ebsi.eu/did-registry/v3/identifiers/$1
+      testIdentifiers:
+        - did:ebsi:z25ZZFS7FweHsm9MX2Qvc6gc
+    - pattern: "^(did:emtrust:.+)$"
+      url: http://driver-did-emtrust:8080/
+      testIdentifiers:
+        - did:emtrust:0x242a5ac36676462bd58a
+    - pattern: "^(did:meta:.+)$"
+      url: https://resolver.metadium.com/1.0/identifiers/$1
+      testIdentifiers:
+        - did:meta:0000000000000000000000000000000000000000000000000000000000005e65
+    - pattern: "^did:(?:tz:|pkh:|web:|key:(?:z6Mk|zQ3s|zDna|z.{200,})).+$"
+      url: http://driver-didkit:8080/identifiers/$1
+      testIdentifiers:
+        - did:tz:tz1YwA1FwpgLtc1G8DKbbZ6e6PTb1dQMRn5x
+        - did:tz:delphinet:tz1WvvbEGpBXGeTVbLiR6DYBe1izmgiYuZbq
+        - did:web:identity.foundation
+        - did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH
+        - did:key:zQ3shokFTS3brHcDQrn82RUDfCZESWL1ZdCEJwekUDPQiYBme
+        - did:key:zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169
+        - did:key:z4MXj1wBzi9jUstyPMS4jQqB6KdJaiatPkAtVtGc6bQEQEEsKTic4G7Rou3iBf9vPmT5dbkm9qsZsuVNjq8HCuW1w24nhBFGkRE4cd2Uf2tfrB3N7h4mnyPp1BF3ZttHTYv3DLUPi1zMdkULiow3M1GfXkoC6DoxDUm1jmN6GBj22SjVsr6dxezRVQc7aj9TxE7JLbMH1wh5X3kA58H3DFW8rnYMakFGbca5CB2Jf6CnGQZmL7o5uJAdTwXfy2iiiyPxXEGerMhHwhjTA1mKYobyk2CpeEcmvynADfNZ5MBvcCS7m3XkFCMNUYBS9NQ3fze6vMSUPsNa6GVYmKx2x6JrdEjCk3qRMMmyjnjCMfR4pXbRMZa3i
+        - did:pkh:tz:tz2BFTyPeYRzxd5aiBchbXN3WCZhx7BqbMBq
+    - pattern: "^(did:orb:.+)$"
+      url: http://orb-did-driver:8121/1.0/identifiers/$1
+      testIdentifiers:
+        - did:orb:hl:uEiBuxTFn4L_Hn8KsOWo8e9kqWP38MThBaToB_5yV3c5QTg:uoQ-BeEJpcGZzOi8vYmFma3JlaWRveXV5d3B5Zjd5NnA0Zmxiem5pNmh4d2prbGQ2N3ltanlpZnV0dWFwN3RzazUzdHNxank:EiD_igS1OSEftg5BGfisJGOS1rgcx5AkQhX0h1B4dHTUYA
+    - pattern: "^(did:oyd:.+)$"
+      url: https://oydid-resolver.data-container.net/1.0/identifiers/$1
+      testIdentifiers:
+        - did:oyd:zQmaBZTghndXTgxNwfbdpVLWdFf6faYE4oeuN2zzXdQt1kh
+        - did:oyd:zQmNauTUUdkpi5TcrTZ2524SKM8dJAzuuw4xfW13iHrtY1W%40did2.data-container.net
+    - pattern: "^(did:moncon:.+)$"
+      url: https://did.driver.moncon.co/1.0/identifiers/$1
+      testIdentifiers:
+        - did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA
+    - pattern: "^(did:dock:.+)$"
+      url: http://dock-did-driver:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:dock:5CxUdCGtopZEJhdv6kfLBZ22PMZX7UK8mdcHbTVw2nw6MVZH
+        - did:dock:5CDsD8HZa6TeSfgmMcxAkbSXYWeob4jFQmtU6sxr4XWTZzUA
+    - pattern: "^(did:mydata:.+)$"
+      url: http://mydata-did-driver:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:mydata:z6MkjNiGktLUrNrwMW6obMR85UsjYmLPFmcXc9qaiAGqPaJT
+        - did:mydata:z6MkscL1kQFhsAQdmXWVQrT6d8AiSwupTxshsreQnjhjVBzu
+    - pattern: "^(did:dns:.+)$"
+      url: http://driver-did-dns:8080/
+      propertiesEndpoint: 'true'
+      testIdentifiers:
+        - did:dns:danubetech.com
+    - pattern: "^(did:everscale:.+)$"
+      url: http://everscale-did-driver:8080/
+      testIdentifiers:
+        - did:everscale:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e
+        - did:everscale:mainnet:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e
+        - did:everscale:testnet:d760f69f830dfa0668f2e7923392217589ec8d62dcb90f2c06656665dba7fb4d
+    - pattern: "^(did:ala:quor:redT:.+)$"
+      url: http://alastria-did-driver-mvp2:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:ala:quor:redT:706b3e4611a855b8b1267c4e9f0c77124af003fe
+        - did:ala:quor:redT:3729a1872356dd5c5ac377c85d539fe63cb561d8
+        - did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15
+    - pattern: "^(did:cheqd:.+)$"
+      url: http://cheqd-did-driver:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:cheqd:mainnet:zF7rhDBfUt9d1gJPjx7s1JXfUY7oVWkY
+        - did:cheqd:testnet:MTMxDQKMTMxDQKMT
+    - pattern: "^(did:com:.+)$"
+      url: http://driver-did-com:8080/
+      testIdentifiers:
+        - did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3
+        - did:com:17rhmdzlv0zjuahw4mvpfhf3u5tuwyjhr4m06dr
+    - pattern: "^(did:dyne:.+)$"
+      url: http://did-driver-dyne:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:dyne:controller:DwPLgTPBjVwDqoLQV8gbuCiTVEHrHMPmufn8T2DZwjRQ
+        - did:dyne:fabchain:DwPLgTPBjVwDqoLQV8gbuCiTVEHrHMPmufn8T2DZwjRQ
+        - did:dyne:id:nNer8S1CceT26TmBEA1u2kQSka6KTTRYMBqpwqhapQE
+    - pattern: "^(did:jwk:.+)$"
+      url: http://did-jwk-driver:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpGZk1iek9qTW1RNGVmVDZrdndUSUpqZWxUcWpsMHhqRUlXUTJxb2JzUk1NIiwia3R5IjoiT0tQIiwiY3J2IjoiRWQyNTUxOSIsImFsZyI6IkVkRFNBIiwieCI6IkFOUmpIX3p4Y0tCeHNqUlBVdHpSYnA3RlNWTEtKWFE5QVBYOU1QMWo3azQifQ
+        - did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1Njpnc0w0VTRxX1J6VFhRckpwQUNnZGkwb1lCdUV1QjNZNWZFanhDd1NPUFlBIiwia3R5IjoiRUMiLCJjcnYiOiJQLTM4NCIsImFsZyI6IkVTMzg0IiwieCI6ImEtRWV5T2hlRUNWcDJqRkdVRTNqR0RCNlAzVV80S0lyZHRzTU9RQXFQN0NBMlVvV3NERG1nOWdJUVhiOEthd0ciLCJ5Ijoib3cxWDJ6VFVRaG12elY4NnpHdGhKc0xLeDE2MmhmSmxmN1p0OTFYUnZBTzRScE4zR2RGaVl3Tmc0NXJWUmlUcSJ9
+    - pattern: "^(did:kscirc:.+)$"
+      url: http://did-kscirc-driver:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:kscirc:k12NqvVM9BX6AaMjPK1hUTUkKBWPBAUXAszTxdx7jDZPv4iqCZ1D
+        - did:kscirc:k17qQYbApdfTdxsrS77k3sbFmJCWfJf7QrvZSfMaAmq6MWpbeGs
+    - pattern: "^(did:iscc:.+)$"
+      url: http://driver-did-iscc:8080/
+      testIdentifiers:
+        - did:iscc:miagwptv4j2z57ci
+    - pattern: "^(did:ev:.+)$"
+      url: http://driver-did-ev:8000/1.0/identifiers/$1
+      testIdentifiers:
+        - did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9
+        - did:ev:bmM8MpeJAGF2ky7YUnwgJGKxyHdCL6DGAUmEW
+    - pattern: "^(did:iid:.+)$"
+      url: http://driver-did-iid:8080/1.0/identifiers/$1
+      testIdentifiers:
+        - did:iid:3QUs61mk7a9CdCpckriQbA5emw8pubj6RMtHXP6gD66YbcungS6w2sa
+    - pattern: "^(did:evan:.+)$"
+      url: http://evan-did-driver:8080/
+      testIdentifiers:
+        - did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734
+    - pattern: "^(did:bid:.+)$"
+      url: http://driver-did-bid:8080/
+      testIdentifiers:
+        - did:bid:ef214PmkhKndUcArDQPgD5J4fFVwqJFPt

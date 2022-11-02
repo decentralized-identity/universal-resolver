@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{containerName}}
-  namespace: uni-resolver
+  namespace: uni-resolver-dev
   labels:
     app: {{containerName}}
 spec:
@@ -19,14 +19,25 @@ spec:
       - name: {{containerName}}
         image: {{containerTag}}
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "5m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
         ports:
         - containerPort: {{containerPort}}
+        securityContext:
+          capabilities:
+            drop:
+              - NET_RAW
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: {{containerName}}
-  namespace: uni-resolver
+  namespace: uni-resolver-dev
 spec:
   type: NodePort
   selector:
