@@ -51,7 +51,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:mpg:7PGGnRdvKKFftSXU3Jw75Vk5npfg
 	curl -X GET http://localhost:8080/1.0/identifiers/did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf
-	curl -X GET http://localhost:8080/1.0/identifiers/did:bid:6cc796b8d6e2fbebc9b3cf9e
 	curl -X GET http://localhost:8080/1.0/identifiers/did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ace:0xf81c16a78b257c10fddf87ed4324d433317169a005ddf36a3a1ba937ba9788e3
@@ -81,8 +80,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iscc:miagwptv4j2z57ci
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iid:3QUs61mk7a9CdCpckriQbA5emw8pubj6RMtHXP6gD66YbcungS6w2sa
-  	curl -X GET http://localhost:8080/1.0/identifiers/did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734
-
+	curl -X GET http://localhost:8080/1.0/identifiers/did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734
+	curl -X GET http://localhost:8080/1.0/identifiers/did:bid:ef214PmkhKndUcArDQPgD5J4fFVwqJFPt
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -152,7 +151,8 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-iscc](https://github.com/iscc/iscc-did-driver) | 0.1.0          | [0.1](https://ieps.iscc.codes/iep-0015/)                                                                       | [ghcr.io/iscc/iscc-did-driver](https://github.com/iscc/iscc-did-driver/pkgs/container/iscc-did-driver) | International Standard Content Code - [ISCC](https://iscc.codes) |
 | [did-ev](https://github.com/KayTrust/driver-did-ev) | 1.0.4          | [0.1](https://github.com/KayTrust/did-method-ev)                                                               | [ghcr.io/kaytrust/driver-did-ev](http://ghcr.io/kaytrust/driver-did-ev) | KayTrust default method based on Ethereum smart contracts |
 | [did-iid](https://github.com/InspurIndustrialInternet/uni-resolver-driver-did-iid) | 0.1.0 | [0.1](https://github.com/InspurIndustrialInternet/iid/blob/main/doc/en/InspurChain_DID_protocol_Specification.md) | [zoeyian/driver-did-iid:latest](https://hub.docker.com/repository/docker/zoeyian/driver-did-iid) | Inspur DID Method |
-| [did-evan](https://github.com/evannetwork/did-driver) | 0.1.2 | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | [evannetwork/evan-did-driver](https://hub.docker.com/r/evannetwork/evan-did-driver) | evan.network
+| [did-evan](https://github.com/evannetwork/did-driver) | 0.1.2 | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | [evannetwork/evan-did-driver](https://hub.docker.com/r/evannetwork/evan-did-driver) | evan.network|
+| [did-bid](https://github.com/caict-4iot-dev/uni-resolver-driver-did-bid) | 2.0.0  | [2.0 WD](https://github.com/teleinfo-bif/bid/blob/master/doc/en/readme.md) | [caictdevelop/driver-did-bid](https://hub.docker.com/repository/docker/caictdevelop/driver-did-bid) | BIF blockchain
 
 ## More Information
 
