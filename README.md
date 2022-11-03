@@ -152,7 +152,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-ev](https://github.com/KayTrust/driver-did-ev) | 1.0.4          | [0.1](https://github.com/KayTrust/did-method-ev)                                                               | [ghcr.io/kaytrust/driver-did-ev](http://ghcr.io/kaytrust/driver-did-ev) | KayTrust default method based on Ethereum smart contracts |
 | [did-iid](https://github.com/InspurIndustrialInternet/uni-resolver-driver-did-iid) | 0.1.0 | [0.1](https://github.com/InspurIndustrialInternet/iid/blob/main/doc/en/InspurChain_DID_protocol_Specification.md) | [zoeyian/driver-did-iid:latest](https://hub.docker.com/repository/docker/zoeyian/driver-did-iid) | Inspur DID Method |
 | [did-evan](https://github.com/evannetwork/did-driver) | 0.1.2 | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | [evannetwork/evan-did-driver](https://hub.docker.com/r/evannetwork/evan-did-driver) | evan.network|
-| [did-bid](https://github.com/evannetwork/did-driver) | 2.0.0  | [2.0 WD](https://github.com/caict-4iot-dev/bid-method) | [caictdevelop/driver-did-bid](https://hub.docker.com/repository/docker/caictdevelop/driver-did-bid) | BIF blockchain
+| [did-bid](https://github.com/caict-4iot-dev/uni-resolver-driver-did-bid) | 2.0.0  | [2.0 WD](https://github.com/caict-4iot-dev/bid-method) | [caictdevelop/driver-did-bid](https://hub.docker.com/repository/docker/caictdevelop/driver-did-bid) | BIF blockchain
 
 ## More Information
 
