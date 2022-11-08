@@ -96,6 +96,12 @@ To do so, follow these steps:
 
 - Make the required changes mentioned above ("How to contribute a driver") to the `.env`, [`application.yml`](https://github.com/decentralized-identity/universal-resolver/blob/main/uni-resolver-web/src/main/resources/application.yml) and `docker-compose.yml` files.
 
+- Pull remote docker images
+
+  ```bash
+    docker-compose -f docker-compose.yml pull
+  ```
+
 - Build uni-resolver-web locally:
 
   ```bash
@@ -105,9 +111,10 @@ To do so, follow these steps:
 - Run the uni-resolver-web locally:
 
   ```bash
-  docker-compose -f docker-compose.yml pull
   docker-compose -f docker-compose.yml up
   ```
+
+After each local change, you must rebuild uni-resolver-web locally. If you pull docker images, it will overwrite the local uni-resolver-web, so you must rebuild again after pulling.
 
 You can now resolve DID Documents via `curl` commands as documented in the [Quick Start](https://github.com/decentralized-identity/universal-resolver#quick-start) notes.
 
