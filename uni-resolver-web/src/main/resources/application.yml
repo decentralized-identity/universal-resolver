@@ -74,6 +74,11 @@ uniresolver:
         - did:ethr:0x1e:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
         - did:ethr:ewc:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
         - did:ethr:volta:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+    - pattern: "^(did:ens:.+)$"
+      url: http://uni-resolver-driver-did-uport:8081/
+      testIdentifiers:
+        - did:ens:vitalik.eth
+        - did:ens:goerli:whatever.eth
     - pattern: "^(did:eosio:.+)$"
       url: http://eosio-driver:8080/
       testIdentifiers:
