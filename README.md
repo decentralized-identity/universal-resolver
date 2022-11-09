@@ -157,6 +157,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-evan](https://github.com/evannetwork/did-driver) | 0.1.2 | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | [evannetwork/evan-did-driver](https://hub.docker.com/r/evannetwork/evan-did-driver) | evan.network|
 | [did-bid](https://github.com/caict-4iot-dev/uni-resolver-driver-did-bid) | 2.0.0  | [2.0 WD](https://github.com/teleinfo-bif/bid/blob/master/doc/en/BID%20Protocol%20Specification.md) | [caictdevelop/driver-did-bid](https://hub.docker.com/repository/docker/caictdevelop/driver-did-bid) | BIF blockchain
 
+
 ## More Information
 
  * [Driver Development](/docs/driver-development.md)
