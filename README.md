@@ -34,6 +34,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ethr:0x5:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ethr:0x02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ethr:0x1e:0x02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71
+	curl -X GET http://localhost:8080/1.0/identifiers/did:ens:vitalik.eth
+	curl -X GET http://localhost:8080/1.0/identifiers/did:ens:goerli:whatever.eth
 	curl -X GET http://localhost:8080/1.0/identifiers/did:eosio:eos:eoscanadacom
 	curl -X GET http://localhost:8080/1.0/identifiers/did:eosio:4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11:caleosblocks
 	curl -X GET http://localhost:8080/1.0/identifiers/did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI
@@ -103,7 +105,8 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-sov](https://github.com/decentralized-identity/uni-resolver-driver-did-sov/) | 0.1-SNAPSHOT   | [0.1](https://sovrin-foundation.github.io/sovrin/spec/did-method-spec-template.html)                           | [universalresolver/driver-did-sov](https://hub.docker.com/r/universalresolver/driver-did-sov/) | Sovrin public ledger
 | [did-stack](https://github.com/decentralized-identity/uni-resolver-driver-did-stack/) | 0.1            | [1.0](https://github.com/blockstack/stacks-blockchain/blob/stacks-1.0/docs/blockstack-did-spec.md)             | [universalresolver/driver-did-stack](https://hub.docker.com/r/universalresolver/driver-did-stack/)
 | [did-dom](https://github.com/decentralized-identity/uni-resolver-driver-did-dom/) | 0.1-SNAPSHOT   | (missing)                                                                                                      | [universalresolver/driver-did-dom](https://hub.docker.com/r/universalresolver/driver-did-dom/)
-| [did-ethr](https://github.com/uport-project/uport-did-driver) | 3.0.0          | [7.0.0](https://github.com/decentralized-identity/ethr-did-resolver/blob/master/doc/did-method-spec.md)        | [uport/uni-resolver-driver-did-uport](https://hub.docker.com/r/uport/uni-resolver-driver-did-uport/) | Ethereum addresses or secp256k1 publicKeys
+| [did-ethr](https://github.com/uport-project/uport-did-driver) | 3.1.0          | [7.0.0](https://github.com/decentralized-identity/ethr-did-resolver/blob/master/doc/did-method-spec.md)        | [uport/uni-resolver-driver-did-uport](https://hub.docker.com/r/uport/uni-resolver-driver-did-uport/) | Ethereum addresses or secp256k1 publicKeys
+| [did-ens](https://github.com/uport-project/uport-did-driver) | 3.1.0          | [0.1.1](https://github.com/veramolabs/did-ens-spec) | ENS names
 | [did-eosio](https://github.com/Gimly-Blockchain/eosio-did-universal-resolver-driver) | 0.1.3          | [0.1](https://github.com/Gimly-Blockchain/eosio-did-spec)                                                      | [gimlyblockchain/eosio-universal-resolver-driver](https://hub.docker.com/r/gimlyblockchain/eosio-universal-resolver-driver) | EOSIO blockchain platform
 | [did-web](https://github.com/uport-project/uport-did-driver) | 3.0.0          | [3.0.0](https://w3c-ccg.github.io/did-method-web/)                                                             | [uport/uni-resolver-driver-did-uport](https://hub.docker.com/r/uport/uni-resolver-driver-did-uport/) | Domain name
 | [did-v1](https://github.com/veres-one/uni-resolver-did-v1-driver) | 0.1            | [1.0](https://w3c-ccg.github.io/did-method-v1/)                                                                | [veresone/uni-resolver-did-v1-driver](https://hub.docker.com/r/veresone/uni-resolver-did-v1-driver) | Veres One Blockchain
@@ -152,7 +155,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-ev](https://github.com/KayTrust/driver-did-ev) | 1.0.4          | [0.1](https://github.com/KayTrust/did-method-ev)                                                               | [ghcr.io/kaytrust/driver-did-ev](http://ghcr.io/kaytrust/driver-did-ev) | KayTrust default method based on Ethereum smart contracts |
 | [did-iid](https://github.com/InspurIndustrialInternet/uni-resolver-driver-did-iid) | 0.1.0 | [0.1](https://github.com/InspurIndustrialInternet/iid/blob/main/doc/en/InspurChain_DID_protocol_Specification.md) | [zoeyian/driver-did-iid:latest](https://hub.docker.com/repository/docker/zoeyian/driver-did-iid) | Inspur DID Method |
 | [did-evan](https://github.com/evannetwork/did-driver) | 0.1.2 | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | [evannetwork/evan-did-driver](https://hub.docker.com/r/evannetwork/evan-did-driver) | evan.network|
-| [did-bid](https://github.com/caict-4iot-dev/uni-resolver-driver-did-bid) | 2.0.0  | [2.0 WD](https://github.com/teleinfo-bif/bid/blob/master/doc/en/readme.md) | [caictdevelop/driver-did-bid](https://hub.docker.com/repository/docker/caictdevelop/driver-did-bid) | BIF blockchain
+| [did-bid](https://github.com/caict-4iot-dev/uni-resolver-driver-did-bid) | 2.0.0  | [2.0 WD](https://github.com/teleinfo-bif/bid/blob/master/doc/en/BID%20Protocol%20Specification.md) | [caictdevelop/driver-did-bid](https://hub.docker.com/repository/docker/caictdevelop/driver-did-bid) | BIF blockchain
 
 ## More Information
 

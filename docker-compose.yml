@@ -30,7 +30,7 @@ services:
     ports:
       - "8082:8080"
   uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:3.0.0
+    image: uport/uni-resolver-driver-did-uport:3.1.0
     ports:
       - "8083:8081"
   driver-did-stack:
@@ -244,9 +244,9 @@ services:
   driver-did-iid:
     image: zoeyian/driver-did-iid:latest
     ports:
-      - "8137:8080"
+      - "8138:8080"
   driver-did-bid:
     image: caictdevelop/driver-did-bid:latest
     ports:
-      - "8138:8080"
+      - "8139:8080"
       
