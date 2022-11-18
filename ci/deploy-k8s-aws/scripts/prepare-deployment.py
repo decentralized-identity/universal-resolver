@@ -139,6 +139,7 @@ def generate_ingress(containers, outputdir, deploymentdomain):
     fout.write('  namespace: \"did\"\n')
     fout.write('  annotations:\n')
     fout.write('    nginx.ingress.kubernetes.io/rewrite-target: /$2\n')
+    fout.write('    kubernetes.io/ingress.class: "nginx"\n')
 #     fout.write('    alb.ingress.kubernetes.io/scheme: internet-facing\n')
 #     fout.write('    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:332553390353:certificate/925fce37-d446-4af3-828e-f803b3746af0\n')
 #     fout.write('    alb.ingress.kubernetes.io/listen-ports: \'[{"HTTP": 80}, {"HTTPS":443}]\'\n')
