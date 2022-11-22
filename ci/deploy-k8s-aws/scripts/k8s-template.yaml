@@ -21,9 +21,15 @@ spec:
         image: {{containerTag}}
         imagePullPolicy: Always
         resources:
+          # Since Amazon EKS Fargate runs only one pod per node,
+          # all Amazon EKS Fargate pods run with guaranteed priority,
+          # so the requested CPU and memory must be equal to the limit.
+          # Reference: https://docs.aws.amazon.com/eks/latest/userguide/fargate-pod-configuration.html
           requests:
-            memory: "128Mi"
-            cpu: "5m"
+            memory: "512Mi"
+            cpu: "500m"
+          # memory: "128Mi"
+          # cpu: "5m"
           limits:
             memory: "512Mi"
             cpu: "500m"
