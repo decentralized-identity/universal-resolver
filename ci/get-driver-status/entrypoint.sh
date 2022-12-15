@@ -34,6 +34,7 @@ python --version
 python /get-driver-status/get-driver-status.py --host "$INPUT_HOST" --config "$INPUT_CONFIG" --out "$REPORTS_FOLDER"
 
 echo "Switch to drivers-status-reports branch"
+git config --global --add safe.directory /github/workspace
 git fetch
 git checkout -b driver-status-reports origin/driver-status-reports
 
