@@ -25,33 +25,33 @@ services:
   #      uniresolver_driver_did_btcr_rpcCertTestnet: ${uniresolver_driver_did_btcr_rpcCertTestnet}
   #    ports:
   #      - "8081:8080"
-  driver-did-sov:
-    image: universalresolver/driver-did-sov:latest
-    environment:
-      uniresolver_driver_did_sov_libIndyPath: ${uniresolver_driver_did_sov_libIndyPath}
-      uniresolver_driver_did_sov_poolConfigs: ${uniresolver_driver_did_sov_poolConfigs}
-      uniresolver_driver_did_sov_poolVersions: ${uniresolver_driver_did_sov_poolVersions}
-      uniresolver_driver_did_sov_walletName: ${uniresolver_driver_did_sov_walletName}
-    ports:
-      - "8082:8080"
-  uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:2.4.0
-    ports:
-      - "8083:8081"
+#  driver-did-sov:
+#    image: universalresolver/driver-did-sov:latest
+#    environment:
+#      uniresolver_driver_did_sov_libIndyPath: ${uniresolver_driver_did_sov_libIndyPath}
+#      uniresolver_driver_did_sov_poolConfigs: ${uniresolver_driver_did_sov_poolConfigs}
+#      uniresolver_driver_did_sov_poolVersions: ${uniresolver_driver_did_sov_poolVersions}
+#      uniresolver_driver_did_sov_walletName: ${uniresolver_driver_did_sov_walletName}
+#    ports:
+#      - "8082:8080"
+#  uni-resolver-driver-did-uport:
+#    image: uport/uni-resolver-driver-did-uport:2.4.0
+#    ports:
+#      - "8083:8081"
   #  driver-did-stack:
   #    image: universalresolver/driver-did-stack:latest
   #    ports:
   #      - "8084:8080"
-  driver-dns:
-    image: universalresolver/driver-dns:latest
-    environment:
-      uniresolver_driver_dns_dnsServers: ${uniresolver_driver_dns_dnsServers}
-    ports:
-      - "8087:8080"
-  jolocom-did-driver:
-    image: jolocomgmbh/jolocom-did-driver:latest
-    ports:
-      - "8088:8080"
+#  driver-dns:
+#    image: universalresolver/driver-dns:latest
+#    environment:
+#      uniresolver_driver_dns_dnsServers: ${uniresolver_driver_dns_dnsServers}
+#    ports:
+#      - "8087:8080"
+#  jolocom-did-driver:
+#    image: jolocomgmbh/jolocom-did-driver:latest
+#    ports:
+#      - "8088:8080"
   #  hacera-did-driver:
   #    image: hacera/hacera-did-driver:latest
   #    ports:
@@ -71,12 +71,12 @@ services:
   #    image: ontio/ontid-driver:latest
   #    ports:
   #      - "8093:8080"
-  kilt-did-driver:
-    image: kiltprotocol/kilt-did-driver:2.4.1
-    environment:
-      KILT_BLOCKCHAIN_NODE: ${uniresolver_driver_kilt_blockchain_node}
-    ports:
-      - "8094:8080"
+#  kilt-did-driver:
+#    image: kiltprotocol/kilt-did-driver:2.4.1
+#    environment:
+#      KILT_BLOCKCHAIN_NODE: ${uniresolver_driver_kilt_blockchain_node}
+#    ports:
+#      - "8094:8080"
   #  evan-did-driver:
   #    image: evannetwork/evan-did-driver:latest
   #    ports:
@@ -85,10 +85,10 @@ services:
   #    image: sphereon/driver-did-factom:latest
   #    ports:
   #      - "8097:8080"
-  driver-did-key:
-    image: universalresolver/driver-did-key:latest
-    ports:
-      - "8098:8080"
+#  driver-did-key:
+#    image: universalresolver/driver-did-key:latest
+#    ports:
+#      - "8098:8080"
   #  dock-did-driver:
   #    image: docknetwork/dock-did-driver:latest
   #    ports:
@@ -185,13 +185,13 @@ services:
     image: identitydotcom/driver-did-sol:latest
     ports:
       - "8118:8080"
-  driver-did-lit:
-    image: ibct/driver-did-lit:0.1.1
-    environment:
-      LEDGIS_LIT_ENDPOINT: ${LEDGIS_LIT_ENDPOINT}
-      LEDGIS_LIT_CODE: ${LEDGIS_LIT_CODE}
-    ports:
-      - "8119:8080"
+#  driver-did-lit:
+#    image: ibct/driver-did-lit:0.1.1
+#    environment:
+#      LEDGIS_LIT_ENDPOINT: ${LEDGIS_LIT_ENDPOINT}
+#      LEDGIS_LIT_CODE: ${LEDGIS_LIT_CODE}
+#    ports:
+#      - "8119:8080"
 
 #  driver-did-emtrust:
 #    image: halialabsdev/emtrust_did_driver:latest
