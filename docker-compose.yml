@@ -249,3 +249,7 @@ services:
     image: caictdevelop/driver-did-bid:latest
     ports:
       - "8139:8080"
+  driver-did-algo:
+    image: ghcr.io/bryk-io/algoid-resolver:latest
+    ports:
+      - "8140:9091"

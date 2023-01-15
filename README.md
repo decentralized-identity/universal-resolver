@@ -84,6 +84,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iid:3QUs61mk7a9CdCpckriQbA5emw8pubj6RMtHXP6gD66YbcungS6w2sa
 	curl -X GET http://localhost:8080/1.0/identifiers/did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bid:ef214PmkhKndUcArDQPgD5J4fFVwqJFPt
+	curl -X GET http://localhost:8080/1.0/identifiers/did:algo:c93fdef1-8a0a-4c65-8c54-fd33117c9e82
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -156,6 +157,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-iid](https://github.com/InspurIndustrialInternet/uni-resolver-driver-did-iid) | 0.1.0 | [0.1](https://github.com/InspurIndustrialInternet/iid/blob/main/doc/en/InspurChain_DID_protocol_Specification.md) | [zoeyian/driver-did-iid:latest](https://hub.docker.com/repository/docker/zoeyian/driver-did-iid) | Inspur DID Method |
 | [did-evan](https://github.com/evannetwork/did-driver) | 0.1.2 | [0.9](https://github.com/evannetwork/evan.network-DID-method-specification/blob/master/evan_did_method_spec.md) | [evannetwork/evan-did-driver](https://hub.docker.com/r/evannetwork/evan-did-driver) | evan.network|
 | [did-bid](https://github.com/caict-4iot-dev/uni-resolver-driver-did-bid) | 2.0.0  | [2.0 WD](https://github.com/teleinfo-bif/bid/blob/master/doc/en/BID%20Protocol%20Specification.md) | [caictdevelop/driver-did-bid](https://hub.docker.com/repository/docker/caictdevelop/driver-did-bid) | BIF blockchain
+| [did-algo](https://github.com/algorandfoundation/did-algo/blob/main/DRIVER.md) | 0.1.0  | [0.4.0](https://github.com/algorandfoundation/did-algo/blob/main/README.md) | [bryk-io/algoid-resolver](https://github.com/orgs/bryk-io/packages/container/package/algoid-resolver) | Algorand DID
 
 
 ## More Information
