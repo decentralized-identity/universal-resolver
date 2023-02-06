@@ -55,13 +55,6 @@ services:
     image: universalresolver/driver-did-ccp:latest
     ports:
       - "8091:8080"
-  work-did-driver:
-    image: didwork/work-did-driver:latest
-    environment:
-      uniresolver_driver_did_work_apikey: ${uniresolver_driver_did_work_apikey}
-      uniresolver_driver_did_work_domain: ${uniresolver_driver_did_work_domain}
-    ports:
-      - "8092:8080"
   ontid-driver:
     image: ontio/ontid-driver:latest
     ports:
