@@ -79,10 +79,6 @@ uniresolver:
       testIdentifiers:
         - did:ens:vitalik.eth
         - did:ens:goerli:whatever.eth
-    - pattern: "^(did:3:.+)$"
-      url: http://uni-resolver-driver-did-uport:8081/
-      testIdentifiers:
-        - did:3:kjzl6cwe1jw14akzaln614o61ewgfzpmxhrn7zmejvgpuegdpz303uhurlmqjpx
     - pattern: "^(did:eosio:.+)$"
       url: http://eosio-driver:8080/
       testIdentifiers:
