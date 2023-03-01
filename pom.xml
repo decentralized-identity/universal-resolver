@@ -77,17 +77,15 @@
 
 		<did-common-java.version>1.4.0</did-common-java.version>
 
-		<eclipse.jetty.version>9.4.44.v20210927</eclipse.jetty.version>
-		<slf4j.version>1.7.25</slf4j.version>
-		<apache.log4j.version>2.17.1</apache.log4j.version>
-		<jackson.databind.version>2.13.4</jackson.databind.version>
-		<jackson.core.version>2.13.2</jackson.core.version>
-		<jackson.annotations.version>2.13.2</jackson.annotations.version>
-		<gson.version>2.8.9</gson.version>
+		<slf4j.version>2.0.6</slf4j.version>
+		<gson.version>2.10.1</gson.version>
+		<jackson.databind.version>2.14.2</jackson.databind.version>
+		<jackson.core.version>2.14.2</jackson.core.version>
+		<jackson.annotations.version>2.14.2</jackson.annotations.version>
 		<commons-codec.version>1.14</commons-codec.version>
 		<httpclient.version>4.5.13</httpclient.version>
 		<springframework.version>6.0.0</springframework.version>
-		<jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+		<jakarta.servlet-api.version>5.0.0</jakarta.servlet-api.version>
 		<junit.version>4.13.1</junit.version>
 
 		<!-- Plugin Versions -->
@@ -181,11 +179,6 @@
 					<version>${maven-war-plugin.version}</version>
 				</plugin>
 				<plugin>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-maven-plugin</artifactId>
-					<version>${eclipse.jetty.version}</version>
-				</plugin>
-				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>${maven-deploy-plugin.version}</version>
@@ -264,11 +257,6 @@
 				<version>${did-common-java.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${eclipse.jetty.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
 				<version>${jackson.core.version}</version>
@@ -322,36 +310,6 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jcl-over-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-slf4j-impl</artifactId>
-				<version>${apache.log4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-api</artifactId>
-				<version>${apache.log4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-core</artifactId>
-				<version>${apache.log4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-web</artifactId>
-				<version>${apache.log4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
