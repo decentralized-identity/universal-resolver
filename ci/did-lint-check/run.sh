@@ -8,7 +8,7 @@ docker run --rm oydeu/did-status-generator:latest > result.json
 
 echo "Checkout to did-lint-reports branch"
 git fetch
-git switch gh-pages --force
+git switch did-lint-reports --force
 
 echo "Push result file to repo"
 git config --global user.email "admin@danubetech.com"
