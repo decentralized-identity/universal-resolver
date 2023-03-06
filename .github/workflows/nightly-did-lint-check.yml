@@ -1,0 +1,23 @@
+name: Nightly DID Lint check
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  did-lint-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Did Lint check
+        run: ./ci/run.sh
+
+      - name: Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,commit,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
+        if: failure()
