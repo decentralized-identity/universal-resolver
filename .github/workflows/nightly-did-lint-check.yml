@@ -2,7 +2,7 @@ name: Nightly DID Lint check
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 1 * * *'
   workflow_dispatch:
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Did Lint check
-        run: ./ci/run.sh
+        run: ./ci/did-lint-check/run.sh
 
       - name: Slack notification
         uses: 8398a7/action-slack@v3
