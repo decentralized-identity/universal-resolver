@@ -287,3 +287,12 @@ uniresolver:
       url: http://driver-did-algo:9091/
       testIdentifiers:
         - did:algo:c93fdef1-8a0a-4c65-8c54-fd33117c9e82
+    - pattern: "^(did:peer:.+)$"
+      # url: http://driver-did-peer:8080/
+      url: https://did.fmgp.app/resolver/peer/$1
+      testIdentifiers:
+        - did:peer:2.Ez6LSghwSE437wnDE1pt3X6hVDUQzSjsHzinpX3XFvMjRAm7y.Vz6Mkhh1e5CEYYq6JBUcTZ6Cp2ranCWRrv7Yax3Le4N59R6dd
+        - did:peer:2.Ez6LSghwSE437wnDE1pt3X6hVDUQzSjsHzinpX3XFvMjRAm7y.Vz6Mkhh1e5CEYYq6JBUcTZ6Cp2ranCWRrv7Yax3Le4N59R6dd.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9hbGljZS5kaWQuZm1ncC5hcHAvIiwiciI6W10sImEiOlsiZGlkY29tbS92MiJdfQ
+        - did:peer:2.Ez6LSkGy3e2z54uP4U9HyXJXRpaF2ytsnTuVgh6SNNmCyGZQZ.Vz6Mkjdwvf9hWc6ibZndW9B97si92DSk9hWAhGYBgP9kUFk8Z.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9ib2IuZGlkLmZtZ3AuYXBwLyIsInIiOltdLCJhIjpbImRpZGNvbW0vdjIiXX0
+        - did:peer:2.Ez6LSbj1AHPALSc6v6jMzozr4HfE3siavLgjZ8XrriNTSWdkW.Vz6MkmL4nXx4qze1UU3hAcAVghn5WVZj2vbt2w9vpAWN85ZAS.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9jaGFybGllLmRpZC5mbWdwLmFwcC8iLCJyIjpbXSwiYSI6WyJkaWRjb21tL3YyIl19
+        - did:peer:2.Ez6LShTw9dYiKEixwH3vAmSufL7gb1Rvp2YGoy4VHYUWxpjmh.Vz6MknK57qz1oyQFdsDm9L29CNBJzqESqe5eTPYXTsg1yVJKw.SeyJ0IjoiZG0iLCJzIjoiZGlkOnBlZXI6Mi5FejZMU2tHeTNlMno1NHVQNFU5SHlYSlhScGFGMnl0c25UdVZnaDZTTk5tQ3lHWlFaLlZ6Nk1ramR3dmY5aFdjNmliWm5kVzlCOTdzaTkyRFNrOWhXQWhHWUJnUDlrVUZrOFouU2V5SjBJam9pWkcwaUxDSnpJam9pYUhSMGNITTZMeTlpYjJJdVpHbGtMbVp0WjNBdVlYQndMeUlzSW5JaU9sdGRMQ0poSWpwYkltUnBaR052YlcwdmRqSWlYWDAiLCJyIjpbXSwiYSI6WyJkaWRjb21tL3YyIl19
