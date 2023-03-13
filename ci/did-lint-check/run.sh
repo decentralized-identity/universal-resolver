@@ -13,6 +13,7 @@ git switch did-lint-reports --force
 echo "Push result file to repo"
 git config --global user.email "admin@danubetech.com"
 git config --global user.name "DID Lint check workflow"
+git status
 git add result.json
 git commit -m "DID Lint check reports"
 git push origin did-lint-reports:did-lint-reports
