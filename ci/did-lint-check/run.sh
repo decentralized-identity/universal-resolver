@@ -6,6 +6,9 @@ docker pull oydeu/did-status-generator:latest
 echo "Running did-status-generator image"
 docker run --rm oydeu/did-status-generator:latest > result.json
 
+echo "### result.json before branch switch"
+cat result.json
+
 echo "Checkout to did-lint-reports branch"
 git fetch
 git switch did-lint-reports --force
@@ -17,8 +20,6 @@ echo "### Current folder"
 ls -al
 echo "### Git status"
 git status
-echo "### result.json"
-cat result.json
 git add result.json
 git commit -m "DID Lint check reports"
 git push origin did-lint-reports:did-lint-reports
