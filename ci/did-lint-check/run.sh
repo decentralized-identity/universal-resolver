@@ -13,7 +13,7 @@ git fetch
 git switch did-lint-reports --force
 
 echo "Replace old result.json with result_var"
-echo result_var > result.json
+echo "$result_var" > result.json
 
 echo "Push result file to repo"
 git config --global user.email "admin@danubetech.com"
