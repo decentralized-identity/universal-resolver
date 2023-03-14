@@ -6,48 +6,44 @@
         "did:btcr:xz35-jznz-q9yu-ply": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:xz35-jznz-q9yu-ply",
-          "duration": 1.303362873
+          "duration": 5.203790087
         }
       },
       {
         "did:btcr:xkrn-xz7q-qsye-28p": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:xkrn-xz7q-qsye-28p",
-          "duration": 1.256691548
+          "duration": 1.26392666
         }
       },
       {
         "did:btcr:x705-jznz-q3nl-srs": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:x705-jznz-q3nl-srs",
-          "duration": 1.222977897
+          "duration": 4.918229459
         }
       }
     ]
   },
   "did:sov": {
-    "status": "partially compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:sov:WRfXPg8dantKVubE3HX8pw": {
           "valid": false,
           "errors": [
             {
-              "value": "id",
-              "error": "there must be one 'id' in 'service'"
-            },
-            {
-              "value": "id",
-              "error": "there must be one 'id' in 'service'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 2.802575368
+          "duration": 4.252334729
         }
       },
       {
         "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx": {
-          "valid": true,
-          "duration": 1.502053967
+          "error": "no response",
+          "duration": 5.008471382
         }
       },
       {
@@ -55,55 +51,61 @@
           "valid": false,
           "errors": [
             {
-              "value": "id",
-              "error": "there must be one 'id' in 'service'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 2.438453143
+          "duration": 2.145657399
         }
       },
       {
         "did:sov:idunion:2GMSLg2A8JXcdYVsPC4Jui": {
-          "valid": true,
-          "duration": 2.129099058
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.149940506
         }
       },
       {
         "did:sov:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE": {
-          "valid": true,
-          "duration": 2.281319349
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.525752189
         }
       },
       {
         "did:sov:indicio:test:5DiMymoHmgfCB2H2WbM7ZL": {
-          "valid": true,
-          "duration": 1.59470017
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.414452079
         }
       }
     ]
   },
   "did:indy": {
-    "status": "partially compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:indy:sovrin:WRfXPg8dantKVubE3HX8pw": {
-          "valid": true,
-          "duration": 2.643712043
-        }
-      },
-      {
-        "did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx": {
-          "valid": true,
-          "duration": 2.763573102
-        }
-      },
-      {
-        "did:indy:sovrin:staging:6cgbu8ZPoWTnR5Rv5JcSMB": {
           "valid": false,
           "errors": [
             {
-              "value": "serviceEndpoint",
-              "error": "there must be one 'serviceEndpoint' in 'service'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
           "infos": [
@@ -116,26 +118,102 @@
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 2.289121765
+          "duration": 2.289983959
+        }
+      },
+      {
+        "did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx": {
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "error": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
+            }
+          ],
+          "duration": 1.967670837
+        }
+      },
+      {
+        "did:indy:sovrin:staging:6cgbu8ZPoWTnR5Rv5JcSMB": {
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "error": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
+            }
+          ],
+          "duration": 1.926764014
         }
       },
       {
         "did:indy:idunion:2GMSLg2A8JXcdYVsPC4Jui": {
-          "valid": true,
-          "duration": 2.089315956
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "error": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
+            }
+          ],
+          "duration": 1.945032747
         }
       },
       {
         "did:indy:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE": {
-          "valid": true,
-          "duration": 2.667433798
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "error": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
+            }
+          ],
+          "duration": 2.634094718
         }
       },
       {
         "did:indy:indicio:test:5DiMymoHmgfCB2H2WbM7ZL": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:indy:indicio:test:5DiMymoHmgfCB2H2WbM7ZL",
-          "duration": 0.96715552
+          "duration": 1.121998849
         }
       }
     ]
@@ -156,7 +234,7 @@
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.701673015
+          "duration": 1.827230114
         }
       },
       {
@@ -172,7 +250,7 @@
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.502414969
+          "duration": 1.658615016
         }
       },
       {
@@ -188,7 +266,7 @@
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.660824831
+          "duration": 1.636415546
         }
       }
     ]
@@ -200,7 +278,7 @@
         "did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0",
-          "duration": 1.144029311
+          "duration": 1.311433421
         }
       }
     ]
@@ -217,7 +295,7 @@
               "error": "add 'http://w3id.org/security/suites/x25519-2019/v1'"
             }
           ],
-          "duration": 1.430449595
+          "duration": 1.41515342
         }
       },
       {
@@ -225,25 +303,17 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.384315805
+          "duration": 1.366174326
         }
       },
       {
         "did:web:did.actor:carol": {
           "valid": false,
           "errors": [
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
             {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
@@ -253,7 +323,7 @@
               "error": "add 'http://w3id.org/security/suites/x25519-2019/v1'"
             }
           ],
-          "duration": 1.513477637
+          "duration": 1.546478035
         }
       },
       {
@@ -265,14 +335,14 @@
               "error": "add 'https://w3id.org/security/suites/jws-2020/v1'"
             }
           ],
-          "duration": 1.393658595
+          "duration": 1.357301277
         }
       },
       {
         "did:web:identity.foundation": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:web:identity.foundation",
-          "duration": 1.061254193
+          "duration": 1.04893115
         }
       }
     ]
@@ -285,11 +355,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 1.657869221
+          "duration": 1.437260435
         }
       },
       {
@@ -297,19 +367,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.485977068
+          "duration": 1.421055203
         }
       },
       {
@@ -317,11 +379,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 1.386280587
+          "duration": 1.430529788
         }
       },
       {
@@ -329,19 +391,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.407435901
+          "duration": 1.385480395
         }
       },
       {
@@ -349,19 +403,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.649648054
+          "duration": 1.50070381
         }
       },
       {
@@ -369,19 +415,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.410061259
+          "duration": 1.385541495
         }
       },
       {
@@ -389,19 +427,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.820612519
+          "duration": 1.914065931
         }
       },
       {
@@ -409,19 +439,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.720622415
+          "duration": 1.679381751
         }
       },
       {
@@ -429,19 +451,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 2.086888492
+          "duration": 1.987606921
         }
       },
       {
@@ -449,19 +463,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.983147637
+          "duration": 2.017761987
         }
       }
     ]
@@ -474,8 +480,8 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
           "infos": [
@@ -488,7 +494,7 @@
               "error": "add 'https://w3id.org/security/suites/secp256k1recovery-2020'"
             }
           ],
-          "duration": 1.798982421
+          "duration": 1.762047522
         }
       },
       {
@@ -496,12 +502,8 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
           "infos": [
@@ -518,7 +520,7 @@
               "error": "add 'https://w3id.org/security/suites/secp256k1recovery-2020'"
             }
           ],
-          "duration": 1.807210201
+          "duration": 1.799001193
         }
       }
     ]
@@ -531,35 +533,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.699751402
+          "duration": 1.595405999
         }
       },
       {
@@ -567,27 +545,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.461299252
+          "duration": 1.463022618
         }
       }
     ]
@@ -600,19 +562,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "authentication",
-              "error": "invalid 'authentication'"
-            },
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 1.325374702
+          "duration": 1.392902673
         }
       }
     ]
@@ -623,7 +577,7 @@
       {
         "did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21": {
           "error": "no response",
-          "duration": 11.145542997
+          "duration": 10.976561211
         }
       }
     ]
@@ -635,7 +589,7 @@
         "did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de",
-          "duration": 1.373845979
+          "duration": 1.27667606
         }
       }
     ]
@@ -645,9 +599,8 @@
     "identifiers": [
       {
         "did:elem:ropsten:EiCtwD11AV9e1oISQRHnMJsBC3OBdYDmx8xeKeASrKaw6A": {
-          "valid": false,
-          "error": "Uniresolver cannot resolve did:elem:ropsten:EiCtwD11AV9e1oISQRHnMJsBC3OBdYDmx8xeKeASrKaw6A",
-          "duration": 6.559030811
+          "error": "no response",
+          "duration": 10.979957089
         }
       }
     ]
@@ -659,7 +612,7 @@
         "did:github:gjgd": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:github:gjgd",
-          "duration": 1.005186475
+          "duration": 1.04001371
         }
       }
     ]
@@ -672,23 +625,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "authentication",
-              "error": "invalid 'authentication'"
-            },
-            {
-              "value": "id",
-              "error": "there must be one 'id' in 'service'"
-            },
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 2.755372361
+          "duration": 2.6398964
         }
       },
       {
@@ -696,23 +637,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "authentication",
-              "error": "invalid 'authentication'"
-            },
-            {
-              "value": "id",
-              "error": "there must be one 'id' in 'service'"
-            },
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 1.707291208
+          "duration": 1.588532081
         }
       }
     ]
@@ -725,15 +654,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 1.55911354
+          "duration": 1.692463035
         }
       }
     ]
@@ -750,7 +675,7 @@
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.625679334
+          "duration": 1.615315297
         }
       },
       {
@@ -758,11 +683,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 1.540210176
+          "duration": 1.519365732
         }
       },
       {
@@ -770,15 +695,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'http://w3id.org/security/suites/x25519-2019/v1'"
             }
           ],
-          "duration": 1.576634212
+          "duration": 1.562138648
         }
       }
     ]
@@ -790,14 +711,14 @@
         "did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764",
-          "duration": 1.77935399
+          "duration": 4.328815122
         }
       },
       {
         "did:factom:testnet:c2d5aa15943c93db313f140e7ed87ec9891d02acbde748932db583aa3080af08": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:factom:testnet:c2d5aa15943c93db313f140e7ed87ec9891d02acbde748932db583aa3080af08",
-          "duration": 0.959987673
+          "duration": 0.967009749
         }
       }
     ]
@@ -810,15 +731,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "authentication",
-              "error": "invalid 'authentication'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.951341912
+          "duration": 1.953969244
         }
       }
     ]
@@ -831,15 +748,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "authentication",
-              "error": "invalid 'authentication'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/2018/credentials/v1'"
             }
           ],
-          "duration": 2.795380561
+          "duration": 2.728765707
         }
       },
       {
@@ -847,15 +760,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 2.853387873
+          "duration": 2.681939113
         }
       }
     ]
@@ -867,7 +776,7 @@
         "did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J",
-          "duration": 1.045924642
+          "duration": 1.042393404
         }
       },
       {
@@ -875,11 +784,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 2.347988536
+          "duration": 2.446187638
         }
       }
     ]
@@ -896,7 +805,7 @@
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.838374783
+          "duration": 1.916829568
         }
       }
     ]
@@ -909,10 +818,6 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             },
@@ -921,31 +826,63 @@
               "error": "add 'https://www.w3.org/2018/credentials/v1'"
             }
           ],
-          "duration": 1.956200864
+          "duration": 2.050239436
         }
       }
     ]
   },
   "did:gatc": {
-    "status": "partially compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:gatc:2xtSori9UQZdTqzxrkp7zqKM4Kj5B4C7": {
-          "valid": true,
-          "duration": 1.713218744
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "error": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
+            }
+          ],
+          "duration": 1.675098779
         }
       },
       {
         "did:gatc:acYseLtTEVeqF8oBhJEejbCVHJ8auVupaRuo6gw4hmXjcc77uCKqyM3imEJH": {
-          "valid": true,
-          "duration": 1.306972536
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "error": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
+            }
+          ],
+          "duration": 1.31939496
         }
       },
       {
         "did:gatc:MDU2OGVjYTViNGUzYmM2OGJiMGE1ZGM3": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:gatc:MDU2OGVjYTViNGUzYmM2OGJiMGE1ZGM3",
-          "duration": 1.366613799
+          "duration": 1.347990016
         }
       }
     ]
@@ -958,19 +895,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "authentication",
-              "error": "invalid 'authentication'"
-            },
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 1.400203786
+          "duration": 1.613630052
         }
       }
     ]
@@ -983,10 +912,6 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             },
@@ -995,7 +920,7 @@
               "error": "add 'https://www.w3.org/2018/credentials/v1'"
             }
           ],
-          "duration": 1.579025477
+          "duration": 1.630766486
         }
       }
     ]
@@ -1008,10 +933,6 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             },
@@ -1020,7 +941,7 @@
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.970449822
+          "duration": 1.648010847
         }
       }
     ]
@@ -1041,7 +962,7 @@
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.6624009
+          "duration": 1.77176415
         }
       }
     ]
@@ -1053,18 +974,24 @@
         "did:lit:AEZ87t1bi5bRxmVh3ksMUi": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:lit:AEZ87t1bi5bRxmVh3ksMUi",
-          "duration": 1.451487805
+          "duration": 1.638636991
         }
       }
     ]
   },
   "did:ebsi": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:ebsi:ziE2n8Ckhi6ut5Z8Cexrihd": {
-          "valid": true,
-          "duration": 1.738861446
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 1.724211558
         }
       }
     ]
@@ -1077,15 +1004,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 2.483049191
+          "duration": 2.441382354
         }
       }
     ]
@@ -1098,10 +1021,6 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             },
@@ -1110,7 +1029,7 @@
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.833855355
+          "duration": 1.834227871
         }
       }
     ]
@@ -1123,18 +1042,18 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 1.8711351
+          "duration": 1.805244751
         }
       },
       {
         "did:tz:delphinet:tz1WvvbEGpBXGeTVbLiR6DYBe1izmgiYuZbq": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:tz:delphinet:tz1WvvbEGpBXGeTVbLiR6DYBe1izmgiYuZbq",
-          "duration": 0.980036761
+          "duration": 1.004729067
         }
       }
     ]
@@ -1147,15 +1066,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.339779176
+          "duration": 1.33391468
         }
       },
       {
@@ -1167,7 +1082,7 @@
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 1.324206059
+          "duration": 1.313131741
         }
       },
       {
@@ -1175,11 +1090,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 1.331863787
+          "duration": 1.294720787
         }
       },
       {
@@ -1191,7 +1106,7 @@
               "error": "add 'https://w3id.org/security/suites/jws-2020/v1'"
             }
           ],
-          "duration": 1.287628416
+          "duration": 1.314000405
         }
       }
     ]
@@ -1204,19 +1119,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1recovery-2020'"
             }
           ],
-          "duration": 1.373487364
+          "duration": 1.328742733
         }
       }
     ]
@@ -1227,24 +1134,36 @@
       {
         "did:orb:hl:uEiBuxTFn4L_Hn8KsOWo8e9kqWP38MThBaToB_5yV3c5QTg:uoQ-BeEJpcGZzOi8vYmFma3JlaWRveXV5d3B5Zjd5NnA0Zmxiem5pNmh4d2prbGQ2N3ltanlpZnV0dWFwN3RzazUzdHNxank:EiD_igS1OSEftg5BGfisJGOS1rgcx5AkQhX0h1B4dHTUYA": {
           "error": "no response",
-          "duration": 10.97596861
+          "duration": 10.973515811
         }
       }
     ]
   },
   "did:oyd": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:oyd:zQmaBZTghndXTgxNwfbdpVLWdFf6faYE4oeuN2zzXdQt1kh": {
-          "valid": true,
-          "duration": 1.206784494
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 1.266931953
         }
       },
       {
         "did:oyd:zQmNauTUUdkpi5TcrTZ2524SKM8dJAzuuw4xfW13iHrtY1W%40did2.data-container.net": {
-          "valid": true,
-          "duration": 1.138198873
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 1.184180573
         }
       }
     ]
@@ -1256,7 +1175,7 @@
         "did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA",
-          "duration": 1.034701338
+          "duration": 1.036680089
         }
       }
     ]
@@ -1269,11 +1188,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 1.691390073
+          "duration": 1.763637784
         }
       },
       {
@@ -1281,11 +1200,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 1.682981149
+          "duration": 1.704378767
         }
       }
     ]
@@ -1297,14 +1216,14 @@
         "did:mydata:z6MkjNiGktLUrNrwMW6obMR85UsjYmLPFmcXc9qaiAGqPaJT": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:mydata:z6MkjNiGktLUrNrwMW6obMR85UsjYmLPFmcXc9qaiAGqPaJT",
-          "duration": 1.765976033
+          "duration": 1.744295091
         }
       },
       {
         "did:mydata:z6MkscL1kQFhsAQdmXWVQrT6d8AiSwupTxshsreQnjhjVBzu": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:mydata:z6MkscL1kQFhsAQdmXWVQrT6d8AiSwupTxshsreQnjhjVBzu",
-          "duration": 1.682772498
+          "duration": 1.672332463
         }
       }
     ]
@@ -1317,15 +1236,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.765249023
+          "duration": 1.673667972
         }
       }
     ]
@@ -1336,19 +1251,19 @@
       {
         "did:everscale:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e": {
           "error": "no response",
-          "duration": 10.974470316
+          "duration": 10.977427773
         }
       },
       {
         "did:everscale:mainnet:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e": {
           "error": "no response",
-          "duration": 10.98801833
+          "duration": 10.969087173
         }
       },
       {
         "did:everscale:testnet:d760f69f830dfa0668f2e7923392217589ec8d62dcb90f2c06656665dba7fb4d": {
           "error": "no response",
-          "duration": 10.974757954
+          "duration": 10.977793702
         }
       }
     ]
@@ -1359,36 +1274,48 @@
       {
         "did:ala:quor:redT:706b3e4611a855b8b1267c4e9f0c77124af003fe": {
           "error": "no response",
-          "duration": 10.972744182
+          "duration": 10.976326312
         }
       },
       {
         "did:ala:quor:redT:3729a1872356dd5c5ac377c85d539fe63cb561d8": {
           "error": "no response",
-          "duration": 10.977282993
+          "duration": 10.976993445
         }
       },
       {
         "did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15": {
           "error": "no response",
-          "duration": 10.972923645
+          "duration": 10.97746958
         }
       }
     ]
   },
   "did:cheqd": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:cheqd:mainnet:Ps1ysXP2Ae6GBfxNhNQNKN": {
-          "valid": true,
-          "duration": 2.90545986
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.854895538
         }
       },
       {
         "did:cheqd:testnet:55dbc8bf-fba3-4117-855c-1e0dc1d3bb47": {
-          "valid": true,
-          "duration": 2.543610897
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.441262021
         }
       }
     ]
@@ -1401,19 +1328,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 1.875484443
+          "duration": 1.996373443
         }
       },
       {
@@ -1421,19 +1340,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 1.70648288
+          "duration": 1.51405179
         }
       }
     ]
@@ -1446,8 +1357,8 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
           "infos": [
@@ -1464,7 +1375,7 @@
               "error": "add 'https://w3id.org/security/suites/secp256k1recovery-2020'"
             }
           ],
-          "duration": 1.541047639
+          "duration": 2.242245341
         }
       },
       {
@@ -1472,8 +1383,8 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
           "infos": [
@@ -1482,7 +1393,7 @@
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 1.33378778
+          "duration": 1.364302916
         }
       },
       {
@@ -1490,31 +1401,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1recovery-2020'"
             }
           ],
-          "duration": 1.499780942
+          "duration": 1.596219377
         }
       }
     ]
@@ -1531,7 +1422,7 @@
               "error": "add 'https://w3id.org/security/suites/jws-2020/v1'"
             }
           ],
-          "duration": 1.343685574
+          "duration": 1.32631494
         }
       },
       {
@@ -1543,7 +1434,7 @@
               "error": "add 'https://w3id.org/security/suites/jws-2020/v1'"
             }
           ],
-          "duration": 1.37178789
+          "duration": 1.641567268
         }
       }
     ]
@@ -1556,15 +1447,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.727905058
+          "duration": 1.756809015
         }
       },
       {
@@ -1572,15 +1459,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.769613873
+          "duration": 1.748014597
         }
       }
     ]
@@ -1593,15 +1476,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 1.711821609
+          "duration": 1.772065945
         }
       }
     ]
@@ -1613,14 +1492,14 @@
         "did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9",
-          "duration": 6.969706739
+          "duration": 6.941509069
         }
       },
       {
         "did:ev:bmM8MpeJAGF2ky7YUnwgJGKxyHdCL6DGAUmEW": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:ev:bmM8MpeJAGF2ky7YUnwgJGKxyHdCL6DGAUmEW",
-          "duration": 5.347813534
+          "duration": 6.930232221
         }
       }
     ]
@@ -1633,35 +1512,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "authentication",
-              "error": "invalid 'authentication'"
-            },
-            {
-              "value": "id",
-              "error": "there must be one 'id' in 'service'"
-            },
-            {
-              "value": "type",
-              "error": "there must be one 'type' in 'service'"
-            },
-            {
-              "value": "serviceEndpoint",
-              "error": "there must be one 'serviceEndpoint' in 'service'"
-            },
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 2.442158833
+          "duration": 2.111324269
         }
       }
     ]
@@ -1674,15 +1529,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 2.135176147
+          "duration": 2.263545692
         }
       }
     ]
@@ -1693,18 +1544,24 @@
       {
         "did:bid:ef214PmkhKndUcArDQPgD5J4fFVwqJFPt": {
           "error": "no response",
-          "duration": 11.315800218
+          "duration": 5.00962095
         }
       }
     ]
   },
   "did:algo": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:algo:c93fdef1-8a0a-4c65-8c54-fd33117c9e82": {
-          "valid": true,
-          "duration": 1.870008761
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 1.792090593
         }
       }
     ]
