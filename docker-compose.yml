@@ -246,3 +246,7 @@ services:
     image: ghcr.io/bryk-io/algoid-resolver:latest
     ports:
       - "8140:9091"
+  driver-did-polygonid:
+    image: polygonid/driver-did-polygonid:latest
+    ports:
+      - "8141:8080"
