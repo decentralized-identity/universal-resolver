@@ -121,7 +121,7 @@ public class ClientUniResolver implements UniResolver {
 			}
 
 			if (httpStatusCode != 200 && resolveRepresentationResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_INTERNALERROR, "Cannot retrieve result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_INTERNALERROR, "Cannot retrieve RESOLVE result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (resolveRepresentationResult != null && resolveRepresentationResult.isErrorResult()) {
@@ -137,10 +137,10 @@ public class ClientUniResolver implements UniResolver {
 			throw ex;
 		} catch (Exception ex) {
 
-			throw new ResolutionException("Cannot retrieve resolve result for " + didString + " from " + uriString + ": " + ex.getMessage(), ex);
+			throw new ResolutionException("Cannot retrieve RESOLVE result for " + didString + " from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved resolve result for " + didString + " (" + uriString + "): " + resolveRepresentationResult);
+		if (log.isDebugEnabled()) log.debug("Retrieved RESOLVE result for " + didString + " (" + uriString + "): " + resolveRepresentationResult);
 
 		// done
 
