@@ -7,11 +7,12 @@ import uniresolver.ResolutionException;
 import uniresolver.local.LocalUniResolver;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.local.extensions.ResolverExtension;
+import uniresolver.local.extensions.ResolverExtension.AbstractResolverExtension;
 import uniresolver.result.ResolveResult;
 
 import java.util.Map;
 
-public class DummyResolverExtension implements ResolverExtension {
+public class DummyResolverExtension extends AbstractResolverExtension implements ResolverExtension {
 
 	private static Logger log = LoggerFactory.getLogger(DummyResolverExtension.class);
 

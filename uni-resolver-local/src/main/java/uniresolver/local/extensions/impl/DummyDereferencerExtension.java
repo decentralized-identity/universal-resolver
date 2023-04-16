@@ -7,12 +7,13 @@ import uniresolver.DereferencingException;
 import uniresolver.ResolutionException;
 import uniresolver.local.LocalUniDereferencer;
 import uniresolver.local.extensions.DereferencerExtension;
+import uniresolver.local.extensions.DereferencerExtension.AbstractDereferencerExtension;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.result.DereferenceResult;
 
 import java.util.Map;
 
-public class DummyDereferencerExtension implements DereferencerExtension {
+public class DummyDereferencerExtension extends AbstractDereferencerExtension implements DereferencerExtension {
 
 	private static Logger log = LoggerFactory.getLogger(DummyDereferencerExtension.class);
 
