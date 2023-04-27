@@ -292,3 +292,8 @@ uniresolver:
       url: http://driver-did-algo:9091/
       testIdentifiers:
         - did:algo:c93fdef1-8a0a-4c65-8c54-fd33117c9e82
+    - pattern: "^(did:polygonid:.+)$"
+      url: http://driver-did-polygonid:8080/
+      propertiesEndpoint: 'true'
+      testIdentifiers:
+        - did:polygonid:polygon:mumbai:2qDj9EDytmvtQP1or3FxykXGEaqSA1ss479MYHDMJc
