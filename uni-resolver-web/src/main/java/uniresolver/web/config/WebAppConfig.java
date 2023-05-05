@@ -91,40 +91,39 @@ public class WebAppConfig {
 	}
 
 	public void configureLocalUniresolver(DriverConfigs driverConfigs, LocalUniResolver uniResolver) {
+
 		List<Driver> drivers = new ArrayList<>();
 
 		for (DriverConfigs.DriverConfig dc : driverConfigs.getDrivers()) {
 
-			if (dc.getPattern() == null)
-				throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
-			if (dc.getURL() == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
+			String pattern = dc.getPattern();
+			String url = dc.getURL();
+			String propertiesEndpoint = dc.getPropertiesEndpoint();
+			List<String> testIdentifiers = dc.getTestIdentifiers();
 
-			// adopted from LocalUniResolverConfigurator
+			if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
+			if (url == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
+
 			// construct HTTP driver
 
 			HttpDriver driver = new HttpDriver();
+			driver.setPattern(pattern);
 
-			driver.setPattern(dc.getPattern());
-			if (dc.getURL().contains("$1") || dc.getURL().contains("$2")) {
-
-				driver.setResolveUri(dc.getURL());
+			if (url.contains("$1") || url.contains("$2")) {
+				driver.setResolveUri(url);
 				driver.setPropertiesUri((URI) null);
 			} else {
-
-				if (!dc.getURL().endsWith("/")) dc.setURL(dc.getURL() + "/");
-
-				driver.setResolveUri(normalizeUri((dc.getURL() + servletMappings.getResolve()), true));
-				if ("true".equals(dc.getPropertiesEndpoint()))
-					driver.setPropertiesUri(normalizeUri((dc.getURL() + servletMappings.getProperties()), false));
+				if (! url.endsWith("/")) url = url + "/";
+				driver.setResolveUri(normalizeUri((url + servletMappings.getResolve()), true));
+				if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(normalizeUri((url + servletMappings.getProperties()), false));
 			}
 
-			driver.setTestIdentifiers(dc.getTestIdentifiers());
+			driver.setTestIdentifiers(testIdentifiers);
 
 			// done
 
 			drivers.add(driver);
-			if (log.isInfoEnabled())
-				log.info("Added driver for pattern '" + dc.getPattern() + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
+			if (log.isInfoEnabled()) log.info("Added driver for pattern '" + dc.getPattern() + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
 		}
 
 		uniResolver.setDrivers(drivers);
