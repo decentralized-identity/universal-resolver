@@ -54,17 +54,25 @@ public class LocalUniResolver implements UniResolver {
 
 	@Override
 	public ResolveDataModelResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+		return this.resolve(didString, resolutionOptions, null);
+	}
+
+	public ResolveDataModelResult resolve(String didString, Map<String, Object> resolutionOptions, Map<String, Object> initialExecutionState) throws ResolutionException {
 		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
-		return (ResolveDataModelResult) this.resolveOrResolveRepresentation(didString, resolutionOptions, false);
+		return (ResolveDataModelResult) this.resolveOrResolveRepresentation(didString, resolutionOptions, false, initialExecutionState);
 	}
 
 	@Override
 	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
-		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
-		return (ResolveRepresentationResult) this.resolveOrResolveRepresentation(didString, resolutionOptions, true);
+		return this.resolveRepresentation(didString, resolutionOptions, null);
 	}
 
-	private ResolveResult resolveOrResolveRepresentation(String didString, Map<String, Object> resolutionOptions, boolean resolveRepresentation) throws ResolutionException {
+	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions, Map<String, Object> initialExecutionState) throws ResolutionException {
+		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
+		return (ResolveRepresentationResult) this.resolveOrResolveRepresentation(didString, resolutionOptions, true, initialExecutionState);
+	}
+
+	private ResolveResult resolveOrResolveRepresentation(String didString, Map<String, Object> resolutionOptions, boolean resolveRepresentation, Map<String, Object> initialExecutionState) throws ResolutionException {
 
 		if (didString == null) throw new NullPointerException();
 		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
@@ -76,6 +84,7 @@ public class LocalUniResolver implements UniResolver {
 		// prepare execution state
 
 		Map<String, Object> executionState = new HashMap<>();
+		if (initialExecutionState != null) executionState.putAll(initialExecutionState);
 
 		// prepare resolve result
 

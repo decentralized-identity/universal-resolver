@@ -62,6 +62,10 @@ public class LocalUniDereferencer implements UniDereferencer {
 
     @Override
     public DereferenceResult dereference(String didUrlString, Map<String, Object> dereferenceOptions) throws ResolutionException, DereferencingException {
+        return this.dereference(didUrlString, dereferenceOptions, null);
+    }
+
+    public DereferenceResult dereference(String didUrlString, Map<String, Object> dereferenceOptions, Map<String, Object> initialExecutionState) throws ResolutionException, DereferencingException {
 
         if (log.isDebugEnabled()) log.debug("dereference(" + didUrlString + ")  with options: " + dereferenceOptions);
 
@@ -78,6 +82,7 @@ public class LocalUniDereferencer implements UniDereferencer {
         // prepare execution state
 
         Map<String, Object> executionState = new HashMap<>();
+        if (initialExecutionState != null) executionState.putAll(initialExecutionState);
 
         // parse
 
