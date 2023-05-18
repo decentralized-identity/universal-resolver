@@ -297,3 +297,7 @@ uniresolver:
       propertiesEndpoint: 'true'
       testIdentifiers:
         - did:polygonid:polygon:mumbai:2qDj9EDytmvtQP1or3FxykXGEaqSA1ss479MYHDMJc
+    - pattern: "^(did:pdc:.+)$"
+        url: http://driver-did-pdc:8080/
+        testIdentifiers:
+          - did:pdc:8801:0xf47b66bc0d9b7c73f9ff27bf1f49a2b69dc167fc
