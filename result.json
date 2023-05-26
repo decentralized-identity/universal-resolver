@@ -6,21 +6,21 @@
         "did:btcr:xz35-jznz-q9yu-ply": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:xz35-jznz-q9yu-ply",
-          "duration": 1.431843061
+          "duration": 1.140394068
         }
       },
       {
         "did:btcr:xkrn-xz7q-qsye-28p": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:xkrn-xz7q-qsye-28p",
-          "duration": 1.280358388
+          "duration": 1.027625141
         }
       },
       {
         "did:btcr:x705-jznz-q3nl-srs": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:x705-jznz-q3nl-srs",
-          "duration": 1.326970954
+          "duration": 1.11178533
         }
       }
     ]
@@ -30,14 +30,29 @@
     "identifiers": [
       {
         "did:sov:WRfXPg8dantKVubE3HX8pw": {
-          "error": "no response",
-          "duration": 11.344059532
+          "valid": false,
+          "errors": [
+            {
+              "value": "id",
+              "error": "there must be one 'id' in 'service'"
+            },
+            {
+              "value": "id",
+              "error": "there must be one 'id' in 'service'"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/x25519-2019/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 5.588100045
         }
       },
       {
         "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx": {
           "valid": true,
-          "duration": 3.004828234
+          "duration": 4.011391093
         }
       },
       {
@@ -54,25 +69,25 @@
               "message": "'https://w3id.org/security/suites/x25519-2019/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
             }
           ],
-          "duration": 11.168523316
+          "duration": 3.347187185
         }
       },
       {
         "did:sov:idunion:2GMSLg2A8JXcdYVsPC4Jui": {
           "valid": true,
-          "duration": 4.834297721
+          "duration": 3.942199823
         }
       },
       {
         "did:sov:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE": {
           "valid": true,
-          "duration": 10.927028529
+          "duration": 4.180513402
         }
       },
       {
         "did:sov:indicio:test:5DiMymoHmgfCB2H2WbM7ZL": {
           "error": "no response",
-          "duration": 11.300769319
+          "duration": 11.066912293
         }
       }
     ]
@@ -83,13 +98,13 @@
       {
         "did:indy:sovrin:WRfXPg8dantKVubE3HX8pw": {
           "valid": true,
-          "duration": 2.478314693
+          "duration": 2.213696263
         }
       },
       {
         "did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx": {
           "valid": true,
-          "duration": 1.654114818
+          "duration": 2.54543365
         }
       },
       {
@@ -111,26 +126,26 @@
               "message": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.836650159
+          "duration": 2.462621022
         }
       },
       {
         "did:indy:idunion:2GMSLg2A8JXcdYVsPC4Jui": {
           "valid": true,
-          "duration": 2.639320936
+          "duration": 1.699387981
         }
       },
       {
         "did:indy:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE": {
           "valid": true,
-          "duration": 3.278771496
+          "duration": 2.505563574
         }
       },
       {
         "did:indy:indicio:test:5DiMymoHmgfCB2H2WbM7ZL": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:indy:indicio:test:5DiMymoHmgfCB2H2WbM7ZL",
-          "duration": 0.936776215
+          "duration": 0.976932795
         }
       }
     ]
@@ -147,7 +162,7 @@
               "error": "Error: Failed to load remote context https://w3id.org/did/v0.11: Request failed with status code 404"
             }
           ],
-          "duration": 1.640481743
+          "duration": 1.570550355
         }
       },
       {
@@ -159,7 +174,7 @@
               "error": "Error: Failed to load remote context https://w3id.org/did/v0.11: Request failed with status code 404"
             }
           ],
-          "duration": 1.641226852
+          "duration": 1.574968176
         }
       },
       {
@@ -171,7 +186,7 @@
               "error": "Error: Failed to load remote context https://w3id.org/did/v0.11: Request failed with status code 404"
             }
           ],
-          "duration": 1.618852391
+          "duration": 1.450746586
         }
       }
     ]
@@ -183,7 +198,7 @@
         "did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0",
-          "duration": 1.216332485
+          "duration": 1.090294729
         }
       }
     ]
@@ -194,7 +209,7 @@
       {
         "did:web:did.actor:alice": {
           "valid": true,
-          "duration": 1.970833734
+          "duration": 1.77181536
         }
       },
       {
@@ -211,7 +226,7 @@
               "message": "'{\"@base\"=>\"did:web:did.actor:bob\"}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
             }
           ],
-          "duration": 1.390386009
+          "duration": 1.291748082
         }
       },
       {
@@ -228,20 +243,19 @@
               "message": "'{\"@base\"=>\"did:web:did.actor:carol\"}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
             }
           ],
-          "duration": 1.502036903
+          "duration": 1.401525749
         }
       },
       {
         "did:web:did.actor:mike": {
           "valid": true,
-          "duration": 1.457020581
+          "duration": 1.43041031
         }
       },
       {
         "did:web:identity.foundation": {
-          "valid": false,
-          "error": "Uniresolver cannot resolve did:web:identity.foundation",
-          "duration": 0.992295374
+          "error": "no response",
+          "duration": 10.593064915
         }
       }
     ]
@@ -252,61 +266,61 @@
       {
         "did:ethr:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736": {
           "valid": true,
-          "duration": 1.996091217
+          "duration": 1.827399932
         }
       },
       {
         "did:ethr:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479": {
           "valid": true,
-          "duration": 1.556909817
+          "duration": 1.549678755
         }
       },
       {
         "did:ethr:0x1:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736": {
           "valid": true,
-          "duration": 1.444546909
+          "duration": 1.375551768
         }
       },
       {
         "did:ethr:0x1:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479": {
           "valid": true,
-          "duration": 1.438357038
+          "duration": 1.604707477
         }
       },
       {
         "did:ethr:goerli:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479": {
           "valid": true,
-          "duration": 1.510600778
+          "duration": 1.637296506
         }
       },
       {
         "did:ethr:0x5:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479": {
           "valid": true,
-          "duration": 1.517051641
+          "duration": 1.512363868
         }
       },
       {
         "did:ethr:rsk:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479": {
           "valid": true,
-          "duration": 1.752075112
+          "duration": 1.843505778
         }
       },
       {
         "did:ethr:0x1e:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479": {
           "valid": true,
-          "duration": 1.812938825
+          "duration": 1.728707308
         }
       },
       {
         "did:ethr:ewc:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479": {
           "valid": true,
-          "duration": 2.088274649
+          "duration": 2.003779377
         }
       },
       {
         "did:ethr:volta:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479": {
           "valid": true,
-          "duration": 2.127669796
+          "duration": 1.940468831
         }
       }
     ]
@@ -333,7 +347,7 @@
               "message": "add 'https://w3id.org/security/suites/secp256k1recovery-2020'"
             }
           ],
-          "duration": 1.861500651
+          "duration": 1.720749388
         }
       },
       {
@@ -363,7 +377,7 @@
               "message": "add 'https://w3id.org/security/suites/secp256k1recovery-2020'"
             }
           ],
-          "duration": 2.507087713
+          "duration": 1.759657869
         }
       }
     ]
@@ -374,13 +388,13 @@
       {
         "did:peer:2.Ez6LSghwSE437wnDE1pt3X6hVDUQzSjsHzinpX3XFvMjRAm7y.Vz6Mkhh1e5CEYYq6JBUcTZ6Cp2ranCWRrv7Yax3Le4N59R6dd.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9hbGljZS5kaWQuZm1ncC5hcHAvIiwiciI6W10sImEiOlsiZGlkY29tbS92MiJdfQ": {
           "valid": true,
-          "duration": 1.808813523
+          "duration": 1.742514757
         }
       },
       {
         "did:peer:2.Ez6LSpSrLxbAhg2SHwKk7kwpsH7DM7QjFS5iK6qP87eViohud.Vz6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9leGFtcGxlLmNvbS9lbmRwb2ludDEiLCJyIjpbImRpZDpleGFtcGxlOnNvbWVtZWRpYXRvciNzb21la2V5MSJdLCJhIjpbImRpZGNvbW0vdjIiLCJkaWRjb21tL2FpcDI7ZW52PXJmYzU4NyJdfQ": {
           "valid": true,
-          "duration": 1.411893291
+          "duration": 1.256476538
         }
       }
     ]
@@ -397,7 +411,7 @@
               "error": "Error: Failed to load remote context https://w3c-ccg.github.io/verifiable-conditions/contexts/verifiable-conditions-2021-v1.json: Request failed with status code 404"
             }
           ],
-          "duration": 1.270996125
+          "duration": 1.137736566
         }
       },
       {
@@ -409,7 +423,7 @@
               "error": "Error: Failed to load remote context https://w3c-ccg.github.io/verifiable-conditions/contexts/verifiable-conditions-2021-v1.json: Request failed with status code 404"
             }
           ],
-          "duration": 1.079501261
+          "duration": 0.882897971
         }
       }
     ]
@@ -434,7 +448,7 @@
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 2.082014712
+          "duration": 1.711472861
         }
       }
     ]
@@ -445,7 +459,7 @@
       {
         "did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21": {
           "error": "no response",
-          "duration": 10.946846166
+          "duration": 10.576659378
         }
       }
     ]
@@ -457,7 +471,7 @@
         "did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de",
-          "duration": 1.378153051
+          "duration": 1.269821063
         }
       }
     ]
@@ -469,7 +483,7 @@
         "did:elem:ropsten:EiCtwD11AV9e1oISQRHnMJsBC3OBdYDmx8xeKeASrKaw6A": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:elem:ropsten:EiCtwD11AV9e1oISQRHnMJsBC3OBdYDmx8xeKeASrKaw6A",
-          "duration": 9.703325103
+          "duration": 9.534815135
         }
       }
     ]
@@ -481,7 +495,7 @@
         "did:github:gjgd": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:github:gjgd",
-          "duration": 1.119014023
+          "duration": 0.854007332
         }
       }
     ]
@@ -498,7 +512,7 @@
               "error": "Error: Failed to load remote context https://www.w3.org/2019/did/v1: Request failed with status code 404"
             }
           ],
-          "duration": 2.458639554
+          "duration": 2.12433552
         }
       },
       {
@@ -510,7 +524,7 @@
               "error": "Error: Failed to load remote context https://www.w3.org/2019/did/v1: Request failed with status code 404"
             }
           ],
-          "duration": 1.474255621
+          "duration": 1.426262566
         }
       }
     ]
@@ -531,7 +545,7 @@
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 2.004231961
+          "duration": 1.767217481
         }
       }
     ]
@@ -548,7 +562,7 @@
               "error": "Error: Failed to load remote context ipfs://QmU7QkuTCPz7NmD5bD7Z7mQVz2UsSPaEK58B5sYnjnPRNW: Unsupported protocol ipfs:"
             }
           ],
-          "duration": 1.286993144
+          "duration": 1.101097856
         }
       },
       {
@@ -560,7 +574,7 @@
               "error": "Error: Failed to load remote context ipfs://QmU7QkuTCPz7NmD5bD7Z7mQVz2UsSPaEK58B5sYnjnPRNW: Unsupported protocol ipfs:"
             }
           ],
-          "duration": 1.168175263
+          "duration": 1.069507747
         }
       },
       {
@@ -572,7 +586,7 @@
               "error": "Error: Failed to load remote context ipfs://QmU7QkuTCPz7NmD5bD7Z7mQVz2UsSPaEK58B5sYnjnPRNW: Unsupported protocol ipfs:"
             }
           ],
-          "duration": 1.175189145
+          "duration": 1.198581207
         }
       }
     ]
@@ -584,14 +598,14 @@
         "did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764",
-          "duration": 3.120457206
+          "duration": 1.189893711
         }
       },
       {
         "did:factom:testnet:c2d5aa15943c93db313f140e7ed87ec9891d02acbde748932db583aa3080af08": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:factom:testnet:c2d5aa15943c93db313f140e7ed87ec9891d02acbde748932db583aa3080af08",
-          "duration": 0.96297231
+          "duration": 0.782976443
         }
       }
     ]
@@ -612,7 +626,7 @@
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 2.336335597
+          "duration": 2.25455063
         }
       }
     ]
@@ -623,7 +637,7 @@
       {
         "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf": {
           "valid": true,
-          "duration": 3.196524145
+          "duration": 3.892941626
         }
       },
       {
@@ -640,7 +654,7 @@
               "message": "'https://w3id.org/security/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
             }
           ],
-          "duration": 2.610225714
+          "duration": 2.633710964
         }
       }
     ]
@@ -652,7 +666,7 @@
         "did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J",
-          "duration": 1.015351892
+          "duration": 0.831934802
         }
       },
       {
@@ -664,7 +678,7 @@
               "error": "missing"
             }
           ],
-          "duration": 2.681942533
+          "duration": 2.553663658
         }
       }
     ]
@@ -675,7 +689,7 @@
       {
         "did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w": {
           "valid": true,
-          "duration": 2.134991028
+          "duration": 1.689229641
         }
       }
     ]
@@ -700,7 +714,7 @@
               "error": "add 'https://www.w3.org/2018/credentials/v1'"
             }
           ],
-          "duration": 2.06951514
+          "duration": 1.82243864
         }
       }
     ]
@@ -711,20 +725,20 @@
       {
         "did:gatc:2xtSori9UQZdTqzxrkp7zqKM4Kj5B4C7": {
           "valid": true,
-          "duration": 1.80603424
+          "duration": 1.587316741
         }
       },
       {
         "did:gatc:acYseLtTEVeqF8oBhJEejbCVHJ8auVupaRuo6gw4hmXjcc77uCKqyM3imEJH": {
           "valid": true,
-          "duration": 1.536362813
+          "duration": 1.103987078
         }
       },
       {
         "did:gatc:MDU2OGVjYTViNGUzYmM2OGJiMGE1ZGM3": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:gatc:MDU2OGVjYTViNGUzYmM2OGJiMGE1ZGM3",
-          "duration": 1.061065103
+          "duration": 1.047622059
         }
       }
     ]
@@ -741,7 +755,7 @@
               "error": "Error: Failed to load remote context https://www.w3.org/2019/did/v1: Request failed with status code 404"
             }
           ],
-          "duration": 1.347476223
+          "duration": 8.397662215
         }
       }
     ]
@@ -766,49 +780,29 @@
               "error": "add 'https://www.w3.org/2018/credentials/v1'"
             }
           ],
-          "duration": 1.624073164
+          "duration": 1.561480637
         }
       }
     ]
   },
   "did:unisot": {
-    "status": "non-compliant",
+    "status": "no response",
     "identifiers": [
       {
         "did:unisot:test:n1aAmTXAg4o44Z9k8YCQncEY91r3TV7WU4": {
-          "valid": false,
-          "errors": [
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
-              "value": "@context",
-              "error": "add 'https://www.w3.org/ns/did/v1'"
-            },
-            {
-              "value": "@context",
-              "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
-            }
-          ],
-          "duration": 1.935860055
+          "error": "no response",
+          "duration": 10.583471025
         }
       }
     ]
   },
   "did:sol": {
-    "status": "non-compliant",
+    "status": "no response",
     "identifiers": [
       {
         "did:sol:devnet:2eK2DKs6vdzTEoj842Gfcs6DdtffPpw1iF6JbzQL4TuK": {
-          "valid": false,
-          "errors": [
-            {
-              "value": "jsonld-validation",
-              "error": "Error: Failed to load remote context https://w3id.org/sol/v1: Request failed with status code 404"
-            }
-          ],
-          "duration": 1.699677728
+          "error": "no response",
+          "duration": 10.588366779
         }
       }
     ]
@@ -818,116 +812,98 @@
     "identifiers": [
       {
         "did:lit:AEZ87t1bi5bRxmVh3ksMUi": {
-          "valid": false,
-          "error": "Uniresolver cannot resolve did:lit:AEZ87t1bi5bRxmVh3ksMUi",
-          "duration": 1.483560506
+          "error": "no response",
+          "duration": 10.696074776
         }
       }
     ]
   },
   "did:ebsi": {
-    "status": "compliant",
+    "status": "no response",
     "identifiers": [
       {
         "did:ebsi:ziE2n8Ckhi6ut5Z8Cexrihd": {
-          "valid": true,
-          "duration": 2.156725565
+          "error": "no response",
+          "duration": 10.589392843
         }
       }
     ]
   },
   "did:emtrust": {
-    "status": "non-compliant",
+    "status": "no response",
     "identifiers": [
       {
         "did:emtrust:0x242a5ac36676462bd58a": {
-          "valid": false,
-          "errors": [
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
-            },
-            {
-              "value": "@context",
-              "error": "add 'https://www.w3.org/ns/did/v1'"
-            }
-          ],
-          "duration": 3.014870379
+          "error": "no response",
+          "duration": 10.588264497
         }
       }
     ]
   },
   "did:meta": {
-    "status": "non-compliant",
+    "status": "no response",
     "identifiers": [
       {
         "did:meta:0000000000000000000000000000000000000000000000000000000000005e65": {
-          "valid": false,
-          "errors": [
-            {
-              "value": "jsonld-validation",
-              "error": "Error: Failed to load remote context https://w3id.org/did/v0.11: Request failed with status code 404"
-            }
-          ],
-          "duration": 1.994672564
+          "error": "no response",
+          "duration": 10.604262135
         }
       }
     ]
   },
   "did:tz": {
-    "status": "partially compliant",
+    "status": "no response",
     "identifiers": [
       {
         "did:tz:tz1YwA1FwpgLtc1G8DKbbZ6e6PTb1dQMRn5x": {
-          "valid": true,
-          "duration": 1.835959329
+          "error": "no response",
+          "duration": 10.595924117
         }
       },
       {
         "did:tz:delphinet:tz1WvvbEGpBXGeTVbLiR6DYBe1izmgiYuZbq": {
-          "valid": false,
-          "error": "Uniresolver cannot resolve did:tz:delphinet:tz1WvvbEGpBXGeTVbLiR6DYBe1izmgiYuZbq",
-          "duration": 1.085761954
+          "error": "no response",
+          "duration": 10.693084385
         }
       }
     ]
   },
   "did:key": {
-    "status": "compliant",
+    "status": "no response",
     "identifiers": [
       {
         "did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH": {
-          "valid": true,
-          "duration": 1.369531152
+          "error": "no response",
+          "duration": 10.588183066
         }
       },
       {
         "did:key:zQ3shokFTS3brHcDQrn82RUDfCZESWL1ZdCEJwekUDPQiYBme": {
-          "valid": true,
-          "duration": 1.341799165
+          "error": "no response",
+          "duration": 10.58826888
         }
       },
       {
         "did:key:zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169": {
-          "valid": true,
-          "duration": 1.334058875
+          "error": "no response",
+          "duration": 10.604808241
         }
       },
       {
         "did:key:z4MXj1wBzi9jUstyPMS4jQqB6KdJaiatPkAtVtGc6bQEQEEsKTic4G7Rou3iBf9vPmT5dbkm9qsZsuVNjq8HCuW1w24nhBFGkRE4cd2Uf2tfrB3N7h4mnyPp1BF3ZttHTYv3DLUPi1zMdkULiow3M1GfXkoC6DoxDUm1jmN6GBj22SjVsr6dxezRVQc7aj9TxE7JLbMH1wh5X3kA58H3DFW8rnYMakFGbca5CB2Jf6CnGQZmL7o5uJAdTwXfy2iiiyPxXEGerMhHwhjTA1mKYobyk2CpeEcmvynADfNZ5MBvcCS7m3XkFCMNUYBS9NQ3fze6vMSUPsNa6GVYmKx2x6JrdEjCk3qRMMmyjnjCMfR4pXbRMZa3i": {
-          "valid": true,
-          "duration": 1.361421692
+          "error": "no response",
+          "duration": 10.60605702
         }
       }
     ]
   },
   "did:pkh": {
-    "status": "compliant",
+    "status": "no response",
     "identifiers": [
       {
         "did:pkh:tz:tz2BFTyPeYRzxd5aiBchbXN3WCZhx7BqbMBq": {
-          "valid": true,
-          "duration": 1.327211296
+          "error": "no response",
+          "duration": 10.703983888
         }
       }
     ]
@@ -938,7 +914,7 @@
       {
         "did:orb:hl:uEiBuxTFn4L_Hn8KsOWo8e9kqWP38MThBaToB_5yV3c5QTg:uoQ-BeEJpcGZzOi8vYmFma3JlaWRveXV5d3B5Zjd5NnA0Zmxiem5pNmh4d2prbGQ2N3ltanlpZnV0dWFwN3RzazUzdHNxank:EiD_igS1OSEftg5BGfisJGOS1rgcx5AkQhX0h1B4dHTUYA": {
           "error": "no response",
-          "duration": 10.961006806
+          "duration": 10.583857356
         }
       }
     ]
@@ -949,13 +925,13 @@
       {
         "did:oyd:zQmaBZTghndXTgxNwfbdpVLWdFf6faYE4oeuN2zzXdQt1kh": {
           "valid": true,
-          "duration": 1.481313155
+          "duration": 1.925259827
         }
       },
       {
         "did:oyd:zQmNauTUUdkpi5TcrTZ2524SKM8dJAzuuw4xfW13iHrtY1W%40did2.data-container.net": {
           "valid": true,
-          "duration": 1.473308063
+          "duration": 7.07560924
         }
       }
     ]
@@ -965,26 +941,19 @@
     "identifiers": [
       {
         "did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA": {
-          "valid": false,
-          "error": "Uniresolver cannot resolve did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA",
-          "duration": 1.023918058
+          "error": "no response",
+          "duration": 10.813431254
         }
       }
     ]
   },
   "did:dock": {
-    "status": "non-compliant",
+    "status": "no response",
     "identifiers": [
       {
         "did:dock:5CxUdCGtopZEJhdv6kfLBZ22PMZX7UK8mdcHbTVw2nw6MVZH": {
-          "valid": false,
-          "errors": [
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
-            }
-          ],
-          "duration": 1.761441099
+          "error": "no response",
+          "duration": 10.686493352
         }
       },
       {
@@ -996,7 +965,7 @@
               "error": "missing"
             }
           ],
-          "duration": 1.71110672
+          "duration": 10.33865396
         }
       }
     ]
@@ -1007,13 +976,13 @@
       {
         "did:mydata:z6MktaWPDXK7qwt9YgcGVuCFAXBvrEP3WPtxJQg37jnULXWL": {
           "valid": true,
-          "duration": 2.679941445
+          "duration": 2.620807023
         }
       },
       {
         "did:mydata:z6MkjgVfx2YE7SUBZBej65E7UHSjAyMLukPvdPjPytpTy1ZM": {
           "valid": true,
-          "duration": 2.521312608
+          "duration": 2.563231868
         }
       }
     ]
@@ -1034,7 +1003,7 @@
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.556955033
+          "duration": 1.562196012
         }
       }
     ]
@@ -1045,19 +1014,19 @@
       {
         "did:everscale:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e": {
           "error": "no response",
-          "duration": 10.976895532
+          "duration": 10.580653087
         }
       },
       {
         "did:everscale:mainnet:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e": {
           "error": "no response",
-          "duration": 10.964321693
+          "duration": 10.599440189
         }
       },
       {
         "did:everscale:testnet:d760f69f830dfa0668f2e7923392217589ec8d62dcb90f2c06656665dba7fb4d": {
           "error": "no response",
-          "duration": 10.972453998
+          "duration": 10.709492871
         }
       }
     ]
@@ -1068,19 +1037,20 @@
       {
         "did:ala:quor:redT:706b3e4611a855b8b1267c4e9f0c77124af003fe": {
           "error": "no response",
-          "duration": 10.963400478
+          "duration": 10.700468807
         }
       },
       {
         "did:ala:quor:redT:3729a1872356dd5c5ac377c85d539fe63cb561d8": {
           "error": "no response",
-          "duration": 11.141062335
+          "duration": 10.700163181
         }
       },
       {
         "did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15": {
-          "error": "no response",
-          "duration": 11.111748363
+          "status": 500,
+          "error": "Internal Server Error",
+          "duration": 8.020537055
         }
       }
     ]
@@ -1091,19 +1061,19 @@
       {
         "did:cheqd:mainnet:Ps1ysXP2Ae6GBfxNhNQNKN": {
           "error": "no response",
-          "duration": 10.960317867
+          "duration": 10.686938991
         }
       },
       {
         "did:cheqd:testnet:55dbc8bf-fba3-4117-855c-1e0dc1d3bb47": {
           "error": "no response",
-          "duration": 10.962145476
+          "duration": 10.867956267
         }
       }
     ]
   },
   "did:com": {
-    "status": "no response",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3": {
@@ -1122,13 +1092,13 @@
               "error": "missing"
             }
           ],
-          "duration": 7.759067097
+          "duration": 7.112393704
         }
       },
       {
         "did:com:17rhmdzlv0zjuahw4mvpfhf3u5tuwyjhr4m06dr": {
           "error": "no response",
-          "duration": 11.302925615
+          "duration": 10.79355677
         }
       }
     ]
@@ -1139,19 +1109,19 @@
       {
         "did:dyne:demo_A:DBzNYB3ft2ncfeGaVV8aR5x95tU5hKUqGLYpDJifEVwu": {
           "error": "no response",
-          "duration": 11.156219487
+          "duration": 10.592335689
         }
       },
       {
         "did:dyne:demo:2r1FxbRA1EyfgeXh9TgEYT5RfkbMFUwLEmbYqeBajNbp": {
-          "valid": true,
-          "duration": 9.143917847
+          "error": "no response",
+          "duration": 10.703751839
         }
       },
       {
         "did:dyne:demo:FFqGYxShyDGAHd4QyLY1KFCSGBb1mBP9sZebEyBM7JPi": {
           "valid": true,
-          "duration": 7.57322246
+          "duration": 7.765415217
         }
       }
     ]
@@ -1162,13 +1132,13 @@
       {
         "did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpGZk1iek9qTW1RNGVmVDZrdndUSUpqZWxUcWpsMHhqRUlXUTJxb2JzUk1NIiwia3R5IjoiT0tQIiwiY3J2IjoiRWQyNTUxOSIsImFsZyI6IkVkRFNBIiwieCI6IkFOUmpIX3p4Y0tCeHNqUlBVdHpSYnA3RlNWTEtKWFE5QVBYOU1QMWo3azQifQ": {
           "valid": true,
-          "duration": 1.338009538
+          "duration": 1.134720837
         }
       },
       {
         "did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1Njpnc0w0VTRxX1J6VFhRckpwQUNnZGkwb1lCdUV1QjNZNWZFanhDd1NPUFlBIiwia3R5IjoiRUMiLCJjcnYiOiJQLTM4NCIsImFsZyI6IkVTMzg0IiwieCI6ImEtRWV5T2hlRUNWcDJqRkdVRTNqR0RCNlAzVV80S0lyZHRzTU9RQXFQN0NBMlVvV3NERG1nOWdJUVhiOEthd0ciLCJ5Ijoib3cxWDJ6VFVRaG12elY4NnpHdGhKc0xLeDE2MmhmSmxmN1p0OTFYUnZBTzRScE4zR2RGaVl3Tmc0NXJWUmlUcSJ9": {
           "valid": true,
-          "duration": 1.343641029
+          "duration": 1.179547291
         }
       }
     ]
@@ -1189,7 +1159,7 @@
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.761841395
+          "duration": 1.618092195
         }
       },
       {
@@ -1205,7 +1175,7 @@
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 1.883578147
+          "duration": 1.603329319
         }
       }
     ]
@@ -1222,7 +1192,7 @@
               "error": "Error: Failed to load remote context https://www.w3id.org/ns/did/v1: Request failed with status code 404"
             }
           ],
-          "duration": 1.979195897
+          "duration": 1.631584426
         }
       }
     ]
@@ -1234,14 +1204,14 @@
         "did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9",
-          "duration": 2.906295593
+          "duration": 3.418113736
         }
       },
       {
         "did:ev:bmM8MpeJAGF2ky7YUnwgJGKxyHdCL6DGAUmEW": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:ev:bmM8MpeJAGF2ky7YUnwgJGKxyHdCL6DGAUmEW",
-          "duration": 2.248869616
+          "duration": 1.886490887
         }
       }
     ]
@@ -1282,7 +1252,7 @@
               "error": "missing"
             }
           ],
-          "duration": 2.030695442
+          "duration": 1.571557549
         }
       }
     ]
@@ -1303,7 +1273,7 @@
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 2.006206301
+          "duration": 1.758539907
         }
       }
     ]
@@ -1320,7 +1290,7 @@
               "error": "Error: Found illegal @type '101'"
             }
           ],
-          "duration": 1.761018052
+          "duration": 1.628672676
         }
       }
     ]
@@ -1331,7 +1301,7 @@
       {
         "did:algo:c93fdef1-8a0a-4c65-8c54-fd33117c9e82": {
           "valid": true,
-          "duration": 2.533983853
+          "duration": 2.62559582
         }
       }
     ]
@@ -1342,7 +1312,7 @@
       {
         "did:polygonid:polygon:mumbai:2qDj9EDytmvtQP1or3FxykXGEaqSA1ss479MYHDMJc": {
           "valid": true,
-          "duration": 1.876883774
+          "duration": 1.586702967
         }
       }
     ]
@@ -1353,7 +1323,7 @@
       {
         "did:pdc:8801:0xf47b66bc0d9b7c73f9ff27bf1f49a2b69dc167fc": {
           "error": "no response",
-          "duration": 11.111615007
+          "duration": 10.57850114
         }
       }
     ]
