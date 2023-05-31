@@ -139,36 +139,36 @@ def generate_ingress(containers, outputdir):
     fout.write('                  number: 7081\n')
     
 
-    # for container in containers:
-    #     print(container)
-    #     print(containers[container]['ports'])
-    #     container_port = get_container_port(containers[container]['ports'])
-    #     if container == 'uni-resolver-web':  # this is the default-name, hosted at: DEFAULT_DOMAIN_NAME
-    #         continue
-    #     sub_domain_name = container.replace('did', '').replace('driver', '').replace('uni-resolver', '').replace('-',
-    #                                                                                                                '')
-    #     print('Adding domains: ' + sub_domain_name + '.' + PROD_DOMAIN_NAME + ' and ' + sub_domain_name + '.' + DEV_DOMAIN_NAME )
-    #
-    #     fout.write('    - host: ' + sub_domain_name + '.' + PROD_DOMAIN_NAME + '\n')
-    #     fout.write('      http:\n')
-    #     fout.write('        paths:\n')
-    #     fout.write('          - path: /*\n')
-    #     fout.write('            pathType: ImplementationSpecific\n')
-    #     fout.write('            backend:\n')
-    #     fout.write('              service:\n')
-    #     fout.write('                name: ' + container + '\n')
-    #     fout.write('                port:\n')
-    #     fout.write('                  number: ' + container_port + '\n')
-    #     fout.write('    - host: ' + sub_domain_name + '.' + DEV_DOMAIN_NAME + '\n')
-    #     fout.write('      http:\n')
-    #     fout.write('        paths:\n')
-    #     fout.write('          - path: /*\n')
-    #     fout.write('            pathType: ImplementationSpecific\n')
-    #     fout.write('            backend:\n')
-    #     fout.write('              service:\n')
-    #     fout.write('                name: ' + container + '\n')
-    #     fout.write('                port:\n')
-    #     fout.write('                  number: ' + container_port + '\n')
+    for container in containers:
+        print(container)
+        print(containers[container]['ports'])
+        container_port = get_container_port(containers[container]['ports'])
+        if container == 'uni-resolver-web':  # this is the default-name, hosted at: DEFAULT_DOMAIN_NAME
+            continue
+        sub_domain_name = container.replace('did', '').replace('driver', '').replace('uni-resolver', '').replace('-',
+                                                                                                                   '')
+        print('Adding domains: ' + sub_domain_name + '.' + PROD_DOMAIN_NAME + ' and ' + sub_domain_name + '.' + DEV_DOMAIN_NAME )
+
+        fout.write('    - host: ' + sub_domain_name + '.' + PROD_DOMAIN_NAME + '\n')
+        fout.write('      http:\n')
+        fout.write('        paths:\n')
+        fout.write('          - path: /*\n')
+        fout.write('            pathType: ImplementationSpecific\n')
+        fout.write('            backend:\n')
+        fout.write('              service:\n')
+        fout.write('                name: ' + container + '\n')
+        fout.write('                port:\n')
+        fout.write('                  number: ' + container_port + '\n')
+        fout.write('    - host: ' + sub_domain_name + '.' + DEV_DOMAIN_NAME + '\n')
+        fout.write('      http:\n')
+        fout.write('        paths:\n')
+        fout.write('          - path: /*\n')
+        fout.write('            pathType: ImplementationSpecific\n')
+        fout.write('            backend:\n')
+        fout.write('              service:\n')
+        fout.write('                name: ' + container + '\n')
+        fout.write('                port:\n')
+        fout.write('                  number: ' + container_port + '\n')
         
     fout.close()
 
