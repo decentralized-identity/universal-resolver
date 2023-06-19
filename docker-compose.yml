@@ -254,3 +254,7 @@ services:
     image: w744219971/driver-did-pdc:latest
     ports:
       - "8142:8080"
+  driver-did-tys:
+    image: itpeoplecorp/tys-did-driver:latest
+    ports:
+      - "8143:8080"
