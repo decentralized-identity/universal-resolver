@@ -46,7 +46,7 @@ public class ResolveServlet extends WebUniResolver {
 			return;
 		}
 
-		// look at path
+		// incomding DID and resolution options
 
 		String didString;
 		Map<String, Object> resolutionOptions = new HashMap<>();
@@ -65,7 +65,7 @@ public class ResolveServlet extends WebUniResolver {
 			if (request.getQueryString() != null) didString += "?" + request.getQueryString();
 		}
 
-		if (log.isInfoEnabled()) log.info("Incoming DID string: " + didString);
+		if (log.isInfoEnabled()) log.info("Incoming DID string: " + didString + ", incoming DID resolution options: " + resolutionOptions);
 
 		// prepare resolution options
 
@@ -74,6 +74,7 @@ public class ResolveServlet extends WebUniResolver {
 
 		List<MediaType> httpAcceptMediaTypes = MediaType.parseMediaTypes(httpAcceptHeader != null ? httpAcceptHeader : ResolveResult.MEDIA_TYPE);
 		MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
+		if (httpAcceptHeader != null) resolutionOptions.put("_http_accept", httpAcceptMediaTypes);
 
 		String accept = HttpBindingServerUtil.acceptForHttpAccepts(httpAcceptMediaTypes);
 		if (!resolutionOptions.containsKey("accept")) {
