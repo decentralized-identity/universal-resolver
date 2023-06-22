@@ -42,7 +42,7 @@ public class ResolveServlet extends WebUniResolver {
 		if (log.isDebugEnabled()) log.debug("Incoming resolve request: " + requestPath);
 
 		if (path.isEmpty()) {
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "No identifier found in resolve request.");
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "No identifier found in resolve request.");
 			return;
 		}
 
@@ -139,7 +139,6 @@ public class ResolveServlet extends WebUniResolver {
 		ServletUtil.sendResponse(
 				response,
 				HttpServletResponse.SC_NOT_ACCEPTABLE,
-				null,
 				"Not acceptable media types " + httpAcceptHeader);
 	}
 }

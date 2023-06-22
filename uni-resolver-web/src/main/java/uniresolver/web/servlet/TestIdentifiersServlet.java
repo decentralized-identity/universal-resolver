@@ -40,7 +40,7 @@ public class TestIdentifiersServlet extends WebUniResolver {
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolver reported: " + ex.getMessage(), ex);
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolver reported: " + ex.getMessage());
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Resolver reported: " + ex.getMessage());
 			return;
 		}
 
@@ -50,7 +50,7 @@ public class TestIdentifiersServlet extends WebUniResolver {
 
 		if (testIdentifiers == null) {
 
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No test identifiers.");
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, "No test identifiers.");
 			return;
 		}
 

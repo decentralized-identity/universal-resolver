@@ -39,7 +39,7 @@ public class MethodsServlet extends WebUniResolver {
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolver reported: " + ex.getMessage(), ex);
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "Resolver reported: " + ex.getMessage());
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Resolver reported: " + ex.getMessage());
 			return;
 		}
 
@@ -49,7 +49,7 @@ public class MethodsServlet extends WebUniResolver {
 
 		if (methods == null) {
 
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, null, "No methods.");
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, "No methods.");
 			return;
 		}
 

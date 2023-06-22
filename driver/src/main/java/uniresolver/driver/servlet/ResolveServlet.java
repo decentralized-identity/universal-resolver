@@ -50,7 +50,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		if (identifier == null) {
 
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, null, "Driver: No identifier found in resolve request.");
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Driver: No identifier found in resolve request.");
 			return;
 		}
 
@@ -129,7 +129,6 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 		ServletUtil.sendResponse(
 				response,
 				HttpServletResponse.SC_NOT_ACCEPTABLE,
-				null,
 				"Not acceptable media types " + httpAcceptHeader);
 		return;
 	}
