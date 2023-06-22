@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 
+import java.util.List;
 import java.util.Objects;
 
 public class MediaTypeUtil {
@@ -27,5 +28,14 @@ public class MediaTypeUtil {
         }
         if (log.isDebugEnabled()) log.debug("Checking if media type " + mediaType + " is acceptable for " + acceptMediaType + ": " + acceptable);
         return acceptable;
+    }
+
+    public static boolean isMediaTypeAcceptable(List<MediaType> acceptMediaTypes, String mediaTypeString) {
+        for (MediaType acceptMediaType : acceptMediaTypes) {
+            if (isMediaTypeAcceptable(acceptMediaType, mediaTypeString)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
