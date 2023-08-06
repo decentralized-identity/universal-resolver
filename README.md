@@ -19,7 +19,6 @@ You can deploy the Universal Resolver on your local machine by cloning this Gith
 
 You should then be able to resolve identifiers locally using simple `curl` requests as follows:
 
-
 	curl -X GET http://localhost:8080/1.0/identifiers/did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpGZk1iek9qTW1RNGVmVDZrdndUSUpqZWxUcWpsMHhqRUlXUTJxb2JzUk1NIiwia3R5IjoiT0tQIiwiY3J2IjoiRWQyNTUxOSIsImFsZyI6IkVkRFNBIiwieCI6IkFOUmpIX3p4Y0tCeHNqUlBVdHpSYnA3RlNWTEtKWFE5QVBYOU1QMWo3azQifQ
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dyne:demo:FFqGYxShyDGAHd4QyLY1KFCSGBb1mBP9sZebEyBM7JPi
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
@@ -164,6 +163,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-polygonid](https://github.com/0xPolygonID/driver-did-polygonid/blob/main/README.md)                        | 0.0.1          | [1.0.0](https://github.com/0xPolygonID/did-polygonid/blob/main/README.md)                                       | [polygonid/driver-did-polygonid](https://hub.docker.com/r/polygonid/driver-did-polygonid)                                                              | PolygonID DID                                                                        |
 | [did-pdc](https://github.com/pdc-community/uni-resolver-driver-did-pdc/blob/master/README.md)         | 0.0.1          | (missing)                                                                                                         | [w744219971/driver-did-pdc](https://hub.docker.com/r/w744219971/driver-did-pdc)                                                                                    | PDC DID                                                                             |
 | [did-tys](https://github.com/itpeople-cy/tys-did-driver/blob/master/README.md)         | 1.0          | 1.0                                                                                                         | [itpeoplecorp/tys-did-driver](https://hub.docker.com/r/itpeoplecorp/tys-did-driver)                                                                                    | TYS DID                         
+
 ## More Information
 
  * [Driver Development](/docs/driver-development.md)
