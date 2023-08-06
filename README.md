@@ -98,6 +98,10 @@ If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
 Note that there is also a [Universal Resolver frontend](https://github.com/decentralized-identity/universal-resolver-frontend/) that can optionally be installed separately.
 
+It is possible to "deep link" to the resolution result of a specific DID as follows:
+
+https://dev.uniresolver.io/#did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+
 ## Drivers
 
 Are you developing a DID method and Universal Resolver driver? Click [Driver Development](/docs/driver-development.md) for instructions.
