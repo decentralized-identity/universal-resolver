@@ -30,14 +30,14 @@ uniresolver:
         - did:sov:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
         - did:sov:indicio:test:5DiMymoHmgfCB2H2WbM7ZL
     - pattern: "^(did:indy:.+)$"
-      url: http://indy-did-driver:8080/1.0/identifiers/$1
+      url: http://driver-did-indy:8080/
+      propertiesEndpoint: 'true'
       testIdentifiers:
         - did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
         - did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx
         - did:indy:sovrin:staging:6cgbu8ZPoWTnR5Rv5JcSMB
         - did:indy:idunion:2GMSLg2A8JXcdYVsPC4Jui
         - did:indy:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
-        - did:indy:indicio:test:5DiMymoHmgfCB2H2WbM7ZL
     - pattern: "^(did:v1:nym:.+)$"
       url: http://uni-resolver-did-v1-driver:8080/
       propertiesEndpoint: 'true'

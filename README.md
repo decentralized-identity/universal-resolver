@@ -19,7 +19,6 @@ You can deploy the Universal Resolver on your local machine by cloning this Gith
 
 You should then be able to resolve identifiers locally using simple `curl` requests as follows:
 
-
 	curl -X GET http://localhost:8080/1.0/identifiers/did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpGZk1iek9qTW1RNGVmVDZrdndUSUpqZWxUcWpsMHhqRUlXUTJxb2JzUk1NIiwia3R5IjoiT0tQIiwiY3J2IjoiRWQyNTUxOSIsImFsZyI6IkVkRFNBIiwieCI6IkFOUmpIX3p4Y0tCeHNqUlBVdHpSYnA3RlNWTEtKWFE5QVBYOU1QMWo3azQifQ
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dyne:demo:FFqGYxShyDGAHd4QyLY1KFCSGBb1mBP9sZebEyBM7JPi
 	curl -X GET http://localhost:8080/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
@@ -99,6 +98,10 @@ You can also use an "Accept" header to request the DID document in a specific re
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).
 
 Note that there is also a [Universal Resolver frontend](https://github.com/decentralized-identity/universal-resolver-frontend/) that can optionally be installed separately.
+
+It is possible to "deep link" to the resolution result of a specific DID as follows:
+
+https://dev.uniresolver.io/#did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
 
 ## Drivers
 
