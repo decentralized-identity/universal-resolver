@@ -28,8 +28,8 @@ paths:
           description: The DID to be resolved.
           examples:
             example1:
-              value: did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx
-              description: A DID using the `sov` method.
+              value: did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx
+              description: A DID using the `indy` method.
             example2:
               value: did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w
               description: A DID using the `ion` method.
@@ -61,10 +61,10 @@ paths:
                 type: object
                 description: The DID document (JSON representation).
                 example: {
-                  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
+                  "id": "did:indy:sovrin:WRfXPg8dantKVubE3HX8pw",
                   "verificationMethod": [
                     {
-                      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
+                      "id": "did:indy:sovrin:WRfXPg8dantKVubE3HX8pw#key-1",
                       "type": "Ed25519VerificationKey2018",
                       "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
                     }
@@ -76,10 +76,10 @@ paths:
                 description: The DID document (JSON-LD representation).
                 example: {
                   "@context": "https://www.w3.org/ns/did/v1",
-                  "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
+                  "id": "did:indy:sovrin:WRfXPg8dantKVubE3HX8pw",
                   "verificationMethod": [
                     {
-                      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
+                      "id": "did:indy:sovrin:WRfXPg8dantKVubE3HX8pw#key-1",
                       "type": "Ed25519VerificationKey2018",
                       "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
                     }
@@ -132,7 +132,7 @@ paths:
                 items:
                   type: string
                 description: The list of supported DID methods.
-                example: ["btcr","sov","v1","key"]
+                example: ["btcr","indy","v1","key"]
   /testIdentifiers:
     get:
       summary: Returns a list of test identifiers that can be resolved.
@@ -145,7 +145,7 @@ paths:
               schema:
                 type: object
                 description: A map of test identifiers, grouped by DID method.
-                example: { "btcr": ["did:btcr:xz35-jznz-q9yu-ply", "did:btcr:xkrn-xz7q-qsye-28p"], "sov": ["did:sov:WRfXPg8dantKVubE3HX8pw"] }
+                example: { "btcr": ["did:btcr:xz35-jznz-q9yu-ply", "did:btcr:xkrn-xz7q-qsye-28p"], "indy": ["did:indy:sovrin:WRfXPg8dantKVubE3HX8pw"] }
 components:
   schemas:
     ResolutionResult:
