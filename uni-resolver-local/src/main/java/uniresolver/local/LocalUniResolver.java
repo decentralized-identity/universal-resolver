@@ -15,6 +15,7 @@ import uniresolver.result.ResolveDataModelResult;
 import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 
+import javax.naming.spi.Resolver;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -113,19 +114,17 @@ public class LocalUniResolver implements UniResolver {
 		// [before resolve]
 
 		List<ResolverExtension> skippedBeforeResolveExtensions = new ArrayList<>();
+		List<ResolverExtension> inapplicableBeforeResolveExtensions = new ArrayList<>();
 
-		if (! extensionStatus.skipBeforeResolve()) {
-			for (ResolverExtension extension : this.getExtensions()) {
-				if (! (extension instanceof ResolverExtension.BeforeResolveResolverExtension)) continue;
-				ExtensionStatus returnedExtensionStatus = ((ResolverExtension.BeforeResolveResolverExtension) extension).beforeResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this);
-				extensionStatus.or(returnedExtensionStatus);
-				if (returnedExtensionStatus == null) { skippedBeforeResolveExtensions.add(extension); continue; }
-				if (log.isDebugEnabled()) log.debug("Executing extension (beforeResolve) " + extension.getClass().getSimpleName() + " with resolution options " + resolutionOptions + " and resolve result " + resolveResult + " and execution state " + executionState);
-				if (extensionStatus.skipBeforeResolve()) break;
-			}
+		for (ResolverExtension.BeforeResolveResolverExtension extension : this.getBeforeResolveResolverExtensions()) {
+			if (extensionStatus.skipBeforeResolve()) { skippedBeforeResolveExtensions.add(extension); continue; }
+			ExtensionStatus returnedExtensionStatus = extension.beforeResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this);
+			extensionStatus.or(returnedExtensionStatus);
+			if (returnedExtensionStatus == null) { inapplicableBeforeResolveExtensions.add(extension); continue; }
+			if (log.isDebugEnabled()) log.debug("Executed extension (beforeResolve) " + extension.getClass().getSimpleName() + " with resolution options " + resolutionOptions + " and resolve result " + resolveResult + " and execution state " + executionState);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Skipped extensions (beforeResolve): " + skippedBeforeResolveExtensions.stream().map(e -> e.getClass().getSimpleName()).toList());
+		if (log.isDebugEnabled()) log.debug("Skipped extensions (beforeResolve): {}, inapplicable extensions (beforeResolve): {}", extensionClassNames(skippedBeforeResolveExtensions), extensionClassNames(inapplicableBeforeResolveExtensions));
 
 		// [resolve]
 
@@ -153,19 +152,17 @@ public class LocalUniResolver implements UniResolver {
 		// [after resolve]
 
 		List<ResolverExtension> skippedAfterResolveExtensions = new ArrayList<>();
+		List<ResolverExtension> inapplicableAfterResolveExtensions = new ArrayList<>();
 
-		if (! extensionStatus.skipAfterResolve()) {
-			for (ResolverExtension extension : this.getExtensions()) {
-				if (! (extension instanceof ResolverExtension.AfterResolveResolverExtension)) continue;
-				ExtensionStatus returnedExtensionStatus = ((ResolverExtension.AfterResolveResolverExtension) extension).afterResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this);
-				extensionStatus.or(returnedExtensionStatus);
-				if (returnedExtensionStatus == null) { skippedAfterResolveExtensions.add(extension); continue; }
-				if (log.isDebugEnabled()) log.debug("Executed extension (afterResolve) " + extension.getClass().getSimpleName() + " with resolution options " + resolutionOptions + " and resolve result " + resolveResult + " and execution state " + executionState);
-				if (extensionStatus.skipAfterResolve()) break;
-			}
+		for (ResolverExtension.AfterResolveResolverExtension extension : this.getAfterResolveResolverExtensions()) {
+			if (extensionStatus.skipAfterResolve()) { skippedAfterResolveExtensions.add(extension); continue; }
+			ExtensionStatus returnedExtensionStatus = extension.afterResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this);
+			extensionStatus.or(returnedExtensionStatus);
+			if (returnedExtensionStatus == null) { inapplicableAfterResolveExtensions.add(extension); continue; }
+			if (log.isDebugEnabled()) log.debug("Executed extension (afterResolve) " + extension.getClass().getSimpleName() + " with resolution options " + resolutionOptions + " and resolve result " + resolveResult + " and execution state " + executionState);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Skipped extensions (afterResolve): " + skippedAfterResolveExtensions.stream().map(e -> e.getClass().getSimpleName()).toList());
+		if (log.isDebugEnabled()) log.debug("Skipped extensions (afterResolve): {}, inapplicable extensions (afterResolve): {}", extensionClassNames(skippedAfterResolveExtensions), extensionClassNames(inapplicableAfterResolveExtensions));
 
 		// additional metadata
 
@@ -300,6 +297,22 @@ public class LocalUniResolver implements UniResolver {
 
 		if (log.isDebugEnabled()) log.debug("Loaded test identifiers: " + testIdentifiers);
 		return testIdentifiers;
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	private static List<String> extensionClassNames(List<ResolverExtension> extensions) {
+		return extensions.stream().map(e -> e.getClass().getSimpleName()).toList();
+	}
+
+	private List<ResolverExtension.BeforeResolveResolverExtension> getBeforeResolveResolverExtensions() {
+		return this.getExtensions().stream().filter(ResolverExtension.BeforeResolveResolverExtension.class::isInstance).map(ResolverExtension.BeforeResolveResolverExtension.class::cast).toList();
+	}
+
+	private List<ResolverExtension.AfterResolveResolverExtension> getAfterResolveResolverExtensions() {
+		return this.getExtensions().stream().filter(ResolverExtension.AfterResolveResolverExtension.class::isInstance).map(ResolverExtension.AfterResolveResolverExtension.class::cast).toList();
 	}
 
 	/*
