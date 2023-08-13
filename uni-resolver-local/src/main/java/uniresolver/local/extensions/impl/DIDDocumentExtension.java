@@ -15,7 +15,7 @@ import uniresolver.result.ResolveResult;
 
 import java.util.Map;
 
-public class DIDDocumentExtension implements DereferencerExtension {
+public class DIDDocumentExtension implements DereferencerExtension.DereferencePrimaryDereferencerExtension {
 
     private static final Logger log = LoggerFactory.getLogger(DIDDocumentExtension.class);
 

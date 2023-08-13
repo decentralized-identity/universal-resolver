@@ -113,8 +113,9 @@ public class LocalUniResolver implements UniResolver {
 
 		if (! extensionStatus.skipBeforeResolve()) {
 			for (ResolverExtension extension : this.getExtensions()) {
+				if (! (extension instanceof ResolverExtension.BeforeResolveResolverExtension)) continue;
 				if (log.isDebugEnabled()) log.debug("Executing extension (beforeResolve) " + extension.getClass().getSimpleName() + " with resolution options " + resolutionOptions + " and resolve result " + resolveResult + " and execution state " + executionState);
-				extensionStatus.or(extension.beforeResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this));
+				extensionStatus.or(((ResolverExtension.BeforeResolveResolverExtension) extension).beforeResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this));
 				if (extensionStatus.skipBeforeResolve()) break;
 			}
 		}
@@ -146,8 +147,9 @@ public class LocalUniResolver implements UniResolver {
 
 		if (! extensionStatus.skipAfterResolve()) {
 			for (ResolverExtension extension : this.getExtensions()) {
+				if (! (extension instanceof ResolverExtension.AfterResolveResolverExtension)) continue;
 				if (log.isDebugEnabled()) log.debug("Executing extension (afterResolve) " + extension.getClass().getSimpleName() + " with resolution options " + resolutionOptions + " and resolve result " + resolveResult + " and execution state " + executionState);
-				extensionStatus.or(extension.afterResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this));
+				extensionStatus.or(((ResolverExtension.AfterResolveResolverExtension) extension).afterResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this));
 				if (extensionStatus.skipAfterResolve()) break;
 			}
 		}
