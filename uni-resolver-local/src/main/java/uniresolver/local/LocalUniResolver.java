@@ -147,8 +147,6 @@ public class LocalUniResolver implements UniResolver {
 
 		// done
 
-		if (log.isInfoEnabled()) log.info("Current resolve result: " + resolveResult + " (" + resolveRepresentation + ", " + resolveResult.getClass().getSimpleName() + ")");
-
 		final ResolveResult finalResolveResult = resolveRepresentation ? resolveResult.toResolveRepresentationResult(accept) : resolveResult.toResolveDataModelResult();
 		if (log.isInfoEnabled()) log.info("Final resolve result: " + finalResolveResult + " (" + resolveRepresentation + ", " + finalResolveResult.getClass().getSimpleName() + ")");
 
