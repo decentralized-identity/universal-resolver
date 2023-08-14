@@ -49,6 +49,19 @@ public class ExtensionStatus {
 		this.skipAfterDereference |= extensionStatus.skipAfterDereference;
 	}
 
+	public boolean skip(String extensionStage) {
+		return switch (extensionStage) {
+			case "beforeResolve" -> this.skipBeforeResolve;
+			case "resolve" -> this.skipResolve;
+			case "afterResolve" -> this.skipAfterResolve;
+			case "beforeDereference" -> this.skipBeforeDereference;
+			case "dereferencePrimary" -> this.skipDereferencePrimary;
+			case "dereferenceSecondary" -> this.skipDereferenceSecondary;
+			case "afterDereference" -> this.skipAfterDereference;
+			default -> throw new IllegalStateException("Unexpected extension stage: " + extensionStage);
+		};
+	}
+
 	public boolean skipBeforeResolve() {
 		return this.skipBeforeResolve;
 	}

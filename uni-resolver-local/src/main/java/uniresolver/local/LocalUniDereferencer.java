@@ -73,9 +73,9 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         // prepare dereference result
 
-        DIDURL didUrl = null;
-        DIDURL didUrlWithoutFragment = null;
-        String didUrlFragment = null;
+        final DIDURL didUrl;
+        final DIDURL didUrlWithoutFragment;
+        final String didUrlFragment;
         DereferenceResult dereferenceResult = DereferenceResult.build();
         ExtensionStatus extensionStatus = new ExtensionStatus();
 
@@ -101,22 +101,11 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         // [before dereference]
 
-        List<DereferencerExtension> skippedBeforeDereferenceExtensions = new ArrayList<>();
-        List<DereferencerExtension> inapplicableBeforeDereferenceExtensions = new ArrayList<>();
-
-        for (DereferencerExtension.BeforeDereferenceDereferencerExtension extension : this.getBeforeDereferenceDereferencerExtensions()) {
-            if (extensionStatus.skipBeforeDereference()) { skippedBeforeDereferenceExtensions.add(extension); continue; }
-            ExtensionStatus returnedExtensionStatus = extension.beforeDereference(didUrl, dereferenceOptions, dereferenceResult, executionState, this);
-            extensionStatus.or(returnedExtensionStatus);
-            if (returnedExtensionStatus == null) { inapplicableBeforeDereferenceExtensions.add(extension); continue; }
-            if (log.isDebugEnabled()) log.debug("Executed extension (beforeDereference) " + extension.getClass().getSimpleName() + " with dereference options " + dereferenceOptions + " and dereference result " + dereferenceResult + " and execution state " + executionState);
-        }
-
-        if (log.isDebugEnabled()) log.debug("Skipped extensions (beforeDereference): {}, inapplicable extensions (beforeDereference): {}", extensionClassNames(skippedBeforeDereferenceExtensions), extensionClassNames(inapplicableBeforeDereferenceExtensions));
+        this.executeExtensions(DereferencerExtension.BeforeDereferenceDereferencerExtension.class, extensionStatus, e -> e.beforeDereference(didUrl, dereferenceOptions, dereferenceResult, executionState, this), dereferenceOptions, dereferenceResult, executionState);
 
         // [resolve]
 
-        ResolveResult resolveResult = null;
+        final ResolveResult resolveResult;
 
         if (! extensionStatus.skipResolve()) {
 
@@ -135,23 +124,13 @@ public class LocalUniDereferencer implements UniDereferencer {
                 dereferenceResult.getDereferencingMetadata().putAll(resolveResult.getDidResolutionMetadata());
                 dereferenceResult.setContentType(null);
             }
+        } else {
+            resolveResult = null;
         }
 
         // [dereference primary]
 
-        List<DereferencerExtension> skippedDefererencePrimaryExtensions = new ArrayList<>();
-        List<DereferencerExtension> inapplicableDefererencePrimaryExtensions = new ArrayList<>();
-
-        if (log.isInfoEnabled()) log.info("Dereferencing (primary): " + didUrlWithoutFragment);
-        for (DereferencerExtension.DereferencePrimaryDereferencerExtension extension : this.getDereferencePrimaryDereferencerExtensions()) {
-            if (extensionStatus.skipDereferencePrimary()) { skippedDefererencePrimaryExtensions.add(extension); continue; }
-            ExtensionStatus returnedExtensionStatus = extension.dereferencePrimary(didUrlWithoutFragment, dereferenceOptions, resolveResult, dereferenceResult, executionState, this);
-            extensionStatus.or(returnedExtensionStatus);
-            if (returnedExtensionStatus == null) { inapplicableDefererencePrimaryExtensions.add(extension); continue; }
-            if (log.isDebugEnabled()) log.debug("Executed extension (dereferencePrimary) " + extension.getClass().getSimpleName() + " with dereference options " + dereferenceOptions + " and resolve result " + resolveResult + " and dereference result " + dereferenceResult + " and execution state " + executionState);
-        }
-
-        if (log.isDebugEnabled()) log.debug("Skipped extensions (dereferencePrimary): {}, inapplicable extensions (dereferencePrimary): {}", extensionClassNames(skippedDefererencePrimaryExtensions), extensionClassNames(inapplicableDefererencePrimaryExtensions));
+        this.executeExtensions(DereferencerExtension.DereferencePrimaryDereferencerExtension.class, extensionStatus, e -> e.dereferencePrimary(didUrlWithoutFragment, dereferenceOptions, resolveResult, dereferenceResult, executionState, this), dereferenceOptions, dereferenceResult, executionState);
 
         // nothing found?
 
@@ -162,19 +141,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         // [dereference secondary]
 
-        List<DereferencerExtension> skippedDefererenceSecondaryExtensions = new ArrayList<>();
-        List<DereferencerExtension> inapplicableDefererenceSecondaryExtensions = new ArrayList<>();
-
-        if (log.isInfoEnabled()) log.info("Dereferencing (secondary): " + didUrlWithoutFragment + ", " + didUrlFragment);
-        for (DereferencerExtension.DereferenceSecondaryDereferencerExtension extension : this.getDereferenceSecondaryDereferencerExtensions()) {
-            if (extensionStatus.skipDereferenceSecondary()) { skippedDefererenceSecondaryExtensions.add(extension); continue; }
-            ExtensionStatus returnedExtensionStatus = extension.dereferenceSecondary(didUrlWithoutFragment, didUrlFragment, dereferenceOptions, dereferenceResult, executionState, this);
-            extensionStatus.or(returnedExtensionStatus);
-            if (returnedExtensionStatus == null) { inapplicableDefererenceSecondaryExtensions.add(extension); continue; }
-            if (log.isDebugEnabled()) log.debug("Executed extension (dereferenceSecondary) " + extension.getClass().getSimpleName() + " with dereference options " + dereferenceOptions + " and dereference result " + dereferenceResult + " and execution state " + executionState);
-        }
-
-        if (log.isDebugEnabled()) log.debug("Skipped extensions (dereferenceSecondary): {}, inapplicable extensions (dereferenceSecondary): {}", extensionClassNames(skippedDefererenceSecondaryExtensions), extensionClassNames(inapplicableDefererenceSecondaryExtensions));
+        this.executeExtensions(DereferencerExtension.DereferenceSecondaryDereferencerExtension.class, extensionStatus, e -> e.dereferenceSecondary(didUrlWithoutFragment, didUrlFragment, dereferenceOptions, dereferenceResult, executionState, this), dereferenceOptions, dereferenceResult, executionState);
 
         // nothing found?
 
@@ -185,18 +152,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         // [after dereference]
 
-        List<DereferencerExtension> skippedAfterDereferenceExtensions = new ArrayList<>();
-        List<DereferencerExtension> inapplicableAfterDereferenceExtensions = new ArrayList<>();
-
-        for (DereferencerExtension.AfterDereferenceDereferencerExtension extension : this.getAfterDereferenceDereferencerExtensions()) {
-            if (extensionStatus.skipAfterDereference()) { skippedAfterDereferenceExtensions.add(extension); continue; }
-            ExtensionStatus returnedExtensionStatus = extension.afterDereference(didUrl, dereferenceOptions, dereferenceResult, executionState, this);
-            extensionStatus.or(returnedExtensionStatus);
-            if (returnedExtensionStatus == null) { inapplicableAfterDereferenceExtensions.add(extension); continue; }
-            if (log.isDebugEnabled()) log.debug("Executed extension (afterDereference) " + extension.getClass().getSimpleName() + " with dereference options " + dereferenceOptions + " and dereference result " + dereferenceResult + " and execution state " + executionState);
-        }
-
-        if (log.isDebugEnabled()) log.debug("Skipped extensions (afterDereference): {}, inapplicable extensions (afterDereference): {}", extensionClassNames(skippedAfterDereferenceExtensions), extensionClassNames(inapplicableAfterDereferenceExtensions));
+        this.executeExtensions(DereferencerExtension.AfterDereferenceDereferencerExtension.class, extensionStatus, e -> e.afterDereference(didUrl, dereferenceOptions, dereferenceResult, executionState, this), dereferenceOptions, dereferenceResult, executionState);
 
         // additional metadata
 
@@ -209,28 +165,34 @@ public class LocalUniDereferencer implements UniDereferencer {
         return dereferenceResult;
     }
 
-    /*
-     * Helper methods
-     */
+    private <E extends DereferencerExtension> void executeExtensions(Class<E> extensionClass, ExtensionStatus extensionStatus, DereferencerExtension.ExtensionFunction<E> extensionFunction, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionState) throws ResolutionException, DereferencingException {
 
-    private static List<String> extensionClassNames(List<DereferencerExtension> extensions) {
-        return extensions.stream().map(e -> e.getClass().getSimpleName()).toList();
-    }
+        String extensionStage = extensionClass.getAnnotation(DereferencerExtension.ExtensionStage.class).value();
 
-    private List<DereferencerExtension.BeforeDereferenceDereferencerExtension> getBeforeDereferenceDereferencerExtensions() {
-        return this.getExtensions().stream().filter(DereferencerExtension.BeforeDereferenceDereferencerExtension.class::isInstance).map(DereferencerExtension.BeforeDereferenceDereferencerExtension.class::cast).toList();
-    }
+        List<E> extensions = this.getExtensions().stream().filter(extensionClass::isInstance).map(extensionClass::cast).toList();
+        if (log.isDebugEnabled()) log.debug("For extension stage '" + extensionStage + "' trying the following extensions: " + DereferencerExtension.extensionClassNames(extensions));
 
-    private List<DereferencerExtension.DereferencePrimaryDereferencerExtension> getDereferencePrimaryDereferencerExtensions() {
-        return this.getExtensions().stream().filter(DereferencerExtension.DereferencePrimaryDereferencerExtension.class::isInstance).map(DereferencerExtension.DereferencePrimaryDereferencerExtension.class::cast).toList();
-    }
+        List<DereferencerExtension> skippedExtensions = new ArrayList<>();
+        List<DereferencerExtension> inapplicableExtensions = new ArrayList<>();
 
-    private List<DereferencerExtension.DereferenceSecondaryDereferencerExtension> getDereferenceSecondaryDereferencerExtensions() {
-        return this.getExtensions().stream().filter(DereferencerExtension.DereferenceSecondaryDereferencerExtension.class::isInstance).map(DereferencerExtension.DereferenceSecondaryDereferencerExtension.class::cast).toList();
-    }
+        for (E extension : extensions) {
+            if (extensionStatus.skip(extensionStage)) { skippedExtensions.add(extension); continue; }
+            String beforeDereferenceOptions = "" + dereferenceOptions;
+            String beforeDereferenceResult = "" + dereferenceResult;
+            String beforeExecutionState = "" + executionState;
+            ExtensionStatus returnedExtensionStatus = extensionFunction.apply(extension);
+            extensionStatus.or(returnedExtensionStatus);
+            if (returnedExtensionStatus == null) { inapplicableExtensions.add(extension); continue; }
+            String afterDereferenceOptions = "" + dereferenceOptions;
+            String afterDereferenceResult = "" + dereferenceResult;
+            String afterExecutionState = "" + executionState;
+            String changedDereferenceOptions = afterDereferenceOptions.equals(beforeDereferenceOptions) ? "(unchanged)" : afterDereferenceOptions;
+            String changedDereferenceResult = afterDereferenceResult.equals(beforeDereferenceResult) ? "(unchanged)" : afterDereferenceResult;
+            String changedExecutionState = afterExecutionState.equals(beforeExecutionState) ? "(unchanged)" : afterExecutionState;
+            if (log.isDebugEnabled()) log.debug("Executed extension (" + extensionStage + ") " + extension.getClass().getSimpleName() + " with dereference options " + changedDereferenceOptions + " and dereference result " + changedDereferenceResult + " and execution state " + changedExecutionState);
+        }
 
-    private List<DereferencerExtension.AfterDereferenceDereferencerExtension> getAfterDereferenceDereferencerExtensions() {
-        return this.getExtensions().stream().filter(DereferencerExtension.AfterDereferenceDereferencerExtension.class::isInstance).map(DereferencerExtension.AfterDereferenceDereferencerExtension.class::cast).toList();
+        if (log.isDebugEnabled()) log.debug("Skipped extensions (" + extensionStage + "): {}, inapplicable extensions (" + extensionStage + "): {}", DereferencerExtension.extensionClassNames(skippedExtensions), DereferencerExtension.extensionClassNames(inapplicableExtensions));
     }
 
     /*
