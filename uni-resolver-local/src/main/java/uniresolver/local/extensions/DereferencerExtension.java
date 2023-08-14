@@ -27,28 +27,28 @@ public interface DereferencerExtension {
 		ExtensionStatus apply(E extension) throws ResolutionException, DereferencingException;
 	}
 
-	@ResolverExtension.ExtensionStage("beforeDereference")
+	@ExtensionStage("beforeDereference")
 	interface BeforeDereferenceDereferencerExtension extends DereferencerExtension {
 		default ExtensionStatus beforeDereference(DIDURL didUrl, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionState, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
 			return null;
 		}
 	}
 
-	@ResolverExtension.ExtensionStage("dereferencePrimary")
+	@ExtensionStage("dereferencePrimary")
 	interface DereferencePrimaryDereferencerExtension extends DereferencerExtension {
 		default ExtensionStatus dereferencePrimary(DIDURL didUrlWithoutFragment, Map<String, Object> dereferenceOptions, ResolveResult resolveResult, DereferenceResult dereferenceResult, Map<String, Object> executionState, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
 			return null;
 		}
 	}
 
-	@ResolverExtension.ExtensionStage("dereferenceSecondary")
+	@ExtensionStage("dereferenceSecondary")
 	interface DereferenceSecondaryDereferencerExtension extends DereferencerExtension {
 		default ExtensionStatus dereferenceSecondary(DIDURL didUrlWithoutFragment, String didUrlFragment, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionState, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
 			return null;
 		}
 	}
 
-	@ResolverExtension.ExtensionStage("afterDereference")
+	@ExtensionStage("afterDereference")
 	interface AfterDereferenceDereferencerExtension extends DereferencerExtension {
 		default ExtensionStatus afterDereference(DIDURL didUrl, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionState, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {
 			return null;
