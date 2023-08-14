@@ -68,7 +68,7 @@ class Conversion {
 
         // done
 
-        if (log.isDebugEnabled()) log.debug("Converted to resolve() result using consumer " + (representationConsumer == null ? null : representationConsumer.getClass()) + ": " + resolveRepresentationResult + " --------> " + resolveDataModelResult);
+        if (log.isTraceEnabled()) log.trace("Converted to resolve() result using consumer " + (representationConsumer == null ? null : representationConsumer.getClass()) + ": " + resolveRepresentationResult + " --------> " + resolveDataModelResult);
         return resolveDataModelResult;
     }
 
@@ -122,7 +122,7 @@ class Conversion {
 
         // done
 
-        if (log.isDebugEnabled()) log.debug("Converted to resolveRepresentation() result using producer " + (representationProducer == null ? null : representationProducer.getClass()) + ": " + resolveDataModelResult + " --------> " + resolveRepresentationResult);
+        if (log.isTraceEnabled()) log.trace("Converted to resolveRepresentation() result using producer " + (representationProducer == null ? null : representationProducer.getClass()) + ": " + resolveDataModelResult + " --------> " + resolveRepresentationResult);
         return resolveRepresentationResult;
     }
 }
