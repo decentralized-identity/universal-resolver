@@ -170,7 +170,7 @@ public class LocalUniDereferencer implements UniDereferencer {
         String extensionStage = extensionClass.getAnnotation(DereferencerExtension.ExtensionStage.class).value();
 
         List<E> extensions = this.getExtensions().stream().filter(extensionClass::isInstance).map(extensionClass::cast).toList();
-        if (log.isDebugEnabled()) log.debug("For extension stage '" + extensionStage + "' trying the following extensions: " + DereferencerExtension.extensionClassNames(extensions));
+        if (log.isDebugEnabled()) log.debug("EXTENSIONS (" + extensionStage + "), TRYING: {}", DereferencerExtension.extensionClassNames(extensions));
 
         List<DereferencerExtension> skippedExtensions = new ArrayList<>();
         List<DereferencerExtension> inapplicableExtensions = new ArrayList<>();
@@ -192,7 +192,10 @@ public class LocalUniDereferencer implements UniDereferencer {
             if (log.isDebugEnabled()) log.debug("Executed extension (" + extensionStage + ") " + extension.getClass().getSimpleName() + " with dereference options " + changedDereferenceOptions + " and dereference result " + changedDereferenceResult + " and execution state " + changedExecutionState);
         }
 
-        if (log.isDebugEnabled()) log.debug("Skipped extensions (" + extensionStage + "): {}, inapplicable extensions (" + extensionStage + "): {}", DereferencerExtension.extensionClassNames(skippedExtensions), DereferencerExtension.extensionClassNames(inapplicableExtensions));
+        if (log.isDebugEnabled()) {
+            List<E> executedExtensions = extensions.stream().filter(e -> ! skippedExtensions.contains(e)).filter(e -> ! inapplicableExtensions.contains(e)).toList();
+            log.debug("EXTENSIONS (" + extensionStage + "), EXECUTED: {}, SKIPPED: {}, INAPPLICABLE: {}", DereferencerExtension.extensionClassNames(executedExtensions), DereferencerExtension.extensionClassNames(skippedExtensions), DereferencerExtension.extensionClassNames(inapplicableExtensions));
+        }
     }
 
     /*

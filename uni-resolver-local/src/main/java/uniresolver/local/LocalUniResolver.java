@@ -198,7 +198,7 @@ public class LocalUniResolver implements UniResolver {
 		String extensionStage = extensionClass.getAnnotation(ResolverExtension.ExtensionStage.class).value();
 
 		List<E> extensions = this.getExtensions().stream().filter(extensionClass::isInstance).map(extensionClass::cast).toList();
-		if (log.isDebugEnabled()) log.debug("For extension stage '" + extensionStage + "' trying the following extensions: " + ResolverExtension.extensionClassNames(extensions));
+		if (log.isDebugEnabled()) log.debug("EXTENSIONS (" + extensionStage + "), TRYING: {}", ResolverExtension.extensionClassNames(extensions));
 
 		List<ResolverExtension> skippedExtensions = new ArrayList<>();
 		List<ResolverExtension> inapplicableExtensions = new ArrayList<>();
@@ -220,7 +220,10 @@ public class LocalUniResolver implements UniResolver {
 			if (log.isDebugEnabled()) log.debug("Executed extension (" + extensionStage + ") " + extension.getClass().getSimpleName() + " with resolution options " + changedResolutionOptions + " and resolve result " + changedResolveResult + " and execution state " + changedExecutionState);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Skipped extensions (" + extensionStage + "): {}, inapplicable extensions (" + extensionStage + "): {}", ResolverExtension.extensionClassNames(skippedExtensions), ResolverExtension.extensionClassNames(inapplicableExtensions));
+		if (log.isDebugEnabled()) {
+			List<E> executedExtensions = extensions.stream().filter(e -> ! skippedExtensions.contains(e)).filter(e -> ! inapplicableExtensions.contains(e)).toList();
+			log.debug("EXTENSIONS (" + extensionStage + "), EXECUTED: {}, SKIPPED: {}, INAPPLICABLE: {}", ResolverExtension.extensionClassNames(executedExtensions), ResolverExtension.extensionClassNames(skippedExtensions), ResolverExtension.extensionClassNames(inapplicableExtensions));
+		}
 	}
 
 	@Override
