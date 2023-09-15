@@ -88,6 +88,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:pdc:8801:0xf47b66bc0d9b7c73f9ff27bf1f49a2b69dc167fc
 	curl -X GET http://localhost:8080/1.0/identifiers/did:tys:4B4AbVzzcJSnCZsdX4VaKyQgHRnC
 	curl -X GET http://localhost:8080/1.0/identifiers/did:plc:yk4dd2qkboz2yv6tpubpc6co
+	curl -X GET http://localhost:8080/1.0/identifiers/did:evrc:issuer:ethereum:246d9b34-09e1-496e-ad5b-fb5ea889d96b
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -169,6 +170,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-pdc](https://github.com/pdc-community/uni-resolver-driver-did-pdc/blob/master/README.md)         | 0.0.1          | (missing)                                                                                                         | [w744219971/driver-did-pdc](https://hub.docker.com/r/w744219971/driver-did-pdc)                                                                                    | PDC DID                                                                             |
 | [did-tys](https://github.com/itpeople-cy/tys-did-driver/blob/master/README.md)         | 1.0          | 1.0                                                                                                         | [itpeoplecorp/tys-did-driver](https://hub.docker.com/r/itpeoplecorp/tys-did-driver)                                                                                    | TYS DID                         
 | [did-plc](https://plc.directory)                                                                      | 0.0.1          | [dev](https://github.com/bluesky-social/did-method-plc/blob/main/README.md)      | [bnewbold/uni-resolver-driver-did-plc](https://hub.docker.com/r/bnewbold/uni-resolver-driver-did-plc)                                                                                    | PLC DID                                                                                        |
+| [did-evrc](https://github.com/vcian/uni-resolver-driver-did-evrc)                                     | 1.0            | 1.0                                                                                                               | [viitorcloud/uni-resolver-driver-did-evrc](https://hub.docker.com/r/viitorcloud/uni-resolver-driver-did-evrc)                                                      | EveryCRED DID Method                                                                |
 
 ## More Information
 
