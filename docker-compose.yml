@@ -268,3 +268,7 @@ services:
     image: bnewbold/uni-resolver-driver-did-plc:latest
     ports:
       - "8144:8000"
+  driver-did-evrc:
+    image: viitorcloud/uni-resolver-driver-did-evrc:latest
+    ports:
+      - "8145:8080"
