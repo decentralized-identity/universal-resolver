@@ -28,7 +28,7 @@ uniresolver:
         - did:sov:staging:6cgbu8ZPoWTnR5Rv5JcSMB
         - did:sov:idunion:2GMSLg2A8JXcdYVsPC4Jui
         - did:sov:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
-        - did:sov:indicio:test:5DiMymoHmgfCB2H2WbM7ZL
+        - did:sov:indicio:demo:KKyAeG7woJMV6MhhAREVKp
     - pattern: "^(did:indy:.+)$"
       url: http://driver-did-indy:8080/
       propertiesEndpoint: 'true'
@@ -38,6 +38,9 @@ uniresolver:
         - did:indy:sovrin:staging:6cgbu8ZPoWTnR5Rv5JcSMB
         - did:indy:idunion:2GMSLg2A8JXcdYVsPC4Jui
         - did:indy:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
+        - did:indy:indicio:demo:KKyAeG7woJMV6MhhAREVKp
+        - did:indy:nxd:LLDnZr8iaYM3F77pUWXnVX
+        - did:indy:findy:test:KMSWjAnqdwgLRc5yZBygcA
     - pattern: "^(did:v1:nym:.+)$"
       url: http://uni-resolver-did-v1-driver:8080/
       propertiesEndpoint: 'true'
