@@ -89,6 +89,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:tys:4B4AbVzzcJSnCZsdX4VaKyQgHRnC
 	curl -X GET http://localhost:8080/1.0/identifiers/did:plc:yk4dd2qkboz2yv6tpubpc6co
 	curl -X GET http://localhost:8080/1.0/identifiers/did:evrc:issuer:ethereum:246d9b34-09e1-496e-ad5b-fb5ea889d96b
+	curl -X GET http://localhost:8080/1.0/identifiers/did:keri:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
+	curl -X GET http://localhost:8080/1.0/identifiers/did:webs:peacekeeper.github.io:did-webs-iiw-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -171,6 +173,8 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-tys](https://github.com/itpeople-cy/tys-did-driver/blob/master/README.md)         | 1.0          | 1.0                                                                                                         | [itpeoplecorp/tys-did-driver](https://hub.docker.com/r/itpeoplecorp/tys-did-driver)                                                                                    | TYS DID                         
 | [did-plc](https://plc.directory)                                                                      | 0.0.1          | [dev](https://github.com/bluesky-social/did-method-plc/blob/main/README.md)      | [bnewbold/uni-resolver-driver-did-plc](https://hub.docker.com/r/bnewbold/uni-resolver-driver-did-plc)                                                                                    | PLC DID                                                                                        |
 | [did-evrc](https://github.com/vcian/uni-resolver-driver-did-evrc)                                     | 1.0            | 1.0                                                                                                               | [viitorcloud/uni-resolver-driver-did-evrc](https://hub.docker.com/r/viitorcloud/uni-resolver-driver-did-evrc)                                                      | EveryCRED DID Method                                                                |
+| [did-keri](https://github.com/hyperledger-labs/did-webs-resolver)                                     | 0.1            | [0.1](https://trustoverip.github.io/tswg-did-method-webs-specification/)                                                                                                               | [gleif/did-keri-resolver](https://hub.docker.com/r/gleif/did-keri-resolver)                                                      | KERI                                             |
+| [did-webs](https://github.com/hyperledger-labs/did-webs-resolver)                                     | 0.1            | [0.1](https://trustoverip.github.io/tswg-did-method-webs-specification/)                                                                                                               | [gleif/did-webs-resolver](https://hub.docker.com/r/gleif/did-webs-resolver)                                                      | KER, Web                                         |
 
 ## More Information
 

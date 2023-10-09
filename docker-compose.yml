@@ -272,3 +272,12 @@ services:
     image: viitorcloud/uni-resolver-driver-did-evrc:latest
     ports:
       - "8145:8080"
+  driver-did-keri:
+    image: gleif/did-keri-resolver-service:latest
+    ports:
+      - "8146:8080"
+  driver-did-webs:
+    image: gleif/did-webs-resolver-service:latest
+    ports:
+      - "8147:8080"
+
