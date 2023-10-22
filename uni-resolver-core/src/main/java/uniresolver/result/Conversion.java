@@ -45,8 +45,8 @@ class Conversion {
             try {
                 RepresentationConsumer.Result result = representationConsumer.consume(didDocumentStream);
                 Map<String, Object> map = new LinkedHashMap<>();
-                map.putAll(result.representationSpecificEntries.get(contentType));
-                map.putAll(result.didDocument);
+                map.putAll(result.representationSpecificEntries().get(contentType));
+                map.putAll(result.didDocument());
                 didDocument = DIDDocument.fromMap(map);
             } catch (IOException ex) {
                 throw new ResolutionException("Problem during consumption of " + contentType + ": " + ex.getMessage(), ex);
@@ -99,8 +99,8 @@ class Conversion {
 
             try {
                 RepresentationProducer.Result result = representationProducer.produce(didDocument.toMap(), null);
-                didDocumentStream = result.representation;
-                contentType = result.mediaType;
+                didDocumentStream = result.representation();
+                contentType = result.mediaType();
             } catch (IOException ex) {
                 throw new ResolutionException("Problem during production of " + mediaType + ": " + ex.getMessage(), ex);
             }
