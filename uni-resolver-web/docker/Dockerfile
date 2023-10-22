@@ -11,7 +11,7 @@ RUN cd /opt/universal-resolver/uni-resolver-core && mvn clean install -N
 RUN cd /opt/universal-resolver/driver && mvn clean install -N
 RUN cd /opt/universal-resolver/driver-http && mvn clean install -N
 RUN cd /opt/universal-resolver/uni-resolver-local && mvn clean install -N
-RUN cd /opt/universal-resolver/uni-resolver-web && mvn clean install package -N
+RUN cd /opt/universal-resolver/uni-resolver-web && mvn clean package -N
 
 # build image
 
