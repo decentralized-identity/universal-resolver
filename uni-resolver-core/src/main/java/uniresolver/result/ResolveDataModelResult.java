@@ -40,7 +40,7 @@ public class ResolveDataModelResult extends ResolveResult implements Result {
 	 */
 
 	@JsonCreator
-	public static ResolveDataModelResult build(@JsonProperty(value="didResolutionMetadata", required=false) Map<String, Object> didResolutionMetadata, @JsonProperty(value="didDocument", required=false) DIDDocument didDocument, @JsonProperty(value="didDocumentMetadata", required=false) Map<String, Object> didDocumentMetadata) {
+	public static ResolveDataModelResult build(@JsonProperty(value="didResolutionMetadata") Map<String, Object> didResolutionMetadata, @JsonProperty(value="didDocument") DIDDocument didDocument, @JsonProperty(value="didDocumentMetadata") Map<String, Object> didDocumentMetadata) {
 		return new ResolveDataModelResult(didResolutionMetadata, didDocument, didDocumentMetadata);
 	}
 

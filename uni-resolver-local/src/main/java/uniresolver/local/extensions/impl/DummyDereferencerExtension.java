@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class DummyDereferencerExtension extends AbstractDereferencerExtension implements DereferencerExtension {
 
-	private static Logger log = LoggerFactory.getLogger(DummyDereferencerExtension.class);
+	private static final Logger log = LoggerFactory.getLogger(DummyDereferencerExtension.class);
 
 	@Override
 	public ExtensionStatus afterDereference(DIDURL didUrl, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionState, LocalUniDereferencer localUniDereferencer) throws ResolutionException, DereferencingException {

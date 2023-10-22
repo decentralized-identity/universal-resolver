@@ -1,18 +1,19 @@
 package uniresolver.web;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.lang.NonNull;
 import org.springframework.web.HttpRequestHandler;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.result.ResolveDataModelResult;
 import uniresolver.result.ResolveRepresentationResult;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	}
 
 	@Override
-	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void handleRequest(HttpServletRequest request, @NonNull HttpServletResponse response) throws ServletException, IOException {
 		if ("GET".equals(request.getMethod())) this.doGet(request, response);
 		if ("POST".equals(request.getMethod())) this.doPost(request, response);
 		if ("PUT".equals(request.getMethod())) this.doPut(request, response);

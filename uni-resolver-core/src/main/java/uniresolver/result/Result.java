@@ -71,7 +71,7 @@ public interface Result {
 
     @JsonIgnore
     default public boolean hasWarnings() {
-        return this.getWarnings() != null && this.getWarnings().size() > 0;
+        return this.getWarnings() != null && !this.getWarnings().isEmpty();
     }
 
     @JsonIgnore

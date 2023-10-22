@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class LocalUniResolverConfigurator {
@@ -26,16 +25,16 @@ public class LocalUniResolverConfigurator {
 
         final Gson gson = new Gson();
 
-        List<Driver> drivers = new ArrayList<Driver>();
+        List<Driver> drivers = new ArrayList<>();
 
         try (Reader reader = new FileReader(filePath)) {
 
             JsonObject jsonObjectRoot  = gson.fromJson(reader, JsonObject.class);
             JsonArray jsonArrayDrivers = jsonObjectRoot.getAsJsonArray("drivers");
 
-            for (Iterator<JsonElement> jsonElementsDrivers = jsonArrayDrivers.iterator(); jsonElementsDrivers.hasNext(); ) {
+            for (JsonElement jsonArrayDriver : jsonArrayDrivers) {
 
-                JsonObject jsonObjectDriver = (JsonObject) jsonElementsDrivers.next();
+                JsonObject jsonObjectDriver = (JsonObject) jsonArrayDriver;
 
                 String pattern = jsonObjectDriver.has("pattern") ? jsonObjectDriver.get("pattern").getAsString() : null;
                 String url = jsonObjectDriver.has("url") ? jsonObjectDriver.get("url").getAsString() : null;
@@ -63,7 +62,9 @@ public class LocalUniResolverConfigurator {
                     if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(url + "1.0/properties");
                 }
 
-                driver.setTestIdentifiers(readTestIdentifiers(testIdentifiers));
+                if (testIdentifiers != null) {
+                    driver.setTestIdentifiers(testIdentifiers.asList().stream().map(JsonElement::getAsString).toList());
+                }
 
                 // done
 
@@ -75,12 +76,5 @@ public class LocalUniResolverConfigurator {
         // done
 
         localUniResolver.setDrivers(drivers);
-    }
-
-    private static List<String> readTestIdentifiers(JsonArray jsonTestIdentifiers) {
-
-        List<String> testIdentifiers = new ArrayList<String> (jsonTestIdentifiers.size());
-        for (JsonElement jsonTestIdentifier : jsonTestIdentifiers) testIdentifiers.add(jsonTestIdentifier.getAsString());
-        return testIdentifiers;
     }
 }

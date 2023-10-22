@@ -23,7 +23,7 @@ public abstract class ResolveResult implements Result {
     private static final Logger log = LoggerFactory.getLogger(ResolveResult.class);
 
     protected ResolveDataModelResult resolveDataModelResult = null;
-    protected Map<String, ResolveRepresentationResult> resolveRepresentationResults = new HashMap<>();
+    protected final Map<String, ResolveRepresentationResult> resolveRepresentationResults = new HashMap<>();
 
     @JsonProperty("didResolutionMetadata")
     private Map<String, Object> didResolutionMetadata;

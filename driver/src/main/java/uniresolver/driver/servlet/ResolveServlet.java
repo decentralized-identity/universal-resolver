@@ -130,6 +130,5 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 				response,
 				HttpServletResponse.SC_NOT_ACCEPTABLE,
 				"Not acceptable media types " + httpAcceptHeader);
-		return;
 	}
 }

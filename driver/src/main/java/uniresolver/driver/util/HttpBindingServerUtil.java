@@ -19,7 +19,6 @@ import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class HttpBindingServerUtil {
 
@@ -33,18 +32,15 @@ public class HttpBindingServerUtil {
 
     public static String toHttpBodyStreamResult(StreamResult streamResult) throws IOException {
         String functionContentProperty;
-        String functionContentStreamProperty;
         String functionMetadataProperty;
         String functionContentMetadataProperty;
 
         if (streamResult instanceof ResolveRepresentationResult) {
             functionContentProperty = "didDocument";
-            functionContentStreamProperty = "didDocumentStream";
             functionMetadataProperty = "didResolutionMetadata";
             functionContentMetadataProperty = "didDocumentMetadata";
         } else if (streamResult instanceof DereferenceResult) {
             functionContentProperty = "content";
-            functionContentStreamProperty = "contentStream";
             functionMetadataProperty = "dereferencingMetadata";
             functionContentMetadataProperty = "contentMetadata";
         } else {
@@ -75,7 +71,7 @@ public class HttpBindingServerUtil {
      */
 
     public static String acceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
-        for (ContentType httpAcceptMediaType : httpAcceptMediaTypes.stream().map((x) -> ContentType.parse(x.toString())).collect(Collectors.toList())) {
+        for (ContentType httpAcceptMediaType : httpAcceptMediaTypes.stream().map((x) -> ContentType.parse(x.toString())).toList()) {
             if (ResolveResult.isResolveResultMediaType(httpAcceptMediaType)) {
                 return Representations.DEFAULT_MEDIA_TYPE;
             }

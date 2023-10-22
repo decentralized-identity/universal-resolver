@@ -50,7 +50,7 @@ public class HttpDriver implements Driver {
 
 		// match string
 
-		String matchedString = null;
+		StringBuilder matchedString = null;
 
 		if (this.getPattern() != null) {
 
@@ -65,12 +65,12 @@ public class HttpDriver implements Driver {
 
 			if (matcher.groupCount() > 0) {
 
-				matchedString = "";
-				for (int i=1; i<=matcher.groupCount(); i++) if (matcher.group(i) != null) matchedString += matcher.group(i);
+				matchedString = new StringBuilder();
+				for (int i=1; i<=matcher.groupCount(); i++) if (matcher.group(i) != null) matchedString.append(matcher.group(i));
 			}
 		}
 
-		if (matchedString == null) matchedString = did.getDidString();
+		if (matchedString == null) matchedString = new StringBuilder(did.getDidString());
 		if (log.isDebugEnabled()) log.debug("Matched string: " + matchedString);
 
 		// set HTTP URI
@@ -79,10 +79,10 @@ public class HttpDriver implements Driver {
 
 		if (uriString.contains("$1")) {
 
-			uriString = uriString.replace("$1", matchedString);
+			uriString = uriString.replace("$1", matchedString.toString());
 		} else if (uriString.contains("$2")) {
 
-			uriString = uriString.replace("$2", URLEncoder.encode(matchedString, StandardCharsets.UTF_8));
+			uriString = uriString.replace("$2", URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
 		} else {
 
 			if (! uriString.endsWith("/")) uriString += "/";
@@ -175,14 +175,9 @@ public class HttpDriver implements Driver {
 
 		// prepare properties
 
-		Map<String, Object> httpProperties = new HashMap<String, Object> ();
+		Map<String, Object> httpProperties = getHttpProperties();
 
-		if (this.getResolveUri() != null) httpProperties.put("resolveUri", this.getResolveUri().toString());
-		if (this.getPropertiesUri() != null) httpProperties.put("propertiesUri", this.getPropertiesUri().toString());
-		if (this.getPattern() != null) httpProperties.put("pattern", this.getPattern().toString());
-		if (this.getTestIdentifiers() != null) httpProperties.put("testIdentifiers", this.getTestIdentifiers());
-
-		Map<String, Object> properties = new HashMap<String, Object> ();
+		Map<String, Object> properties = new HashMap<>();
 		properties.put("http", httpProperties);
 
 		// remote properties
@@ -200,6 +195,16 @@ public class HttpDriver implements Driver {
 		// done
 
 		return properties;
+	}
+
+	private Map<String, Object> getHttpProperties() {
+		Map<String, Object> httpProperties = new HashMap<>();
+
+		if (this.getResolveUri() != null) httpProperties.put("resolveUri", this.getResolveUri().toString());
+		if (this.getPropertiesUri() != null) httpProperties.put("propertiesUri", this.getPropertiesUri().toString());
+		if (this.getPattern() != null) httpProperties.put("pattern", this.getPattern().toString());
+		if (this.getTestIdentifiers() != null) httpProperties.put("testIdentifiers", this.getTestIdentifiers());
+		return httpProperties;
 	}
 
 	public Map<String, Object> remoteProperties() throws ResolutionException {

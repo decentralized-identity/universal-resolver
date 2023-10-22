@@ -24,7 +24,7 @@ import java.util.*;
 
 public class ClientUniResolver implements UniResolver {
 
-	private static Logger log = LoggerFactory.getLogger(ClientUniResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(ClientUniResolver.class);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -40,13 +40,13 @@ public class ClientUniResolver implements UniResolver {
 
 	public static ClientUniResolver create(URI baseUri) {
 
-		if (! baseUri.toString().endsWith("/")) baseUri = URI.create(baseUri.toString() + "/");
+		if (! baseUri.toString().endsWith("/")) baseUri = URI.create(baseUri + "/");
 
 		ClientUniResolver clientUniResolver = new ClientUniResolver();
-		clientUniResolver.setResolveUri(URI.create(baseUri.toString() + "identifiers"));
-		clientUniResolver.setPropertiesUri(URI.create(baseUri.toString() + "properties"));
-		clientUniResolver.setMethodsUri(URI.create(baseUri.toString() + "methods"));
-		clientUniResolver.setTestIdentifiersUri(URI.create(baseUri.toString() + "testIdentifiers"));
+		clientUniResolver.setResolveUri(URI.create(baseUri + "identifiers"));
+		clientUniResolver.setPropertiesUri(URI.create(baseUri + "properties"));
+		clientUniResolver.setMethodsUri(URI.create(baseUri + "methods"));
+		clientUniResolver.setTestIdentifiersUri(URI.create(baseUri + "testIdentifiers"));
 
 		return clientUniResolver;
 	}

@@ -49,7 +49,7 @@ public class DereferenceResult implements Result, StreamResult {
 	 */
 
 	@JsonCreator
-	public static DereferenceResult build(@JsonProperty(value="dereferencingMetadata", required=false) Map<String, Object> dereferencingMetadata, @JsonProperty(value="contentStream", required=true) byte[] contentStream, @JsonProperty(value="contentMetadata", required=false) Map<String, Object> contentMetadata) {
+	public static DereferenceResult build(@JsonProperty(value="dereferencingMetadata") Map<String, Object> dereferencingMetadata, @JsonProperty(value="contentStream", required=true) byte[] contentStream, @JsonProperty(value="contentMetadata") Map<String, Object> contentMetadata) {
 		return new DereferenceResult(dereferencingMetadata, contentStream, contentMetadata);
 	}
 

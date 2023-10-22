@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class DummyResolverExtension extends AbstractResolverExtension implements ResolverExtension {
 
-	private static Logger log = LoggerFactory.getLogger(DummyResolverExtension.class);
+	private static final Logger log = LoggerFactory.getLogger(DummyResolverExtension.class);
 
 	@Override
 	public ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, Map<String, Object> executionState, LocalUniResolver localUniResolver) throws ResolutionException {

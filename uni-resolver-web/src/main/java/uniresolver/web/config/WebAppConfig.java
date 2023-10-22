@@ -97,7 +97,7 @@ public class WebAppConfig {
 		for (DriverConfigs.DriverConfig dc : driverConfigs.getDrivers()) {
 
 			String pattern = dc.getPattern();
-			String url = dc.getURL();
+			String url = dc.getUrl();
 			String propertiesEndpoint = dc.getPropertiesEndpoint();
 			List<String> testIdentifiers = dc.getTestIdentifiers();
 

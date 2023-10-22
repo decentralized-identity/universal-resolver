@@ -231,7 +231,7 @@ public class LocalUniResolver implements UniResolver {
 
 		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
 
-		Map<String, Map<String, Object>> properties = new LinkedHashMap<String, Map<String, Object>> ();
+		Map<String, Map<String, Object>> properties = new LinkedHashMap<>();
 
 		int i = 0;
 
@@ -272,7 +272,7 @@ public class LocalUniResolver implements UniResolver {
 
 		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
 
-		Map<String, List<String>> testIdentifiers = new LinkedHashMap<String, List<String>> ();
+		Map<String, List<String>> testIdentifiers = new LinkedHashMap<>();
 
 		for (Driver driver : this.getDrivers()) {
 
@@ -286,15 +286,9 @@ public class LocalUniResolver implements UniResolver {
 				String driverTestIdentifierMethod = driverTestIdentifier.substring("did:".length());
 				driverTestIdentifierMethod = driverTestIdentifierMethod.substring(0, driverTestIdentifierMethod.indexOf(':'));
 
-				List<String> methodTestIdentifiers = testIdentifiers.get(driverTestIdentifierMethod);
+                List<String> methodTestIdentifiers = testIdentifiers.computeIfAbsent(driverTestIdentifierMethod, k -> new ArrayList<>());
 
-				if (methodTestIdentifiers == null) {
-
-					methodTestIdentifiers = new ArrayList<String> ();
-					testIdentifiers.put(driverTestIdentifierMethod, methodTestIdentifiers);
-				}
-
-				methodTestIdentifiers.add(driverTestIdentifier);
+                methodTestIdentifiers.add(driverTestIdentifier);
 			}
 		}
 
