@@ -1,6 +1,7 @@
 package uniresolver.result;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.DecoderException;
@@ -71,7 +72,9 @@ public class DereferenceResult implements Result, StreamResult {
 
 	private static boolean isJson(byte[] bytes) {
 		try {
-			return objectMapper.getFactory().createParser(bytes).readValueAsTree() != null;
+			try (JsonParser jsonParser = objectMapper.getFactory().createParser(bytes)) {
+				return jsonParser.readValueAsTree() != null;
+			}
 		} catch (IOException ex) {
 			return false;
 		}
