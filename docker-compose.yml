@@ -181,6 +181,9 @@ services:
       - "8126:8080"
   driver-did-dns:
     image: universalresolver/driver-did-dns:latest
+    environment:
+      uniresolver_driver_did_dns_dnsServers: ${uniresolver_driver_did_dns_dnsServers}
+      uniresolver_driver_did_dns_didKeyResolver: ${uniresolver_driver_did_dns_didKeyResolver}
     ports:
       - "8127:8080"
   driver-did-indy:
