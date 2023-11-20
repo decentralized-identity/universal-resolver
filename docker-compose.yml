@@ -283,4 +283,8 @@ services:
     image: gleif/did-webs-resolver-service:latest
     ports:
       - "8147:7677"
+  driver-did-content:
+    image: kataru/content-did-driver:latest
+    ports:
+      - "8148:8888"
 
