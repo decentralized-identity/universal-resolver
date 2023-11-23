@@ -247,6 +247,10 @@ services:
     image: zoeyian/driver-did-iid:latest
     ports:
       - "8138:8080"
+  driver-did-bid:
+    image: caictdevelop/driver-did-bid:latest
+    ports:
+      - "8139:8080"
   driver-did-algo:
     image: ghcr.io/bryk-io/algoid-resolver:latest
     ports:

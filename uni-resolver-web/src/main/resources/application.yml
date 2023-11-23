@@ -280,6 +280,10 @@ uniresolver:
       url: http://evan-did-driver:8080/
       testIdentifiers:
         - did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734
+    - pattern: "^(did:bid:.+)$"
+      url: http://driver-did-bid:8080/
+      testIdentifiers:
+        - did:bid:ef214PmkhKndUcArDQPgD5J4fFVwqJFPt
     - pattern: "^(did:algo:.+)$"
       url: http://driver-did-algo:9091/
       testIdentifiers:
