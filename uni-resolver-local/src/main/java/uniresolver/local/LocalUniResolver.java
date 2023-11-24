@@ -121,10 +121,10 @@ public class LocalUniResolver implements UniResolver {
 
 			ResolveResult driverResolveResult = this.resolveOrResolveRepresentationWithDrivers(did, resolutionOptions, resolveRepresentation);
 			if (driverResolveResult != null) {
-				resolveResult.getDidResolutionMetadata().putAll(driverResolveResult.getDidResolutionMetadata());
 				if (resolveResult instanceof ResolveDataModelResult) ((ResolveDataModelResult) resolveResult).setDidDocument(((ResolveDataModelResult) driverResolveResult).getDidDocument());
 				if (resolveResult instanceof ResolveRepresentationResult) ((ResolveRepresentationResult) resolveResult).setDidDocumentStream(((ResolveRepresentationResult) driverResolveResult).getDidDocumentStream());
-				resolveResult.getDidDocumentMetadata().putAll(driverResolveResult.getDidDocumentMetadata());
+				if (driverResolveResult.getDidResolutionMetadata() != null) resolveResult.getDidResolutionMetadata().putAll(driverResolveResult.getDidResolutionMetadata());
+				if (driverResolveResult.getDidDocumentMetadata() != null) resolveResult.getDidDocumentMetadata().putAll(driverResolveResult.getDidDocumentMetadata());
 			}
 		}
 
