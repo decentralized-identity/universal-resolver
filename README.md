@@ -90,6 +90,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:keri:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
 	curl -X GET http://localhost:8080/1.0/identifiers/did:webs:peacekeeper.github.io:did-webs-iiw-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
 	curl -X GET http://localhost:8080/1.0/identifiers/did:content:3SqTXtoMpiPeNo5vEP2p7yNGQUeCGjqW1wnctv8yaCWXojD29GYcUEo
+ 	curl -X GET http://localhost:8080/1.0/identifiers/did:health:000005saasas1234
+ 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -175,6 +177,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-keri](https://github.com/hyperledger-labs/did-webs-resolver)                                     | 0.1            | [0.1](https://trustoverip.github.io/tswg-did-method-webs-specification/)                                          | [gleif/did-keri-resolver](https://hub.docker.com/r/gleif/did-keri-resolver)                                                                                        | KERI                                                                                |
 | [did-webs](https://github.com/hyperledger-labs/did-webs-resolver)                                     | 0.1            | [0.1](https://trustoverip.github.io/tswg-did-method-webs-specification/)                                          | [gleif/did-webs-resolver](https://hub.docker.com/r/gleif/did-webs-resolver)                                                                                        | KER, Web                                                                            |
 | [did-content](https://github.com/KataruInc/did-content-spec)                                     | 0.1            | [0.1](https://github.com/KataruInc/did-content-spec)                                          | [kataru/content-did-driver](https://hub.docker.com/repository/docker/kataru/content-did-driver)                                                                                        | Content DID                                                                           |
+| [did-health]([[https://github.com/KataruInc/did-content-spec](https://github.com/didhealth/health-did-resolver/blob/v2/doc/did-method-spec.md))](https://github.com/didhealth/health-did-resolver/blob/v2/doc/did-method-spec.md)                                     | 2.0            | [2.0]([[https://github.com/KataruInc/did-content-spec](https://github.com/didhealth/health-did-resolver/blob/v2/doc/did-method-spec.md)](https://github.com/didhealth/health-did-resolver/blob/v2/doc/did-method-spec.md))                                          | [didhealth/uni-resolver-driver-did-health]()                                                                                        | did:health                                                                           |
 
 ## More Information
 
