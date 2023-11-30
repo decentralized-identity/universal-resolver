@@ -73,10 +73,6 @@ uniresolver:
         - did:ethr:0x1:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
         - did:ethr:goerli:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
         - did:ethr:0x5:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
-        - did:ethr:rsk:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
-        - did:ethr:0x1e:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
-        - did:ethr:ewc:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
-        - did:ethr:volta:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
     - pattern: "^(did:ens:.+)$"
       url: http://uni-resolver-driver-did-uport:8081/
       testIdentifiers:
@@ -92,10 +88,6 @@ uniresolver:
       testIdentifiers:
         - did:eosio:eos:eoscanadacom
         - did:eosio:4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11:caleosblocks
-    - pattern: "^(did:nacl:.+)$"
-      url: http://uni-resolver-driver-did-uport:8081/
-      testIdentifiers:
-        - did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI
     - pattern: "^(did:jolo:.+)$"
       url: http://jolocom-did-driver:8080/
       testIdentifiers:
@@ -326,3 +318,7 @@ uniresolver:
       url: http://driver-did-webs:7677/
       testIdentifiers:
         - did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
+    - pattern: "^(did:content:.+)$"
+      url: http://driver-did-content:8888/
+      testIdentifiers:
+        - did:content:3SqTXtoMpiPeNo5vEP2p7yNGQUeCGjqW1wnctv8yaCWXojD29GYcUEo

@@ -30,7 +30,7 @@ services:
     ports:
       - "8082:8080"
   uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:4.1.0
+    image: uport/uni-resolver-driver-did-uport:4.3.0
     ports:
       - "8083:8081"
   driver-did-stack:
@@ -181,6 +181,9 @@ services:
       - "8126:8080"
   driver-did-dns:
     image: universalresolver/driver-did-dns:latest
+    environment:
+      uniresolver_driver_did_dns_dnsServers: ${uniresolver_driver_did_dns_dnsServers}
+      uniresolver_driver_did_dns_didKeyResolver: ${uniresolver_driver_did_dns_didKeyResolver}
     ports:
       - "8127:8080"
   driver-did-indy:
@@ -280,4 +283,8 @@ services:
     image: gleif/did-webs-resolver-service:latest
     ports:
       - "8147:7677"
+  driver-did-content:
+    image: kataru/content-did-driver:latest
+    ports:
+      - "8148:8888"
 
