@@ -322,3 +322,7 @@ uniresolver:
       url: http://driver-did-content:8888/
       testIdentifiers:
         - did:content:3SqTXtoMpiPeNo5vEP2p7yNGQUeCGjqW1wnctv8yaCWXojD29GYcUEo
+    - pattern: "^(did:health:.+)$"
+      url: http://driver-did-health:8080/
+      testIdentifiers:
+        - did:health:000005saasas1234

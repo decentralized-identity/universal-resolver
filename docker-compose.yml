@@ -287,4 +287,8 @@ services:
     image: kataru/content-did-driver:latest
     ports:
       - "8148:8888"
+  driver-did-health:
+    image: didhealth/uni-resolver-driver-did-health:latest
+    ports:
+      - "8149:8080"
 
