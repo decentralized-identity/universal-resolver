@@ -287,4 +287,10 @@ services:
     image: kataru/content-did-driver:latest
     ports:
       - "8148:8888"
-
+  driver-did-btco:
+    image: brianrichter/did-btco:latest
+    environment:
+      ORD_SIGNET_API: ${uniresolver_driver_did_btco_ord_signet_api}
+      ORD_API: ${uniresolver_driver_did_btco_ord_api}
+    ports:
+      - "8149:8080"
