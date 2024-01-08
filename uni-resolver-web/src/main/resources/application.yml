@@ -185,17 +185,20 @@ uniresolver:
       url: https://resolver.metadium.com/1.0/identifiers/$1
       testIdentifiers:
         - did:meta:0000000000000000000000000000000000000000000000000000000000005e65
-    - pattern: "^did:(?:tz:|pkh:|web:|key:(?:z6Mk|zQ3s|zDna|z.{200,})).+$"
+    - pattern: "^did:(?:tz:|pkh:|key:(?:z6Mk|z6LS|zQ3s|zDna|z82L|z2J9|z.{200,})).+$"
       url: http://driver-didkit:3000/identifiers/$1
       testIdentifiers:
         - did:tz:tz1YwA1FwpgLtc1G8DKbbZ6e6PTb1dQMRn5x
-        - did:tz:delphinet:tz1WvvbEGpBXGeTVbLiR6DYBe1izmgiYuZbq
-        - did:web:identity.foundation
         - did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH
         - did:key:zQ3shokFTS3brHcDQrn82RUDfCZESWL1ZdCEJwekUDPQiYBme
         - did:key:zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169
         - did:key:z4MXj1wBzi9jUstyPMS4jQqB6KdJaiatPkAtVtGc6bQEQEEsKTic4G7Rou3iBf9vPmT5dbkm9qsZsuVNjq8HCuW1w24nhBFGkRE4cd2Uf2tfrB3N7h4mnyPp1BF3ZttHTYv3DLUPi1zMdkULiow3M1GfXkoC6DoxDUm1jmN6GBj22SjVsr6dxezRVQc7aj9TxE7JLbMH1wh5X3kA58H3DFW8rnYMakFGbca5CB2Jf6CnGQZmL7o5uJAdTwXfy2iiiyPxXEGerMhHwhjTA1mKYobyk2CpeEcmvynADfNZ5MBvcCS7m3XkFCMNUYBS9NQ3fze6vMSUPsNa6GVYmKx2x6JrdEjCk3qRMMmyjnjCMfR4pXbRMZa3i
         - did:pkh:tz:tz2BFTyPeYRzxd5aiBchbXN3WCZhx7BqbMBq
+    - pattern: "^did:(?:key:(?:z5Tc|z3tE|zUC7)).+$"
+      url: http://driver-did-key:8080/identifiers/$1
+      testIdentifiers:
+        - did:key:z3tEFS9q2WkwvvVvr1BrYwNreqcudmcCQGGRSQ8r73recEqAUHGeLPWzwK6toBdKJgX3Fs
+        - did:key:zUC7DWA2FazpvPXmiXeTWuLjdMGXXmmWXbwoKNo554L3E4PD5ZsoZPqzCvkFkkQGvWp6uLZ3PKQJMfXYzLGNoiMyqXYSQa19cvWTiH3QpzddfRVWW6FtFMWTcvUb7wg4o9khbDt
     - pattern: "^(did:orb:.+)$"
       url: http://orb-did-driver:8121/1.0/identifiers/$1
       testIdentifiers:

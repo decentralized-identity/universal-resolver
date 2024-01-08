@@ -73,6 +73,10 @@ services:
     image: sphereon/uni-resolver-driver-did-factom:latest
     ports:
       - "8097:8080"
+  driver-did-key:
+    image: universalresolver/driver-did-key:latest
+    ports:
+      - "8098:8080"
   uni-resolver-did-v1-driver:
     image: veresone/uni-resolver-did-v1-driver:latest
     ports:
