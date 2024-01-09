@@ -255,10 +255,6 @@ services:
     image: caictdevelop/driver-did-bid:latest
     ports:
       - "8139:8080"
-  driver-did-algo:
-    image: ghcr.io/bryk-io/algoid-resolver:latest
-    ports:
-      - "8140:9091"
   driver-did-polygonid:
     image: polygonid/driver-did-polygonid:latest
     ports:
