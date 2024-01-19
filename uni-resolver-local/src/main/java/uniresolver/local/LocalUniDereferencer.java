@@ -12,6 +12,7 @@ import uniresolver.local.configuration.LocalUniResolverConfigurator;
 import uniresolver.local.extensions.DereferencerExtension;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.local.extensions.impl.DIDDocumentExtension;
+import uniresolver.local.extensions.util.ExecutionStateUtil;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
 
@@ -190,6 +191,7 @@ public class LocalUniDereferencer implements UniDereferencer {
             String changedDereferenceResult = afterDereferenceResult.equals(beforeDereferenceResult) ? "(unchanged)" : afterDereferenceResult;
             String changedExecutionState = afterExecutionState.equals(beforeExecutionState) ? "(unchanged)" : afterExecutionState;
             if (log.isDebugEnabled()) log.debug("Executed extension (" + extensionStage + ") " + extension.getClass().getSimpleName() + " with dereference options " + changedDereferenceOptions + " and dereference result " + changedDereferenceResult + " and execution state " + changedExecutionState);
+            ExecutionStateUtil.addDereferencerExtensionStage(executionState, extensionClass, extension);
         }
 
         if (log.isDebugEnabled()) {

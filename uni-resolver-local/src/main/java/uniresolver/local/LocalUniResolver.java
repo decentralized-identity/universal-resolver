@@ -11,6 +11,7 @@ import uniresolver.driver.http.HttpDriver;
 import uniresolver.local.configuration.LocalUniResolverConfigurator;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.local.extensions.ResolverExtension;
+import uniresolver.local.extensions.util.ExecutionStateUtil;
 import uniresolver.result.ResolveDataModelResult;
 import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
@@ -218,6 +219,7 @@ public class LocalUniResolver implements UniResolver {
 			String changedResolveResult = afterResolveResult.equals(beforeResolveResult) ? "(unchanged)" : afterResolveResult;
 			String changedExecutionState = afterExecutionState.equals(beforeExecutionState) ? "(unchanged)" : afterExecutionState;
 			if (log.isDebugEnabled()) log.debug("Executed extension (" + extensionStage + ") " + extension.getClass().getSimpleName() + " with resolution options " + changedResolutionOptions + " and resolve result " + changedResolveResult + " and execution state " + changedExecutionState);
+			ExecutionStateUtil.addResolverExtensionStage(executionState, extensionClass, extension);
 		}
 
 		if (log.isDebugEnabled()) {
