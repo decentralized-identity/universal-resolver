@@ -9,7 +9,6 @@ from shutil import copy
 import pathlib
 
 # CONSTANTS you may need to change:
-PROD_DOMAIN_NAME = 'resolver.identity.foundation'
 DEV_DOMAIN_NAME = 'dev.uniresolver.io'
 UNIVERSAL_RESOLVER_FRONTEND_TAG = "universalresolver/uni-resolver-frontend:latest;"
 NAMESPACE = "uni-resolver-dev"
@@ -85,7 +84,7 @@ def get_container_tags(containers):
 
 
 def generate_ingress(containers, outputdir):
-    global PROD_DOMAIN_NAME, DEV_DOMAIN_NAME
+    global DEV_DOMAIN_NAME
     print("Generating uni-resolver-ingress.yaml")
     fout = open(outputdir + '/uni-resolver-ingress.yaml', "wt")
     fout.write('apiVersion: networking.k8s.io/v1\n')
@@ -103,23 +102,6 @@ def generate_ingress(containers, outputdir):
     fout.write('spec:\n')
     fout.write('  ingressClassName: alb\n')
     fout.write('  rules:\n')
-    fout.write('    - host: ' + PROD_DOMAIN_NAME + '\n')
-    fout.write('      http:\n')
-    fout.write('        paths:\n')
-    fout.write('          - path: /1.0/*\n')
-    fout.write('            pathType: ImplementationSpecific\n')
-    fout.write('            backend:\n')
-    fout.write('              service:\n')
-    fout.write('                name: uni-resolver-web\n')
-    fout.write('                port:\n')
-    fout.write('                  number: 8080\n')
-    fout.write('          - path: /*\n')
-    fout.write('            pathType: ImplementationSpecific\n')
-    fout.write('            backend:\n')
-    fout.write('              service:\n')
-    fout.write('                name: uni-resolver-frontend\n')
-    fout.write('                port:\n')
-    fout.write('                  number: 7081\n')
     fout.write('    - host: ' + DEV_DOMAIN_NAME + '\n')
     fout.write('      http:\n')
     fout.write('        paths:\n')
@@ -147,18 +129,8 @@ def generate_ingress(containers, outputdir):
     #         continue
     #     sub_domain_name = container.replace('did', '').replace('driver', '').replace('uni-resolver', '').replace('-',
     #                                                                                                                '')
-    #     print('Adding domains: ' + sub_domain_name + '.' + PROD_DOMAIN_NAME + ' and ' + sub_domain_name + '.' + DEV_DOMAIN_NAME )
+    #     print('Adding domains: ' + sub_domain_name + '.' + sub_domain_name + '.' + DEV_DOMAIN_NAME )
     #
-    #     fout.write('    - host: ' + sub_domain_name + '.' + PROD_DOMAIN_NAME + '\n')
-    #     fout.write('      http:\n')
-    #     fout.write('        paths:\n')
-    #     fout.write('          - path: /*\n')
-    #     fout.write('            pathType: ImplementationSpecific\n')
-    #     fout.write('            backend:\n')
-    #     fout.write('              service:\n')
-    #     fout.write('                name: ' + container + '\n')
-    #     fout.write('                port:\n')
-    #     fout.write('                  number: ' + container_port + '\n')
     #     fout.write('    - host: ' + sub_domain_name + '.' + DEV_DOMAIN_NAME + '\n')
     #     fout.write('      http:\n')
     #     fout.write('        paths:\n')
