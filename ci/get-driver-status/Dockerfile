@@ -1,4 +1,4 @@
-FROM python:3.10-buster
+FROM python:3.12-slim
 
 LABEL "com.github.actions.name"="Get driver status"
 LABEL "com.github.actions.description"="Get driver status for a Universal Resolver deplyoment"
@@ -16,6 +16,7 @@ WORKDIR /get-driver-status/
 
 COPY app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install "cython<3.0.0" && pip install --no-build-isolation pyyaml==6.0
 
 COPY app/get-driver-status.py .
 
