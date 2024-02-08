@@ -4,7 +4,7 @@ echo "Pulling did-status-generator image"
 docker pull oydeu/did-status-generator:latest
 
 echo "Running did-status-generator image"
-docker run --rm oydeu/did-status-generator:latest > result.json
+docker run --rm -e "DID_RESOLVER=https://resolver.identity.foundation/1.0/identifiers/" oydeu/did-status-generator:latest > result.json
 echo "Set result.json to result_var"
 result_var=$(cat result.json)
 
