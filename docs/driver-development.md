@@ -60,7 +60,7 @@ Your driver is expected to be well-documented, tested, and working before you su
 
 ### How to update a driver
 
-Contributors should keep their drivers up-to-date as changes happen to the DID Core spec and the DID method spec. Driver implementers may wish to use the `:latest` Docker image version, but should preferably use incremental Docker image versions.
+Contributors should keep their drivers up-to-date as changes happen to the DID Core spec and the DID method spec. Driver implementers MUST specify a Docker image version, and not use `:latest`.
 
 In order to update a driver, simply submit a new PR that increments the Docker image version and updates the relevant files (see above in the "How to contribute a driver" section).
 
