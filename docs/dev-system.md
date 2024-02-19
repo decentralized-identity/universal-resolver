@@ -1,19 +1,13 @@
 # Universal Resolver — Development System
 
-The dev-system or the sandbox installation, which runs the latest code-base of the Universal Resolver project, is hosted at:
+The development instance, which runs the latest code-base of the Universal Resolver project, is hosted at:
 
 https://dev.uniresolver.io
-
-The drivers are exposed by their subdomains (DID method-names). For example: btcr.dev.uniresolver.io 
-> Note for driver-developers: The subdomains are automatically generated based on the Docker image tag e.g.: driver-did-btcr, which consequently must have the DID-method name as part of the tag-name (pattern:  driver-di-`<DID method name>`). 
 
 DIDs can be resolved by calling the resolver:
 
 https://dev.uniresolver.io/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
 
-or by directly accessing the driver’s endpoint:
-
-https://btcr.dev.uniresolver.io/1.0/identifiers/did:btcr:xz35-jznz-q6mr-7q6
 
 The software is automatically updated on every commit and PR on the master branch. See [CI-CD](/docs/continuous-integration-and-delivery.md) for more details
 
@@ -31,5 +25,6 @@ The entry-point to the system is the public Internet facing Application Load Bal
 
 The Kubernetes cluster is spanned across multiple Availability Zones (AZ), which are essential parts for providing fault-tolerance and achieving a high-availability HA of the system. This means that no downtime is to be expected in case of failing parts of the system, as the healthy parts will take over operations reliably.
 
-If containers, like DID-Drivers, are added or removed, the ALB ingress controller https://kubernetes-sigs.github.io/aws-alb-ingress-controller/ takes care of notifying the ALB. Due to this mechanism the ALB stays aware of the system state and is able to keep traffic-routes healthy. 
-By use of https://github.com/kubernetes-sigs/external-dns  the DNS Service Route 53 is updated. Further details regarding the automated system-update are described at [CI-CD](/docs/continuous-integration-and-delivery.md).
+If containers, like Universal Resolver drivers, are added or removed, the ALB ingress controller https://kubernetes-sigs.github.io/aws-alb-ingress-controller/ takes care of notifying the ALB. Due to this mechanism the ALB stays aware of the system state and is able to keep traffic-routes healthy.
+
+Further details regarding the automated system-update are described at [CI-CD](/docs/continuous-integration-and-delivery.md).
