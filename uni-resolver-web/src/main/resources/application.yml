@@ -19,6 +19,11 @@ uniresolver:
         - did:btcr:xz35-jznz-q9yu-ply
         - did:btcr:xkrn-xz7q-qsye-28p
         - did:btcr:x705-jznz-q3nl-srs
+    - pattern: "^(did:btco:.+)$"
+      url: http://driver-did-btco:8080/
+      testIdentifiers:
+        - did:btco:sig:6915376990035
+        - did:btco:53585.3880210795
     - pattern: "^(did:sov:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$"
       url: http://driver-did-sov:8080/
       propertiesEndpoint: 'true'
