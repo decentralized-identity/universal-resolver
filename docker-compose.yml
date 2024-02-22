@@ -176,7 +176,7 @@ services:
     ports:
       - "8125:8080"
   dock-did-driver:
-    image: docknetwork/dock-did-driver:latest
+    image: docknetwork/dock-did-driver:2.0.2
     ports:
       - "8099:8080"
   mydata-did-driver:
@@ -287,4 +287,3 @@ services:
     image: kataru/content-did-driver:latest
     ports:
       - "8148:8888"
-
