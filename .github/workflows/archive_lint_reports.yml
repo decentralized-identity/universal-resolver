@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       
       - name: Get current timestamp
         id: timestamp
-        run: echo "::set-output name=timestamp::$(date +'%Y%m%d%H%M%S')"
+        run: echo "name=timestamp::$(date +'%Y%m%d%H%M%S')" >> "$GITHUB_OUTPUT"
       
       - name: Install dependencies
         run: sudo apt-get install jq -y
