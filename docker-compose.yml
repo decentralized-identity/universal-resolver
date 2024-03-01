@@ -287,3 +287,7 @@ services:
     image: kataru/content-did-driver:latest
     ports:
       - "8148:8888"
+  driver-did-algo:
+    image: ghcr.io/aidtechnology/algoid-resolver:latest
+    ports:
+      - "8149:9091"
