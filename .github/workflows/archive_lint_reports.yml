@@ -6,6 +6,7 @@ on:
       - did-lint-reports
     paths:
       - 'result.json'
+  workflow_dispatch:
 
 jobs:
   copy-result-json:
