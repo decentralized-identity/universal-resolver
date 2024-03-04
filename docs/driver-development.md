@@ -43,9 +43,10 @@ Create a PR that edits the following files in the Universal Resolver root direct
   * image - your Docker image name
   * ports - incremented port number exposed by your Docker image
   * environment - optional environment variables supported by your Docker image
-- [`application.yml`](https://github.com/decentralized-identity/universal-resolver/blob/main/uni-resolver-web/src/main/resources/application.yml) (add  your driver)
+  * uni-resolver-web service - add an `environment` variable for your drivers URL into the uni-resolver-web service definition at the top of this file. This can be used to inject the driver URL at runtime and override the default hard coded value in the application.yml. The variable name should follow the convention of `uniresolver_web_driver_url_did_<your-did-method-identifier>` to avoid conflicts.
+* [`application.yml`](https://github.com/decentralized-identity/universal-resolver/blob/main/uni-resolver-web/src/main/resources/application.yml) (add your driver)
   * pattern - regular expression for matching your DID method
-  * url - endpoint of your Docker image or external resolver endpoint
+  * url - this should be in the format of a [spring property placeholder](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.files.property-placeholders) to allow possible injection of the URL at runtime. The placeholder should use the environment variable specified in the `docker-compose.yml` for your driver and provide a default endpoint of your Docker compose service name or external resolver endpoint. The general spring placeholder format to use is `${uniresolver_web_driver_url_did_<your-did-method-identifier>:<default-static-url>}`.
   * testIdentifiers - list of example DIDs that your driver can resolve
 - [`.env`](https://github.com/decentralized-identity/universal-resolver/blob/main/.env)
   * list environment variables (if any) with default values
