@@ -1,0 +1,47 @@
+name: Copy Result JSON on Commit
+
+on:
+  push:
+    branches:
+      - did-lint-reports
+    paths:
+      - 'result.json'
+  workflow_dispatch:
+
+jobs:
+  copy-result-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      
+      - name: Get current timestamp
+        id: timestamp
+        run: echo "name=timestamp::$(date +'%Y%m%d%H%M%S')" >> "$GITHUB_OUTPUT"
+      
+      - name: Install dependencies
+        run: sudo apt-get install jq -y
+
+      - name: Configure git user
+        run: |
+          git config --global user.name 'Kim Duffy'
+          git config --global user.email 'kimdhamilton@gmail.com'
+      
+      - name: Copy result.json with timestamp
+        run: |
+          cp result.json result_${{ steps.timestamp.outputs.timestamp }}.json
+          jq . result_${{ steps.timestamp.outputs.timestamp }}.json > tmp.json && mv tmp.json result_${{ steps.timestamp.outputs.timestamp }}.json
+      
+      - name: Push to target repository
+        env:
+          REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+        run: |
+          git clone https://x-access-token:${REPO_ACCESS_TOKEN}@github.com/decentralized-identity/universal-resolver-lint-dashboard.git
+          cd universal-resolver-lint-dashboard
+          git checkout -b new-result || git checkout new-result
+          mv ../result_${{ steps.timestamp.outputs.timestamp }}.json .
+          git add result_${{ steps.timestamp.outputs.timestamp }}.json
+          git commit -m "Add new result file"
+          git push -u origin new-result
+
+          
