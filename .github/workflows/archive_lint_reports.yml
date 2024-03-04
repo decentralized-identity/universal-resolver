@@ -42,6 +42,7 @@ jobs:
           git clone https://x-access-token:${REPO_ACCESS_TOKEN}@github.com/decentralized-identity/universal-resolver-lint-dashboard.git
           cd universal-resolver-lint-dashboard
           git checkout -b new-result || git checkout new-result
+          git branch --set-upstream-to=origin/new-result new-result
           git pull
           mv ../result_${{ steps.timestamp.outputs.time }}.json .
           git add result_${{ steps.timestamp.outputs.time }}.json
