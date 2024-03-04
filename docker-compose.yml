@@ -9,6 +9,73 @@ services:
     image: universalresolver/uni-resolver-web:latest
     ports:
       - "8080:8080"
+    environment:
+      # Override default driver URLs if they are set in .env variables, otherwise
+      # don't define the variables and let resolver-web container use its default
+      # set in application.yml.
+      # See https://docs.docker.com/compose/compose-file/05-services/#environment
+      uniresolver_web_driver_url_did_btcr:
+      uniresolver_web_driver_url_did_sov:
+      uniresolver_web_driver_url_did_indy:
+      uniresolver_web_driver_url_did_v1_nym:
+      uniresolver_web_driver_url_did_v1_test_nym:
+      uniresolver_web_driver_url_did_stack:
+      uniresolver_web_driver_url_did_web:
+      uniresolver_web_driver_url_did_ethr:
+      uniresolver_web_driver_url_did_ens:
+      uniresolver_web_driver_url_did_peer:
+      uniresolver_web_driver_url_did_eosio:
+      uniresolver_web_driver_url_did_jolo:
+      uniresolver_web_driver_url_did_hcr:
+      uniresolver_web_driver_url_did_elem_ropsten:
+      uniresolver_web_driver_url_did_github:
+      uniresolver_web_driver_url_did_ccp:
+      uniresolver_web_driver_url_did_ont:
+      uniresolver_web_driver_url_did_kilt:
+      uniresolver_web_driver_url_did_factom:
+      uniresolver_web_driver_url_did_io:
+      uniresolver_web_driver_url_did_bba:
+      uniresolver_web_driver_url_did_schema:
+      uniresolver_web_driver_url_did_ion:
+      uniresolver_web_driver_url_did_ace:
+      uniresolver_web_driver_url_did_gatc:
+      uniresolver_web_driver_url_did_icon:
+      uniresolver_web_driver_url_did_vaa:
+      uniresolver_web_driver_url_did_unisot:
+      uniresolver_web_driver_url_did_sol:
+      uniresolver_web_driver_url_did_lit:
+      uniresolver_web_driver_url_did_ebsi:
+      uniresolver_web_driver_url_did_emtrust:
+      uniresolver_web_driver_url_did_meta:
+      uniresolver_web_driver_url_did_kit:
+      uniresolver_web_driver_url_did_key:
+      uniresolver_web_driver_url_did_orb:
+      uniresolver_web_driver_url_did_oyd:
+      uniresolver_web_driver_url_did_moncon:
+      uniresolver_web_driver_url_did_dock:
+      uniresolver_web_driver_url_did_mydata:
+      uniresolver_web_driver_url_did_dns:
+      uniresolver_web_driver_url_did_everscale:
+      uniresolver_web_driver_url_did_ala_quor_redt:
+      uniresolver_web_driver_url_did_cheqd:
+      uniresolver_web_driver_url_did_com:
+      uniresolver_web_driver_url_did_dyne:
+      uniresolver_web_driver_url_did_jwk:
+      uniresolver_web_driver_url_did_kscirc:
+      uniresolver_web_driver_url_did_iscc:
+      uniresolver_web_driver_url_did_ev:
+      uniresolver_web_driver_url_did_iid:
+      uniresolver_web_driver_url_did_evan:
+      uniresolver_web_driver_url_did_bid:
+      uniresolver_web_driver_url_did_polygonid:
+      uniresolver_web_driver_url_did_pdc:
+      uniresolver_web_driver_url_did_tys:
+      uniresolver_web_driver_url_did_plc:
+      uniresolver_web_driver_url_did_evrc:
+      uniresolver_web_driver_url_did_kerri:
+      uniresolver_web_driver_url_did_webs:
+      uniresolver_web_driver_url_did_content:
+
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
     environment:
