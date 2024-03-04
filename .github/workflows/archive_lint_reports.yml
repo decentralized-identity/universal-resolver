@@ -14,10 +14,13 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-      
+
       - name: Get current timestamp
         id: timestamp
-        run: echo "name=timestamp::$(date +'%Y%m%d%H%M%S')" >> "$GITHUB_OUTPUT"
+        uses: nanzm/get-time-action@master
+        with:
+          timeZone: UTC
+          format: 'YYYY-MM-DD-HH-mm-ss'
       
       - name: Install dependencies
         run: sudo apt-get install jq -y
@@ -29,8 +32,8 @@ jobs:
       
       - name: Copy result.json with timestamp
         run: |
-          cp result.json result_${{ steps.timestamp.outputs.timestamp }}.json
-          jq . result_${{ steps.timestamp.outputs.timestamp }}.json > tmp.json && mv tmp.json result_${{ steps.timestamp.outputs.timestamp }}.json
+          cp result.json result_${{ steps.timestamp.outputs.time }}.json
+          jq . result_${{ steps.timestamp.outputs.time }}.json > tmp.json && mv tmp.json result_${{ steps.timestamp.outputs.time }}.json
       
       - name: Push to target repository
         env:
@@ -39,8 +42,8 @@ jobs:
           git clone https://x-access-token:${REPO_ACCESS_TOKEN}@github.com/decentralized-identity/universal-resolver-lint-dashboard.git
           cd universal-resolver-lint-dashboard
           git checkout -b new-result || git checkout new-result
-          mv ../result_${{ steps.timestamp.outputs.timestamp }}.json .
-          git add result_${{ steps.timestamp.outputs.timestamp }}.json
+          mv ../result_${{ steps.timestamp.outputs.time }}.json .
+          git add result_${{ steps.timestamp.outputs.time }}.json
           git commit -m "Add new result file"
           git push -u origin new-result
 
