@@ -11,7 +11,7 @@ services:
       - "8080:8080"
     environment:
       # Override default driver URLs if they are set in .env variables, otherwise
-      # don't define the variables and let resolver-web container use its default
+      # don't define the variables and let uni-resolver-web container use its default
       # set in application.yml.
       # See https://docs.docker.com/compose/compose-file/05-services/#environment
       uniresolver_web_driver_url_did_btcr:
