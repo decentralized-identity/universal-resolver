@@ -20,6 +20,7 @@ jobs:
         uses: nanzm/get-time-action@master
         with:
           timeZone: UTC
+          format: 'YYYY-MM-DDTHH:mm:ss.sssZ'
       
       - name: Install dependencies
         run: sudo apt-get install jq -y
