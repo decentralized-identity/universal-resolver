@@ -32,4 +32,5 @@ ls -al .
 echo "### Deploying following Specs ### "
 cat deploy.sh
 
+
 ./deploy.sh
