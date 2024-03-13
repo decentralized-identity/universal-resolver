@@ -32,4 +32,6 @@ ls -al .
 echo "### Deploying following Specs ### "
 cat deploy.sh
 
-./deploy.sh
+kubectl get ns
+
+# ./deploy.sh

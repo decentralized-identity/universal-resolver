@@ -26,7 +26,7 @@ jobs:
     - name: Deploy to AWS
       uses: ./ci/deploy-k8s-aws
       env:
-        KUBE_CONFIG_DATA: ${{env.KUBE_CONFIG_DATA}}
+        KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG_DATA_BASE64_UNI_RESOLVER_PROD}}
         AWS_ACCESS_KEY_ID: ${{env.AWS_ACCESS_KEY_ID}}
         AWS_SECRET_ACCESS_KEY: ${{env.AWS_SECRET_ACCESS_KEY}}
         RPC_URL_TESTNET: ${{env.RPC_URL_TESTNET}}

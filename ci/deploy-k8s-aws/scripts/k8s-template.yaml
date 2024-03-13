@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{containerName}}
-  namespace: uni-resolver-dev
+  namespace: uni-resolver
   labels:
     app: {{containerName}}
 spec:

@@ -10,8 +10,9 @@ import pathlib
 
 # CONSTANTS you may need to change:
 DEV_DOMAIN_NAME = 'dev.uniresolver.io'
+PROD_DOMAIN_NAME='resolver.identity.foundation'
 UNIVERSAL_RESOLVER_FRONTEND_TAG = "universalresolver/uni-resolver-frontend:latest;"
-NAMESPACE = "uni-resolver-dev"
+NAMESPACE = "uni-resolver"
 
 
 def init_deployment_dir(outputdir):
@@ -91,7 +92,7 @@ def generate_ingress(containers, outputdir):
     fout.write('kind: Ingress\n')
     fout.write('metadata:\n')
     fout.write('  name: \"uni-resolver-ingress\"\n')
-    fout.write('  namespace: \"uni-resolver-dev\"\n')
+    fout.write('  namespace: \"uni-resolver\"\n')
     fout.write('  annotations:\n')
     fout.write('    alb.ingress.kubernetes.io/scheme: internet-facing\n')
     fout.write('    alb.ingress.kubernetes.io/certificate-arn: \"arn:aws:acm:us-east-2:332553390353:certificate/925fce37-d446-4af3-828e-f803b3746af0,arn:aws:acm:us-east-2:332553390353:certificate/59fa30ca-de05-4024-8f80-fea9ab9ab8bf\"\n')
@@ -103,6 +104,23 @@ def generate_ingress(containers, outputdir):
     fout.write('  ingressClassName: alb\n')
     fout.write('  rules:\n')
     fout.write('    - host: ' + DEV_DOMAIN_NAME + '\n')
+    fout.write('      http:\n')
+    fout.write('        paths:\n')
+    fout.write('          - path: /1.0/*\n')
+    fout.write('            pathType: ImplementationSpecific\n')
+    fout.write('            backend:\n')
+    fout.write('              service:\n')
+    fout.write('                name: uni-resolver-web\n')
+    fout.write('                port:\n')
+    fout.write('                  number: 8080\n')
+    fout.write('          - path: /*\n')
+    fout.write('            pathType: ImplementationSpecific\n')
+    fout.write('            backend:\n')
+    fout.write('              service:\n')
+    fout.write('                name: uni-resolver-frontend\n')
+    fout.write('                port:\n')
+    fout.write('                  number: 7081\n')
+    fout.write('    - host: ' + PROD_DOMAIN_NAME + '\n')
     fout.write('      http:\n')
     fout.write('        paths:\n')
     fout.write('          - path: /1.0/*\n')
