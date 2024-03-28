@@ -92,9 +92,13 @@ paths:
               schema:
                 "$ref": "#/components/schemas/ResolutionResult"
         '400':
-          description: invalid input!
+          description: Invalid DID or DID URL.
+        '404':
+          description: DID or DID URL not found.
+        '406':
+          description: Representation not supported.
         '410':
-          description: successfully resolved (deactivated)!
+          description: Successfully resolved, but DID is deactivated.
           content:
             application/did+json:
               schema:
@@ -108,7 +112,9 @@ paths:
               schema:
                 "$ref": "#/components/schemas/ResolutionResult"
         '500':
-          description: error!
+          description: Internal Error.
+        '501':
+          description: DID method not supported.
   "/properties":
     get:
       summary: Return a map of configuration properties
