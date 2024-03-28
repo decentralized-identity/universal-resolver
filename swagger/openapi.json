@@ -17,8 +17,8 @@
   "paths": {
     "/identifiers/{identifier}": {
       "get": {
-        "summary": "Resolve a DID / Dereference a DID URL.",
-        "description": "<p>This endpoint resolves a DID or dereferences a DID URL. As input it takes the DID or DID URL, plus DID resolution <a href=\"https://www.w3.org/TR/did-core/#did-resolution-options\">options</a>. The output is a DID document in one of the supported representations, plus metadata.</p> <p>See the <a href=\"https://w3c-ccg.github.io/did-resolution/\">DID Resolution</a> specification for additional details.</p>",
+        "summary": "Resolve a DID / Dereference a DID URL",
+        "description": "<p>This endpoint resolves a DID. As input it takes the DID, plus DID resolution <a href=\"https://www.w3.org/TR/did-core/#did-resolution-options\">options</a>. The output is a DID document in one of the supported representations, plus metadata. The same endpoint can also be used to dereference a DID URL. In this case, the output is a DID document, or part of a DID document, or some other resource identified by the DID URL.</p> <p>See the <a href=\"https://w3c-ccg.github.io/did-resolution/\">DID Resolution</a> specification for additional details.</p>",
         "operationId": "resolve",
         "tags": [
           "Universal Resolver"
@@ -156,7 +156,8 @@
     },
     "/properties": {
       "get": {
-        "summary": "Returns a map of properties of the resolver.",
+        "summary": "Return a map of configuration properties",
+        "description": "<p>This endpoint returns a map of the configuration properties of the DID Resolver, including of its drivers.</p>",
         "operationId": "universalResolverGetProperties",
         "tags": [
           "Universal Resolver"
@@ -178,7 +179,8 @@
     },
     "/methods": {
       "get": {
-        "summary": "Returns a list of supported DID methods.",
+        "summary": "Return a list of supported DID methods",
+        "description": "<p>This endpoint returns a list of DID methods supported by the DID Resolver.</p>",
         "operationId": "universalResolverGetMethods",
         "tags": [
           "Universal Resolver"
@@ -209,7 +211,8 @@
     },
     "/testIdentifiers": {
       "get": {
-        "summary": "Returns a list of test identifiers that can be resolved.",
+        "summary": "Return a map of test identifiers",
+        "description": "<p>This endpoint returns a map of test identifiers, grouped by DID method.</p>",
         "operationId": "universalResolverGetTestIdentifiers",
         "tags": [
           "Universal Resolver"
