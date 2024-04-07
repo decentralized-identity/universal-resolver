@@ -12,7 +12,7 @@ paths:
   "/identifiers/{identifier}":
     get:
       summary: Resolve a DID / Dereference a DID URL
-      description: <p>This blabla endpoint resolves a DID. As input it takes the DID, plus
+      description: <p>This endpoint resolves a DID. As input it takes the DID, plus
         DID resolution <a href="https://www.w3.org/TR/did-core/#did-resolution-options">options</a>.
         The output is a DID document in one of the supported representations, plus
         metadata. The same endpoint can also be used to dereference a DID URL. In
@@ -64,7 +64,7 @@ paths:
               value: application/ld+json;profile="https://w3id.org/did-resolution"
               description: Media type of a DID resolution result (JSON-LD representation).
       responses:
-        '200':
+        "200":
           description: successfully resolved!
           content:
             application/did+json:
@@ -90,14 +90,14 @@ paths:
                       publicKeyBase58: H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV
             application/ld+json;profile="https://w3id.org/did-resolution":
               schema:
-                "$ref": "#/components/schemas/ResolutionResult"
-        '400':
+                $ref: "#/components/schemas/ResolutionResult"
+        "400":
           description: Invalid DID or DID URL.
-        '404':
+        "404":
           description: DID or DID URL not found.
-        '406':
+        "406":
           description: Representation not supported.
-        '410':
+        "410":
           description: Successfully resolved, but DID is deactivated.
           content:
             application/did+json:
@@ -110,21 +110,21 @@ paths:
                 description: The deactivated DID document (JSON-LD representation).
             application/ld+json;profile="https://w3id.org/did-resolution":
               schema:
-                "$ref": "#/components/schemas/ResolutionResult"
-        '500':
+                $ref: "#/components/schemas/ResolutionResult"
+        "500":
           description: Internal Error.
-        '501':
+        "501":
           description: DID method not supported.
   "/properties":
     get:
       summary: Return a map of configuration properties
-      description: "<p>This endpoint returns a map of the configuration properties
-        of the DID Resolver, including of its drivers.</p>"
+      description: <p>This endpoint returns a map of the configuration properties
+        of the DID Resolver, including of its drivers.</p>
       operationId: universalResolverGetProperties
       tags:
         - Universal Resolver
       responses:
-        '200':
+        "200":
           description: Success.
           content:
             application/did+json:
@@ -134,13 +134,13 @@ paths:
   "/methods":
     get:
       summary: Return a list of supported DID methods
-      description: "<p>This endpoint returns a list of DID methods supported by the
-        DID Resolver.</p>"
+      description: <p>This endpoint returns a list of DID methods supported by the
+        DID Resolver.</p>
       operationId: universalResolverGetMethods
       tags:
         - Universal Resolver
       responses:
-        '200':
+        "200":
           description: Success.
           content:
             application/did+json:
@@ -157,13 +157,13 @@ paths:
   "/testIdentifiers":
     get:
       summary: Return a map of test identifiers
-      description: "<p>This endpoint returns a map of test identifiers, grouped by
-        DID method.</p>"
+      description: <p>This endpoint returns a map of test identifiers, grouped by
+        DID method.</p>
       operationId: universalResolverGetTestIdentifiers
       tags:
         - Universal Resolver
       responses:
-        '200':
+        "200":
           description: Success.
           content:
             application/did+json:
@@ -181,7 +181,6 @@ components:
     ResolutionResult:
       description: The DID resolution result.
       type: object
-      additionalProperties: false
       properties:
         didDocument:
           type: object
