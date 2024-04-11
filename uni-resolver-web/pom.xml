@@ -13,8 +13,7 @@
 
     <properties>
         <spring.boot.version>3.2.4</spring.boot.version>
-        <org.yaml.snakeyaml.version>2.2</org.yaml.snakeyaml.version>
-        <io.micrometer.micrometer-registry-prometheus.version>1.12.4</io.micrometer.micrometer-registry-prometheus.version>
+        <io.micrometer.micrometer-registry-prometheus.version>1.12.5</io.micrometer.micrometer-registry-prometheus.version>
     </properties>
 
 	<build>
@@ -50,11 +49,6 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>${org.yaml.snakeyaml.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-registry-prometheus</artifactId>
                 <version>${io.micrometer.micrometer-registry-prometheus.version}</version>
@@ -80,10 +74,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jetty</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
         </dependency>
         <dependency>
             <groupId>decentralized-identity</groupId>
