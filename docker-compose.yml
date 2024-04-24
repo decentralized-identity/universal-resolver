@@ -358,3 +358,9 @@ services:
     image: ghcr.io/aidtechnology/algoid-resolver:0.6.0
     ports:
       - "8149:9091"
+  driver-did-itn:
+    image: ghcr.io/itn-trust/driver-did-itn:1.0.0
+    ports:
+      - "8150:8080"
+    environment:
+      DID_RESOLVER_URL: ${uniresolver_driver_did_itn_resolverUrl}
