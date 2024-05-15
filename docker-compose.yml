@@ -357,3 +357,12 @@ services:
       - "8150:8080"
     environment:
       DID_RESOLVER_URL: ${uniresolver_driver_did_itn_resolverUrl}
+  driver-did-iota:
+    image: iotaledger/uni-resolver-driver-iota:0.1
+    ports:
+      - "8151:8080"
+    environment:
+      IOTA_NODE_ENDPOINT: ${uniresolver_driver_did_iota_iotaNodeEndpoint}
+      IOTA_SMR_NODE_ENDPOINT: ${uniresolver_driver_did_iota_smrNodeEndpoint}
+      IOTA_CUSTOM_NETWORK_NAME: ${uniresolver_driver_did_iota_customNetworkName}
+      IOTA_CUSTOM_NODE_ENDPOINT: ${uniresolver_driver_did_iota_customNodeEndpoint}
