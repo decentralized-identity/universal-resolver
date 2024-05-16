@@ -6,7 +6,7 @@ server:
       resolve: "/1.0/identifiers"
       methods: "/1.0/methods"
       testIdentifiers: "/1.0/testIdentifiers"
-  port: '8080'
+  port: "8080"
 spring:
   profiles:
     active: ${uniresolver_web_spring_profiles_active:default}
@@ -14,14 +14,14 @@ uniresolver:
   drivers:
     - pattern: "^(did:btcr:.+)$"
       url: ${uniresolver_web_driver_url_did_btcr:http://driver-did-btcr:8080/}
-      propertiesEndpoint: 'true'
+      propertiesEndpoint: "true"
       testIdentifiers:
         - did:btcr:xz35-jznz-q9yu-ply
         - did:btcr:xkrn-xz7q-qsye-28p
         - did:btcr:x705-jznz-q3nl-srs
     - pattern: "^(did:sov:(?:(?:\\w[-\\w]*(?::\\w[-\\w]*)*):)?(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$"
       url: ${uniresolver_web_driver_url_did_sov:http://driver-did-sov:8080/}
-      propertiesEndpoint: 'true'
+      propertiesEndpoint: "true"
       testIdentifiers:
         - did:sov:WRfXPg8dantKVubE3HX8pw
         - did:sov:test:6cgbu8ZPoWTnR5Rv5JcSMB
@@ -31,7 +31,7 @@ uniresolver:
         - did:sov:indicio:demo:KKyAeG7woJMV6MhhAREVKp
     - pattern: "^(did:indy:.+)$"
       url: ${uniresolver_web_driver_url_did_indy:http://driver-did-indy:8080/}
-      propertiesEndpoint: 'true'
+      propertiesEndpoint: "true"
       testIdentifiers:
         - did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
         - did:indy:sovrin:test:6cgbu8ZPoWTnR5Rv5JcSMB
@@ -42,18 +42,18 @@ uniresolver:
         - did:indy:nxd:LLDnZr8iaYM3F77pUWXnVX
     - pattern: "^(did:v1:nym:.+)$"
       url: ${uniresolver_web_driver_url_did_v1_nym:http://uni-resolver-did-v1-driver:8080/}
-      propertiesEndpoint: 'true'
+      propertiesEndpoint: "true"
       testIdentifiers:
         - did:v1:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR
     - pattern: "^(did:v1:test:nym:.+)$"
       url: ${uniresolver_web_driver_url_did_v1_test_nym:http://uni-resolver-did-v1-driver:8080/}
-      propertiesEndpoint: 'true'
+      propertiesEndpoint: "true"
       testIdentifiers:
         - did:v1:test:nym:z6MkgF4uJbLMoUin2uKaBf4Jb1F7SHzuALE8Ldq8FPPpHE9t
         - did:v1:test:nym:z6MkmWLiAt5FtfwgFJwMDGS1GiFn1KpUXsd7bn1v2hLyXvud
     - pattern: "^(did:stack:.+)$"
       url: ${uniresolver_web_driver_url_did_stack:http://driver-did-stack:8080/}
-      propertiesEndpoint: 'true'
+      propertiesEndpoint: "true"
       testIdentifiers:
         - did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0
     - pattern: "^(did:web:.+)$"
@@ -157,7 +157,7 @@ uniresolver:
         - did:vaa:3wJVWDQWtDFx27FqvSqyo5xsTsxC
     - pattern: "^(did:unisot:.+)$"
       url: ${uniresolver_web_driver_url_did_unisot:http://unisot-did-driver:8080/}
-      propertiesEndpoint: 'true'
+      propertiesEndpoint: "true"
       testIdentifiers:
         - did:unisot:test:n1aAmTXAg4o44Z9k8YCQncEY91r3TV7WU4
     - pattern: "^(did:sol:.+)$"
@@ -222,7 +222,7 @@ uniresolver:
         - did:mydata:z6MkjgVfx2YE7SUBZBej65E7UHSjAyMLukPvdPjPytpTy1ZM
     - pattern: "^(did:dns:.+)$"
       url: ${uniresolver_web_driver_url_did_dns:http://driver-did-dns:8080/}
-      propertiesEndpoint: 'true'
+      propertiesEndpoint: "true"
       testIdentifiers:
         - did:dns:danubetech.com
     - pattern: "^(did:everscale:.+)$"
@@ -287,7 +287,7 @@ uniresolver:
         - did:bid:ef214PmkhKndUcArDQPgD5J4fFVwqJFPt
     - pattern: "^(did:polygonid:.+)$"
       url: ${uniresolver_web_driver_url_did_polygonid:http://driver-did-polygonid:8080/}
-      propertiesEndpoint: 'true'
+      propertiesEndpoint: "true"
       testIdentifiers:
         - did:polygonid:polygon:amoy:2qZBvRQPTZwYEKDVT3xY8W8zXvznqykyeqjSmXdz4U
     - pattern: "^(did:pdc:.+)$"
@@ -322,7 +322,8 @@ uniresolver:
     - pattern: "^(did:algo:.+)$"
       url: http://driver-did-algo:9091/
       testIdentifiers:
-        - did:algo:426165491c77a6c95eeed8d0420b38b0afbe9057c4f33147eb90fafd32aaad22-591154170
+        - did:algo:mainnet:app:1845671812:da490f2d15a625459bf970a3d55e1a646dfd3a956d011546e953e945d39fdada
+        - did:algo:app:1845671812:da490f2d15a625459bf970a3d55e1a646dfd3a956d011546e953e945d39fdada
     - pattern: "^(did:itn:.+)$"
       url: http://driver-did-itn:8080/
       testIdentifiers:
