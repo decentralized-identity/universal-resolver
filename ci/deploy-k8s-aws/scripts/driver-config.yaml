@@ -39,3 +39,13 @@ driver-did-itn:
   env:
     - name: DID_RESOLVER_URL
       value: "https://resolver.itn.mobi"
+driver-did-iota:
+  env:
+    - name: uniresolver_driver_did_iota_iotaNodeEndpoint
+      value: "https://api.stardust-mainnet.iotaledger.net/"
+    - name: uniresolver_driver_did_iota_smrNodeEndpoint
+      value: "https://api.shimmer.network/"
+    - name: uniresolver_driver_did_iota_customNetworkName
+      value: "rms"
+    - name: uniresolver_driver_did_iota_customNodeEndpoint
+      value: "https://api.testnet.shimmer.network/"
