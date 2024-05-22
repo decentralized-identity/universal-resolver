@@ -329,3 +329,7 @@ uniresolver:
       testIdentifiers:
         - did:itn:PA7xLNkMAqzzrDp4UBnrZm
         - did:itn:EzfteTXcoHXh5W1PURHrS3
+    - pattern: "^(did:iota:.+)$"
+      url: ${uniresolver_web_driver_url_did_iota:http://driver-did-iota:8080/}
+      testIdentifiers:
+        - did:iota:0xf4d6f08f5a1b80dd578da7dc1b49c886d580acd4cf7d48119dfeb82b538ad88a
