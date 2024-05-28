@@ -75,6 +75,7 @@ services:
       uniresolver_web_driver_url_did_kerri:
       uniresolver_web_driver_url_did_webs:
       uniresolver_web_driver_url_did_content:
+      uniresolver_web_driver_url_did_iden3:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -366,3 +367,7 @@ services:
       IOTA_SMR_NODE_ENDPOINT: ${uniresolver_driver_did_iota_smrNodeEndpoint}
       IOTA_CUSTOM_NETWORK_NAME: ${uniresolver_driver_did_iota_customNetworkName}
       IOTA_CUSTOM_NODE_ENDPOINT: ${uniresolver_driver_did_iota_customNodeEndpoint}
+  driver-did-iden3:
+    image: ghcr.io/iden3/driver-did-iden3:v0.0.1
+    ports:
+      - "8152:8080"
