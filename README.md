@@ -91,6 +91,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:algo:mainnet:app:1845671812:da490f2d15a625459bf970a3d55e1a646dfd3a956d011546e953e945d39fdada
 	curl -X GET http://localhost:8080/1.0/identifiers/did:itn:PA7xLNkMAqzzrDp4UBnrZm
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iota:0xf4d6f08f5a1b80dd578da7dc1b49c886d580acd4cf7d48119dfeb82b538ad88a
+	curl -X GET http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -178,6 +179,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-algo](https://github.com/algorandfoundation/did-algo)                                            | 1.0.0          | [2.0](https://github.com/algorandfoundation/did-algo/blob/main/SPEC.md)                                          | [ghcr.io/algorandfoundation/did-algo](https://ghcr.io/algorandfoundation/did-algo)                                                                                        | Algorand Blockchain DID Method                                                                           |
 | [did-itn](https://github.com/itn-trust/uni-resolver-driver-did-itn)                                             | 1.0.0          | [1.0](https://github.com/itn-trust/itn-did-spec)                                         | [ghcr.io/itn-trust/driver-did-itn](https://ghcr.io/itn-trust/driver-did-itn)                                                                                        | Integrated Trust Network (ITN) DID Method                                                                           |
 | [did-iota](https://github.com/iotaledger/uni-resolver-driver-iota)									| 0.1.1		 	 | 1.0																												 | [iotaledger/uni-resolver-driver-iota](https://hub.docker.com/r/iotaledger/uni-resolver-driver-iota)															  	  | IOTA DID																			|
+| [did-iden3](https://github.com/iden3/driver-did-iden3/blob/main/README.md)              | 0.0.1          | [1.0.0](https://github.com/iden3/driver-did-iden3/blob/main/README.md)                                         | [ghcr.io/iden3/driver-did-iden3:v0.0.1](https://github.com/iden3/driver-did-iden3/pkgs/container/driver-did-iden3)                                                                          | Iden3 DID                                                                       |
 
 
 ## More Information
