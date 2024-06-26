@@ -116,11 +116,16 @@ public class LocalUniResolver implements UniResolver {
 
 		// [resolve]
 
+		long driverStart = 0, driverStop = -1;
+
 		if (! extensionStatus.skipResolve()) {
 
 			if (log.isInfoEnabled()) log.info("Resolving DID: " + did);
 
+			driverStart = System.currentTimeMillis();
 			ResolveResult driverResolveResult = this.resolveOrResolveRepresentationWithDrivers(did, resolutionOptions, resolveRepresentation);
+			driverStop = System.currentTimeMillis();
+
 			if (driverResolveResult != null) {
 				if (resolveResult instanceof ResolveDataModelResult) ((ResolveDataModelResult) resolveResult).setDidDocument(((ResolveDataModelResult) driverResolveResult).getDidDocument());
 				if (resolveResult instanceof ResolveRepresentationResult) ((ResolveRepresentationResult) resolveResult).setDidDocumentStream(((ResolveRepresentationResult) driverResolveResult).getDidDocumentStream());
@@ -144,6 +149,7 @@ public class LocalUniResolver implements UniResolver {
 
 		long stop = System.currentTimeMillis();
 		resolveResult.getDidResolutionMetadata().put("duration", stop - start);
+		resolveResult.getDidResolutionMetadata().put("driverDuration", driverStop - driverStart);
 		resolveResult.getDidResolutionMetadata().put("did", did.toMap(false));
 
 		// done
