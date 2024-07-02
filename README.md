@@ -84,7 +84,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:pdc:8801:0xf47b66bc0d9b7c73f9ff27bf1f49a2b69dc167fc
 	curl -X GET http://localhost:8080/1.0/identifiers/did:tys:4B4AbVzzcJSnCZsdX4VaKyQgHRnC
 	curl -X GET http://localhost:8080/1.0/identifiers/did:plc:yk4dd2qkboz2yv6tpubpc6co
-	curl -X GET http://localhost:8080/1.0/identifiers/did:evrc:issuer:ethereum:246d9b34-09e1-496e-ad5b-fb5ea889d96b
+	curl -X GET http://localhost:8080/1.0/identifiers/did:evrc:issuer:polygon:62eeb90e-eee4-4d31-8927-1075e82b2a74
 	curl -X GET http://localhost:8080/1.0/identifiers/did:keri:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
 	curl -X GET http://localhost:8080/1.0/identifiers/did:webs:peacekeeper.github.io:did-webs-iiw-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
 	curl -X GET http://localhost:8080/1.0/identifiers/did:content:3SqTXtoMpiPeNo5vEP2p7yNGQUeCGjqW1wnctv8yaCWXojD29GYcUEo
