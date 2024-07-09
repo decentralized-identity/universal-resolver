@@ -368,6 +368,6 @@ services:
       IOTA_CUSTOM_NETWORK_NAME: ${uniresolver_driver_did_iota_customNetworkName}
       IOTA_CUSTOM_NODE_ENDPOINT: ${uniresolver_driver_did_iota_customNodeEndpoint}
   driver-did-iden3:
-    image: ghcr.io/iden3/driver-did-iden3:v0.0.1
+    image: ghcr.io/iden3/driver-did-iden3:v0.0.2
     ports:
       - "8152:8080"
