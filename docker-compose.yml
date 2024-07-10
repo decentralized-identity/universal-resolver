@@ -207,7 +207,7 @@ services:
     ports:
       - "8120:8080"
   driver-didkit:
-    image: ghcr.io/spruceid/didkit-http:latest
+    image: ghcr.io/spruceid/didkit-http:202402050910243f0642d
     environment:
       PORT: 3000
       HOST: 0.0.0.0
