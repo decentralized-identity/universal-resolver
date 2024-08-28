@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DID;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -33,14 +34,25 @@ public class HttpDriver implements Driver {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	private HttpClient httpClient = HttpClients.createDefault();
+	private static final int HTTP_CLIENT_TIMEOUT = 60;
+
+	private HttpClient httpClient;
+	private Pattern pattern = null;
 	private URI resolveUri = null;
 	private URI propertiesUri = null;
-	private Pattern pattern = null;
 	private List<String> testIdentifiers = Collections.emptyList();
 
 	public HttpDriver() {
+		this.httpClient = buildDefaultHttpClient();
+	}
 
+	private static HttpClient buildDefaultHttpClient() {
+		RequestConfig requestConfig = RequestConfig.custom()
+				.setConnectTimeout(HTTP_CLIENT_TIMEOUT * 1000)
+				.setConnectionRequestTimeout(HTTP_CLIENT_TIMEOUT * 1000)
+				.setSocketTimeout(HTTP_CLIENT_TIMEOUT * 1000)
+				.build();
+		return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 	}
 
 	@Override
@@ -276,6 +288,18 @@ public class HttpDriver implements Driver {
 		this.httpClient = httpClient;
 	}
 
+	public Pattern getPattern() {
+		return this.pattern;
+	}
+
+	public void setPattern(Pattern pattern) {
+		this.pattern = pattern;
+	}
+
+	public void setPattern(String pattern) {
+		this.pattern = Pattern.compile(pattern);
+	}
+
 	public URI getResolveUri() {
 		return this.resolveUri;
 	}
@@ -298,18 +322,6 @@ public class HttpDriver implements Driver {
 
 	public void setPropertiesUri(String propertiesUri) {
 		this.propertiesUri = URI.create(propertiesUri);
-	}
-
-	public Pattern getPattern() {
-		return this.pattern;
-	}
-
-	public void setPattern(Pattern pattern) {
-		this.pattern = pattern;
-	}
-
-	public void setPattern(String pattern) {
-		this.pattern = Pattern.compile(pattern);
 	}
 
 	public List<String> getTestIdentifiers() {
