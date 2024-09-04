@@ -59,10 +59,8 @@ uniresolver:
     - pattern: "^(did:web:.+)$"
       url: ${uniresolver_web_driver_url_did_web:http://uni-resolver-driver-did-uport:8081/}
       testIdentifiers:
-        - did:web:did.actor:alice
-        - did:web:did.actor:bob
-        - did:web:did.actor:carol
-        - did:web:did.actor:mike
+        - did:web:identity.foundation
+        - did:web:danubetech.com
     - pattern: "^(did:ethr:.+)$"
       url: ${uniresolver_web_driver_url_did_ethr:http://uni-resolver-driver-did-uport:8081/}
       testIdentifiers:
