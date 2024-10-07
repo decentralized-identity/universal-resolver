@@ -68,13 +68,11 @@ uniresolver:
         - did:ethr:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
         - did:ethr:0x1:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736
         - did:ethr:0x1:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
-        - did:ethr:goerli:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
-        - did:ethr:0x5:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+        - did:ethr:sepolia:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
     - pattern: "^(did:ens:.+)$"
       url: ${uniresolver_web_driver_url_did_ens:http://uni-resolver-driver-did-uport:8081/}
       testIdentifiers:
         - did:ens:vitalik.eth
-        - did:ens:goerli:whatever.eth
     - pattern: "^(did:peer:.+)$"
       url: ${uniresolver_web_driver_url_did_peer:http://uni-resolver-driver-did-uport:8081/}
       testIdentifiers:
