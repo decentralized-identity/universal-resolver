@@ -337,4 +337,8 @@ uniresolver:
       propertiesEndpoint: "true"
       testIdentifiers:
         - did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
+    - pattern: "^(did:prism:.+)$"
+      url: ${uniresolver_web_driver_url_did_prism:http://driver-did-prism:9090/}
+      testIdentifiers:
+        - did:prism:69ecb82551e3e08c092f14f720bae485a8808e5799e966ff1b415cf88d4107e2
     
