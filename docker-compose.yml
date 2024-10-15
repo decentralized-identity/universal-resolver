@@ -76,6 +76,8 @@ services:
       uniresolver_web_driver_url_did_webs:
       uniresolver_web_driver_url_did_content:
       uniresolver_web_driver_url_did_iden3:
+      uniresolver_web_driver_url_did_prism:
+
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -374,3 +376,7 @@ services:
     image: ghcr.io/iden3/driver-did-iden3:v0.0.4
     ports:
       - "8152:8080"
+  driver-did-prism:
+    image: ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism:0.2
+    ports:
+      - "8153:9090"
