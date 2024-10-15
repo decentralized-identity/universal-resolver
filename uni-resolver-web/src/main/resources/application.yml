@@ -339,4 +339,7 @@ uniresolver:
       propertiesEndpoint: "true"
       testIdentifiers:
         - did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
-    
+    - pattern: "^(did:earthid:.+)$"
+      url: ${uniresolver_web_driver_url_did_earthid:http://driver-did-earthid:8080/1.0/identifiers/}
+      testIdentifiers:
+        - did:earthid:66dab28d276a3d08d4f92fd2
