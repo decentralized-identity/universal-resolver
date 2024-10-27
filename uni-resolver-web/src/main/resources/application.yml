@@ -59,10 +59,8 @@ uniresolver:
     - pattern: "^(did:web:.+)$"
       url: ${uniresolver_web_driver_url_did_web:http://uni-resolver-driver-did-uport:8081/}
       testIdentifiers:
-        - did:web:did.actor:alice
-        - did:web:did.actor:bob
-        - did:web:did.actor:carol
-        - did:web:did.actor:mike
+        - did:web:identity.foundation
+        - did:web:danubetech.com
     - pattern: "^(did:ethr:.+)$"
       url: ${uniresolver_web_driver_url_did_ethr:http://uni-resolver-driver-did-uport:8081/}
       testIdentifiers:
@@ -70,13 +68,11 @@ uniresolver:
         - did:ethr:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
         - did:ethr:0x1:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736
         - did:ethr:0x1:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
-        - did:ethr:goerli:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
-        - did:ethr:0x5:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
+        - did:ethr:sepolia:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479
     - pattern: "^(did:ens:.+)$"
       url: ${uniresolver_web_driver_url_did_ens:http://uni-resolver-driver-did-uport:8081/}
       testIdentifiers:
         - did:ens:vitalik.eth
-        - did:ens:goerli:whatever.eth
     - pattern: "^(did:peer:.+)$"
       url: ${uniresolver_web_driver_url_did_peer:http://uni-resolver-driver-did-uport:8081/}
       testIdentifiers:
@@ -339,7 +335,13 @@ uniresolver:
       propertiesEndpoint: "true"
       testIdentifiers:
         - did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
-    - pattern: "^(did:earthid:.+)$"
+    - pattern: "^(did:prism:.+)$"
+      url: ${uniresolver_web_driver_url_did_prism:http://driver-did-prism:9090/}
+      testIdentifiers:
+        - did:prism:c36cd59bbc62dee1925e1343a8fed051416e417116d6169d060746f1e6816cd4
+        - did:prism:0d8481c41b654794f02922601f84811763c655dcfc376acf841eb996846d5e68 # deactivated
+        - did:prism:52e163e8e53466b808e53df870bccd0a066aa4d05af9b689f5c73edcbe23d625 # with updates
+     - pattern: "^(did:earthid:.+)$"
       url: ${uniresolver_web_driver_url_did_earthid:http://driver-did-earthid:8080/1.0/identifiers/}
       testIdentifiers:
         - did:earthid:testnet:6XXVvDkgXCjD6fy62dWaQdyk5368yE1QFdkDpoCFS1d1:0.0.5032772

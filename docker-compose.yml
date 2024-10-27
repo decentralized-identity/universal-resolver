@@ -77,7 +77,8 @@ services:
       uniresolver_web_driver_url_did_webs:
       uniresolver_web_driver_url_did_content:
       uniresolver_web_driver_url_did_iden3:
-      uniresolver_web_driver_url_did_earthid: http://driver-did-earthid:8080/1.0/identifiers/
+      uniresolver_web_driver_url_did_prism:
+      uniresolver_web_driver_url_did_earthid:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -100,7 +101,7 @@ services:
     ports:
       - "8082:8080"
   uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:5.0.0
+    image: uport/uni-resolver-driver-did-uport:5.0.3
     ports:
       - "8083:8081"
   driver-did-stack:
@@ -376,8 +377,11 @@ services:
     image: ghcr.io/iden3/driver-did-iden3:v0.0.4
     ports:
       - "8152:8080"
-  
-  driver-did-earthid:
+  driver-did-prism:
+    image: ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism:0.2
+    ports:
+      - "8153:9090"
+driver-did-earthid:
     image: vibhi09/driver-did-earthid:v1.0.1
     platform: linux/arm64/v8
     environment:
