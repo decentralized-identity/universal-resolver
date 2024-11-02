@@ -14,11 +14,11 @@ Your driver will be invoked via an HTTP GET call to:
 
 `http://<your-image-url>/1.0/identifiers/<your-did>`
 
-Your driver will receive an `Accept` header with the value `application/ld+json`, and it should return either a valid [DID Document](https://w3c-ccg.github.io/did-resolution/#output-diddocument) or a [DID Resolution Result](https://w3c-ccg.github.io/did-resolution/#did-resolution-result) in the HTTP body. Your driver should also return an appropriate value in the `Content-Type` header, such as `application/did+ld+json`.
+Your driver will receive an `Accept` header with the value `application/ld+json`, and it should return either a valid [DID Document](https://w3c.github.io/did-resolution/#output-diddocument) or a [DID Resolution Result](https://w3c.github.io/did-resolution/#did-resolution-result) in the HTTP body. Your driver should also return an appropriate value in the `Content-Type` header, such as `application/did+ld+json`.
 
 A Swagger API definition is available [here](https://github.com/decentralized-identity/universal-resolver/blob/main/openapi/openapi.yaml).
 
-For more information about this interface, see the [DID Resolution](https://w3c-ccg.github.io/did-resolution/) specification.
+For more information about this interface, see the [DID Resolution](https://w3c.github.io/did-resolution/) specification.
 
 ## Driver Rules
 
@@ -100,7 +100,7 @@ To do so, follow these steps:
 - Pull remote docker images
 
   ```bash
-    docker-compose -f docker-compose.yml pull
+    docker compose -f docker-compose.yml pull
   ```
 
 - Build uni-resolver-web locally:
@@ -112,8 +112,10 @@ To do so, follow these steps:
 - Run the uni-resolver-web locally:
 
   ```bash
-  docker-compose -f docker-compose.yml up
+  docker compose -f docker-compose.yml up
   ```
+
+  It's also possible to only start a subset of service, by specifying a list after. Ex: `docker compose -f docker-compose.yml up uni-resolver-web driver-did-prism`
 
 After each local change, you must rebuild uni-resolver-web locally. If you pull docker images, it will overwrite the local uni-resolver-web, so you must rebuild again after pulling.
 
@@ -122,4 +124,4 @@ You can now resolve DID Documents via `curl` commands as documented in the [Quic
 ## Additional Notes
 
 - Depending on the DID method, oftentimes DID drivers will need to read some decentralized ledger or distributed filesystem (the "target system") in order to resolve a DID. Each driver may decide how it will communicate with its respective target system. For those drivers performing operations on DLT's, the driver may do so via web API, communicating with a remote node, running a full node, or another experimental configuration.
-- The detailed definition for the DID Resolution HTTP(S) binding can be found [here](https://w3c-ccg.github.io/did-resolution/#bindings-https).
+- The detailed definition for the DID Resolution HTTP(S) binding can be found [here](https://w3c.github.io/did-resolution/#bindings-https).
