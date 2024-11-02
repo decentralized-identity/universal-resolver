@@ -381,10 +381,14 @@ services:
     image: ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism:0.2
     ports:
       - "8153:9090"
-driver-did-earthid:
+  driver-did-earthid:
     image: vibhi09/driver-did-earthid:v1.0.1
     platform: linux/arm64/v8
     environment:
       baseUrl: "https://did.myearth.id/v2/resolve"
+    ports:
+      - "8154:8080"
+  driver-did-tdw:
+    image: brianrichter/uni-resolver-driver-did-tdw:0.4
     ports:
       - "8154:8080"

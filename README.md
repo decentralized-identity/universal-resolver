@@ -92,6 +92,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iota:0xf4d6f08f5a1b80dd578da7dc1b49c886d580acd4cf7d48119dfeb82b538ad88a
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:prism:c36cd59bbc62dee1925e1343a8fed051416e417116d6169d060746f1e6816cd4
+ 	curl -X GET http://localhost:8080/1.0/identifiers/did:tdw:QmbnQXj7DhWFrmgjDPKZCybn8fkKW7Wze57SQHpwsSQ7NZ:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -181,9 +182,8 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-iota](https://github.com/iotaledger/uni-resolver-driver-iota)									| 0.1.2		 	 | 1.0																												 | [iotaledger/uni-resolver-driver-iota](https://hub.docker.com/r/iotaledger/uni-resolver-driver-iota)															  	  | IOTA DID																			|
 | [did-iden3](https://github.com/iden3/driver-did-iden3)              | 0.0.4          | [1.0.0](https://github.com/iden3/did-iden3/blob/main/did-iden3-method.md)                                         | [ghcr.io/iden3/driver-did-iden3:v0.0.4](https://github.com/iden3/driver-did-iden3/pkgs/container/driver-did-iden3)                                                                          | Iden3 DID                                                                       |
 | [did-prism](https://github.com/FabioPinheiro/uni-resolver-driver-did-prism)                           | 0.2            | [1.0](https://github.com/input-output-hk/prism-did-method-spec)                                                   | [ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism](https://github.com/FabioPinheiro/uni-resolver-driver-did-prism/pkgs/container/uni-resolver-driver-did-prism) | PRISM DID                                                                           |
+| [did-tdw](https://github.com/brianorwhatever/uni-resolver-driver-did-tdw)                         	| 0.4            | [0.4](https://identity.foundation/trustdidweb/)                                                   		     | [uni-resolver-driver-did-tdw](https://hub.docker.com/r/brianrichter/uni-resolver-driver-did-tdw) 				  | Trust DID Web                                                                       |
 | [did-earthid](https://github.com/vibhi09/driver-did-earthid) | 0.1.0 | [1.0](https://github.com/earthid/earthid-did-method-specification) | [vibhi09/driver-did-earthid](https://hub.docker.com/r/vibhi09/driver-did-earthid) | EarthID DID Method |
-
-
 
 ## More Information
 

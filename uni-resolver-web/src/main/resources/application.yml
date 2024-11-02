@@ -342,6 +342,11 @@ uniresolver:
         - did:prism:0d8481c41b654794f02922601f84811763c655dcfc376acf841eb996846d5e68 # deactivated
         - did:prism:52e163e8e53466b808e53df870bccd0a066aa4d05af9b689f5c73edcbe23d625 # with updates
      - pattern: "^(did:earthid:.+)$"
-      url: ${uniresolver_web_driver_url_did_earthid:http://driver-did-earthid:8080/1.0/identifiers/}
-      testIdentifiers:
+       url: ${uniresolver_web_driver_url_did_earthid:http://driver-did-earthid:8080/1.0/identifiers/}
+       testIdentifiers:
         - did:earthid:testnet:6XXVvDkgXCjD6fy62dWaQdyk5368yE1QFdkDpoCFS1d1:0.0.5032772
+    - pattern: "^(did:tdw:.+)$"
+      url: ${uniresolver_web_driver_url_did_tdw:http://driver-did-tdw:8080/}
+      testIdentifiers:
+        - did:tdw:QmbkyrrjFQ3Z2WiDfmesKpmeUhemaiqkWgwemovmVaTJfQ:demo.identifier.me:client:c9dd16b7-e079-43da-b0a9-36515e726c6f
+        - did:tdw:QmbnQXj7DhWFrmgjDPKZCybn8fkKW7Wze57SQHpwsSQ7NZ:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
