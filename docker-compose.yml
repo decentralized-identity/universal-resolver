@@ -387,7 +387,6 @@ services:
       - "8154:8080"
   driver-did-earthid:
     image: vibhi09/driver-did-earthid:v1.0.1
-    platform: linux/arm64/v8
     environment:
       baseUrl: "https://did.myearth.id/v2/resolve"
     ports:
