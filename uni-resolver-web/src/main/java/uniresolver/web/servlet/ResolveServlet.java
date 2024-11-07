@@ -36,10 +36,10 @@ public class ResolveServlet extends WebUniResolver {
 		String servletPath = request.getServletPath();
 		String requestPath = request.getRequestURI();
 
+		if (log.isDebugEnabled()) log.debug("Incoming resolve request: " + requestPath);
+
 		String path = requestPath.substring(contextPath.length() + servletPath.length());
 		if (path.startsWith("/")) path = path.substring(1);
-
-		if (log.isDebugEnabled()) log.debug("Incoming resolve request: " + requestPath);
 
 		if (path.isEmpty()) {
 			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "No identifier found in resolve request.");
