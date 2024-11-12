@@ -384,7 +384,7 @@ services:
     ports:
       - "8154:8080"
   driver-did-quarkid:
-    image:  quarkid/api-proxy
+    image:  quarkid/api-proxy:latest
     ports: 
       - 8155:8080
     environment:
