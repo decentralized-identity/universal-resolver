@@ -346,3 +346,7 @@ uniresolver:
       testIdentifiers:
         - did:tdw:QmbkyrrjFQ3Z2WiDfmesKpmeUhemaiqkWgwemovmVaTJfQ:demo.identifier.me:client:c9dd16b7-e079-43da-b0a9-36515e726c6f
         - did:tdw:QmbnQXj7DhWFrmgjDPKZCybn8fkKW7Wze57SQHpwsSQ7NZ:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
+    - pattern: "^(did:earthid:.+)$"
+      url: ${uniresolver_web_driver_url_did_earthid:http://driver-did-earthid:8080/1.0/identifiers/}
+      testIdentifiers:
+        - did:earthid:testnet:6XXVvDkgXCjD6fy62dWaQdyk5368yE1QFdkDpoCFS1d1:0.0.5032772

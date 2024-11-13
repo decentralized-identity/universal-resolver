@@ -183,7 +183,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-iden3](https://github.com/iden3/driver-did-iden3)              | 0.0.4          | [1.0.0](https://github.com/iden3/did-iden3/blob/main/did-iden3-method.md)                                         | [ghcr.io/iden3/driver-did-iden3:v0.0.4](https://github.com/iden3/driver-did-iden3/pkgs/container/driver-did-iden3)                                                                          | Iden3 DID                                                                       |
 | [did-prism](https://github.com/FabioPinheiro/uni-resolver-driver-did-prism)                           | 0.2            | [1.0](https://github.com/input-output-hk/prism-did-method-spec)                                                   | [ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism](https://github.com/FabioPinheiro/uni-resolver-driver-did-prism/pkgs/container/uni-resolver-driver-did-prism) | PRISM DID                                                                           |
 | [did-tdw](https://github.com/brianorwhatever/uni-resolver-driver-did-tdw)                         	| 0.4            | [0.4](https://identity.foundation/trustdidweb/)                                                   		     | [uni-resolver-driver-did-tdw](https://hub.docker.com/r/brianrichter/uni-resolver-driver-did-tdw) 				  | Trust DID Web                                                                       |
-
+| [did-earthid](https://github.com/vibhi09/driver-did-earthid) | 0.1.0 | [1.0](https://github.com/earthid/earthid-did-method-specification) | [vibhi09/driver-did-earthid](https://hub.docker.com/r/vibhi09/driver-did-earthid) | EarthID DID Method |
 
 ## More Information
 

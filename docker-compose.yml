@@ -5,6 +5,7 @@ networks:
     name: universal-resolver
 
 services:
+
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
@@ -77,6 +78,7 @@ services:
       uniresolver_web_driver_url_did_content:
       uniresolver_web_driver_url_did_iden3:
       uniresolver_web_driver_url_did_prism:
+      uniresolver_web_driver_url_did_earthid:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -383,3 +385,9 @@ services:
     image: brianrichter/uni-resolver-driver-did-tdw:0.4
     ports:
       - "8154:8080"
+  driver-did-earthid:
+    image: vibhi09/driver-did-earthid:v1.0.2
+    environment:
+      baseUrl: "https://did.myearth.id/v2/resolve"
+    ports:
+      - "8155:8080"
