@@ -383,3 +383,13 @@ services:
     image: brianrichter/uni-resolver-driver-did-tdw:0.4
     ports:
       - "8154:8080"
+  driver-did-quarkid:
+    image:  quarkid/api-proxy:latest
+    ports: 
+      - 8155:8080
+    environment:
+              #- NODE_1_URL:https://quarkid-main.extrimian.com/
+      NODE_1_URL: ${uniresolver_driver_did_quarkid_node_url} #https://lbquarkid2.extrimian.com/
+      NODE_1_PATTERN: ${uniresolver_driver_did_quarkid_node_pattern} #did:quarkid
+      NODE_1_BEHAVIOR: ${uniresolver_driver_did_quarkid_node_behavior} #1
+      UV_THREADPOOL_SIZE: ${uniresolver_driver_did_quarkid_node_threadpool_size} #240000
