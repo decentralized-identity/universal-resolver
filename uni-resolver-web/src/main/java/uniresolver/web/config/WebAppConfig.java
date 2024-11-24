@@ -15,6 +15,7 @@ import uniresolver.web.servlet.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 public class WebAppConfig {
@@ -101,12 +102,13 @@ public class WebAppConfig {
 
 		List<Driver> drivers = new ArrayList<>();
 
-		for (DriverConfigs.DriverConfig dc : driverConfigs.getDrivers()) {
+		for (DriverConfigs.DriverConfig driverConfig : driverConfigs.getDrivers()) {
 
-			String pattern = dc.getPattern();
-			String url = dc.getUrl();
-			String propertiesEndpoint = dc.getPropertiesEndpoint();
-			List<String> testIdentifiers = dc.getTestIdentifiers();
+			String pattern = driverConfig.getPattern();
+			String url = driverConfig.getUrl();
+			String propertiesEndpoint = driverConfig.getPropertiesEndpoint();
+			List<String> testIdentifiers = driverConfig.getTestIdentifiers();
+			Map<String, Object> traits = driverConfig.getTraits();
 
 			if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
 			if (url == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
@@ -125,12 +127,13 @@ public class WebAppConfig {
 				if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(normalizeUri((url + servletMappings.getProperties()), false));
 			}
 
-			driver.setTestIdentifiers(testIdentifiers);
+			if (testIdentifiers != null) driver.setTestIdentifiers(testIdentifiers);
+			if (traits != null) driver.setTraits(traits);
 
 			// done
 
 			drivers.add(driver);
-			if (log.isInfoEnabled()) log.info("Added driver for pattern '" + dc.getPattern() + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
+			if (log.isInfoEnabled()) log.info("Added driver for pattern '" + driverConfig.getPattern() + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
 		}
 
 		uniResolver.setDrivers(drivers);

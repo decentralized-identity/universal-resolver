@@ -54,6 +54,7 @@ public class LocalUniResolverConfigurator {
                     driver.setResolveUri(url + "1.0/identifiers/");
                     if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(url + "1.0/properties");
                 }
+
                 if (testIdentifiers != null) driver.setTestIdentifiers(testIdentifiers);
                 if (traits != null) driver.setTraits(traits);
 

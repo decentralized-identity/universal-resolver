@@ -247,7 +247,7 @@ public class LocalUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Loading properties for driver " + driver.getClass().getSimpleName());
 
-			String driverKey = "driver-" + i;
+			String driverKey = (driver instanceof HttpDriver httpDriver) ? httpDriver.getPattern().toString() : "driver-" + i;
 			Map<String, Object> driverProperties = driver.properties();
 			if (driverProperties == null) driverProperties = Collections.emptyMap();
 
@@ -319,7 +319,7 @@ public class LocalUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Loading traits for driver " + driver.getClass().getSimpleName());
 
-			String driverKey = "driver-" + i;
+			String driverKey = (driver instanceof HttpDriver httpDriver) ? httpDriver.getPattern().toString() : "driver-" + i;
 			Map<String, Object> driverTraits = driver.traits();
 			if (driverTraits == null) driverTraits = Collections.emptyMap();
 

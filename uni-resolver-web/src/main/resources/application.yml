@@ -30,6 +30,11 @@ uniresolver:
         - did:sov:idunion:2GMSLg2A8JXcdYVsPC4Jui
         - did:sov:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
         - did:sov:indicio:demo:KKyAeG7woJMV6MhhAREVKp
+      traits:
+        deactivatable: true
+        enumerable: true
+        historyAvailable: true
+        humanReadbale: false
     - pattern: "^(did:indy:.+)$"
       url: ${uniresolver_web_driver_url_did_indy:http://driver-did-indy:8080/}
       propertiesEndpoint: "true"
@@ -41,11 +46,6 @@ uniresolver:
         - did:indy:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
         - did:indy:indicio:demo:KKyAeG7woJMV6MhhAREVKp
         - did:indy:nxd:LLDnZr8iaYM3F77pUWXnVX
-      traits:
-        deactivatable: true
-        enumerable: true
-        historyAvailable: true
-        humanReadbale: false
     - pattern: "^(did:v1:nym:.+)$"
       url: ${uniresolver_web_driver_url_did_v1_nym:http://uni-resolver-did-v1-driver:8080/}
       propertiesEndpoint: "true"
