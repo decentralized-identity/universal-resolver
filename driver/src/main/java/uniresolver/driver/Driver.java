@@ -50,4 +50,8 @@ public interface Driver {
 	default public List<String> testIdentifiers() throws ResolutionException {
 		return Collections.emptyList();
 	}
+
+	default public Map<String, Object> traits() throws ResolutionException {
+		return Collections.emptyMap();
+	}
 }

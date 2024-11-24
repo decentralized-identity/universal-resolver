@@ -306,6 +306,34 @@ public class LocalUniResolver implements UniResolver {
 		return testIdentifiers;
 	}
 
+	@Override
+	public Map<String, Map<String, Object>> traits() throws ResolutionException {
+
+		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
+
+		Map<String, Map<String, Object>> traits = new LinkedHashMap<>();
+
+		int i = 0;
+
+		for (Driver driver : this.getDrivers()) {
+
+			if (log.isDebugEnabled()) log.debug("Loading traits for driver " + driver.getClass().getSimpleName());
+
+			String driverKey = "driver-" + i;
+			Map<String, Object> driverTraits = driver.traits();
+			if (driverTraits == null) driverTraits = Collections.emptyMap();
+
+			traits.put(driverKey, driverTraits);
+
+			i++;
+		}
+
+		// done
+
+		if (log.isDebugEnabled()) log.debug("Loaded traits: " + traits);
+		return traits;
+	}
+
 	/*
 	 * Getters and setters
 	 */

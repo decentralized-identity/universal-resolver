@@ -10,10 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import uniresolver.driver.Driver;
 import uniresolver.driver.http.HttpDriver;
 import uniresolver.local.LocalUniResolver;
-import uniresolver.web.servlet.MethodsServlet;
-import uniresolver.web.servlet.PropertiesServlet;
-import uniresolver.web.servlet.ResolveServlet;
-import uniresolver.web.servlet.TestIdentifiersServlet;
+import uniresolver.web.servlet.*;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -71,6 +68,16 @@ public class WebAppConfig {
 	@Bean
 	public ServletRegistrationBean<TestIdentifiersServlet> testIdentifiersServletRegistrationBean() {
 		return new ServletRegistrationBean<>(testIdentifiersServlet(), servletMappings.getTestIdentifiers());
+	}
+
+	@Bean(name = "TraitsServlet")
+	public TraitsServlet traitsServlet() {
+		return new TraitsServlet();
+	}
+
+	@Bean
+	public ServletRegistrationBean<TraitsServlet> traitsServletRegistrationBean() {
+		return new ServletRegistrationBean<>(traitsServlet(), servletMappings.getTraits());
 	}
 
 	public static String fixWildcardPattern(String s) {

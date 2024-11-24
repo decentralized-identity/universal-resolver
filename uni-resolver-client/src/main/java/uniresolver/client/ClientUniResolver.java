@@ -28,11 +28,19 @@ public class ClientUniResolver implements UniResolver {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	private HttpClient httpClient = HttpClients.createDefault();
-	private URI resolveUri = URI.create("http://localhost:8080/1.0/identifiers");
-	private URI propertiesUri = URI.create("http://localhost:8080/1.0/properties");
-	private URI methodsUri = URI.create("http://localhost:8080/1.0/methods");
-	private URI testIdentifiersUri = URI.create("http://localhost:8080/1.0/testIdentifiers");
+	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
+	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers");
+	public static final URI DEFAULT_PROPERTIES_URI = URI.create("http://localhost:8080/1.0/properties");
+	public static final URI DEFAULT_METHODS_URI = URI.create("http://localhost:8080/1.0/methods");
+	public static final URI DEFAULT_TEST_IDENTIFIERS_URI = URI.create("http://localhost:8080/1.0/testIdentifiers");
+	public static final URI DEFAULT_TRAITS_URI = URI.create("http://localhost:8080/1.0/traits");
+
+	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
+	private URI resolveUri = DEFAULT_RESOLVE_URI;
+	private URI propertiesUri = DEFAULT_PROPERTIES_URI;
+	private URI methodsUri = DEFAULT_METHODS_URI;
+	private URI testIdentifiersUri = DEFAULT_TEST_IDENTIFIERS_URI;
+	private URI traitsUri = DEFAULT_TRAITS_URI;
 
 	public ClientUniResolver() {
 
@@ -47,6 +55,7 @@ public class ClientUniResolver implements UniResolver {
 		clientUniResolver.setPropertiesUri(URI.create(baseUri + "properties"));
 		clientUniResolver.setMethodsUri(URI.create(baseUri + "methods"));
 		clientUniResolver.setTestIdentifiersUri(URI.create(baseUri + "testIdentifiers"));
+		clientUniResolver.setTraitsUri(URI.create(baseUri + "traits"));
 
 		return clientUniResolver;
 	}
@@ -297,67 +306,113 @@ public class ClientUniResolver implements UniResolver {
 		return testIdentifiers;
 	}
 
+	@Override
+	public Map<String, Map<String, Object>> traits() throws ResolutionException {
+
+		// prepare HTTP request
+
+		String uriString = this.getTraitsUri().toString();
+
+		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		httpGet.addHeader("Accept", UniResolver.TRAITS_MIME_TYPE);
+
+		// execute HTTP request
+
+		Map<String, Map<String, Object>> traits;
+
+		if (log.isDebugEnabled()) log.debug("Request to: " + uriString);
+
+		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
+
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+
+			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
+
+			HttpEntity httpEntity = httpResponse.getEntity();
+			String httpBody = EntityUtils.toString(httpEntity);
+			EntityUtils.consume(httpEntity);
+
+			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
+
+			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+
+				if (log.isWarnEnabled()) log.warn("Cannot retrieve TRAITS from " + uriString + ": " + httpBody);
+				throw new ResolutionException(httpBody);
+			}
+
+			traits = (Map<String, Map<String, Object>>) objectMapper.readValue(httpBody, LinkedHashMap.class);
+		} catch (IOException ex) {
+
+			throw new ResolutionException("Cannot retrieve TRAITS from " + uriString + ": " + ex.getMessage(), ex);
+		}
+
+		if (log.isDebugEnabled()) log.debug("Retrieved TRAITS (" + uriString + "): " + traits);
+
+		// done
+
+		return traits;
+	}
+
 	/*
 	 * Getters and setters
 	 */
 
 	public HttpClient getHttpClient() {
-
 		return this.httpClient;
 	}
 
 	public void setHttpClient(HttpClient httpClient) {
-
 		this.httpClient = httpClient;
 	}
 
 	public URI getResolveUri() {
-
 		return this.resolveUri;
 	}
 
 	public void setResolveUri(URI resolveUri) {
-
 		this.resolveUri = resolveUri;
 	}
 
 	public void setResolveUri(String resolveUri) {
-
 		this.resolveUri = URI.create(resolveUri);
 	}
 
 	public URI getPropertiesUri() {
-
 		return this.propertiesUri;
 	}
 
 	public void setPropertiesUri(URI propertiesUri) {
-
 		this.propertiesUri = propertiesUri;
 	}
 
 	public void setPropertiesUri(String propertiesUri) {
-
 		this.propertiesUri = URI.create(propertiesUri);
 	}
 
 	public URI getMethodsUri() {
-
 		return this.methodsUri;
 	}
 
 	public void setMethodsUri(URI methodsUri) {
-
 		this.methodsUri = methodsUri;
 	}
 
 	public URI getTestIdentifiersUri() {
-
 		return this.testIdentifiersUri;
 	}
 
 	public void setTestIdentifiersUri(URI testIdentifiersUri) {
-
 		this.testIdentifiersUri = testIdentifiersUri;
+	}
+
+	public URI getTraitsUri() {
+		return traitsUri;
+	}
+
+	public void setTraitsUri(URI traitsUri) {
+		this.traitsUri = traitsUri;
 	}
 }

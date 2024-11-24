@@ -71,6 +71,11 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 		return this.getUniResolver() == null ? null : this.getUniResolver().testIdentifiers();
 	}
 
+	@Override
+	public Map<String, Map<String, Object>> traits() throws ResolutionException {
+		return this.getUniResolver() == null ? null : this.getUniResolver().traits();
+	}
+
 	/*
 	 * Getters and setters
 	 */

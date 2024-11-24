@@ -41,6 +41,7 @@ public class HttpDriver implements Driver {
 	private URI resolveUri = null;
 	private URI propertiesUri = null;
 	private List<String> testIdentifiers = Collections.emptyList();
+	private Map<String, Object> traits = Collections.emptyMap();
 
 	public HttpDriver() {
 		this.httpClient = buildDefaultHttpClient();
@@ -214,8 +215,6 @@ public class HttpDriver implements Driver {
 
 		if (this.getResolveUri() != null) httpProperties.put("resolveUri", this.getResolveUri().toString());
 		if (this.getPropertiesUri() != null) httpProperties.put("propertiesUri", this.getPropertiesUri().toString());
-		if (this.getPattern() != null) httpProperties.put("pattern", this.getPattern().toString());
-		if (this.getTestIdentifiers() != null) httpProperties.put("testIdentifiers", this.getTestIdentifiers());
 		return httpProperties;
 	}
 
@@ -271,9 +270,13 @@ public class HttpDriver implements Driver {
 	}
 
 	@Override
-	public List<String> testIdentifiers() throws ResolutionException {
-
+	public List<String> testIdentifiers() {
 		return this.getTestIdentifiers();
+	}
+
+	@Override
+	public Map<String, Object> traits() {
+		return this.getTraits();
 	}
 
 	/*
@@ -330,5 +333,13 @@ public class HttpDriver implements Driver {
 
 	public void setTestIdentifiers(List<String> testIdentifiers) {
 		this.testIdentifiers = testIdentifiers;
+	}
+
+	public Map<String, Object> getTraits() {
+		return traits;
+	}
+
+	public void setTraits(Map<String, Object> traits) {
+		this.traits = traits;
 	}
 }

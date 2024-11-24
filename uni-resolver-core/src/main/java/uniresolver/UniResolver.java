@@ -17,6 +17,7 @@ public interface UniResolver extends DIDResolver {
 	public static final String PROPERTIES_MIME_TYPE = "application/json";
 	public static final String METHODS_MIME_TYPE = "application/json";
 	public static final String TEST_IDENTIFIER_MIME_TYPE = "application/json";
+	public static final String TRAITS_MIME_TYPE = "application/json";
 
 	static final Logger log = LoggerFactory.getLogger(UniResolver.class);
 
@@ -65,4 +66,5 @@ public interface UniResolver extends DIDResolver {
 	public Map<String, Map<String, Object>> properties() throws ResolutionException;
 	public Set<String> methods() throws ResolutionException;
 	public Map<String, List<String>> testIdentifiers() throws ResolutionException;
+	public Map<String, Map<String, Object>> traits() throws ResolutionException;
 }

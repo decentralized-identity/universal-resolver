@@ -6,6 +6,7 @@ server:
       resolve: "/1.0/identifiers"
       methods: "/1.0/methods"
       testIdentifiers: "/1.0/testIdentifiers"
+      traits: "/1.0/traits"
   port: "8080"
 spring:
   profiles:
@@ -40,6 +41,11 @@ uniresolver:
         - did:indy:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
         - did:indy:indicio:demo:KKyAeG7woJMV6MhhAREVKp
         - did:indy:nxd:LLDnZr8iaYM3F77pUWXnVX
+      traits:
+        deactivatable: true
+        enumerable: true
+        historyAvailable: true
+        humanReadbale: false
     - pattern: "^(did:v1:nym:.+)$"
       url: ${uniresolver_web_driver_url_did_v1_nym:http://uni-resolver-did-v1-driver:8080/}
       propertiesEndpoint: "true"
@@ -61,6 +67,11 @@ uniresolver:
       testIdentifiers:
         - did:web:identity.foundation
         - did:web:danubetech.com
+      traits:
+        deactivatable: true
+        enumerable: false
+        historyAvailable: false
+        humanReadbale: true
     - pattern: "^(did:ethr:.+)$"
       url: ${uniresolver_web_driver_url_did_ethr:http://uni-resolver-driver-did-uport:8081/}
       testIdentifiers:
@@ -256,6 +267,11 @@ uniresolver:
       testIdentifiers:
         - did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpGZk1iek9qTW1RNGVmVDZrdndUSUpqZWxUcWpsMHhqRUlXUTJxb2JzUk1NIiwia3R5IjoiT0tQIiwiY3J2IjoiRWQyNTUxOSIsImFsZyI6IkVkRFNBIiwieCI6IkFOUmpIX3p4Y0tCeHNqUlBVdHpSYnA3RlNWTEtKWFE5QVBYOU1QMWo3azQifQ
         - did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1Njpnc0w0VTRxX1J6VFhRckpwQUNnZGkwb1lCdUV1QjNZNWZFanhDd1NPUFlBIiwia3R5IjoiRUMiLCJjcnYiOiJQLTM4NCIsImFsZyI6IkVTMzg0IiwieCI6ImEtRWV5T2hlRUNWcDJqRkdVRTNqR0RCNlAzVV80S0lyZHRzTU9RQXFQN0NBMlVvV3NERG1nOWdJUVhiOEthd0ciLCJ5Ijoib3cxWDJ6VFVRaG12elY4NnpHdGhKc0xLeDE2MmhmSmxmN1p0OTFYUnZBTzRScE4zR2RGaVl3Tmc0NXJWUmlUcSJ9
+      traits:
+        deactivatable: false
+        enumerable: false
+        historyAvailable: false
+        humanReadbale: false
     - pattern: "^(did:kscirc:.+)$"
       url: ${uniresolver_web_driver_url_did_kscirc:http://did-kscirc-driver:9800/1.0/identifiers/$1}
       testIdentifiers:
