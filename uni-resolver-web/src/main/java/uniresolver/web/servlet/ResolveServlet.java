@@ -96,7 +96,7 @@ public class ResolveServlet extends WebUniResolver {
 			if (log.isWarnEnabled()) log.warn("Resolve problem for " + didString + ": " + ex.getMessage(), ex);
 
 			if (! (ex instanceof ResolutionException)) ex = new ResolutionException("Resolve problem for " + didString + ": " + ex.getMessage());
-			resolveRepresentationResult = ((ResolutionException) ex).toErrorResult(accept);
+			resolveRepresentationResult = ((ResolutionException) ex).toErrorResolveRepresentationResult(accept);
 		}
 
 		if (log.isInfoEnabled()) log.info("Resolve representation result for " + didString + ": " + resolveRepresentationResult);

@@ -27,28 +27,26 @@ public class DereferencingException extends Exception {
 	private final String error;
 	private final Map<String, Object> dereferencingMetadata;
 
-	private final DereferenceResult dereferenceResult;
+	private DereferenceResult dereferenceResult;
 
 	public DereferencingException(String error, String message, Map<String, Object> dereferencingMetadata, Throwable ex) {
 		super(message, ex);
 		this.error = error;
 		this.dereferencingMetadata = dereferencingMetadata;
-		this.dereferenceResult = null;
 	}
 
 	public DereferencingException(String error, String message, Map<String, Object> dereferencingMetadata) {
 		super(message);
 		this.error = error;
 		this.dereferencingMetadata = dereferencingMetadata;
-		this.dereferenceResult = null;
 	}
 
 	public DereferencingException(String error, String message, Throwable ex) {
-		this(error, message, null, ex);
+		this(error, message, (Map<String, Object>) null, ex);
 	}
 
 	public DereferencingException(String error, String message) {
-		this(error, message, null, null);
+		this(error, message, (Map<String, Object>) null);
 	}
 
 	public DereferencingException(String message, Throwable ex) {
@@ -59,31 +57,30 @@ public class DereferencingException extends Exception {
 		this(ERROR_INTERNALERROR, message);
 	}
 
-	public DereferencingException(DereferenceResult dereferenceResult) {
-		super(dereferenceResult.getErrorMessage());
-		if (! dereferenceResult.isErrorResult()) throw new IllegalArgumentException("No error result: " + dereferenceResult);
-		this.error = dereferenceResult.getError();
-		this.dereferencingMetadata = dereferenceResult.getDereferencingMetadata();
-		this.dereferenceResult = dereferenceResult;
+	public static DereferencingException fromDereferenceResult(DereferenceResult dereferenceResult) {
+		if (dereferenceResult != null && dereferenceResult.isErrorResult()) {
+			DereferencingException dereferencingException = new DereferencingException(dereferenceResult.getError(), dereferenceResult.getErrorMessage(), dereferenceResult.getDereferencingMetadata());
+			dereferencingException.dereferenceResult = dereferenceResult;
+			return dereferencingException;
+		} else {
+			throw new IllegalArgumentException("No error result: " + dereferenceResult);
+		}
 	}
 
 	/*
 	 * Error methods
 	 */
 
-	public DereferenceResult toErrorResult(String contentType) {
-		if (this.getDereferenceResult() != null) {
-			return this.getDereferenceResult();
-		} else {
-			DereferenceResult dereferenceResult = DereferenceResult.build();
-			if (this.getError() != null) dereferenceResult.setError(this.getError());
-			if (this.getMessage() != null) dereferenceResult.setErrorMessage(this.getMessage());
-			if (this.getDereferencingMetadata() != null) dereferenceResult.getDereferencingMetadata().putAll(this.getDereferencingMetadata());
-			dereferenceResult.setContentStream(new byte[0]);
-			dereferenceResult.setContentType(contentType);
-			if (log.isDebugEnabled()) log.debug("Created error dereference result: " + dereferenceResult);
-			return dereferenceResult;
-		}
+	public DereferenceResult toErrorDereferenceResult(String contentType) {
+		if (this.dereferenceResult != null) return this.dereferenceResult;
+		DereferenceResult dereferenceResult = DereferenceResult.build();
+		if (this.getError() != null) dereferenceResult.setError(this.getError());
+		if (this.getMessage() != null) dereferenceResult.setErrorMessage(this.getMessage());
+		if (this.getDereferencingMetadata() != null) dereferenceResult.getDereferencingMetadata().putAll(this.getDereferencingMetadata());
+		dereferenceResult.setContentStream(new byte[0]);
+		dereferenceResult.setContentType(contentType);
+		if (log.isDebugEnabled()) log.debug("Created error dereference result: " + dereferenceResult);
+		return dereferenceResult;
 	}
 
 	/*
@@ -96,10 +93,6 @@ public class DereferencingException extends Exception {
 
 	public Map<String, Object> getDereferencingMetadata() {
 		return dereferencingMetadata;
-	}
-
-	public DereferenceResult getDereferenceResult() {
-		return dereferenceResult;
 	}
 }
 

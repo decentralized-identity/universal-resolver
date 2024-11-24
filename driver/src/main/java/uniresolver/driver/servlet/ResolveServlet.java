@@ -86,7 +86,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 			if (log.isWarnEnabled()) log.warn("Driver: Resolve problem for " + didString + ": " + ex.getMessage(), ex);
 
 			if (! (ex instanceof ResolutionException)) ex = new ResolutionException("Driver: Resolve problem for " + didString + ": " + ex.getMessage());
-			resolveRepresentationResult = ((ResolutionException) ex).toErrorResult(accept);
+			resolveRepresentationResult = ((ResolutionException) ex).toErrorResolveRepresentationResult(accept);
 		}
 
 		if (log.isInfoEnabled()) log.info("Driver: Resolve result for " + didString + ": " + resolveRepresentationResult);

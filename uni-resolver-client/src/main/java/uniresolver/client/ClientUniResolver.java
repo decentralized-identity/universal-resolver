@@ -126,7 +126,7 @@ public class ClientUniResolver implements UniResolver {
 
 			if (resolveRepresentationResult != null && resolveRepresentationResult.isErrorResult()) {
 				if (log.isWarnEnabled()) log.warn(resolveRepresentationResult.getError() + " -> " + resolveRepresentationResult.getErrorMessage());
-				throw new ResolutionException(resolveRepresentationResult);
+				throw ResolutionException.fromResolveResult(resolveRepresentationResult);
 			}
 
 			if (resolveRepresentationResult == null) {

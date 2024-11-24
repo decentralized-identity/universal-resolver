@@ -161,7 +161,7 @@ public class HttpDriver implements Driver {
 
 			if (resolveRepresentationResult != null && resolveRepresentationResult.isErrorResult()) {
 				if (log.isWarnEnabled()) log.warn(resolveRepresentationResult.getError() + " -> " + resolveRepresentationResult.getErrorMessage());
-				throw new ResolutionException(resolveRepresentationResult);
+				throw ResolutionException.fromResolveResult(resolveRepresentationResult);
 			}
 
 			if (resolveRepresentationResult == null) {
