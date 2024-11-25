@@ -131,6 +131,10 @@ paths:
               schema:
                 type: object
                 description: A map of properties.
+                example:
+                  indy:
+                    libIndyPath: "/lib"
+                    poolConfigs: "..."
   "/methods":
     get:
       summary: Return a list of supported DID methods
@@ -192,6 +196,13 @@ paths:
               schema:
                 type: object
                 description: A map of DID traits.
+                example:
+                  indy:
+                    updatable: true
+                    deactivatable: true
+                    enumerable: true
+                    historyAvailable: true
+                    humanReadable: false
 components:
   schemas:
     ResolutionResult:
