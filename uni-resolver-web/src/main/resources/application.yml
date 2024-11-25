@@ -34,7 +34,7 @@ uniresolver:
         deactivatable: true
         enumerable: true
         historyAvailable: true
-        humanReadbale: false
+        humanReadable: false
     - pattern: "^(did:indy:.+)$"
       url: ${uniresolver_web_driver_url_did_indy:http://driver-did-indy:8080/}
       propertiesEndpoint: "true"
@@ -71,7 +71,7 @@ uniresolver:
         deactivatable: true
         enumerable: false
         historyAvailable: false
-        humanReadbale: true
+        humanReadable: true
     - pattern: "^(did:ethr:.+)$"
       url: ${uniresolver_web_driver_url_did_ethr:http://uni-resolver-driver-did-uport:8081/}
       testIdentifiers:
@@ -271,7 +271,7 @@ uniresolver:
         deactivatable: false
         enumerable: false
         historyAvailable: false
-        humanReadbale: false
+        humanReadable: false
     - pattern: "^(did:kscirc:.+)$"
       url: ${uniresolver_web_driver_url_did_kscirc:http://did-kscirc-driver:9800/1.0/identifiers/$1}
       testIdentifiers:
