@@ -176,10 +176,10 @@ uniresolver:
       testIdentifiers:
         - did:lit:AEZ87t1bi5bRxmVh3ksMUi
     - pattern: "^(did:ebsi:.+)$"
-      url: ${uniresolver_web_driver_url_did_ebsi:https://api-pilot.ebsi.eu/did-registry/v4/identifiers/$1}
+      url: ${uniresolver_web_driver_url_did_ebsi:https://api-pilot.ebsi.eu/did-registry/v5/identifiers/$1}
       testIdentifiers:
-        - did:ebsi:ziE2n8Ckhi6ut5Z8Cexrihd
-        - did:ebsi:zkC6cUFUs3FiRp2xedNwih2
+        - did:ebsi:zjUnExsyyweQ9p4cy3nvrVc
+        - did:ebsi:z24q53pA3pjcnoukP6fD5jXt
     - pattern: "^(did:emtrust:.+)$"
       url: ${uniresolver_web_driver_url_did_emtrust:http://driver-did-emtrust:8080/}
       testIdentifiers:
