@@ -55,6 +55,6 @@ public class PropertiesServlet extends WebUniResolver {
 
 		// write result
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.PROPERTIES_MIME_TYPE, propertiesString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.PROPERTIES_MEDIA_TYPE, propertiesString);
 	}
 }

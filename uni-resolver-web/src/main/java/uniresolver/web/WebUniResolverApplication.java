@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import uniresolver.local.LocalUniDereferencer;
 import uniresolver.local.LocalUniResolver;
 
 @SpringBootApplication
@@ -22,5 +23,10 @@ public class WebUniResolverApplication extends SpringBootServletInitializer {
 	@Bean(name = "UniResolver")
 	public LocalUniResolver localUniResolver() {
 		return new LocalUniResolver();
+	}
+
+	@Bean(name = "UniDereferencer")
+	public LocalUniDereferencer localUniDereferencer() {
+		return new LocalUniDereferencer();
 	}
 }

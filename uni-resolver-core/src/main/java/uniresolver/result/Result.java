@@ -2,6 +2,8 @@ package uniresolver.result;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,21 +12,53 @@ import java.util.Map;
 public interface Result {
 
     /*
-     * Serialization
-     */
-
-    public Map<String, Object> toMap();
-    public String toJson();
-
-    /*
-     * Metadata methods
+     * Field methods
      */
 
     @JsonIgnore
     public Map<String, Object> getFunctionMetadata();
 
     @JsonIgnore
+    public byte[] getFunctionContent() throws IOException;
+
+    @JsonIgnore
     public Map<String, Object> getFunctionContentMetadata();
+
+    /*
+     * Serialization
+     */
+
+    @JsonIgnore
+    public Map<String, Object> toMap();
+
+    @JsonIgnore
+    public String toJson();
+
+    @JsonIgnore
+    public String getMediaType();
+
+    @JsonIgnore
+    public URI getDefaultContext();
+
+    @JsonIgnore
+    public boolean isComplete();
+
+    /*
+     * Content type methods
+     */
+
+    @JsonIgnore
+    default public String getContentType() {
+        return (String) this.getFunctionMetadata().get("contentType");
+    }
+
+    @JsonIgnore
+    default public void setContentType(String contentType) {
+        if (contentType != null)
+            this.getFunctionMetadata().put("contentType", contentType);
+        else
+            this.getFunctionMetadata().remove("contentType");
+    }
 
     /*
      * Error methods

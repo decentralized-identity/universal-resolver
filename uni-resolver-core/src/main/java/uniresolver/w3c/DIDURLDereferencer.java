@@ -8,5 +8,5 @@ import java.util.Map;
 
 public interface DIDURLDereferencer {
 
-	public DereferenceResult dereference(String didUrlString, Map<String, Object> dereferenceOptions) throws ResolutionException, DereferencingException;
+	public DereferenceResult dereference(String didUrlString, Map<String, Object> dereferenceOptions) throws DereferencingException, ResolutionException;
 }

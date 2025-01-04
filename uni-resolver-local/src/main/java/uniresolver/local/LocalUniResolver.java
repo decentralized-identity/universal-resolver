@@ -12,8 +12,6 @@ import uniresolver.local.configuration.LocalUniResolverConfigurator;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.local.extensions.ResolverExtension;
 import uniresolver.local.extensions.util.ExecutionStateUtil;
-import uniresolver.result.ResolveDataModelResult;
-import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 
 import java.io.IOException;
@@ -54,26 +52,13 @@ public class LocalUniResolver implements UniResolver {
 	 */
 
 	@Override
-	public ResolveDataModelResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 		return this.resolve(didString, resolutionOptions, null);
 	}
 
-	public ResolveDataModelResult resolve(String didString, Map<String, Object> resolutionOptions, Map<String, Object> initialExecutionState) throws ResolutionException {
+	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions, Map<String, Object> initialExecutionState) throws ResolutionException {
+
 		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
-		return (ResolveDataModelResult) this.resolveOrResolveRepresentation(didString, resolutionOptions, false, initialExecutionState);
-	}
-
-	@Override
-	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
-		return this.resolveRepresentation(didString, resolutionOptions, null);
-	}
-
-	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions, Map<String, Object> initialExecutionState) throws ResolutionException {
-		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
-		return (ResolveRepresentationResult) this.resolveOrResolveRepresentation(didString, resolutionOptions, true, initialExecutionState);
-	}
-
-	private ResolveResult resolveOrResolveRepresentation(String didString, Map<String, Object> resolutionOptions, boolean resolveRepresentation, Map<String, Object> initialExecutionState) throws ResolutionException {
 
 		if (didString == null) throw new NullPointerException();
 		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
@@ -90,7 +75,7 @@ public class LocalUniResolver implements UniResolver {
 		// prepare resolve result
 
 		final DID did;
-		final ResolveResult resolveResult = resolveRepresentation ? ResolveRepresentationResult.build() : ResolveDataModelResult.build();
+		final ResolveResult resolveResult = ResolveResult.build();
 		ExtensionStatus extensionStatus = new ExtensionStatus();
 
 		// parse
@@ -112,7 +97,7 @@ public class LocalUniResolver implements UniResolver {
 
 		// [before resolve]
 
-		this.executeExtensions(ResolverExtension.BeforeResolveResolverExtension.class, extensionStatus, e -> e.beforeResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this), resolutionOptions, resolveResult, executionState);
+		this.executeExtensions(ResolverExtension.BeforeResolveResolverExtension.class, extensionStatus, e -> e.beforeResolve(did, resolutionOptions, resolveResult, executionState, this), resolutionOptions, resolveResult, executionState);
 
 		// [resolve]
 
@@ -123,12 +108,11 @@ public class LocalUniResolver implements UniResolver {
 			if (log.isInfoEnabled()) log.info("Resolving DID: " + did);
 
 			driverStart = System.currentTimeMillis();
-			ResolveResult driverResolveResult = this.resolveOrResolveRepresentationWithDrivers(did, resolutionOptions, resolveRepresentation);
+			ResolveResult driverResolveResult = this.resolveWithDrivers(did, resolutionOptions);
 			driverStop = System.currentTimeMillis();
 
 			if (driverResolveResult != null) {
-				if (resolveResult instanceof ResolveDataModelResult) ((ResolveDataModelResult) resolveResult).setDidDocument(((ResolveDataModelResult) driverResolveResult).getDidDocument());
-				if (resolveResult instanceof ResolveRepresentationResult) ((ResolveRepresentationResult) resolveResult).setDidDocumentStream(((ResolveRepresentationResult) driverResolveResult).getDidDocumentStream());
+				resolveResult.setDidDocument(driverResolveResult.getDidDocument());
 				if (driverResolveResult.getDidResolutionMetadata() != null) resolveResult.getDidResolutionMetadata().putAll(driverResolveResult.getDidResolutionMetadata());
 				if (driverResolveResult.getDidDocumentMetadata() != null) resolveResult.getDidDocumentMetadata().putAll(driverResolveResult.getDidDocumentMetadata());
 			}
@@ -143,7 +127,7 @@ public class LocalUniResolver implements UniResolver {
 
 		// [after resolve]
 
-		this.executeExtensions(ResolverExtension.AfterResolveResolverExtension.class, extensionStatus, e -> e.afterResolve(did, resolutionOptions, resolveResult, resolveRepresentation, executionState, this), resolutionOptions, resolveResult, executionState);
+		this.executeExtensions(ResolverExtension.AfterResolveResolverExtension.class, extensionStatus, e -> e.afterResolve(did, resolutionOptions, resolveResult, executionState, this), resolutionOptions, resolveResult, executionState);
 
 		// additional metadata
 
@@ -154,13 +138,11 @@ public class LocalUniResolver implements UniResolver {
 
 		// done
 
-		final ResolveResult finalResolveResult = resolveRepresentation ? resolveResult.toResolveRepresentationResult(accept) : resolveResult.toResolveDataModelResult();
-		if (log.isInfoEnabled()) log.info("Final resolve result: " + finalResolveResult + " (" + resolveRepresentation + ", " + finalResolveResult.getClass().getSimpleName() + ")");
-
-		return finalResolveResult;
+		if (log.isInfoEnabled()) log.info("Final resolve result: " + resolveResult);
+		return resolveResult;
 	}
 
-	public ResolveResult resolveOrResolveRepresentationWithDrivers(DID did, Map<String, Object> resolutionOptions, boolean resolveRepresentation) throws ResolutionException {
+	public ResolveResult resolveWithDrivers(DID did, Map<String, Object> resolutionOptions) throws ResolutionException {
 
 		ResolveResult driverResolveResult = null;
 		Driver usedDriver = null;
@@ -169,10 +151,7 @@ public class LocalUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Attempting to resolve " + did + " with driver " + driver.getClass().getSimpleName());
 
-			if (resolveRepresentation)
-				driverResolveResult = driver.resolveRepresentation(did, resolutionOptions);
-			else
-				driverResolveResult = driver.resolve(did, resolutionOptions);
+			driverResolveResult = driver.resolve(did, resolutionOptions);
 
 			if (driverResolveResult != null) {
 				usedDriver = driver;

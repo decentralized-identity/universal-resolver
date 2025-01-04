@@ -56,6 +56,6 @@ public class TestIdentifiersServlet extends WebUniResolver {
 
 		// write result
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.TEST_IDENTIFIER_MIME_TYPE, testIdentifiersString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.TEST_IDENTIFIER_MEDIA_TYPE, testIdentifiersString);
 	}
 }

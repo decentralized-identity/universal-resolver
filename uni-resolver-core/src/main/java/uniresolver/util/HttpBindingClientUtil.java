@@ -2,14 +2,17 @@ package uniresolver.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import foundation.identity.did.DIDDocument;
 import foundation.identity.did.representations.Representations;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
+import foundation.identity.did.representations.consumption.RepresentationConsumer;
+import foundation.identity.did.representations.consumption.RepresentationConsumerDIDCBOR;
+import foundation.identity.did.representations.consumption.RepresentationConsumerDIDJSON;
+import foundation.identity.did.representations.consumption.RepresentationConsumerDIDJSONLD;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.result.DereferenceResult;
-import uniresolver.result.ResolveRepresentationResult;
+import uniresolver.result.ResolveResult;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -19,6 +22,9 @@ import java.util.Map;
 
 public class HttpBindingClientUtil {
 
+    public static final String RESOLVE_RESULT_DEFAULT_CONTENT_TYPE = Representations.DEFAULT_MEDIA_TYPE;
+    public static final String DEREFERENCE_RESULT_DEFAULT_CONTENT_TYPE = "application/octet-stream";
+
     private static final Logger log = LoggerFactory.getLogger(HttpBindingClientUtil.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -27,117 +33,219 @@ public class HttpBindingClientUtil {
      * HTTP body
      */
 
-    public static ResolveRepresentationResult fromHttpBodyResolveRepresentationResult(String httpBody, ContentType httpContentType) throws IOException {
+    public static ResolveResult fromHttpBodyResolveResult(String httpBody) throws IOException {
 
-        if (log.isDebugEnabled()) log.debug("Deserializing resolve representation result from HTTP body.");
+        if (! isResolveResultHttpContent(httpBody)) throw new IllegalArgumentException("Invalid HTTP body: " + httpBody);
+        if (log.isDebugEnabled()) log.debug("Deserializing resolve result from HTTP body.");
 
-        ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
+        // prepare result
+
+        ResolveResult resolveResult = ResolveResult.build();
         Map<String, Object> json = objectMapper.readValue(httpBody, LinkedHashMap.class);
 
-        if (json.get("didResolutionMetadata") instanceof Map) resolveRepresentationResult.setDidResolutionMetadata((Map<String, Object>) json.get("didResolutionMetadata"));
-        if (json.get("didDocumentMetadata") instanceof Map) resolveRepresentationResult.setDidDocumentMetadata((Map<String, Object>) json.get("didDocumentMetadata"));
+        if (json.get("didResolutionMetadata") instanceof Map) resolveResult.getDidResolutionMetadata().putAll((Map<String, Object>) json.get("didResolutionMetadata"));
+        if (json.get("didDocumentMetadata") instanceof Map) resolveResult.getDidDocumentMetadata().putAll((Map<String, Object>) json.get("didDocumentMetadata"));
 
-        byte[] didDocumentStream = new byte[0];
-        Object didDocument = json.get("didDocument");
-        if (didDocument instanceof Map) {
-            didDocumentStream = objectMapper.writeValueAsBytes(didDocument);
-        } else if (didDocument instanceof String) {
-            if (((String) didDocument).isEmpty()) {
-                didDocumentStream = new byte[0];
+        // didDocument
+
+        byte[] didDocumentBytes = null;
+        Object didDocumentObject = json.get("didDocument");
+        if (didDocumentObject instanceof Map) {
+            didDocumentBytes = objectMapper.writeValueAsBytes(didDocumentObject);
+        } else if (didDocumentObject instanceof String) {
+            if (((String) didDocumentObject).isEmpty()) {
+                didDocumentBytes = new byte[0];
             } else {
                 try {
-                    didDocumentStream = Base64.getDecoder().decode((String) didDocument);
+                    didDocumentBytes = Base64.getDecoder().decode((String) didDocumentObject);
                 } catch (IllegalArgumentException ex) {
-                    didDocumentStream = ((String) didDocument).getBytes(StandardCharsets.UTF_8);
+                    didDocumentBytes = ((String) didDocumentObject).getBytes(StandardCharsets.UTF_8);
                 }
             }
+        } else {
+            throw new IOException("Cannot read didDocument: " + didDocumentBytes);
         }
 
-        if (resolveRepresentationResult.getContentType() == null) {
-            String contentType = null;
-            if (httpContentType != null) {
-                contentType = contentTypeForHttpContentTypeAndContent(httpContentType.getMimeType(), didDocumentStream);
-                if (log.isDebugEnabled()) log.debug("No contentType metadata property in resolution result. Based on HTTP Content-Type " + httpContentType + " and content, determined contentType: " + contentType);
-            }
-            if (contentType == null) {
-                contentType = Representations.DEFAULT_MEDIA_TYPE;
-                if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
-            }
-            resolveRepresentationResult.setContentType(contentType);
+        // contentType
+
+        String contentType = resolveResult.getContentType();
+        if (contentType == null) {
+            contentType = Representations.DEFAULT_MEDIA_TYPE;
+            if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
+            resolveResult.setContentType(contentType);
         }
 
-        resolveRepresentationResult.setDidDocumentStream(didDocumentStream);
-        return resolveRepresentationResult;
+        // finish result
+
+        RepresentationConsumer representationConsumer = Representations.getConsumer(contentType);
+        DIDDocument didDocument = representationConsumer.consume(didDocumentBytes);
+        resolveResult.setDidDocument(didDocument);
+
+        // done
+
+        return resolveResult;
     }
 
-    public static DereferenceResult fromHttpBodyDereferenceResult(String httpBody, ContentType httpContentType) throws IOException {
+    public static DereferenceResult fromHttpBodyDereferenceResult(String httpBody) throws IOException {
+
+        if (! isDereferenceResultHttpContent(httpBody)) throw new IllegalArgumentException("Invalid HTTP body: " + httpBody);
         if (log.isDebugEnabled()) log.debug("Deserializing dereference result from HTTP body.");
+
+        // prepare result
 
         DereferenceResult dereferenceResult = DereferenceResult.build();
         Map<String, Object> json = objectMapper.readValue(httpBody, LinkedHashMap.class);
 
-        if (json.get("dereferencingMetadata") instanceof Map) dereferenceResult.setDereferencingMetadata((Map<String, Object>) json.get("dereferencingMetadata"));
-        if (json.get("contentMetadata") instanceof Map) dereferenceResult.setContentMetadata((Map<String, Object>) json.get("contentMetadata"));
+        if (json.get("dereferencingMetadata") instanceof Map) dereferenceResult.getDereferencingMetadata().putAll((Map<String, Object>) json.get("dereferencingMetadata"));
+        if (json.get("contentMetadata") instanceof Map) dereferenceResult.getContentMetadata().putAll((Map<String, Object>) json.get("contentMetadata"));
 
-        byte[] contentStream = new byte[0];
-        Object content = json.get("content");
-        if (content instanceof Map) {
-            contentStream = objectMapper.writeValueAsBytes(content);
-        } else if (content instanceof String) {
-            if (((String) content).isEmpty()) {
-                contentStream = new byte[0];
+        // content
+
+        byte[] content = null;
+        Object contentObject = json.get("content");
+        if (contentObject instanceof Map) {
+            content = objectMapper.writeValueAsBytes(contentObject);
+        } else if (contentObject instanceof String) {
+            if (((String) contentObject).isEmpty()) {
+                content = new byte[0];
             } else {
                 try {
-                    contentStream = Hex.decodeHex((String) content);
-                } catch (DecoderException ex) {
-                    contentStream = ((String) content).getBytes(StandardCharsets.UTF_8);
+                    content = Base64.getDecoder().decode((String) contentObject);
+                } catch (IllegalArgumentException ex) {
+                    content = ((String) contentObject).getBytes(StandardCharsets.UTF_8);
                 }
             }
+        } else {
+            throw new IOException("Cannot read content: " + content);
         }
 
-        if (dereferenceResult.getContentType() == null) {
-            String contentType = null;
-            if (httpContentType != null) {
-                contentType = contentTypeForHttpContentTypeAndContent(httpContentType.getMimeType(), contentStream);
-                if (log.isDebugEnabled()) log.debug("No contentType metadata property in dereference result. Based on HTTP Content-Type " + httpContentType + " and content, determined contentType: " + contentType);
-            }
-            if (contentType == null) {
-                contentType = Representations.DEFAULT_MEDIA_TYPE;
-                if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
-            }
-            dereferenceResult.setContentType(contentType);
-        }
+        // contentType
 
-        dereferenceResult.setContentStream(contentStream);
-        return dereferenceResult;
-    }
-
-    public static ResolveRepresentationResult fromHttpBodyDidDocument(byte[] httpBodyBytes, ContentType httpContentType) {
-        if (log.isDebugEnabled()) log.debug("Deserializing DID document from HTTP body.");
-
-        byte[] didDocumentStream = httpBodyBytes;
-
-        ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
-
-        String contentType = null;
-        if (httpContentType != null) {
-            contentType = contentTypeForHttpContentTypeAndContent(httpContentType.getMimeType(), didDocumentStream);
-            if (log.isDebugEnabled()) log.debug("No contentType metadata property. Based on HTTP Content-Type " + httpContentType + " and content, determined contentType: " + contentType);
-        }
+        String contentType = dereferenceResult.getContentType();
         if (contentType == null) {
             contentType = Representations.DEFAULT_MEDIA_TYPE;
             if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
+            dereferenceResult.setContentType(contentType);
         }
-        resolveRepresentationResult.setContentType(contentType);
 
-        resolveRepresentationResult.setDidDocumentStream(didDocumentStream);
-        return resolveRepresentationResult;
+        // finish result
+
+        dereferenceResult.setContent(content);
+
+        // done
+
+        return dereferenceResult;
     }
+
+    public static ResolveResult fromHttpBodyDidDocument(byte[] httpBodyBytes, ContentType httpContentType) throws IOException {
+
+        if (log.isDebugEnabled()) log.debug("Deserializing DID document from HTTP body.");
+
+        // prepare result
+
+        ResolveResult resolveResult = ResolveResult.build();
+
+        // didDocument
+
+        byte[] didDocumentBytes = httpBodyBytes;
+
+        // contentType
+
+        String contentType = null;
+        if (httpContentType != null) {
+            contentType = resolveResultContentTypeForHttpContentTypeAndContent(httpContentType.getMimeType(), didDocumentBytes);
+            if (log.isDebugEnabled()) log.debug("No contentType metadata property. Based on HTTP Content-Type " + httpContentType + " and content, determined contentType: " + contentType);
+        }
+        if (contentType == null) {
+            contentType = RESOLVE_RESULT_DEFAULT_CONTENT_TYPE;
+            if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default " + RESOLVE_RESULT_DEFAULT_CONTENT_TYPE);
+        }
+        resolveResult.setContentType(contentType);
+
+        // finish result
+
+        RepresentationConsumer representationConsumer = Representations.getConsumer(contentType);
+        DIDDocument didDocument = representationConsumer.consume(didDocumentBytes);
+        resolveResult.setDidDocument(didDocument);
+
+        // done
+
+        return resolveResult;
+    }
+
+    public static DereferenceResult fromHttpBodyContent(byte[] httpBodyBytes, ContentType httpContentType) throws IOException {
+
+        if (log.isDebugEnabled()) log.debug("Deserializing content from HTTP body.");
+
+        // prepare result
+
+        DereferenceResult dereferenceResult = DereferenceResult.build();
+
+        // content
+
+        byte[] contentBytes = httpBodyBytes;
+
+        // contentType
+
+        String contentType = null;
+        if (httpContentType != null) {
+            contentType = dereferenceResultContentTypeForHttpContentTypeAndContent(httpContentType.getMimeType(), contentBytes);
+            if (log.isDebugEnabled()) log.debug("No contentType metadata property. Based on HTTP Content-Type " + httpContentType + " and content, determined contentType: " + contentType);
+        }
+        if (contentType == null) {
+            contentType = DEREFERENCE_RESULT_DEFAULT_CONTENT_TYPE;
+            if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default " + DEREFERENCE_RESULT_DEFAULT_CONTENT_TYPE);
+        }
+        dereferenceResult.setContentType(contentType);
+
+        // finish result
+
+        dereferenceResult.setContent(contentBytes);
+
+        // done
+
+        return dereferenceResult;
+    }
+
+    /*
+     * Media Type methods
+     */
+
+    public static String resolveResultContentTypeForHttpContentTypeAndContent(String mediaTypeString, byte[] content) {
+        if (mediaTypeString == null) throw new NullPointerException();
+        ContentType mediaType = ContentType.parse(mediaTypeString);
+        String contentType = null;
+        if (Representations.isConsumableMediaType(mediaType.getMimeType())) contentType = mediaType.getMimeType();
+        else if ("application/ld+json".equals(mediaType.getMimeType())) contentType = RepresentationConsumerDIDJSONLD.MEDIA_TYPE;
+        else if ("application/json".equals(mediaType.getMimeType())) contentType = isJsonLdHttpContent(content) ? RepresentationConsumerDIDJSONLD.MEDIA_TYPE : RepresentationConsumerDIDJSON.MEDIA_TYPE;
+        else if ("application/cbor".equals(mediaType.getMimeType())) contentType = RepresentationConsumerDIDCBOR.MEDIA_TYPE;
+        return contentType;
+    }
+
+    public static String dereferenceResultContentTypeForHttpContentTypeAndContent(String mediaTypeString, byte[] content) {
+        if (mediaTypeString == null) throw new NullPointerException();
+        ContentType mediaType = ContentType.parse(mediaTypeString);
+        String contentType = mediaType.getMimeType();
+        return contentType;
+    }
+
+    /*
+     * Helper methods
+     */
 
     public static boolean isResolveResultHttpContent(String httpContentString) {
         try {
             Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
             return json.containsKey("didDocument");
+        } catch (JsonProcessingException ex) {
+            return false;
+        }
+    }
+
+    public static boolean isDereferenceResultHttpContent(String httpContentString) {
+        try {
+            Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
+            return json.containsKey("content");
         } catch (JsonProcessingException ex) {
             return false;
         }
@@ -150,20 +258,5 @@ public class HttpBindingClientUtil {
         } catch (IOException ex) {
             return false;
         }
-    }
-
-    /*
-     * HTTP headers
-     */
-
-    public static String contentTypeForHttpContentTypeAndContent(String mediaTypeString, byte[] contentBytes) {
-        if (mediaTypeString == null) throw new NullPointerException();
-        ContentType mediaType = ContentType.parse(mediaTypeString);
-        String representationMediaType = null;
-        if (Representations.isRepresentationMediaType(mediaType.getMimeType())) representationMediaType = mediaType.getMimeType();
-        else if ("application/ld+json".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_JSONLD;
-        else if ("application/json".equals(mediaType.getMimeType())) representationMediaType = isJsonLdHttpContent(contentBytes) ? Representations.MEDIA_TYPE_JSONLD : Representations.MEDIA_TYPE_JSON;
-        else if ("application/cbor".equals(mediaType.getMimeType())) representationMediaType = Representations.MEDIA_TYPE_CBOR;
-        return representationMediaType;
     }
 }

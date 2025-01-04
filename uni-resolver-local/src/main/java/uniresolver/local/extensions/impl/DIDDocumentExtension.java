@@ -2,6 +2,7 @@ package uniresolver.local.extensions.impl;
 
 import foundation.identity.did.DIDURL;
 import foundation.identity.did.representations.Representations;
+import foundation.identity.did.representations.production.RepresentationProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.DereferencingException;
@@ -10,9 +11,9 @@ import uniresolver.local.LocalUniDereferencer;
 import uniresolver.local.extensions.DereferencerExtension;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.result.DereferenceResult;
-import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class DIDDocumentExtension implements DereferencerExtension.DereferencePrimaryDereferencerExtension {
@@ -40,19 +41,25 @@ public class DIDDocumentExtension implements DereferencerExtension.DereferencePr
 
         // dereference
 
-        if (! Representations.isRepresentationMediaType(accept)) {
-            throw new DereferencingException(DereferencingException.ERROR_CONTENTTYEPNOTSUPPORTED, "Content type not supported: " + accept);
+        if (! Representations.isProducibleMediaType(accept)) {
+            throw new DereferencingException(DereferencingException.ERROR_CONTENTTYPENOTSUPPORTED, "Content type not supported: " + accept);
         }
-
-        ResolveRepresentationResult resolveRepresentationResult = resolveResult.toResolveRepresentationResult(accept);
 
         if (log.isDebugEnabled()) log.debug("Dereferencing DID URL that has no path (assuming DID document): " + didUrlWithoutFragment);
 
-        // update result
+        RepresentationProducer representationProducer = Representations.getProducer(accept);
+        byte[] content;
+        try {
+            content = representationProducer.produce(resolveResult.getDidDocument());
+        } catch (IOException ex) {
+            throw new DereferencingException(DereferencingException.ERROR_CONTENTTYPENOTSUPPORTED, "Cannot produce DID document in content type: " + accept);
+        }
 
-        dereferenceResult.setContentType(resolveRepresentationResult.getContentType());
-        dereferenceResult.setContentStream(resolveRepresentationResult.getDidDocumentStream());
-        dereferenceResult.setContentMetadata(resolveRepresentationResult.getDidDocumentMetadata());
+        // set dereference result
+
+        dereferenceResult.setContentType(resolveResult.getContentType());
+        dereferenceResult.setContent(content);
+        dereferenceResult.setContentMetadata(resolveResult.getDidDocumentMetadata());
 
         // done
 

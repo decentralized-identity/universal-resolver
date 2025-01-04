@@ -8,18 +8,10 @@ import java.util.Map;
 
 public class DereferencingException extends Exception {
 
-	/*
-	 * From DID Core
-	 */
-
 	public static final String ERROR_INVALIDDIDURL = "invalidDidUrl";
 	public static final String ERROR_NOTFOUND = "notFound";
-
-	/*
-	 * From DID Resolution
-	 */
-
-	public static final String ERROR_CONTENTTYEPNOTSUPPORTED = "contentTypeNotSupported";
+	public static final String ERROR_CONTENTTYPENOTSUPPORTED = "contentTypeNotSupported";
+	public static final String ERROR_METHODNOTSUPPORTED = "methodNotSupported";
 	public static final String ERROR_INTERNALERROR = "internalError";
 
 	private static final Logger log = LoggerFactory.getLogger(DereferencingException.class);
@@ -71,14 +63,13 @@ public class DereferencingException extends Exception {
 	 * Error methods
 	 */
 
-	public DereferenceResult toErrorDereferenceResult(String contentType) {
+	public DereferenceResult toErrorDereferenceResult() {
 		if (this.dereferenceResult != null) return this.dereferenceResult;
 		DereferenceResult dereferenceResult = DereferenceResult.build();
 		if (this.getError() != null) dereferenceResult.setError(this.getError());
 		if (this.getMessage() != null) dereferenceResult.setErrorMessage(this.getMessage());
 		if (this.getDereferencingMetadata() != null) dereferenceResult.getDereferencingMetadata().putAll(this.getDereferencingMetadata());
-		dereferenceResult.setContentStream(new byte[0]);
-		dereferenceResult.setContentType(contentType);
+		dereferenceResult.setContent(null);
 		if (log.isDebugEnabled()) log.debug("Created error dereference result: " + dereferenceResult);
 		return dereferenceResult;
 	}

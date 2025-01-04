@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
-import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 import uniresolver.util.HttpBindingClientUtil;
 
@@ -61,7 +60,7 @@ public class ClientUniResolver implements UniResolver {
 	}
 
 	@Override
-	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 
 		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
 
@@ -92,7 +91,7 @@ public class ClientUniResolver implements UniResolver {
 
 		// execute HTTP request and read response
 
-		ResolveRepresentationResult resolveRepresentationResult = null;
+		ResolveResult resolveResult = null;
 
 		if (log.isDebugEnabled()) log.debug("Request for DID " + didString + " to " + uriString + " with Accept: header " + acceptMediaTypesString);
 
@@ -117,29 +116,29 @@ public class ClientUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Response HTTP body from " + uriString + ": " + httpBodyString);
 
-			if ((httpContentType != null && ResolveResult.isResolveResultMediaType(httpContentType)) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString)) {
-				resolveRepresentationResult = HttpBindingClientUtil.fromHttpBodyResolveRepresentationResult(httpBodyString, httpContentType);
+			if (httpContentType != null && (ResolveResult.isMediaType(httpContentType) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString))) {
+				resolveResult = HttpBindingClientUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
-			if (httpStatusCode == 404 && resolveRepresentationResult == null) {
+			if (httpStatusCode == 404 && resolveResult == null) {
 				throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode == 406 && resolveRepresentationResult == null) {
+			if (httpStatusCode == 406 && resolveResult == null) {
 				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode != 200 && resolveRepresentationResult == null) {
+			if (httpStatusCode != 200 && resolveResult == null) {
 				throw new ResolutionException(ResolutionException.ERROR_INTERNALERROR, "Cannot retrieve RESOLVE result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
-			if (resolveRepresentationResult != null && resolveRepresentationResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn(resolveRepresentationResult.getError() + " -> " + resolveRepresentationResult.getErrorMessage());
-				throw ResolutionException.fromResolveResult(resolveRepresentationResult);
+			if (resolveResult != null && resolveResult.isErrorResult()) {
+				if (log.isWarnEnabled()) log.warn(resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
+				throw ResolutionException.fromResolveResult(resolveResult);
 			}
 
-			if (resolveRepresentationResult == null) {
-				resolveRepresentationResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
+			if (resolveResult == null) {
+				resolveResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
 			}
 		} catch (ResolutionException ex) {
 
@@ -149,11 +148,11 @@ public class ClientUniResolver implements UniResolver {
 			throw new ResolutionException("Cannot retrieve RESOLVE result for " + didString + " from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved RESOLVE result for " + didString + " (" + uriString + "): " + resolveRepresentationResult);
+		if (log.isDebugEnabled()) log.debug("Retrieved RESOLVE result for " + didString + " (" + uriString + "): " + resolveResult);
 
 		// done
 
-		return resolveRepresentationResult.toResolveRepresentationResult(accept);
+		return resolveResult;
 	}
 
 	@Override
@@ -164,7 +163,7 @@ public class ClientUniResolver implements UniResolver {
 		String uriString = this.getPropertiesUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", UniResolver.PROPERTIES_MIME_TYPE);
+		httpGet.addHeader("Accept", UniResolver.PROPERTIES_MEDIA_TYPE);
 
 		// execute HTTP request
 
@@ -214,7 +213,7 @@ public class ClientUniResolver implements UniResolver {
 		String uriString = this.getMethodsUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", UniResolver.METHODS_MIME_TYPE);
+		httpGet.addHeader("Accept", UniResolver.METHODS_MEDIA_TYPE);
 
 		// execute HTTP request
 
@@ -264,7 +263,7 @@ public class ClientUniResolver implements UniResolver {
 		String uriString = this.getTestIdentifiersUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", UniResolver.TEST_IDENTIFIER_MIME_TYPE);
+		httpGet.addHeader("Accept", UniResolver.TEST_IDENTIFIER_MEDIA_TYPE);
 
 		// execute HTTP request
 
@@ -314,7 +313,7 @@ public class ClientUniResolver implements UniResolver {
 		String uriString = this.getTraitsUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", UniResolver.TRAITS_MIME_TYPE);
+		httpGet.addHeader("Accept", UniResolver.TRAITS_MEDIA_TYPE);
 
 		// execute HTTP request
 

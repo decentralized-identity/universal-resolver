@@ -11,8 +11,8 @@ import org.springframework.http.MediaType;
 import uniresolver.ResolutionException;
 import uniresolver.driver.util.HttpBindingServerUtil;
 import uniresolver.driver.util.MediaTypeUtil;
-import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
+import uniresolver.result.Result;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -75,55 +75,52 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		// invoke the driver
 
-		ResolveRepresentationResult resolveRepresentationResult;
+		Result result;
 
 		try {
-
-			resolveRepresentationResult = InitServlet.getDriver().resolveRepresentation(DID.fromString(didString), resolutionOptions);
-			if (resolveRepresentationResult == null) throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "Driver: No resolve result for " + didString);
+			result = InitServlet.getDriver().resolve(DID.fromString(didString), resolutionOptions);
+			if (result == null) throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "Driver: No resolve result for " + didString);
 		} catch (Exception ex) {
-
 			if (log.isWarnEnabled()) log.warn("Driver: Resolve problem for " + didString + ": " + ex.getMessage(), ex);
-
 			if (! (ex instanceof ResolutionException)) ex = new ResolutionException("Driver: Resolve problem for " + didString + ": " + ex.getMessage());
-			resolveRepresentationResult = ((ResolutionException) ex).toErrorResolveRepresentationResult(accept);
+			result = ((ResolutionException) ex).toErrorResolveResult();
 		}
 
-		if (log.isInfoEnabled()) log.info("Driver: Resolve result for " + didString + ": " + resolveRepresentationResult);
+		if (log.isInfoEnabled()) log.info("Driver: Result for " + didString + ": " + result);
 
 		// write resolve result
 
 		for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
-			if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
+			int httpStatusCode = HttpBindingServerUtil.httpStatusCodeForResult(result);
 
-				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + ResolveResult.MEDIA_TYPE);
-
+			if (result instanceof ResolveResult && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
+				if (log.isDebugEnabled()) log.debug("Driver: Supporting HTTP media type " + httpAcceptMediaType + " via default resolve result content type " + ResolveResult.MEDIA_TYPE);
 				ServletUtil.sendResponse(
 						response,
-						HttpBindingServerUtil.httpStatusCodeForResult(resolveRepresentationResult),
+						httpStatusCode,
 						ResolveResult.MEDIA_TYPE,
-						HttpBindingServerUtil.toHttpBodyStreamResult(resolveRepresentationResult));
-				return;
-			} else {
-
-				// determine representation media type
-
-				if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, resolveRepresentationResult.getContentType())) {
-					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + resolveRepresentationResult.getContentType());
-				} else {
-					if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + httpAcceptMediaType);
-					continue;
-				}
-
-				ServletUtil.sendResponse(
-						response,
-						HttpBindingServerUtil.httpStatusCodeForResult(resolveRepresentationResult),
-						resolveRepresentationResult.getContentType(),
-						resolveRepresentationResult.getDidDocumentStream()
-				);
+						HttpBindingServerUtil.httpBodyForResult(result));
 				return;
 			}
+
+
+			// determine representation media type
+
+			if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, result.getContentType())) {
+				if (log.isDebugEnabled()) log.debug("Driver: Supporting HTTP media type " + httpAcceptMediaType + " via content type " + result.getContentType());
+			} else {
+				if (log.isDebugEnabled()) log.debug("Driver: Not supporting HTTP media type " + httpAcceptMediaType);
+				continue;
+			}
+
+			ServletUtil.sendResponse(
+					response,
+					httpStatusCode,
+					result.getContentType(),
+					result.getFunctionContent()
+			);
+			return;
 		}
 
 		ServletUtil.sendResponse(

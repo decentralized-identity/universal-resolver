@@ -55,6 +55,6 @@ public class TraitsServlet extends WebUniResolver {
 
 		// write result
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.TRAITS_MIME_TYPE, traitsString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.TRAITS_MEDIA_TYPE, traitsString);
 	}
 }

@@ -6,43 +6,39 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.http.entity.ContentType;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@JsonPropertyOrder({ "dereferencingMetadata", "contentStream", "contentMetadata" })
+@JsonPropertyOrder({ "dereferencingMetadata", "content", "contentMetadata" })
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class DereferenceResult implements Result, StreamResult {
+public class DereferenceResult implements Result {
 
-	public static final String MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
+	public static final String MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-url-dereferencing\"";
+	public static final ContentType CONTENT_TYPE = ContentType.parse(MEDIA_TYPE);
 
-	private static final Logger log = LoggerFactory.getLogger(ResolveRepresentationResult.class);
+	private static final URI DEFAULT_JSONLD_CONTEXT = URI.create("https://w3id.org/did-resolution/v1");
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	@JsonProperty
+	@JsonProperty("dereferencingMetadata")
 	private Map<String, Object> dereferencingMetadata;
 
-	@JsonProperty
-	private byte[] contentStream;
+	@JsonProperty("content")
+	private byte[] content;
 
-	@JsonProperty
+	@JsonProperty("contentMetadata")
 	private Map<String, Object> contentMetadata;
 
-	private DereferenceResult(Map<String, Object> dereferencingMetadata, byte[] contentStream, Map<String, Object> contentMetadata) {
+	private DereferenceResult(Map<String, Object> dereferencingMetadata, byte[] content, Map<String, Object> contentMetadata) {
 		this.dereferencingMetadata = dereferencingMetadata != null ? dereferencingMetadata : new LinkedHashMap<>();
-		this.contentStream = contentStream != null ? contentStream : new byte[0];
+		this.content = content;
 		this.contentMetadata = contentMetadata != null ? contentMetadata : new LinkedHashMap<>();
-	}
-
-	@JsonIgnore
-	public boolean isComplete() {
-		return this.getContentType() != null && this.getContentStream() != null;
 	}
 
 	/*
@@ -50,12 +46,31 @@ public class DereferenceResult implements Result, StreamResult {
 	 */
 
 	@JsonCreator
-	public static DereferenceResult build(@JsonProperty(value="dereferencingMetadata") Map<String, Object> dereferencingMetadata, @JsonProperty(value="contentStream", required=true) byte[] contentStream, @JsonProperty(value="contentMetadata") Map<String, Object> contentMetadata) {
-		return new DereferenceResult(dereferencingMetadata, contentStream, contentMetadata);
+	public static DereferenceResult build(@JsonProperty(value="dereferencingMetadata") Map<String, Object> dereferencingMetadata, @JsonProperty(value="content", required=true) byte[] content, @JsonProperty(value="contentMetadata") Map<String, Object> contentMetadata) {
+		return new DereferenceResult(dereferencingMetadata, content, contentMetadata);
 	}
 
 	public static DereferenceResult build() {
 		return new DereferenceResult(new LinkedHashMap<>(), new byte[0], new LinkedHashMap<>());
+	}
+
+	/*
+	 * Field methods
+	 */
+
+	@Override
+	public Map<String, Object> getFunctionMetadata() {
+		return this.getDereferencingMetadata();
+	}
+
+	@Override
+	public byte[] getFunctionContent() {
+		return this.getContent();
+	}
+
+	@Override
+	public Map<String, Object> getFunctionContentMetadata() {
+		return this.getContentMetadata();
 	}
 
 	/*
@@ -68,16 +83,6 @@ public class DereferenceResult implements Result, StreamResult {
 
 	public static DereferenceResult fromJson(Reader reader) throws IOException {
 		return objectMapper.readValue(reader, DereferenceResult.class);
-	}
-
-	private static boolean isJson(byte[] bytes) {
-		try {
-			try (JsonParser jsonParser = objectMapper.getFactory().createParser(bytes)) {
-				return jsonParser.readValueAsTree() != null;
-			}
-		} catch (IOException ex) {
-			return false;
-		}
 	}
 
 	@Override
@@ -94,104 +99,92 @@ public class DereferenceResult implements Result, StreamResult {
 		}
 	}
 
-	/*
-	 * Metadata methods
-	 */
-
 	@Override
-	public Map<String, Object> getFunctionMetadata() {
-		return this.getDereferencingMetadata();
+	public String getMediaType() {
+		return MEDIA_TYPE;
 	}
 
 	@Override
-	public Map<String, Object> getFunctionContentMetadata() {
-		return this.getContentMetadata();
-	}
-
-	/*
-	 * Content stream methods
-	 */
-
-	@Override
-	public byte[] getFunctionContentStream() {
-		return this.getContentStream();
+	public URI getDefaultContext() {
+		return DEFAULT_JSONLD_CONTEXT;
 	}
 
 	@Override
-	public void setFunctionContentStream(byte[] functionContentStream) {
-		this.setContentStream(functionContentStream);
-	}
-
-	/*
-	 * Conversion
-	 */
-
-	public ResolveRepresentationResult toResolveRepresentationResult() {
-		ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
-		resolveRepresentationResult.getDidResolutionMetadata().putAll(this.getDereferencingMetadata());
-		resolveRepresentationResult.setDidDocumentStream(this.getContentStream());
-		resolveRepresentationResult.getDidDocumentMetadata().putAll(this.getContentMetadata());
-		return resolveRepresentationResult;
+	public boolean isComplete() {
+		return this.getContentType() != null && this.getContent() != null;
 	}
 
 	/*
 	 * Getters and setters
 	 */
 
-	@JsonGetter
+	@JsonGetter("dereferencingMetadata")
 	public final Map<String, Object> getDereferencingMetadata() {
 		return this.dereferencingMetadata;
 	}
 
-	@JsonSetter
+	@JsonSetter("dereferencingMetadata")
 	public final void setDereferencingMetadata(Map<String, Object> dereferencingMetadata) {
 		this.dereferencingMetadata = dereferencingMetadata;
 	}
 
-	@JsonIgnore
-	public final byte[] getContentStream() {
-		return this.contentStream;
+	@JsonGetter("content")
+	public final byte[] getContent() {
+		return this.content;
 	}
 
-	@JsonGetter("contentStream")
-	public final String getContentStreamAsString() {
-		if (this.getContentStream() == null) {
+	@JsonGetter("content")
+	public final String getContentAsString() {
+		if (this.getContent() == null) {
 			return null;
 		} else {
-			if (isJson(this.getContentStream())) {
-				return new String(this.getContentStream(), StandardCharsets.UTF_8);
-			} else {
-				return Hex.encodeHexString(this.getContentStream());
+			try {
+				try (JsonParser jsonParser = objectMapper.getFactory().createParser(this.getContent())) {
+					if (jsonParser.readValueAsTree() != null) return new String(this.getContent(), StandardCharsets.UTF_8);
+				}
+			} catch (IOException ignored) {
 			}
+			return Hex.encodeHexString(this.getContent());
 		}
 	}
 
-	@JsonIgnore
-	public final void setContentStream(byte[] contentStream) {
-		this.contentStream = contentStream;
+	@JsonSetter("content")
+	public final void setContent(byte[] content) {
+		this.content = content;
 	}
 
-	@JsonSetter("contentStream")
-	public final void setContentStreamAsString(String contentStream) {
-		if (contentStream == null) {
-			this.setContentStream(null);
+	@JsonSetter("content")
+	public final void setContentAsString(String contentString) {
+		if (contentString == null) {
+			this.setContent(null);
 		} else {
 			try {
-				this.setContentStream(Hex.decodeHex(contentStream));
+				this.setContent(Hex.decodeHex(contentString));
 			} catch (DecoderException ex) {
-				this.setContentStream(contentStream.getBytes(StandardCharsets.UTF_8));
+				this.setContent(contentString.getBytes(StandardCharsets.UTF_8));
 			}
 		}
 	}
 
-	@JsonGetter
+	@JsonGetter("contentMetadata")
 	public final Map<String, Object> getContentMetadata() {
 		return this.contentMetadata;
 	}
 
-	@JsonSetter
+	@JsonSetter("contentMetadata")
 	public final void setContentMetadata(Map<String, Object> contentMetadata) {
 		this.contentMetadata = contentMetadata;
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	@JsonIgnore
+	public static boolean isMediaType(ContentType mediaType) {
+		boolean isResolveResultMimeTypeEquals = CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType());
+		boolean isResolveResultProfileEquals = CONTENT_TYPE.getParameter("profile").equals(mediaType.getParameter("profile"));
+		return isResolveResultMimeTypeEquals && isResolveResultProfileEquals;
 	}
 
 	/*

@@ -3,6 +3,9 @@ package uniresolver.driver.util;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
+import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
+import foundation.identity.did.representations.production.RepresentationProducerDIDJSON;
+import foundation.identity.did.representations.production.RepresentationProducerDIDJSONLD;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
@@ -10,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import uniresolver.DereferencingException;
 import uniresolver.ResolutionException;
-import uniresolver.result.*;
+import uniresolver.result.DereferenceResult;
+import uniresolver.result.ResolveResult;
+import uniresolver.result.Result;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,72 +32,6 @@ public class HttpBindingServerUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.USE_DEFAULTS);
 
     /*
-     * HTTP body
-     */
-
-    public static String toHttpBodyStreamResult(StreamResult streamResult) throws IOException {
-        String functionContentProperty;
-        String functionMetadataProperty;
-        String functionContentMetadataProperty;
-
-        if (streamResult instanceof ResolveRepresentationResult) {
-            functionContentProperty = "didDocument";
-            functionMetadataProperty = "didResolutionMetadata";
-            functionContentMetadataProperty = "didDocumentMetadata";
-        } else if (streamResult instanceof DereferenceResult) {
-            functionContentProperty = "content";
-            functionMetadataProperty = "dereferencingMetadata";
-            functionContentMetadataProperty = "contentMetadata";
-        } else {
-            throw new IllegalArgumentException("Invalid stream result: " + streamResult.getClass());
-        }
-
-        Map<String, Object> json = new LinkedHashMap<>();
-        json.put("@context", ResolveResult.DEFAULT_JSONLD_CONTEXT);
-        if (streamResult.getFunctionContentStream() == null || streamResult.getFunctionContentStream().length == 0) {
-            json.put(functionContentProperty, null);
-        } else if (isContentTypeJson(streamResult)) {
-            json.put(functionContentProperty, objectMapper.readValue(new ByteArrayInputStream(streamResult.getFunctionContentStream()), LinkedHashMap.class));
-        } else if (isContentTypeText(streamResult)) {
-            json.put(functionContentProperty, new String(streamResult.getFunctionContentStream(), StandardCharsets.UTF_8));
-        } else {
-            json.put(functionContentProperty, Base64.getEncoder().encodeToString(streamResult.getFunctionContentStream()));
-        }
-        json.put(functionMetadataProperty, streamResult.getFunctionMetadata());
-        json.put(functionContentMetadataProperty, streamResult.getFunctionContentMetadata());
-
-        String jsonString = objectMapper.writeValueAsString(json);
-        if (log.isDebugEnabled()) log.debug("HTTP body for stream result: " + jsonString);
-        return jsonString;
-    }
-
-    /*
-     * HTTP headers
-     */
-
-    public static String acceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
-        for (ContentType httpAcceptMediaType : httpAcceptMediaTypes.stream().map((x) -> ContentType.parse(x.toString())).toList()) {
-            if (ResolveResult.isResolveResultMediaType(httpAcceptMediaType)) {
-                return Representations.DEFAULT_MEDIA_TYPE;
-            }
-            String accept = acceptForHttpAccepts(httpAcceptMediaType.getMimeType());
-            if (accept != null) return accept;
-        }
-        return Representations.DEFAULT_MEDIA_TYPE;
-    }
-
-    public static String acceptForHttpAccepts(String httpAcceptMediaType) {
-        if (httpAcceptMediaType == null) throw new NullPointerException();
-        ContentType mediaType = ContentType.parse(httpAcceptMediaType);
-        String accept = null;
-        if (Representations.isRepresentationMediaType(mediaType.getMimeType())) accept = mediaType.getMimeType();
-        else if ("application/ld+json".equals(mediaType.getMimeType())) accept = Representations.MEDIA_TYPE_JSONLD;
-        else if ("application/json".equals(mediaType.getMimeType())) accept = Representations.MEDIA_TYPE_JSON;
-        else if ("application/cbor".equals(mediaType.getMimeType())) accept = Representations.MEDIA_TYPE_CBOR;
-        return accept;
-    }
-
-    /*
      * HTTP status code
      */
 
@@ -103,7 +42,7 @@ public class HttpBindingServerUtil {
             return HttpStatus.SC_NOT_FOUND;
         else if (ResolutionException.ERROR_INVALIDDID.equals(result.getError()) || DereferencingException.ERROR_INVALIDDIDURL.equals(result.getError()))
             return HttpStatus.SC_BAD_REQUEST;
-        else if (ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED.equals(result.getError()) || DereferencingException.ERROR_CONTENTTYEPNOTSUPPORTED.equals(result.getError()))
+        else if (ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED.equals(result.getError()) || DereferencingException.ERROR_CONTENTTYPENOTSUPPORTED.equals(result.getError()))
             return HttpStatus.SC_NOT_ACCEPTABLE;
         else if (ResolutionException.ERROR_METHODNOTSUPPORTED.equals(result.getError()))
             return HttpStatus.SC_NOT_IMPLEMENTED;
@@ -116,16 +55,83 @@ public class HttpBindingServerUtil {
     }
 
     /*
+     * HTTP body
+     */
+
+    public static String httpBodyForResult(Result result) throws IOException {
+        String functionContentProperty;
+        String functionMetadataProperty;
+        String functionContentMetadataProperty;
+
+        if (result instanceof ResolveResult) {
+            functionContentProperty = "didDocument";
+            functionMetadataProperty = "didResolutionMetadata";
+            functionContentMetadataProperty = "didDocumentMetadata";
+        } else if (result instanceof DereferenceResult) {
+            functionContentProperty = "content";
+            functionMetadataProperty = "dereferencingMetadata";
+            functionContentMetadataProperty = "contentMetadata";
+        } else {
+            throw new IllegalArgumentException("Invalid stream result: " + result.getClass());
+        }
+
+        Map<String, Object> json = new LinkedHashMap<>();
+        json.put("@context", result.getDefaultContext());
+        byte[] content = result.getFunctionContent();
+        if (content == null || content.length == 0) {
+            json.put(functionContentProperty, null);
+        } else if (isContentTypeJson(result)) {
+            json.put(functionContentProperty, objectMapper.readValue(new ByteArrayInputStream(content), LinkedHashMap.class));
+        } else if (isContentTypeText(result)) {
+            json.put(functionContentProperty, new String(content, StandardCharsets.UTF_8));
+        } else {
+            json.put(functionContentProperty, Base64.getEncoder().encodeToString(content));
+        }
+        json.put(functionMetadataProperty, result.getFunctionMetadata());
+        json.put(functionContentMetadataProperty, result.getFunctionContentMetadata());
+
+        String jsonString = objectMapper.writeValueAsString(json);
+        if (log.isDebugEnabled()) log.debug("HTTP body for stream result: " + jsonString);
+        return jsonString;
+    }
+
+    /*
+     * Media Type methods
+     */
+
+    public static String acceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
+        for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
+            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
+                return Representations.DEFAULT_MEDIA_TYPE;
+            }
+            String accept = acceptForHttpAccept(httpAcceptMediaType.toString());
+            if (accept != null) return accept;
+        }
+        return Representations.DEFAULT_MEDIA_TYPE;
+    }
+
+    public static String acceptForHttpAccept(String httpAcceptMediaType) {
+        if (httpAcceptMediaType == null) throw new NullPointerException();
+        ContentType mediaType = ContentType.parse(httpAcceptMediaType);
+        String accept = null;
+        if (Representations.isProducibleMediaType(mediaType.getMimeType())) accept = mediaType.getMimeType();
+        else if ("application/ld+json".equals(mediaType.getMimeType())) accept = RepresentationProducerDIDJSONLD.MEDIA_TYPE;
+        else if ("application/json".equals(mediaType.getMimeType())) accept = RepresentationProducerDIDJSON.MEDIA_TYPE;
+        else if ("application/cbor".equals(mediaType.getMimeType())) accept = RepresentationProducerDIDCBOR.MEDIA_TYPE;
+        return accept;
+    }
+
+    /*
      * Helper methods
      */
 
-    private static boolean isContentTypeJson(StreamResult streamResult) {
+    private static boolean isContentTypeJson(Result result) {
         final MediaType acceptMediaType = MediaType.valueOf("application/json");
-        return MediaTypeUtil.isMediaTypeAcceptable(acceptMediaType, streamResult.getContentType());
+        return MediaTypeUtil.isMediaTypeAcceptable(acceptMediaType, result.getContentType());
     }
 
-    private static boolean isContentTypeText(StreamResult streamResult) {
+    private static boolean isContentTypeText(Result result) {
         final MediaType acceptMediaType = MediaType.valueOf("text/*");
-        return MediaTypeUtil.isMediaTypeAcceptable(acceptMediaType, streamResult.getContentType());
+        return MediaTypeUtil.isMediaTypeAcceptable(acceptMediaType, result.getContentType());
     }
 }

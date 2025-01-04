@@ -2,8 +2,6 @@ package uniresolver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uniresolver.result.ResolveDataModelResult;
-import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 
 import java.util.Map;
@@ -69,39 +67,15 @@ public class ResolutionException extends Exception {
 	 * Error methods
 	 */
 
-	public ResolveDataModelResult toErrorResolveDataModelResult() {
-		if (this.resolveResult != null) {
-            try {
-                return this.resolveResult.toResolveDataModelResult();
-			} catch (ResolutionException ex) {
-				throw new IllegalStateException(ex.getMessage(), ex);
-            }
-        }
-		ResolveDataModelResult resolveDataModelResult = ResolveDataModelResult.build();
-		if (this.getError() != null) resolveDataModelResult.setError(this.getError());
-		if (this.getMessage() != null) resolveDataModelResult.setErrorMessage(this.getMessage());
-		if (this.getDidResolutionMetadata() != null) resolveDataModelResult.getDidResolutionMetadata().putAll(this.getDidResolutionMetadata());
-		resolveDataModelResult.setDidDocument(null);
-		if (log.isDebugEnabled()) log.debug("Created error resolve result: " + resolveDataModelResult);
-		return resolveDataModelResult;
-	}
-
-	public ResolveRepresentationResult toErrorResolveRepresentationResult(String contentType) {
-		if (this.resolveResult != null) {
-            try {
-                return this.resolveResult.toResolveRepresentationResult(contentType);
-            } catch (ResolutionException ex) {
-                throw new IllegalStateException(ex.getMessage(), ex);
-            }
-        }
-		ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
-		if (this.getError() != null) resolveRepresentationResult.setError(this.getError());
-		if (this.getMessage() != null) resolveRepresentationResult.setErrorMessage(this.getMessage());
-		if (this.getDidResolutionMetadata() != null) resolveRepresentationResult.getDidResolutionMetadata().putAll(this.getDidResolutionMetadata());
-		resolveRepresentationResult.setDidDocumentStream(new byte[0]);
-		resolveRepresentationResult.setContentType(contentType);
-		if (log.isDebugEnabled()) log.debug("Created error resolve representation result: " + resolveRepresentationResult);
-		return resolveRepresentationResult;
+	public ResolveResult toErrorResolveResult() {
+		if (this.resolveResult != null) return this.resolveResult;
+		ResolveResult resolveResult = ResolveResult.build();
+		if (this.getError() != null) resolveResult.setError(this.getError());
+		if (this.getMessage() != null) resolveResult.setErrorMessage(this.getMessage());
+		if (this.getDidResolutionMetadata() != null) resolveResult.getDidResolutionMetadata().putAll(this.getDidResolutionMetadata());
+		resolveResult.setDidDocument(null);
+		if (log.isDebugEnabled()) log.debug("Created error resolve result: " + resolveResult);
+		return resolveResult;
 	}
 
 	/*

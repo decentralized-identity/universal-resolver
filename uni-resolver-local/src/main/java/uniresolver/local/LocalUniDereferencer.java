@@ -8,6 +8,8 @@ import uniresolver.DereferencingException;
 import uniresolver.ResolutionException;
 import uniresolver.UniDereferencer;
 import uniresolver.UniResolver;
+import uniresolver.driver.Driver;
+import uniresolver.driver.http.HttpDriver;
 import uniresolver.local.configuration.LocalUniResolverConfigurator;
 import uniresolver.local.extensions.DereferencerExtension;
 import uniresolver.local.extensions.ExtensionStatus;
@@ -31,7 +33,6 @@ public class LocalUniDereferencer implements UniDereferencer {
     private static final Logger log = LoggerFactory.getLogger(LocalUniDereferencer.class);
 
     private UniResolver uniResolver;
-
     private List<DereferencerExtension> extensions = new ArrayList<>(DEFAULT_EXTENSIONS);
 
     public LocalUniDereferencer() {
@@ -71,6 +72,7 @@ public class LocalUniDereferencer implements UniDereferencer {
         if (log.isDebugEnabled()) log.debug("dereference(" + didUrlString + ")  with options: " + dereferenceOptions);
 
         if (didUrlString == null) throw new NullPointerException();
+        if (this.getUniResolver() == null) throw new ResolutionException("No resolver configured.");
 
         // prepare dereference result
 
@@ -117,7 +119,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
             // resolve
 
-            resolveResult = this.uniResolver.resolveRepresentation(didUrl.getDid().getDidString(), resolveOptions);
+            resolveResult = this.uniResolver.resolve(didUrl.getDid().getDidString(), resolveOptions);
 
             // dereferencing metadata = DID resolution metadata - content type
 
@@ -162,8 +164,49 @@ public class LocalUniDereferencer implements UniDereferencer {
         // done
 
         if (log.isInfoEnabled()) log.info("Final dereference result: " + dereferenceResult);
-
         return dereferenceResult;
+    }
+
+    public DereferenceResult dereferenceWithDrivers(DIDURL didUrl, Map<String, Object> dereferenceOptions) throws DereferencingException, ResolutionException {
+
+        if (! (this.getUniResolver() instanceof LocalUniResolver)) {
+            log.debug("Cannot dereference with drivers, no drivers available: " + didUrl);
+            return null;
+        }
+
+        DereferenceResult driverDereferenceResult = null;
+        Driver usedDriver = null;
+
+        for (Driver driver : ((LocalUniResolver) this.getUniResolver()).getDrivers()) {
+
+            if (log.isDebugEnabled()) log.debug("Attempting to dereference " + didUrl + " with driver " + driver.getClass().getSimpleName());
+
+            driverDereferenceResult = driver.dereference(didUrl, dereferenceOptions);
+
+            if (driverDereferenceResult != null) {
+                usedDriver = driver;
+                break;
+            }
+        }
+
+        if (usedDriver == null) {
+
+            if (log.isInfoEnabled()) log.info("Method not supported: " + didUrl.getDid().getMethodName());
+            throw new ResolutionException(ResolutionException.ERROR_METHODNOTSUPPORTED, "Method not supported: " + didUrl.getDid().getMethodName());
+        }
+
+        if (usedDriver instanceof HttpDriver) {
+
+            driverDereferenceResult.getDereferencingMetadata().put("pattern", ((HttpDriver) usedDriver).getPattern().pattern());
+            driverDereferenceResult.getDereferencingMetadata().put("driverUrl", ((HttpDriver) usedDriver).getResolveUri());
+
+            if (log.isDebugEnabled()) log.debug("Resolved " + didUrl + " with driver " + usedDriver.getClass().getSimpleName() + " and pattern " + ((HttpDriver) usedDriver).getPattern().pattern());
+        } else {
+
+            if (log.isDebugEnabled()) log.debug("Resolved " + didUrl + " with driver " + usedDriver.getClass().getSimpleName());
+        }
+
+        return driverDereferenceResult;
     }
 
     private <E extends DereferencerExtension> void executeExtensions(Class<E> extensionClass, ExtensionStatus extensionStatus, DereferencerExtension.ExtensionFunction<E> extensionFunction, Map<String, Object> dereferenceOptions, DereferenceResult dereferenceResult, Map<String, Object> executionState) throws ResolutionException, DereferencingException {

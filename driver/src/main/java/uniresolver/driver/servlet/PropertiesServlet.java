@@ -57,6 +57,6 @@ public class PropertiesServlet extends HttpServlet implements Servlet {
 
 		// write properties
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, Driver.PROPERTIES_MIME_TYPE, propertiesString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, Driver.PROPERTIES_MEDIA_TYPE, propertiesString);
 	}
 }
