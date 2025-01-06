@@ -28,7 +28,7 @@ The second step takes the image and deploys it (create or update) to the configu
 ![](https://user-images.githubusercontent.com/55081379/68245944-2a78db00-0018-11ea-8ebe-22c19d5ad096.PNG)
 
 1. Dev pushes code to GitHub
-2. GitHub Actions (GHA) is triggerd by the „push“ event, clones the repo and runs the workflow for every container:
+2. GitHub Actions (GHA) is triggered by the „push“ event, clones the repo and runs the workflow for every container:
     * (a) Docker build
     * (b) Docker push (Docker image goes to DockerHub)
     * (c) Deploy to Kubernetes
