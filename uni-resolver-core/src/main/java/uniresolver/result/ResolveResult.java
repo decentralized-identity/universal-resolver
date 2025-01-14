@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DIDDocument;
-import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.production.RepresentationProducer;
 import org.apache.http.entity.ContentType;
 
@@ -64,9 +63,7 @@ public class ResolveResult implements Result {
 
     @Override
     public byte[] getFunctionContent() throws IOException {
-        RepresentationProducer representationProducer = Representations.getProducer(this.getContentType());
-        if (representationProducer == null) throw new IOException("Cannot produce DID document for contentType " + this.getContentType());
-        return representationProducer.produce(this.getDidDocument());
+        return RepresentationProducer.produce(this.getDidDocument(), this.getContentType());
     }
 
     @Override
@@ -98,11 +95,6 @@ public class ResolveResult implements Result {
         } catch (JsonProcessingException ex) {
             throw new RuntimeException("Cannot write JSON: " + ex.getMessage(), ex);
         }
-    }
-
-    @Override
-    public String getMediaType() {
-        return MEDIA_TYPE;
     }
 
     @Override

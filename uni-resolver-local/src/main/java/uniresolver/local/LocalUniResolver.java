@@ -91,34 +91,32 @@ public class LocalUniResolver implements UniResolver {
 			throw new ResolutionException(ResolutionException.ERROR_INVALIDDID, errorMessage);
 		}
 
-		// check options
-
-		String accept = (String) resolutionOptions.get("accept");
-
 		// [before resolve]
 
 		this.executeExtensions(ResolverExtension.BeforeResolveResolverExtension.class, extensionStatus, e -> e.beforeResolve(did, resolutionOptions, resolveResult, executionState, this), resolutionOptions, resolveResult, executionState);
 
-		// [resolve]
-
-		long driverStart = 0, driverStop = -1;
+		// [resolve] with drivers
 
 		if (! extensionStatus.skipResolve()) {
 
 			if (log.isInfoEnabled()) log.info("Resolving DID: " + did);
 
-			driverStart = System.currentTimeMillis();
+			long driverStart = System.currentTimeMillis();
 			ResolveResult driverResolveResult = this.resolveWithDrivers(did, resolutionOptions);
-			driverStop = System.currentTimeMillis();
+			long driverStop = System.currentTimeMillis();
+			resolveResult.getDidResolutionMetadata().put("driverDuration", driverStop - driverStart);
 
-			if (driverResolveResult != null) {
-				resolveResult.setDidDocument(driverResolveResult.getDidDocument());
-				if (driverResolveResult.getDidResolutionMetadata() != null) resolveResult.getDidResolutionMetadata().putAll(driverResolveResult.getDidResolutionMetadata());
-				if (driverResolveResult.getDidDocumentMetadata() != null) resolveResult.getDidDocumentMetadata().putAll(driverResolveResult.getDidDocumentMetadata());
+			if (driverResolveResult == null) {
+				if (log.isInfoEnabled()) log.info("Method not supported: " + did.getMethodName());
+				throw new ResolutionException(ResolutionException.ERROR_METHODNOTSUPPORTED, "Method not supported: " + did.getMethodName());
 			}
+
+			resolveResult.setDidDocument(driverResolveResult.getDidDocument());
+			if (driverResolveResult.getDidResolutionMetadata() != null) resolveResult.getDidResolutionMetadata().putAll(driverResolveResult.getDidResolutionMetadata());
+			if (driverResolveResult.getDidDocumentMetadata() != null) resolveResult.getDidDocumentMetadata().putAll(driverResolveResult.getDidDocumentMetadata());
 		}
 
-		// nothing found?
+		// incomplete result?
 
 		if (! resolveResult.isComplete()) {
 			if (log.isInfoEnabled()) log.info("Resolve result is incomplete: " + resolveResult);
@@ -133,7 +131,6 @@ public class LocalUniResolver implements UniResolver {
 
 		long stop = System.currentTimeMillis();
 		resolveResult.getDidResolutionMetadata().put("duration", stop - start);
-		resolveResult.getDidResolutionMetadata().put("driverDuration", driverStop - driverStart);
 		resolveResult.getDidResolutionMetadata().put("did", did.toMap(false));
 
 		// done
@@ -159,11 +156,7 @@ public class LocalUniResolver implements UniResolver {
 			}
 		}
 
-		if (usedDriver == null) {
-
-			if (log.isInfoEnabled()) log.info("Method not supported: " + did.getMethodName());
-			throw new ResolutionException(ResolutionException.ERROR_METHODNOTSUPPORTED, "Method not supported: " + did.getMethodName());
-		}
+		if (driverResolveResult == null) return null;
 
 		if (usedDriver instanceof HttpDriver) {
 

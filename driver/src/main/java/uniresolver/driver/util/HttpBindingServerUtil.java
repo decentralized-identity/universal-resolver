@@ -27,6 +27,9 @@ import java.util.Map;
 
 public class HttpBindingServerUtil {
 
+    public static final String RESOLVE_DEFAULT_ACCEPT = Representations.DEFAULT_MEDIA_TYPE;
+    public static final String DEREFERENCE_DEFAULT_ACCEPT = "*/*";
+
     private static final Logger log = LoggerFactory.getLogger(HttpBindingServerUtil.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.USE_DEFAULTS);
@@ -99,26 +102,34 @@ public class HttpBindingServerUtil {
      * Media Type methods
      */
 
-    public static String acceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
+    public static String resolveAcceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
         for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
             if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
-                return Representations.DEFAULT_MEDIA_TYPE;
+                return RESOLVE_DEFAULT_ACCEPT;
             }
-            String accept = acceptForHttpAccept(httpAcceptMediaType.toString());
+            String accept = resolveAcceptForHttpAccept(httpAcceptMediaType.toString());
             if (accept != null) return accept;
         }
-        return Representations.DEFAULT_MEDIA_TYPE;
+        return RESOLVE_DEFAULT_ACCEPT;
     }
 
-    public static String acceptForHttpAccept(String httpAcceptMediaType) {
-        if (httpAcceptMediaType == null) throw new NullPointerException();
+    private static String resolveAcceptForHttpAccept(String httpAcceptMediaType) {
         ContentType mediaType = ContentType.parse(httpAcceptMediaType);
-        String accept = null;
-        if (Representations.isProducibleMediaType(mediaType.getMimeType())) accept = mediaType.getMimeType();
-        else if ("application/ld+json".equals(mediaType.getMimeType())) accept = RepresentationProducerDIDJSONLD.MEDIA_TYPE;
-        else if ("application/json".equals(mediaType.getMimeType())) accept = RepresentationProducerDIDJSON.MEDIA_TYPE;
-        else if ("application/cbor".equals(mediaType.getMimeType())) accept = RepresentationProducerDIDCBOR.MEDIA_TYPE;
-        return accept;
+        if (Representations.isProducibleMediaType(mediaType.getMimeType())) return mediaType.getMimeType();
+        else if ("application/ld+json".equals(mediaType.getMimeType())) return RepresentationProducerDIDJSONLD.MEDIA_TYPE;
+        else if ("application/json".equals(mediaType.getMimeType())) return RepresentationProducerDIDJSON.MEDIA_TYPE;
+        else if ("application/cbor".equals(mediaType.getMimeType())) return RepresentationProducerDIDCBOR.MEDIA_TYPE;
+        return null;
+    }
+
+    public static String dereferenceAcceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
+        for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
+            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) {
+                return DEREFERENCE_DEFAULT_ACCEPT;
+            }
+            return httpAcceptMediaType.toString();
+        }
+        return DEREFERENCE_DEFAULT_ACCEPT;
     }
 
     /*

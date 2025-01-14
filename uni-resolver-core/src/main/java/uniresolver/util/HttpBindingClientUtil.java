@@ -50,6 +50,7 @@ public class HttpBindingClientUtil {
 
         byte[] didDocumentBytes = null;
         Object didDocumentObject = json.get("didDocument");
+        if (didDocumentObject == null) didDocumentObject = json.get("didDocumentStream");
         if (didDocumentObject instanceof Map) {
             didDocumentBytes = objectMapper.writeValueAsBytes(didDocumentObject);
         } else if (didDocumentObject instanceof String) {
@@ -62,8 +63,6 @@ public class HttpBindingClientUtil {
                     didDocumentBytes = ((String) didDocumentObject).getBytes(StandardCharsets.UTF_8);
                 }
             }
-        } else {
-            throw new IOException("Cannot read didDocument: " + didDocumentBytes);
         }
 
         // contentType
@@ -77,8 +76,7 @@ public class HttpBindingClientUtil {
 
         // finish result
 
-        RepresentationConsumer representationConsumer = Representations.getConsumer(contentType);
-        DIDDocument didDocument = representationConsumer.consume(didDocumentBytes);
+        DIDDocument didDocument = didDocumentBytes == null ? null : RepresentationConsumer.consume(didDocumentBytes, contentType);
         resolveResult.setDidDocument(didDocument);
 
         // done
@@ -103,6 +101,7 @@ public class HttpBindingClientUtil {
 
         byte[] content = null;
         Object contentObject = json.get("content");
+        if (contentObject == null) contentObject = json.get("contentStream");
         if (contentObject instanceof Map) {
             content = objectMapper.writeValueAsBytes(contentObject);
         } else if (contentObject instanceof String) {
@@ -115,8 +114,6 @@ public class HttpBindingClientUtil {
                     content = ((String) contentObject).getBytes(StandardCharsets.UTF_8);
                 }
             }
-        } else {
-            throw new IOException("Cannot read content: " + content);
         }
 
         // contentType
@@ -164,8 +161,7 @@ public class HttpBindingClientUtil {
 
         // finish result
 
-        RepresentationConsumer representationConsumer = Representations.getConsumer(contentType);
-        DIDDocument didDocument = representationConsumer.consume(didDocumentBytes);
+        DIDDocument didDocument = RepresentationConsumer.consume(didDocumentBytes, contentType);
         resolveResult.setDidDocument(didDocument);
 
         // done
@@ -236,7 +232,7 @@ public class HttpBindingClientUtil {
     public static boolean isResolveResultHttpContent(String httpContentString) {
         try {
             Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
-            return json.containsKey("didDocument");
+            return json.containsKey("didDocument") || json.containsKey("didDocumentStream");
         } catch (JsonProcessingException ex) {
             return false;
         }
@@ -245,7 +241,7 @@ public class HttpBindingClientUtil {
     public static boolean isDereferenceResultHttpContent(String httpContentString) {
         try {
             Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
-            return json.containsKey("content");
+            return json.containsKey("content") || json.containsKey("contentStream");
         } catch (JsonProcessingException ex) {
             return false;
         }

@@ -42,6 +42,7 @@ public class HttpDriver implements Driver {
 	private Pattern pattern = null;
 	private URI resolveUri = null;
 	private URI propertiesUri = null;
+	private boolean supportsDereference = false;
 	private List<String> testIdentifiers = Collections.emptyList();
 	private Map<String, Object> traits = Collections.emptyMap();
 
@@ -163,7 +164,7 @@ public class HttpDriver implements Driver {
 			}
 
 			if (resolveResult != null && resolveResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn(resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
+				if (log.isWarnEnabled()) log.warn("Driver received RESOLVE result: " + resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
 				throw ResolutionException.fromResolveResult(resolveResult);
 			}
 
@@ -221,14 +222,14 @@ public class HttpDriver implements Driver {
 
 		if (uriString.contains("$1")) {
 
-			uriString = uriString.replace("$1", matchedString.toString());
+			uriString = uriString.replace("$1", didUrl.toString());
 		} else if (uriString.contains("$2")) {
 
-			uriString = uriString.replace("$2", URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
+			uriString = uriString.replace("$2", URLEncoder.encode(didUrl.toString(), StandardCharsets.UTF_8));
 		} else {
 
 			if (! uriString.endsWith("/")) uriString += "/";
-			uriString += matchedString;
+			uriString += didUrl.toString();
 		}
 
 		// set Accept header
@@ -454,6 +455,14 @@ public class HttpDriver implements Driver {
 
 	public void setPropertiesUri(String propertiesUri) {
 		this.propertiesUri = URI.create(propertiesUri);
+	}
+
+	public boolean getSupportsDereference() {
+		return this.supportsDereference;
+	}
+
+	public void setSupportsDereference(boolean supportsDereference) {
+		this.supportsDereference = supportsDereference;
 	}
 
 	public List<String> getTestIdentifiers() {

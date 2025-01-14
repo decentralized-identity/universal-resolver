@@ -35,9 +35,6 @@ public interface Result {
     public String toJson();
 
     @JsonIgnore
-    public String getMediaType();
-
-    @JsonIgnore
     public URI getDefaultContext();
 
     @JsonIgnore

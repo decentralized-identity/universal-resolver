@@ -18,10 +18,7 @@ import uniresolver.web.WebUniResolver;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ResolveServlet extends WebUniResolver {
 
@@ -41,13 +38,13 @@ public class ResolveServlet extends WebUniResolver {
 		String servletPath = request.getServletPath();
 		String requestPath = request.getRequestURI();
 
-		if (log.isDebugEnabled()) log.debug("Incoming dereference request: " + requestPath);
+		if (log.isDebugEnabled()) log.debug("Incoming request: " + requestPath);
 
 		String path = requestPath.substring(contextPath.length() + servletPath.length());
 		if (path.startsWith("/")) path = path.substring(1);
 
 		if (path.isEmpty()) {
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "No identifier found in dereference request.");
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "No identifier found in request.");
 			return;
 		}
 
@@ -55,6 +52,7 @@ public class ResolveServlet extends WebUniResolver {
 
 		String identifier;
 		Map<String, Object> options = new LinkedHashMap<>();
+		boolean isResolve;
 
 		if (path.startsWith("did%3A")) {
 			identifier = URLDecoder.decode(path, StandardCharsets.UTF_8);
@@ -69,10 +67,11 @@ public class ResolveServlet extends WebUniResolver {
 			identifier = path;
 			if (request.getQueryString() != null) identifier += "?" + request.getQueryString();
 		}
+		isResolve = (! identifier.contains("/")) && (! identifier.contains("?")) && (! identifier.contains("#"));
 
-		if (log.isInfoEnabled()) log.info("Incoming identifier: " + identifier + ", incoming options: " + options);
+		if (log.isInfoEnabled()) log.info("Incoming identifier: " + identifier + " (isResolve=" + isResolve + "), incoming options: " + options);
 
-		// prepare dereference options
+		// prepare options
 
 		String httpXConfigHeader = request.getHeader("X-Config");
 		if (log.isInfoEnabled()) log.info("Incoming X-Config: header string: " + httpXConfigHeader);
@@ -82,13 +81,18 @@ public class ResolveServlet extends WebUniResolver {
 		String httpAcceptHeader = request.getHeader("Accept");
 		if (log.isInfoEnabled()) log.info("Incoming Accept: header string: " + httpAcceptHeader);
 
-		List<MediaType> httpAcceptMediaTypes = MediaType.parseMediaTypes(httpAcceptHeader != null ? httpAcceptHeader : ResolveResult.MEDIA_TYPE);
-		MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
+		List<MediaType> httpAcceptMediaTypes = httpAcceptHeader == null ? null : MediaType.parseMediaTypes(httpAcceptHeader);
+		if (httpAcceptMediaTypes != null) MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
 		if (httpAcceptHeader != null) options.put("_http_accept", httpAcceptMediaTypes);
 
-		String accept = HttpBindingServerUtil.acceptForHttpAccepts(httpAcceptMediaTypes);
 		if (! options.containsKey("accept")) {
-			options.put("accept", accept);
+			if (isResolve) {
+				if (httpAcceptMediaTypes == null) httpAcceptMediaTypes = Collections.singletonList(MediaType.parseMediaType(ResolveResult.MEDIA_TYPE));
+				options.put("accept", HttpBindingServerUtil.resolveAcceptForHttpAccepts(httpAcceptMediaTypes));
+			} else {
+				if (httpAcceptMediaTypes == null) httpAcceptMediaTypes = Collections.singletonList(MediaType.parseMediaType(DereferenceResult.MEDIA_TYPE));
+				options.put("accept", HttpBindingServerUtil.dereferenceAcceptForHttpAccepts(httpAcceptMediaTypes));
+			}
 		}
 
 		if (log.isDebugEnabled()) log.debug("Using options: " + options);
@@ -97,7 +101,7 @@ public class ResolveServlet extends WebUniResolver {
 
 		Result result;
 
-		if (isBareDid(identifier)) {
+		if (isResolve) {
 			try {
 				result = this.resolve(identifier, options);
 				if (result == null) throw new ResolutionException(DereferencingException.ERROR_NOTFOUND, "No resolve result for " + identifier);
@@ -183,9 +187,5 @@ public class ResolveServlet extends WebUniResolver {
 				response,
 				HttpServletResponse.SC_NOT_ACCEPTABLE,
 				"Not acceptable media types " + httpAcceptHeader);
-	}
-
-	private static boolean isBareDid(String identifier) {
-		return (!identifier.contains("/")) && (!identifier.contains("?")) && (!identifier.contains("#"));
 	}
 }

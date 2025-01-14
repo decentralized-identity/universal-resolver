@@ -248,6 +248,7 @@ uniresolver:
         - did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15
     - pattern: "^(did:cheqd:.+)$"
       url: ${uniresolver_web_driver_url_did_cheqd:http://cheqd-did-driver:8080/1.0/identifiers/$1}
+      supportsDereference: true
       testIdentifiers:
         - did:cheqd:mainnet:Ps1ysXP2Ae6GBfxNhNQNKN
         - did:cheqd:testnet:55dbc8bf-fba3-4117-855c-1e0dc1d3bb47

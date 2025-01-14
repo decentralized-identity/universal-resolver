@@ -2,6 +2,7 @@ package uniresolver.local;
 
 import foundation.identity.did.DIDURL;
 import foundation.identity.did.parser.ParserException;
+import foundation.identity.did.representations.Representations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.DereferencingException;
@@ -10,6 +11,7 @@ import uniresolver.UniDereferencer;
 import uniresolver.UniResolver;
 import uniresolver.driver.Driver;
 import uniresolver.driver.http.HttpDriver;
+import uniresolver.driver.util.HttpBindingServerUtil;
 import uniresolver.local.configuration.LocalUniResolverConfigurator;
 import uniresolver.local.extensions.DereferencerExtension;
 import uniresolver.local.extensions.ExtensionStatus;
@@ -74,6 +76,15 @@ public class LocalUniDereferencer implements UniDereferencer {
         if (didUrlString == null) throw new NullPointerException();
         if (this.getUniResolver() == null) throw new ResolutionException("No resolver configured.");
 
+        // start time
+
+        long start = System.currentTimeMillis();
+
+        // prepare execution state
+
+        Map<String, Object> executionState = new HashMap<>();
+        if (initialExecutionState != null) executionState.putAll(initialExecutionState);
+
         // prepare dereference result
 
         final DIDURL didUrl;
@@ -81,11 +92,6 @@ public class LocalUniDereferencer implements UniDereferencer {
         final String didUrlFragment;
         DereferenceResult dereferenceResult = DereferenceResult.build();
         ExtensionStatus extensionStatus = new ExtensionStatus();
-
-        // prepare execution state
-
-        Map<String, Object> executionState = new HashMap<>();
-        if (initialExecutionState != null) executionState.putAll(initialExecutionState);
 
         // parse
 
@@ -106,34 +112,59 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         this.executeExtensions(DereferencerExtension.BeforeDereferenceDereferencerExtension.class, extensionStatus, e -> e.beforeDereference(didUrl, dereferenceOptions, dereferenceResult, executionState, this), dereferenceOptions, dereferenceResult, executionState);
 
-        // [resolve]
+        // [dereference primary] with drivers
 
-        final ResolveResult resolveResult;
+        if (! extensionStatus.skipDereferencePrimary()) {
 
-        if (! extensionStatus.skipResolve()) {
+            if (log.isInfoEnabled()) log.info("Dereferencing DID URL with drivers: " + didUrlWithoutFragment);
 
-            // dereference options + DID parameters = resolve options
+            long driverStart = System.currentTimeMillis();
+            DereferenceResult driverDereferenceResult = this.dereferencePrimaryWithDrivers(didUrlWithoutFragment, dereferenceOptions);
+            long driverStop = System.currentTimeMillis();
+            dereferenceResult.getDereferencingMetadata().put("driverDuration", driverStop - driverStart);
 
-            Map<String, Object> resolveOptions = new HashMap<>(dereferenceOptions);
-            if (didUrl.getParameters() != null) resolveOptions.putAll(didUrl.getParameters());
-
-            // resolve
-
-            resolveResult = this.uniResolver.resolve(didUrl.getDid().getDidString(), resolveOptions);
-
-            // dereferencing metadata = DID resolution metadata - content type
-
-            if (resolveResult != null) {
-                dereferenceResult.getDereferencingMetadata().putAll(resolveResult.getDidResolutionMetadata());
-                dereferenceResult.setContentType(null);
+            if (driverDereferenceResult != null) {
+                dereferenceResult.setContent(driverDereferenceResult.getContent());
+                if (driverDereferenceResult.getDereferencingMetadata() != null) dereferenceResult.getDereferencingMetadata().putAll(driverDereferenceResult.getDereferencingMetadata());
+                if (driverDereferenceResult.getContentMetadata() != null) dereferenceResult.getContentMetadata().putAll(driverDereferenceResult.getContentMetadata());
             }
-        } else {
-            resolveResult = null;
         }
 
         // [dereference primary]
 
-        this.executeExtensions(DereferencerExtension.DereferencePrimaryDereferencerExtension.class, extensionStatus, e -> e.dereferencePrimary(didUrlWithoutFragment, dereferenceOptions, resolveResult, dereferenceResult, executionState, this), dereferenceOptions, dereferenceResult, executionState);
+        if (! dereferenceResult.isComplete() && ! extensionStatus.skipDereferencePrimary()) {
+
+            if (log.isInfoEnabled()) log.info("Dereferencing DID URL with resolver: " + didUrlWithoutFragment);
+
+            // [resolve]
+
+            final ResolveResult resolveResult;
+
+            if (! extensionStatus.skipResolve()) {
+
+                // resolve options = dereference options + DID parameters
+
+                Map<String, Object> resolveOptions = new HashMap<>(dereferenceOptions);
+                resolveOptions.put("accept", Representations.DEFAULT_MEDIA_TYPE);
+                if (didUrl.getParameters() != null) resolveOptions.putAll(didUrl.getParameters());
+
+                // resolve
+
+                resolveResult = this.getUniResolver().resolve(didUrl.getDid().getDidString(), resolveOptions);
+
+                // dereferencing metadata
+
+                if (resolveResult != null) {
+                    dereferenceResult.getDereferencingMetadata().put("didResolutionMetadata", resolveResult.getDidResolutionMetadata());
+                }
+            } else {
+                resolveResult = null;
+            }
+
+            // [dereference primary]
+
+            this.executeExtensions(DereferencerExtension.DereferencePrimaryDereferencerExtension.class, extensionStatus, e -> e.dereferencePrimary(didUrlWithoutFragment, dereferenceOptions, resolveResult, dereferenceResult, executionState, this), dereferenceOptions, dereferenceResult, executionState);
+        }
 
         // nothing found?
 
@@ -159,6 +190,8 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         // additional metadata
 
+        long stop = System.currentTimeMillis();
+        dereferenceResult.getDereferencingMetadata().put("duration", stop - start);
         dereferenceResult.getDereferencingMetadata().put("didUrl", didUrl.toMap(false));
 
         // done
@@ -167,7 +200,7 @@ public class LocalUniDereferencer implements UniDereferencer {
         return dereferenceResult;
     }
 
-    public DereferenceResult dereferenceWithDrivers(DIDURL didUrl, Map<String, Object> dereferenceOptions) throws DereferencingException, ResolutionException {
+    public DereferenceResult dereferencePrimaryWithDrivers(DIDURL didUrl, Map<String, Object> dereferenceOptions) throws DereferencingException, ResolutionException {
 
         if (! (this.getUniResolver() instanceof LocalUniResolver)) {
             log.debug("Cannot dereference with drivers, no drivers available: " + didUrl);
@@ -179,6 +212,8 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         for (Driver driver : ((LocalUniResolver) this.getUniResolver()).getDrivers()) {
 
+            if (driver instanceof HttpDriver httpDriver && ! httpDriver.getSupportsDereference()) continue;
+
             if (log.isDebugEnabled()) log.debug("Attempting to dereference " + didUrl + " with driver " + driver.getClass().getSimpleName());
 
             driverDereferenceResult = driver.dereference(didUrl, dereferenceOptions);
@@ -189,11 +224,7 @@ public class LocalUniDereferencer implements UniDereferencer {
             }
         }
 
-        if (usedDriver == null) {
-
-            if (log.isInfoEnabled()) log.info("Method not supported: " + didUrl.getDid().getMethodName());
-            throw new ResolutionException(ResolutionException.ERROR_METHODNOTSUPPORTED, "Method not supported: " + didUrl.getDid().getMethodName());
-        }
+        if (driverDereferenceResult == null) return null;
 
         if (usedDriver instanceof HttpDriver) {
 

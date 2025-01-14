@@ -100,11 +100,6 @@ public class DereferenceResult implements Result {
 	}
 
 	@Override
-	public String getMediaType() {
-		return MEDIA_TYPE;
-	}
-
-	@Override
 	public URI getDefaultContext() {
 		return DEFAULT_JSONLD_CONTEXT;
 	}
@@ -128,7 +123,6 @@ public class DereferenceResult implements Result {
 		this.dereferencingMetadata = dereferencingMetadata;
 	}
 
-	@JsonGetter("content")
 	public final byte[] getContent() {
 		return this.content;
 	}
@@ -148,7 +142,6 @@ public class DereferenceResult implements Result {
 		}
 	}
 
-	@JsonSetter("content")
 	public final void setContent(byte[] content) {
 		this.content = content;
 	}

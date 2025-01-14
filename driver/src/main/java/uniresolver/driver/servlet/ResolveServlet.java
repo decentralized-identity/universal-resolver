@@ -66,7 +66,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 		List<MediaType> httpAcceptMediaTypes = MediaType.parseMediaTypes(httpAcceptHeader != null ? httpAcceptHeader : ResolveResult.MEDIA_TYPE);
 		MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
 
-		String accept = HttpBindingServerUtil.acceptForHttpAccepts(httpAcceptMediaTypes);
+		String accept = HttpBindingServerUtil.resolveAcceptForHttpAccepts(httpAcceptMediaTypes);
 
 		Map<String, Object> resolutionOptions = new HashMap<>();
 		resolutionOptions.put("accept", accept);

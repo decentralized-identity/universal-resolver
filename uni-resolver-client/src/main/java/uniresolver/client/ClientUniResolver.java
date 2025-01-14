@@ -133,7 +133,7 @@ public class ClientUniResolver implements UniResolver {
 			}
 
 			if (resolveResult != null && resolveResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn(resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
+				if (log.isWarnEnabled()) log.warn("Received RESOLVE result: " + resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
 				throw ResolutionException.fromResolveResult(resolveResult);
 			}
 
