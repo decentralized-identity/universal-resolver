@@ -72,7 +72,7 @@ public class HttpBindingServerUtil {
             functionMetadataProperty = "dereferencingMetadata";
             functionContentMetadataProperty = "contentMetadata";
         } else {
-            throw new IllegalArgumentException("Invalid stream result: " + result.getClass());
+            throw new IllegalArgumentException("Invalid result: " + result.getClass());
         }
 
         Map<String, Object> json = new LinkedHashMap<>();
@@ -91,7 +91,7 @@ public class HttpBindingServerUtil {
         json.put(functionContentMetadataProperty, result.getFunctionContentMetadata());
 
         String jsonString = objectMapper.writeValueAsString(json);
-        if (log.isDebugEnabled()) log.debug("HTTP body for stream result: " + jsonString);
+        if (log.isDebugEnabled()) log.debug("HTTP body for result: " + jsonString);
         return jsonString;
     }
 
