@@ -167,20 +167,20 @@ public class ResolveServlet extends WebUniResolver {
 
 			// determine representation media type
 
-			if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, result.getContentType())) {
+			if (result.getContentType() != null && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, result.getContentType())) {
 				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + result.getContentType());
-			} else {
-				if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + httpAcceptMediaType);
-				continue;
+				byte[] httpBody = result.getFunctionContent();
+				ServletUtil.sendResponse(
+						response,
+						httpStatusCode,
+						result.getContentType(),
+						httpBody);
+				return;
 			}
 
-            byte[] httpBody = result.getFunctionContent();
-            ServletUtil.sendResponse(
-					response,
-					httpStatusCode,
-					result.getContentType(),
-					httpBody);
-			return;
+			// continue
+
+			if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + httpAcceptMediaType);
 		}
 
 		ServletUtil.sendResponse(

@@ -51,7 +51,7 @@ public class DereferenceResult implements Result {
 	}
 
 	public static DereferenceResult build() {
-		return new DereferenceResult(new LinkedHashMap<>(), new byte[0], new LinkedHashMap<>());
+		return new DereferenceResult(new LinkedHashMap<>(), null, new LinkedHashMap<>());
 	}
 
 	/*
