@@ -3,6 +3,10 @@ package uniresolver.local.extensions.impl;
 import foundation.identity.did.DIDURL;
 import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.production.RepresentationProducer;
+import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
+import foundation.identity.did.representations.production.RepresentationProducerDIDJSON;
+import foundation.identity.did.representations.production.RepresentationProducerDIDJSONLD;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.DereferencingException;
@@ -41,6 +45,10 @@ public class DIDDocumentExtension implements DereferencerExtension.DereferencePr
 
          // dereference
 
+        if ("*/*".equals(accept)) accept = Representations.DEFAULT_MEDIA_TYPE;
+        else if ("application/ld+json".equals(accept)) accept = RepresentationProducerDIDJSONLD.MEDIA_TYPE;
+        else if ("application/json".equals(accept)) accept = RepresentationProducerDIDJSON.MEDIA_TYPE;
+        else if ("application/cbor".equals(accept)) accept = RepresentationProducerDIDCBOR.MEDIA_TYPE;
         if (! Representations.isProducibleMediaType(accept)) {
             throw new DereferencingException(DereferencingException.ERROR_CONTENTTYPENOTSUPPORTED, "Content type not supported: " + accept);
         }
