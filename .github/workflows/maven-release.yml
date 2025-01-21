@@ -27,7 +27,7 @@ jobs:
 
   docker-release:
     needs: maven-release
-    uses: danubetech/workflows/.github/workflows/docker-release.yml@main
+    uses: danubetech/workflows/.github/workflows/maven-triggered-docker-release.yml@main
     with:
       GLOBAL_IMAGE_NAME: universalresolver/uni-resolver-web
       GLOBAL_REPO_NAME: docker.io
