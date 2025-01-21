@@ -63,6 +63,7 @@ public class ResolveResult implements Result {
 
     @Override
     public byte[] getFunctionContent() throws IOException {
+        if (this.getDidDocument() == null) return null;
         return RepresentationProducer.produce(this.getDidDocument(), this.getContentType());
     }
 
