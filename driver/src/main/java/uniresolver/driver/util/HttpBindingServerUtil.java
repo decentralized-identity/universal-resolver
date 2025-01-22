@@ -131,12 +131,10 @@ public class HttpBindingServerUtil {
      */
 
     private static boolean isContentTypeJson(Result result) {
-        final MediaType acceptMediaType = MediaType.valueOf("application/json");
-        return MediaTypeUtil.isMediaTypeAcceptable(acceptMediaType, result.getContentType());
+        return result.getContentType().contains("+json") || result.getContentType().contains("/json");
     }
 
     private static boolean isContentTypeText(Result result) {
-        final MediaType acceptMediaType = MediaType.valueOf("text/*");
-        return MediaTypeUtil.isMediaTypeAcceptable(acceptMediaType, result.getContentType());
+        return result.getContentType().startsWith("text/");
     }
 }
