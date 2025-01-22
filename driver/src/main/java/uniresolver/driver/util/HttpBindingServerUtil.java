@@ -3,6 +3,8 @@ package uniresolver.driver.util;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
+import foundation.identity.did.representations.consumption.RepresentationConsumerDID;
+import foundation.identity.did.representations.production.RepresentationProducerDID;
 import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
 import foundation.identity.did.representations.production.RepresentationProducerDIDJSON;
 import foundation.identity.did.representations.production.RepresentationProducerDIDJSONLD;
@@ -131,7 +133,7 @@ public class HttpBindingServerUtil {
      */
 
     private static boolean isContentTypeJson(Result result) {
-        return result.getContentType().contains("+json") || result.getContentType().contains("/json");
+        return RepresentationProducerDID.MEDIA_TYPE.equals(result.getContentType()) || result.getContentType().contains("+json") || result.getContentType().contains("/json");
     }
 
     private static boolean isContentTypeText(Result result) {
