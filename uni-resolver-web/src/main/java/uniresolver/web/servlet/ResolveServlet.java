@@ -1,6 +1,8 @@
 package uniresolver.web.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import foundation.identity.did.representations.Representations;
+import foundation.identity.did.representations.production.RepresentationProducer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -167,15 +169,32 @@ public class ResolveServlet extends WebUniResolver {
 
 			// determine representation media type
 
-			if (result.getContentType() != null && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, result.getContentType())) {
-				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content type " + result.getContentType());
-				byte[] httpBody = result.getFunctionContent();
-				ServletUtil.sendResponse(
-						response,
-						httpStatusCode,
-						result.getContentType(),
-						httpBody);
-				return;
+			if (result instanceof ResolveResult resolveResult) {
+				for (RepresentationProducer representationProducer : Representations.representationProducers) {
+					if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, representationProducer.getMediaType())) {
+						if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via DID document media type " + representationProducer.getMediaType() + " and resolved DID document media type " + representationProducer.getMediaType());
+						byte[] httpBody = representationProducer.produce(resolveResult.getDidDocument());
+						ServletUtil.sendResponse(
+								response,
+								httpStatusCode,
+								representationProducer.getMediaType(),
+								httpBody);
+						return;
+					}
+				}
+			}
+
+			if (result instanceof DereferenceResult dereferenceResult) {
+				if (result.getContentType() != null && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, result.getContentType())) {
+					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content media type " + result.getContentType());
+					byte[] httpBody = result.getFunctionContent();
+					ServletUtil.sendResponse(
+							response,
+							httpStatusCode,
+							result.getContentType(),
+							httpBody);
+					return;
+				}
 			}
 
 			// continue
