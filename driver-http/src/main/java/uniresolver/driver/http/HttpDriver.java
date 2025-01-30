@@ -237,7 +237,7 @@ public class HttpDriver implements Driver {
 		String accept = (String) dereferenceOptions.get("accept");
 		if (accept == null) throw new ResolutionException("No 'accept' provided in 'dereferenceOptions' for dereference().");
 
-		List<String> acceptMediaTypes = Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
+		List<String> acceptMediaTypes = Arrays.asList(DereferenceResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
 
 		if (log.isDebugEnabled()) log.debug("Setting Accept: header to " + acceptMediaTypesString);

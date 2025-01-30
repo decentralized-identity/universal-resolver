@@ -3,6 +3,8 @@ package uniresolver.driver.util;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
+import foundation.identity.did.representations.consumption.RepresentationConsumerDID;
+import foundation.identity.did.representations.production.RepresentationProducerDID;
 import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
 import foundation.identity.did.representations.production.RepresentationProducerDIDJSON;
 import foundation.identity.did.representations.production.RepresentationProducerDIDJSONLD;
@@ -104,29 +106,23 @@ public class HttpBindingServerUtil {
 
     public static String resolveAcceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
         for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
-            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
-                return RESOLVE_DEFAULT_ACCEPT;
-            }
-            String accept = resolveAcceptForHttpAccept(httpAcceptMediaType.toString());
-            if (accept != null) return accept;
+            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
+            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
+
+            ContentType mediaType = ContentType.parse(httpAcceptMediaType.toString());
+            if (Representations.isProducibleMediaType(mediaType.getMimeType())) return mediaType.getMimeType();
+            else if ("application/ld+json".equals(mediaType.getMimeType())) return RepresentationProducerDIDJSONLD.MEDIA_TYPE;
+            else if ("application/json".equals(mediaType.getMimeType())) return RepresentationProducerDIDJSON.MEDIA_TYPE;
+            else if ("application/cbor".equals(mediaType.getMimeType())) return RepresentationProducerDIDCBOR.MEDIA_TYPE;
         }
         return RESOLVE_DEFAULT_ACCEPT;
     }
 
-    private static String resolveAcceptForHttpAccept(String httpAcceptMediaType) {
-        ContentType mediaType = ContentType.parse(httpAcceptMediaType);
-        if (Representations.isProducibleMediaType(mediaType.getMimeType())) return mediaType.getMimeType();
-        else if ("application/ld+json".equals(mediaType.getMimeType())) return RepresentationProducerDIDJSONLD.MEDIA_TYPE;
-        else if ("application/json".equals(mediaType.getMimeType())) return RepresentationProducerDIDJSON.MEDIA_TYPE;
-        else if ("application/cbor".equals(mediaType.getMimeType())) return RepresentationProducerDIDCBOR.MEDIA_TYPE;
-        return null;
-    }
-
     public static String dereferenceAcceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
         for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
-            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) {
-                return DEREFERENCE_DEFAULT_ACCEPT;
-            }
+            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) return DEREFERENCE_DEFAULT_ACCEPT;
+            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) return DEREFERENCE_DEFAULT_ACCEPT;
+
             return httpAcceptMediaType.toString();
         }
         return DEREFERENCE_DEFAULT_ACCEPT;
@@ -137,12 +133,10 @@ public class HttpBindingServerUtil {
      */
 
     private static boolean isContentTypeJson(Result result) {
-        final MediaType acceptMediaType = MediaType.valueOf("application/json");
-        return MediaTypeUtil.isMediaTypeAcceptable(acceptMediaType, result.getContentType());
+        return RepresentationProducerDID.MEDIA_TYPE.equals(result.getContentType()) || result.getContentType().contains("+json") || result.getContentType().contains("/json");
     }
 
     private static boolean isContentTypeText(Result result) {
-        final MediaType acceptMediaType = MediaType.valueOf("text/*");
-        return MediaTypeUtil.isMediaTypeAcceptable(acceptMediaType, result.getContentType());
+        return result.getContentType().startsWith("text/");
     }
 }
