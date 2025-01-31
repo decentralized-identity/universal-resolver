@@ -27,7 +27,6 @@ jobs:
     with:
       GLOBAL_IMAGE_NAME: universalresolver/uni-resolver-web
       GLOBAL_REPO_NAME: docker.io
-      GLOBAL_FRAMEWORK: maven
       PATH_TO_DOCKERFILE: uni-resolver-web/docker/Dockerfile
     secrets:
       VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
