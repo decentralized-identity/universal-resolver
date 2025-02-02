@@ -59,7 +59,7 @@ public class LocalUniResolver implements UniResolver {
 
 	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions, Map<String, Object> initialExecutionState) throws ResolutionException {
 
-		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
+		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ") with options: " + resolutionOptions);
 
 		if (didString == null) throw new NullPointerException();
 		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");

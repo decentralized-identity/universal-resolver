@@ -71,7 +71,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
     public DereferenceResult dereference(String didUrlString, Map<String, Object> dereferenceOptions, Map<String, Object> initialExecutionState) throws ResolutionException, DereferencingException {
 
-        if (log.isDebugEnabled()) log.debug("dereference(" + didUrlString + ")  with options: " + dereferenceOptions);
+        if (log.isDebugEnabled()) log.debug("dereference(" + didUrlString + ") with options: " + dereferenceOptions);
 
         if (didUrlString == null) throw new NullPointerException();
         if (this.getUniResolver() == null) throw new ResolutionException("No resolver configured.");
@@ -145,7 +145,7 @@ public class LocalUniDereferencer implements UniDereferencer {
                 // resolve options = dereference options + DID parameters
 
                 Map<String, Object> resolveOptions = new HashMap<>(dereferenceOptions);
-                resolveOptions.put("accept", Representations.DEFAULT_MEDIA_TYPE);
+                if (! resolveOptions.containsKey("accept")) resolveOptions.put("accept", Representations.DEFAULT_MEDIA_TYPE);
                 if (didUrl.getParameters() != null) resolveOptions.putAll(didUrl.getParameters());
 
                 // resolve
