@@ -100,6 +100,16 @@ public class HttpBindingServerUtil {
         return jsonString;
     }
 
+    public static String httpContentTypeForResult(Result result) {
+        if (result instanceof ResolveResult) {
+            return ResolveResult.MEDIA_TYPE;
+        } else if (result instanceof DereferenceResult) {
+            return DereferenceResult.MEDIA_TYPE;
+        } else {
+            throw new IllegalArgumentException("Invalid result: " + result.getClass());
+        }
+    }
+
     /*
      * Media Type methods
      */
