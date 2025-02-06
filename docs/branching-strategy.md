@@ -10,9 +10,9 @@ The following recipe shortly describes the typical steps that developers need to
 
 ![](https://hackernoon.com/hn-images/1*iHPPa72N11sBI_JSDEGxEA.png)
 
-1. ***Create a branch***: When implementing a new feature, some improvement or a bugfix, a new branch should be created of the `main` branch. In order to preserve an organized git-repo, we agreed on follwing prefixes for branches:
+1. ***Create a branch***: When implementing a new feature, some improvement or a bugfix, a new branch should be created of the `main` branch. In order to preserve an organized git-repo, we agreed on following prefixes for branches:
 
-    - feature-\<branch-name\> -> adding/changeing functionality, whereas the branch-name should reflect the intention
+    - feature-\<branch-name\> -> adding/changing functionality, whereas the branch-name should reflect the intention
     - bugfix-\<GitHub-issue\> -> fixing Github-issues
     - refactor-\<branch-name\> -> cleanup, maintanance, improving code quality, adding Unit tests
     - ci-\<branch-name\> -> anything related to continous integration
