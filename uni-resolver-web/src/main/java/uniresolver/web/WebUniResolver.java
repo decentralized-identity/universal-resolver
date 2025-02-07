@@ -9,17 +9,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.web.HttpRequestHandler;
+import uniresolver.DereferencingException;
 import uniresolver.ResolutionException;
+import uniresolver.UniDereferencer;
 import uniresolver.UniResolver;
-import uniresolver.result.ResolveDataModelResult;
-import uniresolver.result.ResolveRepresentationResult;
+import uniresolver.result.DereferenceResult;
+import uniresolver.result.ResolveResult;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 @WebServlet
-public abstract class WebUniResolver extends HttpServlet implements HttpRequestHandler, UniResolver {
+public abstract class WebUniResolver extends HttpServlet implements HttpRequestHandler, UniDereferencer, UniResolver {
+
+	@Autowired
+	@Qualifier("UniDereferencer")
+	private UniDereferencer uniDereferencer;
 
 	@Autowired
 	@Qualifier("UniResolver")
@@ -47,13 +54,8 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 	}
 
 	@Override
-	public ResolveDataModelResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 		return this.getUniResolver() == null ? null : this.getUniResolver().resolve(didString, resolutionOptions);
-	}
-
-	@Override
-	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
-		return this.getUniResolver() == null ? null : this.getUniResolver().resolveRepresentation(didString, resolutionOptions);
 	}
 
 	@Override
@@ -71,9 +73,27 @@ public abstract class WebUniResolver extends HttpServlet implements HttpRequestH
 		return this.getUniResolver() == null ? null : this.getUniResolver().testIdentifiers();
 	}
 
+	@Override
+	public Map<String, Map<String, Object>> traits() throws ResolutionException {
+		return this.getUniResolver() == null ? null : this.getUniResolver().traits();
+	}
+
+	@Override
+	public DereferenceResult dereference(String didUrlString, Map<String, Object> dereferenceOptions) throws ResolutionException, DereferencingException {
+		return this.getUniDereferencer() == null ? null : this.getUniDereferencer().dereference(didUrlString, dereferenceOptions);
+	}
+
 	/*
 	 * Getters and setters
 	 */
+
+	public UniDereferencer getUniDereferencer() {
+		return this.uniDereferencer;
+	}
+
+	public void setUniDereferencer(UniDereferencer uniDereferencer) {
+		this.uniDereferencer = uniDereferencer;
+	}
 
 	public UniResolver getUniResolver() {
 		return this.uniResolver;

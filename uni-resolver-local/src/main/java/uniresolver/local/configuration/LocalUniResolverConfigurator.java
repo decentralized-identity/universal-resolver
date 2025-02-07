@@ -1,9 +1,6 @@
 package uniresolver.local.configuration;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.driver.Driver;
@@ -16,30 +13,31 @@ import java.io.Reader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class LocalUniResolverConfigurator {
 
     private static final Logger log = LoggerFactory.getLogger(LocalUniResolverConfigurator.class);
 
-    public static void configureLocalUniResolver(String filePath, LocalUniResolver localUniResolver) throws IOException {
+    private final static ObjectMapper objectMapper = new ObjectMapper();
 
-        final Gson gson = new Gson();
+    public static void configureLocalUniResolver(String filePath, LocalUniResolver localUniResolver) throws IOException {
 
         List<Driver> drivers = new ArrayList<>();
 
         try (Reader reader = new FileReader(filePath)) {
 
-            JsonObject jsonObjectRoot  = gson.fromJson(reader, JsonObject.class);
-            JsonArray jsonArrayDrivers = jsonObjectRoot.getAsJsonArray("drivers");
+            Map<String, Object> jsonRoot = objectMapper.readValue(reader, Map.class);
+            List<Map<String, Object>> jsonDrivers = (List<Map<String, Object>>) jsonRoot.get("drivers");
 
-            for (JsonElement jsonArrayDriver : jsonArrayDrivers) {
+            for (Map<String, Object> jsonDriver : jsonDrivers) {
 
-                JsonObject jsonObjectDriver = (JsonObject) jsonArrayDriver;
-
-                String pattern = jsonObjectDriver.has("pattern") ? jsonObjectDriver.get("pattern").getAsString() : null;
-                String url = jsonObjectDriver.has("url") ? jsonObjectDriver.get("url").getAsString() : null;
-                String propertiesEndpoint = jsonObjectDriver.has("propertiesEndpoint") ? jsonObjectDriver.get("propertiesEndpoint").getAsString() : null;
-                JsonArray testIdentifiers = jsonObjectDriver.has("testIdentifiers") ? jsonObjectDriver.get("testIdentifiers").getAsJsonArray() : null;
+                String pattern = jsonDriver.containsKey("pattern") ? (String) jsonDriver.get("pattern") : null;
+                String url = jsonDriver.containsKey("url") ? (String) jsonDriver.get("url") : null;
+                String propertiesEndpoint = jsonDriver.containsKey("propertiesEndpoint") ? (String) jsonDriver.get("propertiesEndpoint") : null;
+                String supportsDereference = jsonDriver.containsKey("supportsDereference") ? (String) jsonDriver.get("supportsDereference") : null;
+                List<String> testIdentifiers = jsonDriver.containsKey("testIdentifiers") ? (List<String>) jsonDriver.get("testIdentifiers") : null;
+                Map<String, Object> traits = jsonDriver.containsKey("traits") ? (Map<String, Object>) jsonDriver.get("traits") : null;
 
                 if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
                 if (url == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
@@ -47,24 +45,20 @@ public class LocalUniResolverConfigurator {
                 // construct HTTP driver
 
                 HttpDriver driver = new HttpDriver();
-
                 driver.setPattern(pattern);
 
                 if (url.contains("$1") || url.contains("$2")) {
-
                     driver.setResolveUri(url);
                     driver.setPropertiesUri((URI) null);
                 } else {
-
                     if (! url.endsWith("/")) url = url + "/";
-
                     driver.setResolveUri(url + "1.0/identifiers/");
                     if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(url + "1.0/properties");
                 }
 
-                if (testIdentifiers != null) {
-                    driver.setTestIdentifiers(testIdentifiers.asList().stream().map(JsonElement::getAsString).toList());
-                }
+                if (supportsDereference != null) driver.setSupportsDereference(Boolean.parseBoolean(supportsDereference));
+                if (testIdentifiers != null) driver.setTestIdentifiers(testIdentifiers);
+                if (traits != null) driver.setTraits(traits);
 
                 // done
 

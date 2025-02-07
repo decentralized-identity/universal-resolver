@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 @Configuration
@@ -25,7 +26,9 @@ public class DriverConfigs {
 		private String pattern;
 		private String url;
 		private String propertiesEndpoint;
+		private String supportsDereference;
 		private List<String> testIdentifiers;
+		private Map<String, Object> traits;
 
 		public String getPattern() {
 			return pattern;
@@ -51,6 +54,14 @@ public class DriverConfigs {
 			this.propertiesEndpoint = value;
 		}
 
+		public String getSupportsDereference() {
+			return supportsDereference;
+		}
+
+		public void setSupportsDereference(String supportsDereference) {
+			this.supportsDereference = supportsDereference;
+		}
+
 		public List<String> getTestIdentifiers() {
 			return testIdentifiers;
 		}
@@ -59,14 +70,24 @@ public class DriverConfigs {
 			this.testIdentifiers = value;
 		}
 
+		public Map<String,Object> getTraits() {
+			return traits;
+		}
+
+		public void setTraits(Map<String,Object> traits) {
+			this.traits = traits;
+		}
+
 		@Override
 		public String toString() {
-			return new StringJoiner(", ", DriverConfig.class.getSimpleName() + "[", "]").add(
-							"pattern='" + pattern + "'")
-					.add("url='" + url + "'")
-					.add("propertiesEndpoint='" + propertiesEndpoint + "'")
-					.add("testIdentifiers=" + testIdentifiers)
-					.toString();
+			return "DriverConfig{" +
+					"pattern='" + pattern + '\'' +
+					", url='" + url + '\'' +
+					", propertiesEndpoint='" + propertiesEndpoint + '\'' +
+					", supportsDereference='" + supportsDereference + '\'' +
+					", testIdentifiers=" + testIdentifiers +
+					", traits=" + traits +
+					'}';
 		}
 	}
 }

@@ -11,6 +11,7 @@ public class ServletMappings {
 	private String resolve;
 	private String methods;
 	private String testIdentifiers;
+	private String traits;
 
 	public String getProperties() {
 		return properties;
@@ -28,6 +29,10 @@ public class ServletMappings {
 		return testIdentifiers;
 	}
 
+	public String getTraits() {
+		return traits;
+	}
+
 	public void setProperties(String properties) {
 		this.properties = properties;
 	}
@@ -42,5 +47,9 @@ public class ServletMappings {
 
 	public void setTestIdentifiers(String testIdentifiers) {
 		this.testIdentifiers = testIdentifiers;
+	}
+
+	public void setTraits(String traits) {
+		this.traits = traits;
 	}
 }

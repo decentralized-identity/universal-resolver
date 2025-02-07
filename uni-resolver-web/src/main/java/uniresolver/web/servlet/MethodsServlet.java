@@ -55,6 +55,6 @@ public class MethodsServlet extends WebUniResolver {
 
 		// write result
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.METHODS_MIME_TYPE, methodsString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.METHODS_MEDIA_TYPE, methodsString);
 	}
 }

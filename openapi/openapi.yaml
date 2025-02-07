@@ -131,6 +131,10 @@ paths:
               schema:
                 type: object
                 description: A map of properties.
+                example:
+                  indy:
+                    libIndyPath: "/lib"
+                    poolConfigs: "..."
   "/methods":
     get:
       summary: Return a list of supported DID methods
@@ -176,6 +180,29 @@ paths:
                     - did:btcr:xkrn-xz7q-qsye-28p
                   indy:
                     - did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+  "/traits":
+    get:
+      summary: Return a map of DID traits
+      description: <p>This endpoint returns a map of the DID traits of
+        the DID methods supported by the DID Resolver.</p>
+      operationId: universalResolverGetTraits
+      tags:
+        - Universal Resolver
+      responses:
+        "200":
+          description: Success.
+          content:
+            application/did+json:
+              schema:
+                type: object
+                description: A map of DID traits.
+                example:
+                  indy:
+                    updatable: true
+                    deactivatable: true
+                    enumerable: true
+                    historyAvailable: true
+                    humanReadable: false
 components:
   schemas:
     ResolutionResult:

@@ -2,6 +2,11 @@ package uniresolver.local.extensions.impl;
 
 import foundation.identity.did.DIDURL;
 import foundation.identity.did.representations.Representations;
+import foundation.identity.did.representations.production.RepresentationProducer;
+import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
+import foundation.identity.did.representations.production.RepresentationProducerDIDJSON;
+import foundation.identity.did.representations.production.RepresentationProducerDIDJSONLD;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.DereferencingException;
@@ -10,9 +15,9 @@ import uniresolver.local.LocalUniDereferencer;
 import uniresolver.local.extensions.DereferencerExtension;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.result.DereferenceResult;
-import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class DIDDocumentExtension implements DereferencerExtension.DereferencePrimaryDereferencerExtension {
@@ -38,21 +43,30 @@ public class DIDDocumentExtension implements DereferencerExtension.DereferencePr
 
         if (log.isInfoEnabled()) log.info("Executing dereferencePrimary() with extension " + this.getClass().getName());
 
-        // dereference
+         // dereference
 
-        if (! Representations.isRepresentationMediaType(accept)) {
-            throw new DereferencingException(DereferencingException.ERROR_CONTENTTYEPNOTSUPPORTED, "Content type not supported: " + accept);
+        if ("*/*".equals(accept)) accept = Representations.DEFAULT_MEDIA_TYPE;
+        else if ("application/ld+json".equals(accept)) accept = RepresentationProducerDIDJSONLD.MEDIA_TYPE;
+        else if ("application/json".equals(accept)) accept = RepresentationProducerDIDJSON.MEDIA_TYPE;
+        else if ("application/cbor".equals(accept)) accept = RepresentationProducerDIDCBOR.MEDIA_TYPE;
+        if (! Representations.isProducibleMediaType(accept)) {
+            throw new DereferencingException(DereferencingException.ERROR_CONTENTTYPENOTSUPPORTED, "Content type not supported: " + accept);
         }
-
-        ResolveRepresentationResult resolveRepresentationResult = resolveResult.toResolveRepresentationResult(accept);
 
         if (log.isDebugEnabled()) log.debug("Dereferencing DID URL that has no path (assuming DID document): " + didUrlWithoutFragment);
 
-        // update result
+        byte[] content;
+        try {
+            content = RepresentationProducer.produce(resolveResult.getDidDocument(), accept);
+        } catch (IOException ex) {
+            throw new DereferencingException(DereferencingException.ERROR_CONTENTTYPENOTSUPPORTED, "Cannot produce DID document: " + ex.getMessage(), ex);
+        }
 
-        dereferenceResult.setContentType(resolveRepresentationResult.getContentType());
-        dereferenceResult.setContentStream(resolveRepresentationResult.getDidDocumentStream());
-        dereferenceResult.setContentMetadata(resolveRepresentationResult.getDidDocumentMetadata());
+        // set dereference result
+
+        dereferenceResult.setContentType(resolveResult.getContentType());
+        dereferenceResult.setContent(content);
+        dereferenceResult.setContentMetadata(resolveResult.getDidDocumentMetadata());
 
         // done
 
