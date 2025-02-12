@@ -5,6 +5,7 @@ networks:
     name: universal-resolver
 
 services:
+
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
     ports:
@@ -77,6 +78,7 @@ services:
       uniresolver_web_driver_url_did_content:
       uniresolver_web_driver_url_did_iden3:
       uniresolver_web_driver_url_did_prism:
+      uniresolver_web_driver_url_did_earthid:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -393,3 +395,9 @@ services:
       NODE_1_PATTERN: ${uniresolver_driver_did_quarkid_node_pattern} #did:quarkid
       NODE_1_BEHAVIOR: ${uniresolver_driver_did_quarkid_node_behavior} #1
       UV_THREADPOOL_SIZE: ${uniresolver_driver_did_quarkid_node_threadpool_size} #240000
+  driver-did-earthid:
+    image: earthid/services:driver-did-earthid-v1.0
+    environment:
+      baseUrl: "https://did.myearth.id/v2/resolve"
+    ports:
+      - "8156:8080"
