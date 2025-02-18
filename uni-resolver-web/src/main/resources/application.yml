@@ -343,11 +343,6 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_iota:http://driver-did-iota:8080/}
       testIdentifiers:
         - did:iota:0xf4d6f08f5a1b80dd578da7dc1b49c886d580acd4cf7d48119dfeb82b538ad88a
-    - pattern: "^(did:iden3:.+)$"
-      url: ${uniresolver_web_driver_url_did_iden3:http://driver-did-iden3:8080/}
-      propertiesEndpoint: "true"
-      testIdentifiers:
-        - did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
     - pattern: "^(did:prism:.+)$"
       url: ${uniresolver_web_driver_url_did_prism:http://driver-did-prism:9090/}
       testIdentifiers:

@@ -67,7 +67,6 @@ services:
       uniresolver_web_driver_url_did_iid:
       uniresolver_web_driver_url_did_evan:
       uniresolver_web_driver_url_did_bid:
-      uniresolver_web_driver_url_did_polygonid:
       uniresolver_web_driver_url_did_pdc:
       uniresolver_web_driver_url_did_tys:
       uniresolver_web_driver_url_did_plc:
@@ -75,7 +74,6 @@ services:
       uniresolver_web_driver_url_did_kerri:
       uniresolver_web_driver_url_did_webs:
       uniresolver_web_driver_url_did_content:
-      uniresolver_web_driver_url_did_iden3:
       uniresolver_web_driver_url_did_prism:
 
   driver-did-btcr:
@@ -317,10 +315,6 @@ services:
     image: caictdevelop/driver-did-bid:latest
     ports:
       - "8139:8080"
-  driver-did-polygonid:
-    image: ghcr.io/iden3/driver-did-iden3:v0.0.4
-    ports:
-      - "8141:8080"
   driver-did-pdc:
     image: w744219971/driver-did-pdc:latest
     ports:
@@ -371,10 +365,6 @@ services:
       IOTA_CUSTOM_NETWORK_NAME: ${uniresolver_driver_did_iota_customNetworkName}
       IOTA_CUSTOM_NODE_ENDPOINT: ${uniresolver_driver_did_iota_customNodeEndpoint}
       IOTA_CUSTOM_NODE_AUTH_TOKEN: ${uniresolver_driver_did_iota_customNodeAuthToken}
-  driver-did-iden3:
-    image: ghcr.io/iden3/driver-did-iden3:v0.0.4
-    ports:
-      - "8152:8080"
   driver-did-prism:
     image: ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism:0.2
     ports:
