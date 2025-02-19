@@ -180,6 +180,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-prism](https://github.com/FabioPinheiro/uni-resolver-driver-did-prism)                           | 0.2            | [1.0](https://github.com/input-output-hk/prism-did-method-spec)                                                   | [ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism](https://github.com/FabioPinheiro/uni-resolver-driver-did-prism/pkgs/container/uni-resolver-driver-did-prism) | PRISM DID                                                                           |
 | [did-webvh](https://github.com/brianorwhatever/uni-resolver-driver-did-webvh)                         	| 0.5            | [0.5](https://identity.foundation/didwebvh/)                                                   		     | [uni-resolver-driver-did-webvh](ghcr.io/brianorwhatever/uni-resolver-driver-did-webvh:main) 				  | DID WEBVH - Verifiable History                                                                       |
 | [did-quarkid](https://github.com/ssi-quarkid/api-proxy)                         	| 1.0            | 1.0                                             		     | [uni-resolver-driver-did-quarkid](extrimianpublic.azurecr.io/modena-resolver:metadataSupport) 				  | QuarkID
+| [did-earthid](https://github.com/vibhi09/driver-did-earthid) | 0.1.0 | [1.0](https://github.com/earthid/earthid-did-method-specification) | [vibhi09/driver-did-earthid](https://hub.docker.com/r/vibhi09/driver-did-earthid) | EarthID DID Method |
 
 ## More Information
 
