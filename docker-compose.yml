@@ -75,7 +75,6 @@ services:
       uniresolver_web_driver_url_did_webs:
       uniresolver_web_driver_url_did_content:
       uniresolver_web_driver_url_did_prism:
-
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
     environment:
@@ -386,4 +385,4 @@ services:
   driver-did-zkjm:
     image: saishibu38380/uni-resolver-driver-zkjm:v1.0.0
     ports:
-      - "8080:8080"
+      - "8081:8080"
