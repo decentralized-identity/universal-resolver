@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.6"
 
 networks:
   default:
@@ -7,7 +7,6 @@ networks:
 services:
   uni-resolver-web:
     image: universalresolver/uni-resolver-web:latest
-    platform: linux/amd64
     ports:
       - "8080:8080"
     environment:
@@ -385,7 +384,6 @@ services:
       NODE_1_BEHAVIOR: ${uniresolver_driver_did_quarkid_node_behavior} #1
       UV_THREADPOOL_SIZE: ${uniresolver_driver_did_quarkid_node_threadpool_size} #240000
   driver-did-zkjm:
-    platform: linux/amd64
-    image: saishibu38380/uni-resolver-driver-zkjm:v1
+    image: saishibu38380/uni-resolver-driver-zkjm:v1.0.0
     ports:
       - "8080:8080"
