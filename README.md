@@ -182,7 +182,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-webvh](https://github.com/brianorwhatever/uni-resolver-driver-did-webvh)                         	| 0.5            | [0.5](https://identity.foundation/didwebvh/)                                                   		     | [uni-resolver-driver-did-webvh](ghcr.io/brianorwhatever/uni-resolver-driver-did-webvh:main) 				  | DID WEBVH - Verifiable History                                                                       |
 | [did-quarkid](https://github.com/ssi-quarkid/api-proxy)                         	| 1.0            | 1.0                                             		     | [uni-resolver-driver-did-quarkid](extrimianpublic.azurecr.io/modena-resolver:metadataSupport) 				  | QuarkID
 
-| [did-zkjm](https://github.com/JupiterMetaZK/.github)                         	| 1.0.0            | 1.0.0                                             		     | [uni-resolver-driver-did-zkjm](https://hub.docker.com/r/saishibu38380/uni-resolver-driver-zkjm) 				  | ZKJM DID
+ [did-zkjm](https://github.com/JupiterMetaZK/.github)                         	| 1.0.0            | 1.0.0                                             		     | [uni-resolver-driver-did-zkjm](https://hub.docker.com/r/saishibu38380/uni-resolver-driver-zkjm) 				  | ZKJM DID
 
 
 ## More Information
