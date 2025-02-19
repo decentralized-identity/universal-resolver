@@ -10,14 +10,12 @@ import org.springframework.context.annotation.Configuration;
 import uniresolver.driver.Driver;
 import uniresolver.driver.http.HttpDriver;
 import uniresolver.local.LocalUniResolver;
-import uniresolver.web.servlet.MethodsServlet;
-import uniresolver.web.servlet.PropertiesServlet;
-import uniresolver.web.servlet.ResolveServlet;
-import uniresolver.web.servlet.TestIdentifiersServlet;
+import uniresolver.web.servlet.*;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 public class WebAppConfig {
@@ -73,6 +71,16 @@ public class WebAppConfig {
 		return new ServletRegistrationBean<>(testIdentifiersServlet(), servletMappings.getTestIdentifiers());
 	}
 
+	@Bean(name = "TraitsServlet")
+	public TraitsServlet traitsServlet() {
+		return new TraitsServlet();
+	}
+
+	@Bean
+	public ServletRegistrationBean<TraitsServlet> traitsServletRegistrationBean() {
+		return new ServletRegistrationBean<>(traitsServlet(), servletMappings.getTraits());
+	}
+
 	public static String fixWildcardPattern(String s) {
 		if(s == null) return "";
 		if (s.endsWith("*")) return s;
@@ -94,12 +102,14 @@ public class WebAppConfig {
 
 		List<Driver> drivers = new ArrayList<>();
 
-		for (DriverConfigs.DriverConfig dc : driverConfigs.getDrivers()) {
+		for (DriverConfigs.DriverConfig driverConfig : driverConfigs.getDrivers()) {
 
-			String pattern = dc.getPattern();
-			String url = dc.getUrl();
-			String propertiesEndpoint = dc.getPropertiesEndpoint();
-			List<String> testIdentifiers = dc.getTestIdentifiers();
+			String pattern = driverConfig.getPattern();
+			String url = driverConfig.getUrl();
+			String propertiesEndpoint = driverConfig.getPropertiesEndpoint();
+			String supportsDereference = driverConfig.getSupportsDereference();
+			List<String> testIdentifiers = driverConfig.getTestIdentifiers();
+			Map<String, Object> traits = driverConfig.getTraits();
 
 			if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
 			if (url == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
@@ -118,12 +128,14 @@ public class WebAppConfig {
 				if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(normalizeUri((url + servletMappings.getProperties()), false));
 			}
 
-			driver.setTestIdentifiers(testIdentifiers);
+			if (supportsDereference != null) driver.setSupportsDereference(Boolean.parseBoolean(supportsDereference));
+			if (testIdentifiers != null) driver.setTestIdentifiers(testIdentifiers);
+			if (traits != null) driver.setTraits(traits);
 
 			// done
 
 			drivers.add(driver);
-			if (log.isInfoEnabled()) log.info("Added driver for pattern '" + dc.getPattern() + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
+			if (log.isInfoEnabled()) log.info("Added driver for pattern '" + driverConfig.getPattern() + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
 		}
 
 		uniResolver.setDrivers(drivers);

@@ -6,6 +6,7 @@ server:
       resolve: "/1.0/identifiers"
       methods: "/1.0/methods"
       testIdentifiers: "/1.0/testIdentifiers"
+      traits: "/1.0/traits"
   port: "8080"
 spring:
   profiles:
@@ -29,6 +30,11 @@ uniresolver:
         - did:sov:idunion:2GMSLg2A8JXcdYVsPC4Jui
         - did:sov:idunion:test:BDrEcHc8Tb4Lb2VyQZWEDE
         - did:sov:indicio:demo:KKyAeG7woJMV6MhhAREVKp
+      traits:
+        deactivatable: true
+        enumerable: true
+        historyAvailable: true
+        humanReadable: false
     - pattern: "^(did:indy:.+)$"
       url: ${uniresolver_web_driver_url_did_indy:http://driver-did-indy:8080/}
       propertiesEndpoint: "true"
@@ -61,6 +67,11 @@ uniresolver:
       testIdentifiers:
         - did:web:identity.foundation
         - did:web:danubetech.com
+      traits:
+        deactivatable: true
+        enumerable: false
+        historyAvailable: false
+        humanReadable: true
     - pattern: "^(did:ethr:.+)$"
       url: ${uniresolver_web_driver_url_did_ethr:http://uni-resolver-driver-did-uport:8081/}
       testIdentifiers:
@@ -142,7 +153,8 @@ uniresolver:
       testIdentifiers:
         - did:gatc:2xtSori9UQZdTqzxrkp7zqKM4Kj5B4C7
         - did:gatc:acYseLtTEVeqF8oBhJEejbCVHJ8auVupaRuo6gw4hmXjcc77uCKqyM3imEJH
-        - did:gatc:MDU2OGVjYTViNGUzYmM2OGJiMGE1ZGM3
+        - did:gatc:32MxGGj4gpCEWMiKjPtCqsrbg9JF9Kn4
+        - did:gatc:25sPfKCaYnzV6f8ckJeqyqNcpsbeBPBS
     - pattern: "^(did:icon:.+)$"
       url: ${uniresolver_web_driver_url_did_icon:http://driver-did-icon:8080/}
       testIdentifiers:
@@ -165,10 +177,10 @@ uniresolver:
       testIdentifiers:
         - did:lit:AEZ87t1bi5bRxmVh3ksMUi
     - pattern: "^(did:ebsi:.+)$"
-      url: ${uniresolver_web_driver_url_did_ebsi:https://api-pilot.ebsi.eu/did-registry/v4/identifiers/$1}
+      url: ${uniresolver_web_driver_url_did_ebsi:https://api-pilot.ebsi.eu/did-registry/v5/identifiers/$1}
       testIdentifiers:
-        - did:ebsi:ziE2n8Ckhi6ut5Z8Cexrihd
-        - did:ebsi:zkC6cUFUs3FiRp2xedNwih2
+        - did:ebsi:zjUnExsyyweQ9p4cy3nvrVc
+        - did:ebsi:z24q53pA3pjcnoukP6fD5jXt
     - pattern: "^(did:emtrust:.+)$"
       url: ${uniresolver_web_driver_url_did_emtrust:http://driver-did-emtrust:8080/}
       testIdentifiers:
@@ -236,6 +248,7 @@ uniresolver:
         - did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15
     - pattern: "^(did:cheqd:.+)$"
       url: ${uniresolver_web_driver_url_did_cheqd:http://cheqd-did-driver:8080/1.0/identifiers/$1}
+      supportsDereference: true
       testIdentifiers:
         - did:cheqd:mainnet:Ps1ysXP2Ae6GBfxNhNQNKN
         - did:cheqd:testnet:55dbc8bf-fba3-4117-855c-1e0dc1d3bb47
@@ -256,11 +269,16 @@ uniresolver:
       testIdentifiers:
         - did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpGZk1iek9qTW1RNGVmVDZrdndUSUpqZWxUcWpsMHhqRUlXUTJxb2JzUk1NIiwia3R5IjoiT0tQIiwiY3J2IjoiRWQyNTUxOSIsImFsZyI6IkVkRFNBIiwieCI6IkFOUmpIX3p4Y0tCeHNqUlBVdHpSYnA3RlNWTEtKWFE5QVBYOU1QMWo3azQifQ
         - did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1Njpnc0w0VTRxX1J6VFhRckpwQUNnZGkwb1lCdUV1QjNZNWZFanhDd1NPUFlBIiwia3R5IjoiRUMiLCJjcnYiOiJQLTM4NCIsImFsZyI6IkVTMzg0IiwieCI6ImEtRWV5T2hlRUNWcDJqRkdVRTNqR0RCNlAzVV80S0lyZHRzTU9RQXFQN0NBMlVvV3NERG1nOWdJUVhiOEthd0ciLCJ5Ijoib3cxWDJ6VFVRaG12elY4NnpHdGhKc0xLeDE2MmhmSmxmN1p0OTFYUnZBTzRScE4zR2RGaVl3Tmc0NXJWUmlUcSJ9
+      traits:
+        deactivatable: false
+        enumerable: false
+        historyAvailable: false
+        humanReadable: false
     - pattern: "^(did:kscirc:.+)$"
-      url: ${uniresolver_web_driver_url_did_kscirc:http://did-kscirc-driver:8080/1.0/identifiers/$1}
+      url: ${uniresolver_web_driver_url_did_kscirc:http://did-kscirc-driver:9800/1.0/identifiers/$1}
       testIdentifiers:
-        - did:kscirc:k5xYCTsCXvkDriaAHT75WL9UDdXFMcTdnvmjFvxfS7qxPhxs8jC5
-        - did:kscirc:k398DShRAWwSSzpepQ1krfrtSfLLHgk2QKfufY8CkoMJi39JyBUz
+        - did:kscirc:k7745fAnbFGBeECS7xTDkowVXZZxEvMhpfbcQjaLYSiyed5du9MJ
+        - did:kscirc:k2f2PhnVHabRenKbaKfLMyuxRU94S1HfAwsR2dMHxTqVeEzmPxsd
     - pattern: "^(did:iscc:.+)$"
       url: ${uniresolver_web_driver_url_did_iscc:http://driver-did-iscc:8080/}
       testIdentifiers:
@@ -277,7 +295,7 @@ uniresolver:
     - pattern: "^(did:evan:.+)$"
       url: ${uniresolver_web_driver_url_did_evan:http://evan-did-driver:8080/}
       testIdentifiers:
-        - did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734
+        - did:evan:0x7df25c5090b5361562ef30b3c30ddcde0ac59dd4
     - pattern: "^(did:bid:.+)$"
       url: ${uniresolver_web_driver_url_did_bid:http://driver-did-bid:8080/}
       testIdentifiers:
@@ -344,9 +362,13 @@ uniresolver:
     - pattern: "^(did:tdw:.+)$"
       url: ${uniresolver_web_driver_url_did_tdw:http://driver-did-tdw:8080/}
       testIdentifiers:
-        - did:tdw:QmbkyrrjFQ3Z2WiDfmesKpmeUhemaiqkWgwemovmVaTJfQ:demo.identifier.me:client:c9dd16b7-e079-43da-b0a9-36515e726c6f
         - did:tdw:QmbnQXj7DhWFrmgjDPKZCybn8fkKW7Wze57SQHpwsSQ7NZ:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
+    - pattern: "^(did:quarkid:.+)$"
+      url: ${uniresolver_web_driver_url_did_quarkid:http://driver-did-quarkid:8080/}
+      testIdentifiers:
+        - did:quarkid:EiA9SoiWkqduxPJcVk3UVoUGWm3WL2S6mox3qH3AWVCwMQ
     - pattern: "^(did:earthid:.+)$"
       url: ${uniresolver_web_driver_url_did_earthid:http://driver-did-earthid:8080/1.0/identifiers/}
       testIdentifiers:
         - did:earthid:testnet:6XXVvDkgXCjD6fy62dWaQdyk5368yE1QFdkDpoCFS1d1:0.0.5032772
+

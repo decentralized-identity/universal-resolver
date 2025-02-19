@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
-import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 import uniresolver.util.HttpBindingClientUtil;
 
@@ -28,11 +27,19 @@ public class ClientUniResolver implements UniResolver {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	private HttpClient httpClient = HttpClients.createDefault();
-	private URI resolveUri = URI.create("http://localhost:8080/1.0/identifiers");
-	private URI propertiesUri = URI.create("http://localhost:8080/1.0/properties");
-	private URI methodsUri = URI.create("http://localhost:8080/1.0/methods");
-	private URI testIdentifiersUri = URI.create("http://localhost:8080/1.0/testIdentifiers");
+	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
+	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers");
+	public static final URI DEFAULT_PROPERTIES_URI = URI.create("http://localhost:8080/1.0/properties");
+	public static final URI DEFAULT_METHODS_URI = URI.create("http://localhost:8080/1.0/methods");
+	public static final URI DEFAULT_TEST_IDENTIFIERS_URI = URI.create("http://localhost:8080/1.0/testIdentifiers");
+	public static final URI DEFAULT_TRAITS_URI = URI.create("http://localhost:8080/1.0/traits");
+
+	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
+	private URI resolveUri = DEFAULT_RESOLVE_URI;
+	private URI propertiesUri = DEFAULT_PROPERTIES_URI;
+	private URI methodsUri = DEFAULT_METHODS_URI;
+	private URI testIdentifiersUri = DEFAULT_TEST_IDENTIFIERS_URI;
+	private URI traitsUri = DEFAULT_TRAITS_URI;
 
 	public ClientUniResolver() {
 
@@ -47,12 +54,13 @@ public class ClientUniResolver implements UniResolver {
 		clientUniResolver.setPropertiesUri(URI.create(baseUri + "properties"));
 		clientUniResolver.setMethodsUri(URI.create(baseUri + "methods"));
 		clientUniResolver.setTestIdentifiersUri(URI.create(baseUri + "testIdentifiers"));
+		clientUniResolver.setTraitsUri(URI.create(baseUri + "traits"));
 
 		return clientUniResolver;
 	}
 
 	@Override
-	public ResolveRepresentationResult resolveRepresentation(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
+	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 
 		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
 
@@ -83,7 +91,7 @@ public class ClientUniResolver implements UniResolver {
 
 		// execute HTTP request and read response
 
-		ResolveRepresentationResult resolveRepresentationResult = null;
+		ResolveResult resolveResult = null;
 
 		if (log.isDebugEnabled()) log.debug("Request for DID " + didString + " to " + uriString + " with Accept: header " + acceptMediaTypesString);
 
@@ -108,29 +116,29 @@ public class ClientUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Response HTTP body from " + uriString + ": " + httpBodyString);
 
-			if ((httpContentType != null && ResolveResult.isResolveResultMediaType(httpContentType)) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString)) {
-				resolveRepresentationResult = HttpBindingClientUtil.fromHttpBodyResolveRepresentationResult(httpBodyString, httpContentType);
+			if (httpContentType != null && (ResolveResult.isMediaType(httpContentType) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString))) {
+				resolveResult = HttpBindingClientUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
-			if (httpStatusCode == 404 && resolveRepresentationResult == null) {
+			if (httpStatusCode == 404 && resolveResult == null) {
 				throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode == 406 && resolveRepresentationResult == null) {
+			if (httpStatusCode == 406 && resolveResult == null) {
 				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode != 200 && resolveRepresentationResult == null) {
+			if (httpStatusCode != 200 && resolveResult == null) {
 				throw new ResolutionException(ResolutionException.ERROR_INTERNALERROR, "Cannot retrieve RESOLVE result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
-			if (resolveRepresentationResult != null && resolveRepresentationResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn(resolveRepresentationResult.getError() + " -> " + resolveRepresentationResult.getErrorMessage());
-				throw new ResolutionException(resolveRepresentationResult);
+			if (resolveResult != null && resolveResult.isErrorResult()) {
+				if (log.isWarnEnabled()) log.warn("Received RESOLVE result: " + resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
+				throw ResolutionException.fromResolveResult(resolveResult);
 			}
 
-			if (resolveRepresentationResult == null) {
-				resolveRepresentationResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
+			if (resolveResult == null) {
+				resolveResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
 			}
 		} catch (ResolutionException ex) {
 
@@ -140,11 +148,11 @@ public class ClientUniResolver implements UniResolver {
 			throw new ResolutionException("Cannot retrieve RESOLVE result for " + didString + " from " + uriString + ": " + ex.getMessage(), ex);
 		}
 
-		if (log.isDebugEnabled()) log.debug("Retrieved RESOLVE result for " + didString + " (" + uriString + "): " + resolveRepresentationResult);
+		if (log.isDebugEnabled()) log.debug("Retrieved RESOLVE result for " + didString + " (" + uriString + "): " + resolveResult);
 
 		// done
 
-		return resolveRepresentationResult.toResolveRepresentationResult(accept);
+		return resolveResult;
 	}
 
 	@Override
@@ -155,7 +163,7 @@ public class ClientUniResolver implements UniResolver {
 		String uriString = this.getPropertiesUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", UniResolver.PROPERTIES_MIME_TYPE);
+		httpGet.addHeader("Accept", UniResolver.PROPERTIES_MEDIA_TYPE);
 
 		// execute HTTP request
 
@@ -205,7 +213,7 @@ public class ClientUniResolver implements UniResolver {
 		String uriString = this.getMethodsUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", UniResolver.METHODS_MIME_TYPE);
+		httpGet.addHeader("Accept", UniResolver.METHODS_MEDIA_TYPE);
 
 		// execute HTTP request
 
@@ -255,7 +263,7 @@ public class ClientUniResolver implements UniResolver {
 		String uriString = this.getTestIdentifiersUri().toString();
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
-		httpGet.addHeader("Accept", UniResolver.TEST_IDENTIFIER_MIME_TYPE);
+		httpGet.addHeader("Accept", UniResolver.TEST_IDENTIFIER_MEDIA_TYPE);
 
 		// execute HTTP request
 
@@ -297,67 +305,113 @@ public class ClientUniResolver implements UniResolver {
 		return testIdentifiers;
 	}
 
+	@Override
+	public Map<String, Map<String, Object>> traits() throws ResolutionException {
+
+		// prepare HTTP request
+
+		String uriString = this.getTraitsUri().toString();
+
+		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		httpGet.addHeader("Accept", UniResolver.TRAITS_MEDIA_TYPE);
+
+		// execute HTTP request
+
+		Map<String, Map<String, Object>> traits;
+
+		if (log.isDebugEnabled()) log.debug("Request to: " + uriString);
+
+		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
+
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+
+			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
+
+			HttpEntity httpEntity = httpResponse.getEntity();
+			String httpBody = EntityUtils.toString(httpEntity);
+			EntityUtils.consume(httpEntity);
+
+			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
+
+			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+
+				if (log.isWarnEnabled()) log.warn("Cannot retrieve TRAITS from " + uriString + ": " + httpBody);
+				throw new ResolutionException(httpBody);
+			}
+
+			traits = (Map<String, Map<String, Object>>) objectMapper.readValue(httpBody, LinkedHashMap.class);
+		} catch (IOException ex) {
+
+			throw new ResolutionException("Cannot retrieve TRAITS from " + uriString + ": " + ex.getMessage(), ex);
+		}
+
+		if (log.isDebugEnabled()) log.debug("Retrieved TRAITS (" + uriString + "): " + traits);
+
+		// done
+
+		return traits;
+	}
+
 	/*
 	 * Getters and setters
 	 */
 
 	public HttpClient getHttpClient() {
-
 		return this.httpClient;
 	}
 
 	public void setHttpClient(HttpClient httpClient) {
-
 		this.httpClient = httpClient;
 	}
 
 	public URI getResolveUri() {
-
 		return this.resolveUri;
 	}
 
 	public void setResolveUri(URI resolveUri) {
-
 		this.resolveUri = resolveUri;
 	}
 
 	public void setResolveUri(String resolveUri) {
-
 		this.resolveUri = URI.create(resolveUri);
 	}
 
 	public URI getPropertiesUri() {
-
 		return this.propertiesUri;
 	}
 
 	public void setPropertiesUri(URI propertiesUri) {
-
 		this.propertiesUri = propertiesUri;
 	}
 
 	public void setPropertiesUri(String propertiesUri) {
-
 		this.propertiesUri = URI.create(propertiesUri);
 	}
 
 	public URI getMethodsUri() {
-
 		return this.methodsUri;
 	}
 
 	public void setMethodsUri(URI methodsUri) {
-
 		this.methodsUri = methodsUri;
 	}
 
 	public URI getTestIdentifiersUri() {
-
 		return this.testIdentifiersUri;
 	}
 
 	public void setTestIdentifiersUri(URI testIdentifiersUri) {
-
 		this.testIdentifiersUri = testIdentifiersUri;
+	}
+
+	public URI getTraitsUri() {
+		return traitsUri;
+	}
+
+	public void setTraitsUri(URI traitsUri) {
+		this.traitsUri = traitsUri;
 	}
 }

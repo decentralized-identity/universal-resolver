@@ -2,26 +2,15 @@ package uniresolver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uniresolver.result.ResolveDataModelResult;
-import uniresolver.result.ResolveRepresentationResult;
 import uniresolver.result.ResolveResult;
 
 import java.util.Map;
 
 public class ResolutionException extends Exception {
 
-	/*
-	 * From DID Core
-	 */
-
 	public static final String ERROR_INVALIDDID = "invalidDid";
 	public static final String ERROR_NOTFOUND = "notFound";
 	public static final String ERROR_REPRESENTATIONNOTSUPPORTED = "representationNotSupported";
-
-	/*
-	 * From DID Resolution
-	 */
-
 	public static final String ERROR_METHODNOTSUPPORTED = "methodNotSupported";
 	public static final String ERROR_INTERNALERROR = "internalError";
 
@@ -30,28 +19,26 @@ public class ResolutionException extends Exception {
 	private final String error;
 	private final Map<String, Object> didResolutionMetadata;
 
-	private final ResolveResult resolveResult;
+	private ResolveResult resolveResult;
 
 	public ResolutionException(String error, String message, Map<String, Object> didResolutionMetadata, Throwable ex) {
 		super(message, ex);
 		this.error = error;
 		this.didResolutionMetadata = didResolutionMetadata;
-		this.resolveResult = null;
 	}
 
 	public ResolutionException(String error, String message, Map<String, Object> didResolutionMetadata) {
 		super(message);
 		this.error = error;
 		this.didResolutionMetadata = didResolutionMetadata;
-		this.resolveResult = null;
 	}
 
 	public ResolutionException(String error, String message, Throwable ex) {
-		this(error, message, null, ex);
+		this(error, message, (Map<String, Object>) null, ex);
 	}
 
 	public ResolutionException(String error, String message) {
-		this(error, message, null, null);
+		this(error, message, (Map<String, Object>) null);
 	}
 
 	public ResolutionException(String message, Throwable ex) {
@@ -66,53 +53,29 @@ public class ResolutionException extends Exception {
 		this(ex.getMessage(), ex);
 	}
 
-	public ResolutionException(ResolveResult resolveResult) {
-		super(resolveResult.getErrorMessage());
-		if (! resolveResult.isErrorResult()) throw new IllegalArgumentException("No error result: " + resolveResult);
-		this.error = resolveResult.getError();
-		this.didResolutionMetadata = resolveResult.getDidResolutionMetadata();
-		this.resolveResult = resolveResult;
+	public static ResolutionException fromResolveResult(ResolveResult resolveResult) {
+		if (resolveResult != null && resolveResult.isErrorResult()) {
+			ResolutionException resolutionException = new ResolutionException(resolveResult.getError(), resolveResult.getErrorMessage(), resolveResult.getDidResolutionMetadata());
+			resolutionException.resolveResult = resolveResult;
+			return resolutionException;
+		} else {
+			throw new IllegalArgumentException("No error result: " + resolveResult);
+		}
 	}
 
 	/*
 	 * Error methods
 	 */
 
-	public ResolveDataModelResult toErrorResult() {
-		if (this.getResolveResult() != null) {
-			try {
-				return this.getResolveResult().toResolveDataModelResult();
-			} catch (ResolutionException ex) {
-				throw new IllegalStateException(ex.getMessage(), ex);
-			}
-		} else {
-			ResolveDataModelResult resolveDataModelResult = ResolveDataModelResult.build();
-			if (this.getError() != null) resolveDataModelResult.setError(this.getError());
-			if (this.getMessage() != null) resolveDataModelResult.setErrorMessage(this.getMessage());
-			if (this.getDidResolutionMetadata() != null) resolveDataModelResult.getDidResolutionMetadata().putAll(this.getDidResolutionMetadata());
-			resolveDataModelResult.setDidDocument(null);
-			if (log.isDebugEnabled()) log.debug("Created error resolve result: " + resolveDataModelResult);
-			return resolveDataModelResult;
-		}
-	}
-
-	public ResolveRepresentationResult toErrorResult(String contentType) {
-		if (this.getResolveResult() != null) {
-			try {
-				return this.getResolveResult().toResolveRepresentationResult(contentType);
-			} catch (ResolutionException ex) {
-				throw new IllegalStateException(ex.getMessage(), ex);
-			}
-		} else {
-			ResolveRepresentationResult resolveRepresentationResult = ResolveRepresentationResult.build();
-			if (this.getError() != null) resolveRepresentationResult.setError(this.getError());
-			if (this.getMessage() != null) resolveRepresentationResult.setErrorMessage(this.getMessage());
-			if (this.getDidResolutionMetadata() != null) resolveRepresentationResult.setDidResolutionMetadata(this.getDidResolutionMetadata());
-			resolveRepresentationResult.setDidDocumentStream(new byte[0]);
-			resolveRepresentationResult.setContentType(contentType);
-			if (log.isDebugEnabled()) log.debug("Created error resolve result: " + resolveRepresentationResult);
-			return resolveRepresentationResult;
-		}
+	public ResolveResult toErrorResolveResult() {
+		if (this.resolveResult != null) return this.resolveResult;
+		ResolveResult resolveResult = ResolveResult.build();
+		if (this.getError() != null) resolveResult.setError(this.getError());
+		if (this.getMessage() != null) resolveResult.setErrorMessage(this.getMessage());
+		if (this.getDidResolutionMetadata() != null) resolveResult.getDidResolutionMetadata().putAll(this.getDidResolutionMetadata());
+		resolveResult.setDidDocument(null);
+		if (log.isDebugEnabled()) log.debug("Created error resolve result: " + resolveResult);
+		return resolveResult;
 	}
 
 	/*
@@ -125,9 +88,5 @@ public class ResolutionException extends Exception {
 
 	public Map<String, Object> getDidResolutionMetadata() {
 		return didResolutionMetadata;
-	}
-
-	public ResolveResult getResolveResult() {
-		return resolveResult;
 	}
 }

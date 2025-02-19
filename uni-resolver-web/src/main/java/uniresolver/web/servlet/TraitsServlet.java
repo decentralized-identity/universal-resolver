@@ -9,12 +9,11 @@ import uniresolver.UniResolver;
 import uniresolver.web.WebUniResolver;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
-public class TestIdentifiersServlet extends WebUniResolver {
+public class TraitsServlet extends WebUniResolver {
 
-	protected static final Logger log = LoggerFactory.getLogger(TestIdentifiersServlet.class);
+	protected static final Logger log = LoggerFactory.getLogger(TraitsServlet.class);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -30,13 +29,13 @@ public class TestIdentifiersServlet extends WebUniResolver {
 
 		// execute the request
 
-		Map<String, List<String>> testIdentifiers;
-		String testIdentifiersString;
+		Map<String, Map<String, Object>> traits;
+		String traitsString;
 
 		try {
 
-			testIdentifiers = this.testIdentifiers();
-			testIdentifiersString = testIdentifiers == null ? null : objectMapper.writeValueAsString(testIdentifiers);
+			traits = this.traits();
+			traitsString = traits == null ? null : objectMapper.writeValueAsString(traits);
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolver reported: " + ex.getMessage(), ex);
@@ -44,18 +43,18 @@ public class TestIdentifiersServlet extends WebUniResolver {
 			return;
 		}
 
-		if (log.isInfoEnabled()) log.info("Test identifiers: " + testIdentifiers);
+		if (log.isInfoEnabled()) log.info("Traits: " + traits);
 
 		// no result?
 
-		if (testIdentifiers == null) {
+		if (traits == null) {
 
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, "No test identifiers.");
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, "No traits.");
 			return;
 		}
 
 		// write result
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.TEST_IDENTIFIER_MEDIA_TYPE, testIdentifiersString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, UniResolver.TRAITS_MEDIA_TYPE, traitsString);
 	}
 }

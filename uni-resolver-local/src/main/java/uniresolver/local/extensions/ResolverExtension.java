@@ -27,14 +27,14 @@ public interface ResolverExtension {
 
 	@ExtensionStage("beforeResolve")
 	interface BeforeResolveResolverExtension extends ResolverExtension {
-		default ExtensionStatus beforeResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, Map<String, Object> executionState, LocalUniResolver localUniResolver) throws ResolutionException {
+		default ExtensionStatus beforeResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, Map<String, Object> executionState, LocalUniResolver localUniResolver) throws ResolutionException {
 			return null;
 		}
 	}
 
 	@ExtensionStage("afterResolve")
 	interface AfterResolveResolverExtension extends ResolverExtension {
-		default ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, boolean resolveRepresentation, Map<String, Object> executionState, LocalUniResolver localUniResolver) throws ResolutionException {
+		default ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, Map<String, Object> executionState, LocalUniResolver localUniResolver) throws ResolutionException {
 			return null;
 		}
 	}

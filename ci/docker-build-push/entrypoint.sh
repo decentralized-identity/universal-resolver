@@ -31,7 +31,7 @@ fi
 
 if [ -z "${DOCKER_FILE}" ]
 then
-   echo "No Dockerfile spectified. Using default file: Dockerfile"
+   echo "No Dockerfile specified. Using default file: Dockerfile"
    DOCKER_FILE=Dockerfile
 fi
 

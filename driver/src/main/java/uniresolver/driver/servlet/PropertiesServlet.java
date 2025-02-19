@@ -19,7 +19,6 @@ public class PropertiesServlet extends HttpServlet implements Servlet {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	public PropertiesServlet() {
-
 		super();
 	}
 
@@ -39,11 +38,9 @@ public class PropertiesServlet extends HttpServlet implements Servlet {
 		String propertiesString;
 
 		try {
-
 			properties = InitServlet.getDriver() == null ? null : InitServlet.getDriver().properties();
 			propertiesString = properties == null ? null : objectMapper.writeValueAsString(properties);
 		} catch (Exception ex) {
-
 			if (log.isWarnEnabled()) log.warn("Properties problem: " + ex.getMessage(), ex);
 			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Properties problem: " + ex.getMessage());
 			return;
@@ -54,13 +51,12 @@ public class PropertiesServlet extends HttpServlet implements Servlet {
 		// no properties?
 
 		if (properties == null) {
-
 			ServletUtil.sendResponse(response, HttpServletResponse.SC_NOT_FOUND, "No properties.");
 			return;
 		}
 
 		// write properties
 
-		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, Driver.PROPERTIES_MIME_TYPE, propertiesString);
+		ServletUtil.sendResponse(response, HttpServletResponse.SC_OK, Driver.PROPERTIES_MEDIA_TYPE, propertiesString);
 	}
 }
