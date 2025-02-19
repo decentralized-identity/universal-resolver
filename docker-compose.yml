@@ -386,7 +386,7 @@ services:
     ports:
       - "8154:8080"
   driver-did-earthid:
-    image: earthid/services:driver-did-earthid-v1.0
+    image: earthid/driver-did-earthid-v1.0
     environment:
       baseUrl: "https://did.myearth.id/v2/resolve"
     ports:
