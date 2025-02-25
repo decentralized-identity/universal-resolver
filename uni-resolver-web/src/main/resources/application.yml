@@ -357,3 +357,8 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_quarkid:http://driver-did-quarkid:8080/}
       testIdentifiers:
         - did:quarkid:EiA9SoiWkqduxPJcVk3UVoUGWm3WL2S6mox3qH3AWVCwMQ
+    - pattern: "^(did:iden3:.+)$"
+      url: ${uniresolver_web_driver_url_did_iden3:http://driver-did-iden3:8080/}
+      propertiesEndpoint: "true"
+      testIdentifiers:
+        - did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
