@@ -93,6 +93,8 @@ You should then be able to resolve identifiers locally using simple `curl` reque
  	curl -X GET http://localhost:8080/1.0/identifiers/did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:quarkid:EiBJ_1z9_OtvrfSgUNnBIs808vsRq7dQCKMP4LuSUosdXQ
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
+	curl -X GET 'http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw?gist=f12d4f6fddeed78cb8b1faf1c6f4f171a590c1b05c484118a09847f5caa74d03'
+	curl -X GET 'http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw?state=7a1a45d22b686cf1bd2f9fbecbed38b725a555e6d8ad68d3780feda9124b1a13'
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
 	curl -H "Accept: application/did+ld+json" https://dev.uniresolver.io/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw

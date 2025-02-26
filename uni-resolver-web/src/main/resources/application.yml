@@ -360,5 +360,6 @@ uniresolver:
     - pattern: "^(did:iden3:.+)$"
       url: ${uniresolver_web_driver_url_did_iden3:http://driver-did-iden3:8080/}
       propertiesEndpoint: "true"
+      supportsDereference: true
       testIdentifiers:
         - did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
