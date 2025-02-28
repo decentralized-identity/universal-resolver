@@ -357,6 +357,10 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_quarkid:http://driver-did-quarkid:8080/}
       testIdentifiers:
         - did:quarkid:EiA9SoiWkqduxPJcVk3UVoUGWm3WL2S6mox3qH3AWVCwMQ
+    - pattern: "^(did:zkjm:.+)$"
+      url: ${uniresolver_web_driver_url_did_zkjm:http://driver-did-zkjm:8080}
+      testIdentifiers:
+        - "did:zkjm:mainnet:d90e52b36a2e2306dc873ec0f7a94351"
     - pattern: "^(did:iden3:.+)$"
       url: ${uniresolver_web_driver_url_did_iden3:http://driver-did-iden3:8080/}
       propertiesEndpoint: "true"

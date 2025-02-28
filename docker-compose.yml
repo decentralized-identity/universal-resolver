@@ -388,3 +388,7 @@ services:
       NODE_1_PATTERN: ${uniresolver_driver_did_quarkid_node_pattern} #did:quarkid
       NODE_1_BEHAVIOR: ${uniresolver_driver_did_quarkid_node_behavior} #1
       UV_THREADPOOL_SIZE: ${uniresolver_driver_did_quarkid_node_threadpool_size} #240000
+  driver-did-zkjm:
+    image: saishibu38380/uni-resolver-driver-zkjm:v1.0.0
+    ports:
+      - "8081:8080"
