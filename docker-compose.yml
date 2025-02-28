@@ -75,6 +75,8 @@ services:
       uniresolver_web_driver_url_did_webs:
       uniresolver_web_driver_url_did_content:
       uniresolver_web_driver_url_did_prism:
+      uniresolver_web_driver_url_did_iden3:
+
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
     environment:
@@ -364,6 +366,10 @@ services:
       IOTA_CUSTOM_NETWORK_NAME: ${uniresolver_driver_did_iota_customNetworkName}
       IOTA_CUSTOM_NODE_ENDPOINT: ${uniresolver_driver_did_iota_customNodeEndpoint}
       IOTA_CUSTOM_NODE_AUTH_TOKEN: ${uniresolver_driver_did_iota_customNodeAuthToken}
+  driver-did-iden3:
+    image: ghcr.io/iden3/driver-did-iden3:v0.0.8
+    ports:
+      - "8152:8080"
   driver-did-prism:
     image: ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism:0.2
     ports:

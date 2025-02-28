@@ -361,4 +361,9 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_zkjm:http://driver-did-zkjm:8080}
       testIdentifiers:
         - "did:zkjm:mainnet:d90e52b36a2e2306dc873ec0f7a94351"
-  
+    - pattern: "^(did:iden3:.+)$"
+      url: ${uniresolver_web_driver_url_did_iden3:http://driver-did-iden3:8080/}
+      propertiesEndpoint: "true"
+      supportsDereference: true
+      testIdentifiers:
+        - did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
