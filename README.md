@@ -92,6 +92,13 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:prism:c36cd59bbc62dee1925e1343a8fed051416e417116d6169d060746f1e6816cd4
  	curl -X GET http://localhost:8080/1.0/identifiers/did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:quarkid:EiBJ_1z9_OtvrfSgUNnBIs808vsRq7dQCKMP4LuSUosdXQ
+
+	curl -X GET http://localhost:8080/1.0/identifiers/did:zkjm:mainnet:d90e52b36a2e2306dc873ec0f7a94351
+
+	curl -X GET http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
+	curl -X GET 'http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw?gist=f12d4f6fddeed78cb8b1faf1c6f4f171a590c1b05c484118a09847f5caa74d03'
+	curl -X GET 'http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw?state=7a1a45d22b686cf1bd2f9fbecbed38b725a555e6d8ad68d3780feda9124b1a13'
+
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
 	curl -H "Accept: application/did+ld+json" https://dev.uniresolver.io/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
@@ -180,6 +187,10 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-prism](https://github.com/FabioPinheiro/uni-resolver-driver-did-prism)                           | 0.2            | [1.0](https://github.com/input-output-hk/prism-did-method-spec)                                                   | [ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism](https://github.com/FabioPinheiro/uni-resolver-driver-did-prism/pkgs/container/uni-resolver-driver-did-prism) | PRISM DID                                                                           |
 | [did-webvh](https://github.com/brianorwhatever/uni-resolver-driver-did-webvh)                         	| 0.5            | [0.5](https://identity.foundation/didwebvh/)                                                   		     | [uni-resolver-driver-did-webvh](ghcr.io/brianorwhatever/uni-resolver-driver-did-webvh:main) 				  | DID WEBVH - Verifiable History                                                                       |
 | [did-quarkid](https://github.com/ssi-quarkid/api-proxy)                         	| 1.0            | 1.0                                             		     | [uni-resolver-driver-did-quarkid](extrimianpublic.azurecr.io/modena-resolver:metadataSupport) 				  | QuarkID
+
+| [did-zkjm](https://github.com/JupiterMetaZK/.github)                         	| 1.0.0            | 1.0.0                                             		     | [uni-resolver-driver-did-zkjm](https://hub.docker.com/r/saishibu38380/uni-resolver-driver-zkjm) 				  | ZKJM DID                                                                            |
+| [did-iden3](https://github.com/iden3/driver-did-iden3)              | 0.0.8          | [1.0.0](https://github.com/iden3/did-iden3/blob/main/did-iden3-method.md)                                         | [ghcr.io/iden3/driver-did-iden3:v0.0.8](https://github.com/iden3/driver-did-iden3/pkgs/container/driver-did-iden3)                                                                          | Iden3 DID    
+
 
 ## More Information
 
