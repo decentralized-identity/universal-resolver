@@ -75,40 +75,39 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		// invoke the driver
 
-		Result result;
+		ResolveResult resolveResult;
 
 		try {
-			result = InitServlet.getDriver().resolve(DID.fromString(didString), resolutionOptions);
-			if (result == null) throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "Driver: No resolve result for " + didString);
+			resolveResult = InitServlet.getDriver().resolve(DID.fromString(didString), resolutionOptions);
+			if (resolveResult == null) throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "Driver: No resolve result for " + didString);
 		} catch (Exception ex) {
 			if (log.isWarnEnabled()) log.warn("Driver: Resolve problem for " + didString + ": " + ex.getMessage(), ex);
 			if (! (ex instanceof ResolutionException)) ex = new ResolutionException("Driver: Resolve problem for " + didString + ": " + ex.getMessage());
-			result = ((ResolutionException) ex).toErrorResolveResult();
+			resolveResult = ((ResolutionException) ex).toErrorResolveResult();
 		}
 
-		if (log.isInfoEnabled()) log.info("Driver: Result for " + didString + ": " + result);
+		if (log.isInfoEnabled()) log.info("Driver: Result for " + didString + ": " + resolveResult);
 
 		// write resolve result
 
 		for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
-			int httpStatusCode = HttpBindingServerUtil.httpStatusCodeForResult(result);
+			int httpStatusCode = HttpBindingServerUtil.httpStatusCodeForResult(resolveResult);
 
-			if (result instanceof ResolveResult && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
+			if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
 				if (log.isDebugEnabled()) log.debug("Driver: Supporting HTTP media type " + httpAcceptMediaType + " via default resolve result content type " + ResolveResult.MEDIA_TYPE);
 				ServletUtil.sendResponse(
 						response,
 						httpStatusCode,
 						ResolveResult.MEDIA_TYPE,
-						HttpBindingServerUtil.httpBodyForResult(result));
+						HttpBindingServerUtil.httpBodyForResult(resolveResult));
 				return;
 			}
 
-
 			// determine representation media type
 
-			if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, result.getContentType())) {
-				if (log.isDebugEnabled()) log.debug("Driver: Supporting HTTP media type " + httpAcceptMediaType + " via content type " + result.getContentType());
+			if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, resolveResult.getContentType())) {
+				if (log.isDebugEnabled()) log.debug("Driver: Supporting HTTP media type " + httpAcceptMediaType + " via content type " + resolveResult.getContentType());
 			} else {
 				if (log.isDebugEnabled()) log.debug("Driver: Not supporting HTTP media type " + httpAcceptMediaType);
 				continue;
@@ -117,8 +116,8 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 			ServletUtil.sendResponse(
 					response,
 					httpStatusCode,
-					result.getContentType(),
-					result.getFunctionContent()
+					resolveResult.getContentType(),
+					resolveResult.getFunctionContent()
 			);
 			return;
 		}
