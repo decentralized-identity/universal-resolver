@@ -36,6 +36,7 @@ public class LocalUniResolverConfigurator {
                 String url = jsonDriver.containsKey("url") ? (String) jsonDriver.get("url") : null;
                 String propertiesEndpoint = jsonDriver.containsKey("propertiesEndpoint") ? (String) jsonDriver.get("propertiesEndpoint") : null;
                 String supportsDereference = jsonDriver.containsKey("supportsDereference") ? (String) jsonDriver.get("supportsDereference") : null;
+                String acceptHeaderValue = jsonDriver.containsKey("acceptHeaderValue") ? (String) jsonDriver.get("acceptHeaderValue") : null;
                 List<String> testIdentifiers = jsonDriver.containsKey("testIdentifiers") ? (List<String>) jsonDriver.get("testIdentifiers") : null;
                 Map<String, Object> traits = jsonDriver.containsKey("traits") ? (Map<String, Object>) jsonDriver.get("traits") : null;
 
@@ -57,6 +58,7 @@ public class LocalUniResolverConfigurator {
                 }
 
                 if (supportsDereference != null) driver.setSupportsDereference(Boolean.parseBoolean(supportsDereference));
+                if (acceptHeaderValue != null) driver.setAcceptHeaderValue(acceptHeaderValue);
                 if (testIdentifiers != null) driver.setTestIdentifiers(testIdentifiers);
                 if (traits != null) driver.setTraits(traits);
 
