@@ -178,6 +178,7 @@ uniresolver:
         - did:lit:AEZ87t1bi5bRxmVh3ksMUi
     - pattern: "^(did:ebsi:.+)$"
       url: ${uniresolver_web_driver_url_did_ebsi:https://api-pilot.ebsi.eu/did-registry/v5/identifiers/$1}
+      acceptHeaderValue: application/did+ld+json
       testIdentifiers:
         - did:ebsi:zjUnExsyyweQ9p4cy3nvrVc
         - did:ebsi:z24q53pA3pjcnoukP6fD5jXt
@@ -197,7 +198,7 @@ uniresolver:
         - did:key:zQ3shokFTS3brHcDQrn82RUDfCZESWL1ZdCEJwekUDPQiYBme
         - did:key:z4MXj1wBzi9jUstyPMS4jQqB6KdJaiatPkAtVtGc6bQEQEEsKTic4G7Rou3iBf9vPmT5dbkm9qsZsuVNjq8HCuW1w24nhBFGkRE4cd2Uf2tfrB3N7h4mnyPp1BF3ZttHTYv3DLUPi1zMdkULiow3M1GfXkoC6DoxDUm1jmN6GBj22SjVsr6dxezRVQc7aj9TxE7JLbMH1wh5X3kA58H3DFW8rnYMakFGbca5CB2Jf6CnGQZmL7o5uJAdTwXfy2iiiyPxXEGerMhHwhjTA1mKYobyk2CpeEcmvynADfNZ5MBvcCS7m3XkFCMNUYBS9NQ3fze6vMSUPsNa6GVYmKx2x6JrdEjCk3qRMMmyjnjCMfR4pXbRMZa3i
         - did:pkh:tz:tz2BFTyPeYRzxd5aiBchbXN3WCZhx7BqbMBq
-    - pattern: "^did:(?:key:(?:zDna|z82L|z2J9|z5Tc|z3tE|zUC7)).+$"
+    - pattern: "^did:(?:key:(?:zDna|z82L|z2J9|z5Tc|z3tE|zUC7|z2dm|zmYg|zhQR)).+$"
       url: ${uniresolver_web_driver_url_did_key:http://driver-did-key:8080/1.0/identifiers/$1}
       testIdentifiers:
         - did:key:zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169
@@ -300,11 +301,6 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_bid:http://driver-did-bid:8080/}
       testIdentifiers:
         - did:bid:ef214PmkhKndUcArDQPgD5J4fFVwqJFPt
-    - pattern: "^(did:polygonid:.+)$"
-      url: ${uniresolver_web_driver_url_did_polygonid:http://driver-did-polygonid:8080/}
-      propertiesEndpoint: "true"
-      testIdentifiers:
-        - did:polygonid:polygon:amoy:2qZBvRQPTZwYEKDVT3xY8W8zXvznqykyeqjSmXdz4U
     - pattern: "^(did:pdc:.+)$"
       url: ${uniresolver_web_driver_url_did_pdc:http://driver-did-pdc:8080/}
       testIdentifiers:
@@ -348,27 +344,32 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_iota:http://driver-did-iota:8080/}
       testIdentifiers:
         - did:iota:0xf4d6f08f5a1b80dd578da7dc1b49c886d580acd4cf7d48119dfeb82b538ad88a
-    - pattern: "^(did:iden3:.+)$"
-      url: ${uniresolver_web_driver_url_did_iden3:http://driver-did-iden3:8080/}
-      propertiesEndpoint: "true"
-      testIdentifiers:
-        - did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
     - pattern: "^(did:prism:.+)$"
       url: ${uniresolver_web_driver_url_did_prism:http://driver-did-prism:9090/}
       testIdentifiers:
         - did:prism:c36cd59bbc62dee1925e1343a8fed051416e417116d6169d060746f1e6816cd4
         - did:prism:0d8481c41b654794f02922601f84811763c655dcfc376acf841eb996846d5e68 # deactivated
         - did:prism:52e163e8e53466b808e53df870bccd0a066aa4d05af9b689f5c73edcbe23d625 # with updates
-    - pattern: "^(did:tdw:.+)$"
-      url: ${uniresolver_web_driver_url_did_tdw:http://driver-did-tdw:8080/}
+    - pattern: "^(did:webvh:.+)$"
+      url: ${uniresolver_web_driver_url_did_webvh:http://driver-did-webvh:8080/}
       testIdentifiers:
-        - did:tdw:QmbnQXj7DhWFrmgjDPKZCybn8fkKW7Wze57SQHpwsSQ7NZ:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
+        - did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
     - pattern: "^(did:quarkid:.+)$"
       url: ${uniresolver_web_driver_url_did_quarkid:http://driver-did-quarkid:8080/}
       testIdentifiers:
         - did:quarkid:EiA9SoiWkqduxPJcVk3UVoUGWm3WL2S6mox3qH3AWVCwMQ
+    - pattern: "^(did:zkjm:.+)$"
+      url: ${uniresolver_web_driver_url_did_zkjm:http://driver-did-zkjm:8080}
+      testIdentifiers:
+        - "did:zkjm:mainnet:d90e52b36a2e2306dc873ec0f7a94351"
+    - pattern: "^(did:iden3:.+)$"
+      url: ${uniresolver_web_driver_url_did_iden3:http://driver-did-iden3:8080/}
+      propertiesEndpoint: "true"
+      supportsDereference: true
+      testIdentifiers:
+        - did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
     - pattern: "^(did:earthid:.+)$"
       url: ${uniresolver_web_driver_url_did_earthid:http://driver-did-earthid:8080/}
       testIdentifiers:
         - did:earthid:mainnet:FFCdRmBDB57c47abbXJfxUpFRiAnJ3HTUJ7P81AMvRZb:0.0.8799732
-
+        

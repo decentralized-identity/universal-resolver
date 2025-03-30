@@ -55,16 +55,18 @@ public class DIDDocumentExtension implements DereferencerExtension.DereferencePr
 
         if (log.isDebugEnabled()) log.debug("Dereferencing DID URL that has no path (assuming DID document): " + didUrlWithoutFragment);
 
+        RepresentationProducer representationProducer;
         byte[] content;
         try {
-            content = RepresentationProducer.produce(resolveResult.getDidDocument(), accept);
+            representationProducer = Representations.getProducer(accept);
+            content = representationProducer.produce(resolveResult.getDidDocument());
         } catch (IOException ex) {
             throw new DereferencingException(DereferencingException.ERROR_CONTENTTYPENOTSUPPORTED, "Cannot produce DID document: " + ex.getMessage(), ex);
         }
 
         // set dereference result
 
-        dereferenceResult.setContentType(resolveResult.getContentType());
+        dereferenceResult.setContentType(representationProducer.getMediaType());
         dereferenceResult.setContent(content);
         dereferenceResult.setContentMetadata(resolveResult.getDidDocumentMetadata());
 

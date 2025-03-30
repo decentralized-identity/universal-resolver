@@ -108,6 +108,7 @@ public class WebAppConfig {
 			String url = driverConfig.getUrl();
 			String propertiesEndpoint = driverConfig.getPropertiesEndpoint();
 			String supportsDereference = driverConfig.getSupportsDereference();
+			String acceptHeaderValue = driverConfig.getAcceptHeaderValue();
 			List<String> testIdentifiers = driverConfig.getTestIdentifiers();
 			Map<String, Object> traits = driverConfig.getTraits();
 
@@ -129,6 +130,7 @@ public class WebAppConfig {
 			}
 
 			if (supportsDereference != null) driver.setSupportsDereference(Boolean.parseBoolean(supportsDereference));
+			if (acceptHeaderValue != null) driver.setAcceptHeaderValue(acceptHeaderValue);
 			if (testIdentifiers != null) driver.setTestIdentifiers(testIdentifiers);
 			if (traits != null) driver.setTraits(traits);
 

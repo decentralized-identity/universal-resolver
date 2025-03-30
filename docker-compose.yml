@@ -68,7 +68,6 @@ services:
       uniresolver_web_driver_url_did_iid:
       uniresolver_web_driver_url_did_evan:
       uniresolver_web_driver_url_did_bid:
-      uniresolver_web_driver_url_did_polygonid:
       uniresolver_web_driver_url_did_pdc:
       uniresolver_web_driver_url_did_tys:
       uniresolver_web_driver_url_did_plc:
@@ -76,8 +75,8 @@ services:
       uniresolver_web_driver_url_did_kerri:
       uniresolver_web_driver_url_did_webs:
       uniresolver_web_driver_url_did_content:
-      uniresolver_web_driver_url_did_iden3:
       uniresolver_web_driver_url_did_prism:
+      uniresolver_web_driver_url_did_iden3:
       uniresolver_web_driver_url_did_earthid:
 
   driver-did-btcr:
@@ -273,7 +272,7 @@ services:
     ports:
       - "8130:8080"
   cheqd-did-driver:
-    image: ghcr.io/cheqd/did-resolver:3.6.1
+    image: ghcr.io/cheqd/did-resolver:3.7.6
     ports:
       - "8131:8080"
     environment:
@@ -319,10 +318,6 @@ services:
     image: caictdevelop/driver-did-bid:latest
     ports:
       - "8139:8080"
-  driver-did-polygonid:
-    image: ghcr.io/iden3/driver-did-iden3:v0.0.4
-    ports:
-      - "8141:8080"
   driver-did-pdc:
     image: w744219971/driver-did-pdc:latest
     ports:
@@ -344,7 +339,7 @@ services:
     ports:
       - "8146:7678"
   driver-did-webs:
-    image: gleif/did-webs-resolver-service:latest
+    image: gleif/did-webs-resolver-service:iiw37
     ports:
       - "8147:7677"
   driver-did-content:
@@ -374,15 +369,15 @@ services:
       IOTA_CUSTOM_NODE_ENDPOINT: ${uniresolver_driver_did_iota_customNodeEndpoint}
       IOTA_CUSTOM_NODE_AUTH_TOKEN: ${uniresolver_driver_did_iota_customNodeAuthToken}
   driver-did-iden3:
-    image: ghcr.io/iden3/driver-did-iden3:v0.0.4
+    image: ghcr.io/iden3/driver-did-iden3:v0.0.8
     ports:
       - "8152:8080"
   driver-did-prism:
-    image: ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism:0.2
+    image: ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism:1.1
     ports:
       - "8153:9090"
-  driver-did-tdw:
-    image: brianrichter/uni-resolver-driver-did-tdw:0.4
+  driver-did-webvh:
+    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:main
     ports:
       - "8154:8080"
   driver-did-quarkid:
@@ -401,3 +396,7 @@ services:
       baseUrl: "https://did.myearth.id/v2/resolve"
     ports:
       - "8156:8080"
+  driver-did-zkjm:
+    image: saishibu38380/uni-resolver-driver-zkjm:v1.0.0
+    ports:
+      - "8081:8080"
