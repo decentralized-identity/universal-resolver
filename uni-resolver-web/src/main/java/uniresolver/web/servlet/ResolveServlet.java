@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.util.MimeTypeUtils;
 import uniresolver.DereferencingException;
 import uniresolver.ResolutionException;
 import uniresolver.driver.util.HttpBindingServerUtil;
@@ -84,7 +85,7 @@ public class ResolveServlet extends WebUniResolver {
 		if (log.isInfoEnabled()) log.info("Incoming Accept: header string: " + httpAcceptHeader);
 
 		List<MediaType> httpAcceptMediaTypes = httpAcceptHeader == null ? null : MediaType.parseMediaTypes(httpAcceptHeader);
-		if (httpAcceptMediaTypes != null) MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
+		if (httpAcceptMediaTypes != null) MimeTypeUtils.sortBySpecificity(httpAcceptMediaTypes);
 		if (httpAcceptHeader != null) options.put("_http_accept", httpAcceptMediaTypes);
 
 		if (! options.containsKey("accept")) {
