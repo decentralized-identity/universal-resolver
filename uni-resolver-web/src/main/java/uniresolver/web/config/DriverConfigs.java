@@ -26,6 +26,7 @@ public class DriverConfigs {
 		private String pattern;
 		private String url;
 		private String propertiesEndpoint;
+		private String supportsOptions;
 		private String supportsDereference;
 		private String acceptHeaderValue;
 		private List<String> testIdentifiers;
@@ -53,6 +54,14 @@ public class DriverConfigs {
 
 		public void setPropertiesEndpoint(String value) {
 			this.propertiesEndpoint = value;
+		}
+
+		public String getSupportsOptions() {
+			return supportsOptions;
+		}
+
+		public void setSupportsOptions(String supportsOptions) {
+			this.supportsOptions = supportsOptions;
 		}
 
 		public String getSupportsDereference() {
@@ -93,8 +102,9 @@ public class DriverConfigs {
 					"pattern='" + pattern + '\'' +
 					", url='" + url + '\'' +
 					", propertiesEndpoint='" + propertiesEndpoint + '\'' +
-					", acceptHeaderValue='" + acceptHeaderValue + '\'' +
+					", supportsOptions='" + supportsOptions + '\'' +
 					", supportsDereference='" + supportsDereference + '\'' +
+					", acceptHeaderValue='" + acceptHeaderValue + '\'' +
 					", testIdentifiers=" + testIdentifiers +
 					", traits=" + traits +
 					'}';
