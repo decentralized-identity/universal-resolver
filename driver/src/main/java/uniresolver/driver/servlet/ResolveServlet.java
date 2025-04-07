@@ -72,6 +72,8 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 				} else {
 					options = objectMapper.readValue(URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8), LinkedHashMap.class);
 				}
+			} else if (request.getQueryString() != null) {
+				options.putAll(objectMapper.readValue(request.getQueryString(), Map.class));
 			}
 		} else {
 			identifier = path;
