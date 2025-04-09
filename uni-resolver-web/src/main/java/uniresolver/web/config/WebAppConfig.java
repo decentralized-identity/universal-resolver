@@ -107,6 +107,7 @@ public class WebAppConfig {
 			String pattern = driverConfig.getPattern();
 			String url = driverConfig.getUrl();
 			String propertiesEndpoint = driverConfig.getPropertiesEndpoint();
+			String supportsOptions = driverConfig.getSupportsOptions();
 			String supportsDereference = driverConfig.getSupportsDereference();
 			String acceptHeaderValue = driverConfig.getAcceptHeaderValue();
 			List<String> testIdentifiers = driverConfig.getTestIdentifiers();
@@ -129,6 +130,7 @@ public class WebAppConfig {
 				if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(normalizeUri((url + servletMappings.getProperties()), false));
 			}
 
+			if (supportsOptions != null) driver.setSupportsOptions(Boolean.parseBoolean(supportsOptions));
 			if (supportsDereference != null) driver.setSupportsDereference(Boolean.parseBoolean(supportsDereference));
 			if (acceptHeaderValue != null) driver.setAcceptHeaderValue(acceptHeaderValue);
 			if (testIdentifiers != null) driver.setTestIdentifiers(testIdentifiers);

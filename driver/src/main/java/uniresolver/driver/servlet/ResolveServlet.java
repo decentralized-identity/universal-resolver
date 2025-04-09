@@ -1,6 +1,10 @@
 package uniresolver.driver.servlet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DID;
+import foundation.identity.did.DIDURL;
+import foundation.identity.did.representations.Representations;
+import foundation.identity.did.representations.production.RepresentationProducer;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,27 +12,25 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.util.MimeTypeUtils;
+import uniresolver.DereferencingException;
 import uniresolver.ResolutionException;
 import uniresolver.driver.util.HttpBindingServerUtil;
 import uniresolver.driver.util.MediaTypeUtil;
+import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
 import uniresolver.result.Result;
 
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ResolveServlet extends HttpServlet implements Servlet {
 
 	private static final Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
-	public ResolveServlet() {
-
-		super();
-	}
+	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -42,85 +44,185 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 		String servletPath = request.getServletPath();
 		String requestPath = request.getRequestURI();
 
-		String identifier = requestPath.substring(contextPath.length() + servletPath.length());
-		if (identifier.startsWith("/")) identifier = identifier.substring(1);
-		identifier = URLDecoder.decode(identifier, StandardCharsets.UTF_8);
+		if (log.isDebugEnabled()) log.debug("Incoming request: " + requestPath);
 
-		if (log.isInfoEnabled()) log.info("Driver: Incoming resolve request for identifier: " + identifier);
+		String path = requestPath.substring(contextPath.length() + servletPath.length());
+		if (path.startsWith("/")) path = path.substring(1);
 
-		if (identifier == null) {
-
-			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Driver: No identifier found in resolve request.");
+		if (path.isEmpty()) {
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "No identifier found in request.");
 			return;
 		}
 
-		// assume identifier is a DID
+		// parse request
 
-		String didString = identifier;
+		String identifier;
+		Map<String, Object> options = new LinkedHashMap<>();
+		boolean isResolve;
 
-		// prepare resolution options
+		if (path.startsWith("did%3A")) {
+			identifier = URLDecoder.decode(path, StandardCharsets.UTF_8);
+			if (request.getParameterMap() != null) {
+				for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
+					String parameterName = e.nextElement();
+					String parameterValue = request.getParameter(parameterName);
+					options.put(parameterName, parameterValue);
+				}
+			}
+		} else {
+			identifier = path;
+			if (request.getQueryString() != null) identifier += "?" + request.getQueryString();
+		}
+		isResolve = (! identifier.contains("/")) && (! identifier.contains("?")) && (! identifier.contains("#"));
+
+		if (log.isInfoEnabled()) log.info("Incoming identifier: " + identifier + " (isResolve=" + isResolve + "), incoming options: " + options);
+
+		// prepare options
+
+		String httpXConfigHeader = request.getHeader("X-Config");
+		if (log.isInfoEnabled()) log.info("Incoming X-Config: header string: " + httpXConfigHeader);
+		Map<String, Object> httpXConfigHeaderMap = httpXConfigHeader == null ? null : (Map<String, Object>) objectMapper.readValue(httpXConfigHeader, Map.class);
+		if (httpXConfigHeaderMap != null) options.put("_http_x_config", httpXConfigHeaderMap);
 
 		String httpAcceptHeader = request.getHeader("Accept");
-		if (log.isInfoEnabled()) log.info("Driver: Incoming Accept: header string: " + httpAcceptHeader);
+		if (log.isInfoEnabled()) log.info("Incoming Accept: header string: " + httpAcceptHeader);
 
-		List<MediaType> httpAcceptMediaTypes = MediaType.parseMediaTypes(httpAcceptHeader != null ? httpAcceptHeader : ResolveResult.MEDIA_TYPE);
-		MediaType.sortBySpecificityAndQuality(httpAcceptMediaTypes);
+		List<MediaType> httpAcceptMediaTypes = httpAcceptHeader == null ? null : MediaType.parseMediaTypes(httpAcceptHeader);
+		if (httpAcceptMediaTypes != null) MimeTypeUtils.sortBySpecificity(httpAcceptMediaTypes);
+		if (httpAcceptHeader != null) options.put("_http_accept", httpAcceptMediaTypes);
 
-		String accept = HttpBindingServerUtil.resolveAcceptForHttpAccepts(httpAcceptMediaTypes);
-
-		Map<String, Object> resolutionOptions = new HashMap<>();
-		resolutionOptions.put("accept", accept);
-
-		if (log.isDebugEnabled()) log.debug("Driver: Using resolution options: " + resolutionOptions);
-
-		// invoke the driver
-
-		ResolveResult resolveResult;
-
-		try {
-			resolveResult = InitServlet.getDriver().resolve(DID.fromString(didString), resolutionOptions);
-			if (resolveResult == null) throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "Driver: No resolve result for " + didString);
-		} catch (Exception ex) {
-			if (log.isWarnEnabled()) log.warn("Driver: Resolve problem for " + didString + ": " + ex.getMessage(), ex);
-			if (! (ex instanceof ResolutionException)) ex = new ResolutionException("Driver: Resolve problem for " + didString + ": " + ex.getMessage());
-			resolveResult = ((ResolutionException) ex).toErrorResolveResult();
+		if (! options.containsKey("accept")) {
+			if (isResolve) {
+				if (httpAcceptMediaTypes == null) httpAcceptMediaTypes = Collections.singletonList(MediaType.parseMediaType(ResolveResult.MEDIA_TYPE));
+				options.put("accept", HttpBindingServerUtil.resolveAcceptForHttpAccepts(httpAcceptMediaTypes));
+			} else {
+				if (httpAcceptMediaTypes == null) httpAcceptMediaTypes = Collections.singletonList(MediaType.parseMediaType(DereferenceResult.MEDIA_TYPE));
+				options.put("accept", HttpBindingServerUtil.dereferenceAcceptForHttpAccepts(httpAcceptMediaTypes));
+			}
 		}
 
-		if (log.isInfoEnabled()) log.info("Driver: Result for " + didString + ": " + resolveResult);
+		if (log.isDebugEnabled()) log.debug("Using options: " + options);
 
-		// write resolve result
+		// execute the request
+
+		Result result;
+
+		if (isResolve) {
+			try {
+				result = InitServlet.getDriver().resolve(DID.fromString(identifier), options);
+				if (result == null) throw new ResolutionException(DereferencingException.ERROR_NOTFOUND, "No resolve result for " + identifier);
+			} catch (Exception ex) {
+				if (log.isWarnEnabled()) log.warn("Resolve problem for " + identifier + ": " + ex.getMessage(), ex);
+				if (! (ex instanceof ResolutionException)) ex = new ResolutionException("Resolve problem for " + identifier + ": " + ex.getMessage(), ex);
+				result = ((ResolutionException) ex).toErrorResolveResult();
+			}
+		} else {
+			try {
+				result = InitServlet.getDriver().dereference(DIDURL.fromString(identifier), options);
+				if (result == null) throw new DereferencingException(DereferencingException.ERROR_NOTFOUND, "No dereference result for " + identifier);
+			} catch (Exception ex) {
+				if (log.isWarnEnabled()) log.warn("Dereference problem for " + identifier + ": " + ex.getMessage(), ex);
+				if (ex instanceof ResolutionException) ex = new DereferencingException(((ResolutionException) ex).getError(), "Error " + ((ResolutionException) ex).getError() + " from resolver: " + ex.getMessage(), ((ResolutionException) ex).getDidResolutionMetadata(), ex);
+				if (! (ex instanceof DereferencingException)) ex = new DereferencingException("Dereference problem for " + identifier + ": " + ex.getMessage(), ex);
+				result = ((DereferencingException) ex).toErrorDereferenceResult();
+			}
+		}
+
+		if (log.isInfoEnabled()) log.info("Result for " + identifier + ": " + result);
+
+		// experimental: support for redirect
+
+		if (Integer.valueOf(HttpServletResponse.SC_SEE_OTHER).equals(result.getFunctionMetadata().get("_http_code"))) {
+			Map<String, String> httpHeaders = (Map<String, String>) result.getFunctionMetadata().get("_http_headers");
+			if (log.isDebugEnabled()) log.debug("Redirecting with HTTP headers: " + httpHeaders);
+			ServletUtil.sendResponse(
+					response,
+					HttpServletResponse.SC_SEE_OTHER,
+					httpHeaders,
+					null);
+			return;
+		}
+
+		// determine status code, content type, body
+
+		int httpStatusCode = HttpBindingServerUtil.httpStatusCodeForResult(result);
+		String httpContentType = HttpBindingServerUtil.httpContentTypeForResult(result);
+		Object httpBody = HttpBindingServerUtil.httpBodyForResult(result);
+
+		// write error result
+
+		if (result.isErrorResult()) {
+			if (log.isDebugEnabled()) log.debug("Ignoring media type, returning error result");
+			ServletUtil.sendResponse(
+					response,
+					httpStatusCode,
+					httpContentType,
+					(String) httpBody);
+			return;
+		}
+
+		// write result using content negotiation
 
 		for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
-			int httpStatusCode = HttpBindingServerUtil.httpStatusCodeForResult(resolveResult);
-
-			if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
-				if (log.isDebugEnabled()) log.debug("Driver: Supporting HTTP media type " + httpAcceptMediaType + " via default resolve result content type " + ResolveResult.MEDIA_TYPE);
+			if (result instanceof ResolveResult && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
+				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default resolve result content type " + ResolveResult.MEDIA_TYPE);
 				ServletUtil.sendResponse(
 						response,
 						httpStatusCode,
-						ResolveResult.MEDIA_TYPE,
-						HttpBindingServerUtil.httpBodyForResult(resolveResult));
+						httpContentType,
+						(String) httpBody);
+				return;
+			}
+
+			if (result instanceof DereferenceResult && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) {
+				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default dereference result content type " + DereferenceResult.MEDIA_TYPE);
+				ServletUtil.sendResponse(
+						response,
+						httpStatusCode,
+						httpContentType,
+						(String) httpBody);
 				return;
 			}
 
 			// determine representation media type
 
-			if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, resolveResult.getContentType())) {
-				if (log.isDebugEnabled()) log.debug("Driver: Supporting HTTP media type " + httpAcceptMediaType + " via content type " + resolveResult.getContentType());
-			} else {
-				if (log.isDebugEnabled()) log.debug("Driver: Not supporting HTTP media type " + httpAcceptMediaType);
-				continue;
+			if (result instanceof ResolveResult resolveResult) {
+				for (RepresentationProducer representationProducer : Representations.representationProducers) {
+					if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, representationProducer.getMediaType())) {
+						if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via DID document media type " + representationProducer.getMediaType() + " and resolved DID document media type " + representationProducer.getMediaType());
+						httpContentType = representationProducer.getMediaType();
+						httpBody = representationProducer.produce(resolveResult.getDidDocument());
+						ServletUtil.sendResponse(
+								response,
+								httpStatusCode,
+								httpContentType,
+								(byte[]) httpBody);
+						return;
+					}
+				}
 			}
 
-			ServletUtil.sendResponse(
-					response,
-					httpStatusCode,
-					resolveResult.getContentType(),
-					resolveResult.getFunctionContent()
-			);
-			return;
+			if (result instanceof DereferenceResult dereferenceResult) {
+				if (result.getContentType() != null && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, result.getContentType())) {
+					if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via content media type " + result.getContentType());
+					httpContentType = dereferenceResult.getContentType();
+					httpBody = result.getFunctionContent();
+					ServletUtil.sendResponse(
+							response,
+							httpStatusCode,
+							httpContentType,
+							(byte[]) httpBody);
+					return;
+				}
+			}
+
+			// continue
+
+			if (log.isDebugEnabled()) log.debug("Not supporting HTTP media type " + httpAcceptMediaType);
 		}
+
+		// not acceptable
 
 		ServletUtil.sendResponse(
 				response,

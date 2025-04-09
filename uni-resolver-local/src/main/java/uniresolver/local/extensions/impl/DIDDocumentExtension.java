@@ -64,6 +64,8 @@ public class DIDDocumentExtension implements DereferencerExtension.DereferencePr
             throw new DereferencingException(DereferencingException.ERROR_CONTENTTYPENOTSUPPORTED, "Cannot produce DID document: " + ex.getMessage(), ex);
         }
 
+        if (log.isDebugEnabled()) log.debug("Dereferenced DID document with content type " + resolveResult.getContentType() + " using producer for " + representationProducer.getMediaType());
+
         // set dereference result
 
         dereferenceResult.setContentType(representationProducer.getMediaType());

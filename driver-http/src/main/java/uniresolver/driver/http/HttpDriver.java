@@ -29,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class HttpDriver implements Driver {
 
@@ -42,6 +43,7 @@ public class HttpDriver implements Driver {
 	private Pattern pattern = null;
 	private URI resolveUri = null;
 	private URI propertiesUri = null;
+	private boolean supportsOptions = false;
 	private boolean supportsDereference = false;
 	private String acceptHeaderValue = null;
 	private List<String> testIdentifiers = Collections.emptyList();
@@ -92,18 +94,27 @@ public class HttpDriver implements Driver {
 
 		// set HTTP URI
 
-		String uriString = this.getResolveUri().toString();
+		StringBuilder uriString = new StringBuilder(this.getResolveUri().toString());
 
-		if (uriString.contains("$1")) {
+		if (uriString.toString().contains("$1")) {
 
-			uriString = uriString.replace("$1", matchedString.toString());
-		} else if (uriString.contains("$2")) {
+			uriString = new StringBuilder(uriString.toString().replace("$1", matchedString.toString()));
+		} else if (uriString.toString().contains("$2")) {
 
-			uriString = uriString.replace("$2", URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
+			uriString = new StringBuilder(uriString.toString().replace("$2", URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8)));
 		} else {
 
-			if (! uriString.endsWith("/")) uriString += "/";
-			uriString += matchedString;
+			if (! uriString.toString().endsWith("/")) uriString.append("/");
+			if (this.getSupportsOptions() && ! optionsForHttpUriQuery(resolutionOptions).isEmpty()) {
+				uriString.append(URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
+				uriString.append("?");
+				for (Map.Entry<String, Object> entry : optionsForHttpUriQuery(resolutionOptions).entrySet()) {
+					uriString.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+				}
+				if (uriString.lastIndexOf("&") == uriString.length() - 1) uriString.deleteCharAt(uriString.length() - 1);
+			} else {
+				uriString.append(matchedString);
+			}
 		}
 
 		// set Accept header
@@ -119,7 +130,7 @@ public class HttpDriver implements Driver {
 
 		// prepare HTTP request
 
-		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		HttpGet httpGet = new HttpGet(URI.create(uriString.toString()));
 		httpGet.addHeader("Accept", acceptMediaTypesString);
 
 		// execute HTTP request and read response
@@ -199,13 +210,13 @@ public class HttpDriver implements Driver {
 
 		if (this.getPattern() != null) {
 
-			Matcher matcher = this.getPattern().matcher(didUrl.getDid().getDidString());
+			Matcher matcher = this.getPattern().matcher(didUrl.getDidUrlString());
 
 			if (! matcher.matches()) {
-				if (log.isDebugEnabled()) log.debug("Skipping identifier " + didUrl.getDid() + " - does not match pattern " + this.getPattern());
+				if (log.isDebugEnabled()) log.debug("Skipping identifier " + didUrl + " - does not match pattern " + this.getPattern());
 				return null;
 			} else {
-				if (log.isDebugEnabled()) log.debug("Identifier " + didUrl.getDid() + " matches pattern " + this.getPattern() + " with " + matcher.groupCount() + " groups");
+				if (log.isDebugEnabled()) log.debug("Identifier " + didUrl + " matches pattern " + this.getPattern() + " with " + matcher.groupCount() + " groups");
 			}
 
 			if (matcher.groupCount() > 0) {
@@ -215,23 +226,32 @@ public class HttpDriver implements Driver {
 			}
 		}
 
-		if (matchedString == null) matchedString = new StringBuilder(didUrl.getDid().getDidString());
+		if (matchedString == null) matchedString = new StringBuilder(didUrl.getDidUrlString());
 		if (log.isDebugEnabled()) log.debug("Matched string: " + matchedString);
 
 		// set HTTP URI
 
-		String uriString = this.getResolveUri().toString();
+		StringBuilder uriString = new StringBuilder(this.getResolveUri().toString());
 
-		if (uriString.contains("$1")) {
+		if (uriString.toString().contains("$1")) {
 
-			uriString = uriString.replace("$1", didUrl.toString());
-		} else if (uriString.contains("$2")) {
+			uriString = new StringBuilder(uriString.toString().replace("$1", matchedString));
+		} else if (uriString.toString().contains("$2")) {
 
-			uriString = uriString.replace("$2", URLEncoder.encode(didUrl.toString(), StandardCharsets.UTF_8));
+			uriString = new StringBuilder(uriString.toString().replace("$2", URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8)));
 		} else {
 
-			if (! uriString.endsWith("/")) uriString += "/";
-			uriString += didUrl.toString();
+			if (! uriString.toString().endsWith("/")) uriString.append("/");
+			if (this.getSupportsOptions() && ! optionsForHttpUriQuery(dereferenceOptions).isEmpty()) {
+				uriString.append(URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
+				uriString.append("?");
+				for (Map.Entry<String, Object> entry : optionsForHttpUriQuery(dereferenceOptions).entrySet()) {
+					uriString.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+				}
+				if (uriString.lastIndexOf("&") == uriString.length() - 1) uriString.deleteCharAt(uriString.length() - 1);
+			} else {
+				uriString.append(matchedString);
+			}
 		}
 
 		// set Accept header
@@ -246,7 +266,7 @@ public class HttpDriver implements Driver {
 
 		// prepare HTTP request
 
-		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		HttpGet httpGet = new HttpGet(URI.create(uriString.toString()));
 		httpGet.addHeader("Accept", acceptMediaTypesString);
 
 		// execute HTTP request and read response
@@ -412,6 +432,19 @@ public class HttpDriver implements Driver {
 	}
 
 	/*
+	 * Helper methods
+	 */
+
+	private static Map<String, Object> optionsForHttpUriQuery(Map<String, Object> options) {
+		return options
+				.entrySet()
+				.stream()
+				.filter(x -> ! "accept".equals(x.getKey()))
+				.filter(x -> ! x.getKey().startsWith("_"))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+	}
+
+	/*
 	 * Getters and setters
 	 */
 
@@ -457,6 +490,14 @@ public class HttpDriver implements Driver {
 
 	public void setPropertiesUri(String propertiesUri) {
 		this.propertiesUri = URI.create(propertiesUri);
+	}
+
+	public boolean getSupportsOptions() {
+		return this.supportsOptions;
+	}
+
+	public void setSupportsOptions(boolean supportsOptions) {
+		this.supportsOptions = supportsOptions;
 	}
 
 	public boolean getSupportsDereference() {
