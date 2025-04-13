@@ -126,8 +126,8 @@ public class WebAppConfig {
 				driver.setPropertiesUri((URI) null);
 			} else {
 				if (! url.endsWith("/")) url = url + "/";
-				driver.setResolveUri(normalizeUri((url + servletMappings.getResolve()), true));
-				if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(normalizeUri((url + servletMappings.getProperties()), false));
+				driver.setResolveUri(normalizeUri((url + this.servletMappings.getResolve()), true));
+				if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(normalizeUri((url + this.servletMappings.getProperties()), false));
 			}
 
 			if (supportsOptions != null) driver.setSupportsOptions(Boolean.parseBoolean(supportsOptions));
@@ -147,6 +147,6 @@ public class WebAppConfig {
 
 	@PostConstruct
 	private void initDrivers() {
-		if (driverConfigs.getDrivers() != null) configureLocalUniresolver(driverConfigs, localUniResolver);
+		if (this.driverConfigs.getDrivers() != null) configureLocalUniresolver(this.driverConfigs, this.localUniResolver);
 	}
 }
