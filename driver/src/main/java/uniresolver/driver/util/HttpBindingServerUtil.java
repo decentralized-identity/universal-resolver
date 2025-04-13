@@ -3,7 +3,6 @@ package uniresolver.driver.util;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
-import foundation.identity.did.representations.consumption.RepresentationConsumerDID;
 import foundation.identity.did.representations.production.RepresentationProducerDID;
 import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
 import foundation.identity.did.representations.production.RepresentationProducerDIDJSON;
@@ -85,9 +84,9 @@ public class HttpBindingServerUtil {
         byte[] content = result.getFunctionContent();
         if (content == null || content.length == 0) {
             json.put(functionContentProperty, null);
-        } else if (isContentTypeJson(result)) {
+        } else if (isContentJson(result)) {
             json.put(functionContentProperty, objectMapper.readValue(new ByteArrayInputStream(content), LinkedHashMap.class));
-        } else if (isContentTypeText(result)) {
+        } else if (isContentText(result)) {
             json.put(functionContentProperty, new String(content, StandardCharsets.UTF_8));
         } else {
             json.put(functionContentProperty, Base64.getEncoder().encodeToString(content));
@@ -142,11 +141,13 @@ public class HttpBindingServerUtil {
      * Helper methods
      */
 
-    private static boolean isContentTypeJson(Result result) {
-        return RepresentationProducerDID.MEDIA_TYPE.equals(result.getContentType()) || result.getContentType().contains("+json") || result.getContentType().contains("/json");
+    private static boolean isContentJson(Result result) throws IOException {
+        boolean isContentTypeJson = RepresentationProducerDID.MEDIA_TYPE.equals(result.getContentType()) || result.getContentType().contains("+json") || result.getContentType().contains("/json");
+        boolean isContentJson = result.getFunctionContent()[0] == '{' || result.getFunctionContent()[0] == '[';
+        return isContentTypeJson && isContentJson;
     }
 
-    private static boolean isContentTypeText(Result result) {
+    private static boolean isContentText(Result result) {
         return result.getContentType().startsWith("text/");
     }
 }
