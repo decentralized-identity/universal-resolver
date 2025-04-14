@@ -62,7 +62,7 @@ public class ClientUniResolver implements UniResolver {
 	@Override
 	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 
-		if (log.isDebugEnabled()) log.debug("resolveRepresentation(" + didString + ")  with options: " + resolutionOptions);
+		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
 
 		if (didString == null) throw new NullPointerException();
 		if (resolutionOptions == null) resolutionOptions = new HashMap<>();
@@ -77,7 +77,7 @@ public class ClientUniResolver implements UniResolver {
 		// set Accept header
 
 		String accept = (String) resolutionOptions.get("accept");
-		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolveRepresentation().");
+		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolve().");
 
 		List<String> acceptMediaTypes = Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);

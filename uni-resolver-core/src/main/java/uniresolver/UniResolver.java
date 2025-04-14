@@ -1,5 +1,6 @@
 package uniresolver;
 
+import foundation.identity.did.representations.Representations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.result.ResolveResult;
@@ -22,7 +23,7 @@ public interface UniResolver extends DIDResolver {
 	@Override public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException;
 
 	default public ResolveResult resolve(String didString) throws ResolutionException {
-		return this.resolve(didString, new HashMap<>());
+		return this.resolve(didString, Map.of("accept", Representations.DEFAULT_MEDIA_TYPE));
 	}
 
 	public Map<String, Map<String, Object>> properties() throws ResolutionException;
