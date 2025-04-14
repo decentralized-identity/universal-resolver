@@ -368,3 +368,7 @@ uniresolver:
       supportsDereference: true
       testIdentifiers:
         - did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
+    - pattern: "^(did:cndid:.+)$"
+      url: ${uniresolver_web_driver_url_did_cndid:http://driver-did-cndid:8080/}
+      testIdentifiers:
+        - did:cndid:sf24eYrmwXt6nx4fig3XJm7n9UP6PNRJ3

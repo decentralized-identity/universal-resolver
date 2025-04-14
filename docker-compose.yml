@@ -76,6 +76,7 @@ services:
       uniresolver_web_driver_url_did_content:
       uniresolver_web_driver_url_did_prism:
       uniresolver_web_driver_url_did_iden3:
+      uniresolver_web_driver_url_did_cndid:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -392,3 +393,7 @@ services:
     image: saishibu38380/uni-resolver-driver-zkjm:v1.0.0
     ports:
       - "8081:8080"
+  driver-did-cndid:
+    image: teleinfo/driver-did-cndid:v1.0.0
+    ports:
+      - "8160:8080"
