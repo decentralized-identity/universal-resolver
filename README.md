@@ -218,3 +218,6 @@ Decentralized Identity Foundation - https://identity.foundation/
 <img align="left" src="https://raw.githubusercontent.com/decentralized-identity/universal-resolver/main/docs/logo-ngi0pet.png" width="115">
 
 Supported by [NLnet](https://nlnet.nl/) and [NGI0 PET](https://nlnet.nl/PET/#NGI), which is made possible with financial support from the European Commission's [Next Generation Internet](https://ngi.eu/) programme.
+
+To test on Macbooks with Apple Silicon:
+docker build --platform=linux/amd64 -f ./uni-resolver-web/docker/Dockerfile . -t universalresolver/uni-resolver-web
