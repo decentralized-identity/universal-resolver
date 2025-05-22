@@ -178,6 +178,7 @@ uniresolver:
         - did:lit:AEZ87t1bi5bRxmVh3ksMUi
     - pattern: "^(did:ebsi:.+)$"
       url: ${uniresolver_web_driver_url_did_ebsi:https://api-pilot.ebsi.eu/did-registry/v5/identifiers/$1}
+      acceptHeaderValue: application/did+ld+json
       testIdentifiers:
         - did:ebsi:zjUnExsyyweQ9p4cy3nvrVc
         - did:ebsi:z24q53pA3pjcnoukP6fD5jXt
@@ -197,7 +198,7 @@ uniresolver:
         - did:key:zQ3shokFTS3brHcDQrn82RUDfCZESWL1ZdCEJwekUDPQiYBme
         - did:key:z4MXj1wBzi9jUstyPMS4jQqB6KdJaiatPkAtVtGc6bQEQEEsKTic4G7Rou3iBf9vPmT5dbkm9qsZsuVNjq8HCuW1w24nhBFGkRE4cd2Uf2tfrB3N7h4mnyPp1BF3ZttHTYv3DLUPi1zMdkULiow3M1GfXkoC6DoxDUm1jmN6GBj22SjVsr6dxezRVQc7aj9TxE7JLbMH1wh5X3kA58H3DFW8rnYMakFGbca5CB2Jf6CnGQZmL7o5uJAdTwXfy2iiiyPxXEGerMhHwhjTA1mKYobyk2CpeEcmvynADfNZ5MBvcCS7m3XkFCMNUYBS9NQ3fze6vMSUPsNa6GVYmKx2x6JrdEjCk3qRMMmyjnjCMfR4pXbRMZa3i
         - did:pkh:tz:tz2BFTyPeYRzxd5aiBchbXN3WCZhx7BqbMBq
-    - pattern: "^did:(?:key:(?:zDna|z82L|z2J9|z5Tc|z3tE|zUC7)).+$"
+    - pattern: "^did:(?:key:(?:zDna|z82L|z2J9|z5Tc|z3tE|zUC7|z2dm|zmYg|zhQR)).+$"
       url: ${uniresolver_web_driver_url_did_key:http://driver-did-key:8080/1.0/identifiers/$1}
       testIdentifiers:
         - did:key:zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169
@@ -360,5 +361,14 @@ uniresolver:
     - pattern: "^(did:zkjm:.+)$"
       url: ${uniresolver_web_driver_url_did_zkjm:http://driver-did-zkjm:8080}
       testIdentifiers:
-        - "did:zkjm:mainnet:d90e52b36a2e2306dc873ec0f7a94351"
-  
+        - "did:zkjm:mainnet:00925166B335cCe0149E4a91607F770d3CbdEc53"
+    - pattern: "^(did:iden3:.+)$"
+      url: ${uniresolver_web_driver_url_did_iden3:http://driver-did-iden3:8080/}
+      propertiesEndpoint: "true"
+      supportsDereference: true
+      testIdentifiers:
+        - did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
+    - pattern: "^(did:cndid:.+)$"
+      url: ${uniresolver_web_driver_url_did_cndid:http://driver-did-cndid:8080/}
+      testIdentifiers:
+        - did:cndid:sf24eYrmwXt6nx4fig3XJm7n9UP6PNRJ3

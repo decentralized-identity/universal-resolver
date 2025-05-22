@@ -33,3 +33,27 @@ jobs:
       CI_SECRET_READER_PERIODIC_TOKEN: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
       VAULTCA: ${{ secrets.VAULTCA }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  trigger-deployment:
+    needs: [ docker-latest ]
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Get current branch
+        id: branch
+        run: |
+          echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+
+      - name: Trigger AWS Kubernetes deployment
+        uses: actions/github-script@v6
+        env:
+          BRANCH: ${{ steps.branch.outputs.branch_name }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'kubernetes-deploy-to-cluster.yml',
+              ref: process.env.BRANCH
+            })
