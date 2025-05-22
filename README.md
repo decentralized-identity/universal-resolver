@@ -93,7 +93,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
  	curl -X GET http://localhost:8080/1.0/identifiers/did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:quarkid:EiBJ_1z9_OtvrfSgUNnBIs808vsRq7dQCKMP4LuSUosdXQ
 
-	curl -X GET http://localhost:8080/1.0/identifiers/did:zkjm:mainnet:d90e52b36a2e2306dc873ec0f7a94351
+	curl -X GET http://localhost:8080/1.0/identifiers/did:zkjm:mainnet:00925166B335cCe0149E4a91607F770d3CbdEc53
 
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
 	curl -X GET 'http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw?gist=f12d4f6fddeed78cb8b1faf1c6f4f171a590c1b05c484118a09847f5caa74d03'
