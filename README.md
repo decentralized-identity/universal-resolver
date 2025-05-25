@@ -93,7 +93,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
  	curl -X GET http://localhost:8080/1.0/identifiers/did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
 	curl -X GET http://localhost:8080/1.0/identifiers/did:quarkid:EiBJ_1z9_OtvrfSgUNnBIs808vsRq7dQCKMP4LuSUosdXQ
 
-	curl -X GET http://localhost:8080/1.0/identifiers/did:zkjm:mainnet:d90e52b36a2e2306dc873ec0f7a94351
+	curl -X GET http://localhost:8080/1.0/identifiers/did:zkjm:mainnet:00925166B335cCe0149E4a91607F770d3CbdEc53
 
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
 	curl -X GET 'http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw?gist=f12d4f6fddeed78cb8b1faf1c6f4f171a590c1b05c484118a09847f5caa74d03'
@@ -189,8 +189,9 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-prism](https://github.com/FabioPinheiro/uni-resolver-driver-did-prism)                           | 1.1            | [1.0](https://github.com/input-output-hk/prism-did-method-spec)                                                   | [ghcr.io/fabiopinheiro/uni-resolver-driver-did-prism](https://github.com/FabioPinheiro/uni-resolver-driver-did-prism/pkgs/container/uni-resolver-driver-did-prism) | PRISM DID                                                                           |
 | [did-webvh](https://github.com/decentralized-identity/uni-resolver-driver-did-webvh)                         	| 0.5            | [0.5](https://identity.foundation/didwebvh/)                                                   		     | [uni-resolver-driver-did-webvh](ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:sha256-f1aff57f56ee4c0b5b5fbf754006a060c793714585f3e80fc44ab9ab6bc38dcc.sig) 				  | DID WEBVH - Verifiable History                                                                       |
 | [did-quarkid](https://github.com/ssi-quarkid/api-proxy)                         	| 1.0            | 1.0                                             		     | [uni-resolver-driver-did-quarkid](extrimianpublic.azurecr.io/modena-resolver:metadataSupport) 				  | QuarkID
-
 | [did-zkjm](https://github.com/JupiterMetaZK/.github)                         	| 1.0.0            | 1.0.0                                             		     | [uni-resolver-driver-did-zkjm](https://hub.docker.com/r/saishibu38380/uni-resolver-driver-zkjm) 				  | ZKJM DID                                                                            |
+
+| [did-zkjm](https://github.com/JupiterMetaZK/.github)                         	| 1.0.0            | 1.0.0                                             		     |  				  | ZKJM DID                                                                            |
 | [did-iden3](https://github.com/iden3/driver-did-iden3)              | 0.0.8          | [1.0.0](https://github.com/iden3/did-iden3/blob/main/did-iden3-method.md)                                         | [ghcr.io/iden3/driver-did-iden3:v0.0.8](https://github.com/iden3/driver-did-iden3/pkgs/container/driver-did-iden3)                                                                          | Iden3 DID    
 
 | [did-cndid](https://github.com/teleinfo-bif/uni-resolver-driver-did-cndid)                              | 1.0.0          | [1.0.0](https://github.com/teleinfo-bif/cndid/blob/main/doc/en/CNDID%20Protocol%20Specification.md)                | [teleinfo/driver-did-cndid](https://hub.docker.com/repository/docker/teleinfo/driver-did-cndid)                                                                | CN DID                                                                      |
@@ -217,3 +218,6 @@ Decentralized Identity Foundation - https://identity.foundation/
 <img align="left" src="https://raw.githubusercontent.com/decentralized-identity/universal-resolver/main/docs/logo-ngi0pet.png" width="115">
 
 Supported by [NLnet](https://nlnet.nl/) and [NGI0 PET](https://nlnet.nl/PET/#NGI), which is made possible with financial support from the European Commission's [Next Generation Internet](https://ngi.eu/) programme.
+
+To test on Macbooks with Apple Silicon:
+docker build --platform=linux/amd64 -f ./uni-resolver-web/docker/Dockerfile . -t universalresolver/uni-resolver-web
