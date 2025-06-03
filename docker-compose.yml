@@ -129,7 +129,7 @@ services:
     ports:
       - "8093:8080"
   kilt-did-driver:
-    image: kiltprotocol/kilt-did-driver:2.5.0
+    image: kiltprotocol/kilt-did-driver:3.0.0
     environment:
       KILT_BLOCKCHAIN_NODE: ${uniresolver_driver_kilt_blockchain_node}
     ports:
