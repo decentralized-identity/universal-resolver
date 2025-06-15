@@ -65,6 +65,8 @@ public class ResolveServlet extends WebUniResolver {
 					String parameterValue = request.getParameter(parameterName);
 					options.put(parameterName, parameterValue);
 				}
+			} else if (request.getQueryString() != null) {
+				options = objectMapper.readValue(URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8), LinkedHashMap.class);
 			}
 		} else {
 			identifier = path;
