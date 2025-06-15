@@ -397,3 +397,7 @@ services:
     image: teleinfo/driver-did-cndid:v1.0.0
     ports:
       - "8160:8080"
+  driver-did-btc1:
+    image: universalresolver/driver-did-btc1
+    ports:
+      - "8161:8080"
