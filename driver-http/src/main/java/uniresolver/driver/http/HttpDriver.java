@@ -453,16 +453,16 @@ public class HttpDriver implements Driver {
 				queryString.append(option.getKey()).append("=").append(option.getValue()).append("&");
 			}
 			if (queryString.lastIndexOf("&") == queryString.length() - 1) queryString.deleteCharAt(queryString.length() - 1);
-			driverHttpQueryString = queryString.toString();
+			driverHttpQueryString = URLEncoder.encode(queryString.toString(), StandardCharsets.UTF_8);
 		} else {
             try {
-				driverHttpQueryString = objectMapper.writeValueAsString(options);
+				driverHttpQueryString = URLEncoder.encode(objectMapper.writeValueAsString(options), StandardCharsets.UTF_8);
             } catch (JsonProcessingException ex) {
                 throw new IllegalArgumentException("Cannot serialize options " + options + ": " + ex.getMessage(), ex);
             }
         }
 
-		if (log.isDebugEnabled()) log.debug("Driver HTTP Query String: " + driverHttpQueryString);
+		if (log.isDebugEnabled()) log.debug("driverHttpQueryStringForOptions: " + driverHttpQueryString);
 		return driverHttpQueryString;
 	}
 
