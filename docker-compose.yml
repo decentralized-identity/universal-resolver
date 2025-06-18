@@ -356,7 +356,7 @@ services:
     environment:
       DID_RESOLVER_URL: ${uniresolver_driver_did_itn_resolverUrl}
   driver-did-iota:
-    image: iotaledger/uni-resolver-driver-iota:0.2.0
+    image: iotaledger/uni-resolver-driver-iota:0.2
     ports:
       - "8151:8080"
     environment:
