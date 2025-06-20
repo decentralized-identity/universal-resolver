@@ -41,13 +41,7 @@ driver-did-itn:
       value: "https://resolver.itn.mobi"
 driver-did-iota:
   env:
-    - name: IOTA_NODE_ENDPOINT
-      value: "https://api.stardust-mainnet.iotaledger.net/"
-    - name: IOTA_SMR_NODE_ENDPOINT
-      value: "https://api.shimmer.network/"
-    - name: IOTA_CUSTOM_NETWORK_NAME
-      value: "rms"
-    - name: IOTA_CUSTOM_NODE_ENDPOINT
-      value: "https://api.testnet.shimmer.network/"
+    - name: NETWORK
+      value: "testnet,mainnet"
 driver-did-prism:
   env:
