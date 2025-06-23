@@ -77,6 +77,7 @@ services:
       uniresolver_web_driver_url_did_prism:
       uniresolver_web_driver_url_did_iden3:
       uniresolver_web_driver_url_did_cndid:
+      uniresolver_web_driver_url_did_tgrid:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -401,3 +402,7 @@ services:
     image: universalresolver/driver-did-btc1
     ports:
       - "8161:8080"
+  driver-did-tgrid:
+    image: trustgrid01/universal-did-proxy-resolver
+    ports:
+      - "8080:8080"

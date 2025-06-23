@@ -378,3 +378,9 @@ uniresolver:
       supportsOptions: true
       testIdentifiers:
         - did:btc1:k1qypcylxwhf8sykn2dztm6z8lxm43kwkyzf07qmp9jafv3zfntmpwtks9hmnrw
+    - pattern: "^(did:tgrid:.+)$"
+      url: ${uniresolver_web_driver_url_did_tgrid:http://did-resolver.staging.trustgrid.com:8080/}
+      propertiesEndpoint: "true"
+      supportsOptions: true
+      testIdentifiers:
+        - did:tgrid:trustgrid:dev:<hash>
