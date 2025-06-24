@@ -90,7 +90,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:itn:PA7xLNkMAqzzrDp4UBnrZm
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iota:0xf4d6f08f5a1b80dd578da7dc1b49c886d580acd4cf7d48119dfeb82b538ad88a
 	curl -X GET http://localhost:8080/1.0/identifiers/did:prism:c36cd59bbc62dee1925e1343a8fed051416e417116d6169d060746f1e6816cd4
- 	curl -X GET http://localhost:8080/1.0/identifiers/did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
+ 	curl -X GET http://localhost:8080/1.0/identifiers/did:webvh:QmVJ5nUYb9iugnUz4yDfbe8UFbhmnsvS2EAzSpSfPScRAn:opsecid.github.io
 	curl -X GET http://localhost:8080/1.0/identifiers/did:quarkid:EiBJ_1z9_OtvrfSgUNnBIs808vsRq7dQCKMP4LuSUosdXQ
 	curl -X GET http://localhost:8080/1.0/identifiers/did:zkjm:mainnet:d90e52b36a2e2306dc873ec0f7a94351
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw
