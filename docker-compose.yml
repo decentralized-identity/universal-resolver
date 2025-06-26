@@ -356,17 +356,11 @@ services:
     environment:
       DID_RESOLVER_URL: ${uniresolver_driver_did_itn_resolverUrl}
   driver-did-iota:
-    image: iotaledger/uni-resolver-driver-iota:0.1.2
+    image: iotaledger/uni-resolver-driver-iota:0.2
     ports:
       - "8151:8080"
     environment:
-      IOTA_NODE_ENDPOINT: ${uniresolver_driver_did_iota_iotaNodeEndpoint}
-      IOTA_NODE_AUTH_TOKEN: ${uniresolver_driver_did_iota_iotaNodeAuthToken}
-      IOTA_SMR_NODE_ENDPOINT: ${uniresolver_driver_did_iota_smrNodeEndpoint}
-      IOTA_SMR_NODE_AUTH_TOKEN: ${uniresolver_driver_did_iota_smrNodeAuthToken}
-      IOTA_CUSTOM_NETWORK_NAME: ${uniresolver_driver_did_iota_customNetworkName}
-      IOTA_CUSTOM_NODE_ENDPOINT: ${uniresolver_driver_did_iota_customNodeEndpoint}
-      IOTA_CUSTOM_NODE_AUTH_TOKEN: ${uniresolver_driver_did_iota_customNodeAuthToken}
+      NETWORK: ${uniresolver_driver_did_iota_network}
   driver-did-iden3:
     image: ghcr.io/iden3/driver-did-iden3:v0.0.8
     ports:
