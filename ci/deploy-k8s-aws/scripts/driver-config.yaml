@@ -51,3 +51,11 @@ driver-did-iota:
       value: "https://api.testnet.shimmer.network/"
 driver-did-prism:
   env:
+driver-did-near:
+  env:
+    - name: CONTRACT_ID
+      value: "neardti.testnet"
+    - name: RPC_URL
+      value: "https://rpc.testnet.near.org"
+    - name: NETWORK_ID
+      value: "testnet"
