@@ -63,6 +63,15 @@ paths:
             application/ld+json;profile="https://w3id.org/did-resolution":
               value: application/ld+json;profile="https://w3id.org/did-resolution"
               description: Media type of a DID resolution result (JSON-LD representation).
+        - in: query
+          name: options
+          schema:
+            type: object
+            additionalProperties:
+              type: string
+          description: The options for resolving the DID or dereferencing the DID URL.
+          style: form
+          explode: true
       responses:
         "200":
           description: successfully resolved!
