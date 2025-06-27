@@ -395,3 +395,11 @@ services:
     image: universalresolver/driver-did-btc1:0.2.0-aa2e1dd
     ports:
       - "8161:8080"
+  driver-did-near:
+    image: ghcr.io/kaytrust/driver-did-near:latest
+    environment:
+      CONTRACT_ID: ${uniresolver_driver_did_near_contract_id}
+      RPC_URL: ${uniresolver_driver_did_near_rpc_url}
+      NETWORK_ID: ${uniresolver_driver_did_near_network_id}
+    ports:
+      - "8162:8000"
