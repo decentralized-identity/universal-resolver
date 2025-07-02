@@ -198,7 +198,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-near](https://github.com/KayTrust/driver-did-near)                              | 1.0.0          | [0.1.0](https://github.com/DTI-web3/did-near/blob/master/README.md)                | [kaytrust/driver-did-near](https://github.com/KayTrust/driver-did-near/pkgs/container/driver-did-near)                                                                | NEAR DID                                                                      |
 
 
-[did-tgrid](https://github.com/tgrid-usa/Universal-did-proxy-resolver)                              | 1.0.0          | [1.0.0](https://github.com/teleinfo-bif/cndid/blob/main/doc/en/CNDID%20Protocol%20Specification.md)                | [trustgrid/universal-did-proxy-resolver](https://hub.docker.com/r/trustgrid01/universal-did-proxy-resolver)                                                                | Trustgrid DID (tgrid)                                                                      
+[did-tgrid](https://github.com/tgrid-usa/Universal-did-proxy-resolver)                              | 1.0.0          | [1.0.0](https://github.com/tgrid-usa/uni-resolver-driver-did-trustgrid/blob/main/README.md)                | [trustgrid/uni-resolver-driver-did-tgrid](https://hub.docker.com/r/trustgrid01/uni-resolver-driver-did-tgrid)                                                                | Trustgrid DID (tgrid)                                                                      
 
 
 ## More Information
