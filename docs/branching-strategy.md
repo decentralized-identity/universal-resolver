@@ -14,8 +14,8 @@ The following recipe shortly describes the typical steps that developers need to
 
     - feature-\<branch-name\> -> adding/changing functionality, whereas the branch-name should reflect the intention
     - bugfix-\<GitHub-issue\> -> fixing Github-issues
-    - refactor-\<branch-name\> -> cleanup, maintanance, improving code quality, adding Unit tests
-    - ci-\<branch-name\> -> anything related to continous integration
+    - refactor-\<branch-name\> -> cleanup, maintenance, improving code quality, adding Unit tests
+    - ci-\<branch-name\> -> anything related to continuous integration
     - docs-\<branch-name\> -> updating/extending documentation, no code changes allowed  
     - release-\<version-to-be-released\> -> release of a new major version
     
