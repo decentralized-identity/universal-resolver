@@ -98,7 +98,11 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET 'http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw?state=7a1a45d22b686cf1bd2f9fbecbed38b725a555e6d8ad68d3780feda9124b1a13'
     curl -X GET http://localhost:8080/1.0/identifiers/did:cndid:sf24eYrmwXt6nx4fig3XJm7n9UP6PNRJ3
 	curl -X GET http://localhost:8080/1.0/identifiers/did:btc1:k1qypcylxwhf8sykn2dztm6z8lxm43kwkyzf07qmp9jafv3zfntmpwtks9hmnrw
+
+	curl -X GET http://localhost:8080/1.0/identifiers/did:tgrid:trustgrid:dev:QjA1qdXKmxzgK4u8mFoBpF
+
 	curl -X GET http://localhost:8080/1.0/identifiers/did:near:CF5RiJYh4EVmEt8UADTjoP3XaZo1NPWxv6w5TmkLqjpR
+
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
@@ -192,6 +196,9 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-iden3](https://github.com/iden3/driver-did-iden3)              | 0.0.8          | [1.0.0](https://github.com/iden3/did-iden3/blob/main/did-iden3-method.md)                                         | [ghcr.io/iden3/driver-did-iden3:v0.0.8](https://github.com/iden3/driver-did-iden3/pkgs/container/driver-did-iden3)                                                                          | Iden3 DID    
 | [did-cndid](https://github.com/teleinfo-bif/uni-resolver-driver-did-cndid)                              | 1.0.0          | [1.0.0](https://github.com/teleinfo-bif/cndid/blob/main/doc/en/CNDID%20Protocol%20Specification.md)                | [teleinfo/driver-did-cndid](https://hub.docker.com/repository/docker/teleinfo/driver-did-cndid)                                                                | CN DID                                                                      |
 | [did-near](https://github.com/KayTrust/driver-did-near)                              | 1.0.0          | [0.1.0](https://github.com/DTI-web3/did-near/blob/master/README.md)                | [kaytrust/driver-did-near](https://github.com/KayTrust/driver-did-near/pkgs/container/driver-did-near)                                                                | NEAR DID                                                                      |
+
+
+[did-tgrid](https://github.com/tgrid-usa/Universal-did-proxy-resolver)                              | 1.0.0          | [1.0.0](https://github.com/tgrid-usa/uni-resolver-driver-did-trustgrid/blob/main/README.md)                | [trustgrid/uni-resolver-driver-did-tgrid](https://hub.docker.com/r/trustgrid01/uni-resolver-driver-did-tgrid)                                                                | Trustgrid DID (tgrid)                                                                      
 
 
 ## More Information
