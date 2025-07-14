@@ -1,7 +1,7 @@
 FROM python:3.10-buster
 
 LABEL "com.github.actions.name"="Get driver status"
-LABEL "com.github.actions.description"="Get driver status for a Universal Resolver deplyoment"
+LABEL "com.github.actions.description"="Get driver status for a Universal Resolver deployment"
 LABEL "com.github.actions.icon"="mic"
 LABEL "com.github.actions.color"="blue"
 LABEL "version"="1.0.0"
