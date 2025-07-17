@@ -319,7 +319,7 @@ uniresolver:
       testIdentifiers:
         - did:evrc:issuer:polygon:62eeb90e-eee4-4d31-8927-1075e82b2a74
     - pattern: "^(did:keri:.+)$"
-      url: ${uniresolver_web_driver_url_did_kerri:http://driver-did-keri:7678/}
+      url: ${uniresolver_web_driver_url_did_keri:http://driver-did-keri:7678/}
       testIdentifiers:
         - did:keri:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
     - pattern: "^(did:webs:.+)$"
@@ -373,3 +373,22 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_cndid:http://driver-did-cndid:8080/}
       testIdentifiers:
         - did:cndid:sf24eYrmwXt6nx4fig3XJm7n9UP6PNRJ3
+    - pattern: "^(did:btc1:.+)$"
+      url: ${uniresolver_web_driver_url_did_btc1:http://driver-did-btc1:8080/}
+      propertiesEndpoint: "true"
+      supportsOptions: true
+      testIdentifiers:
+        - did:btc1:k1qypcylxwhf8sykn2dztm6z8lxm43kwkyzf07qmp9jafv3zfntmpwtks9hmnrw
+
+    - pattern: "^(did:tgrid:.+)$"
+      url: ${uniresolver_web_driver_url_did_tgrid:http://driver-did-tgrid:8080/}
+      propertiesEndpoint: "true"
+      supportsOptions: true
+      testIdentifiers:
+        - did:tgrid:trustgrid:dev:QjA1qdXKmxzgK4u8mFoBpF
+
+    - pattern: "^(did:near:.+)$"
+      url: ${uniresolver_web_driver_url_did_near:http://driver-did-near:8000/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:near:CF5RiJYh4EVmEt8UADTjoP3XaZo1NPWxv6w5TmkLqjpR
+

@@ -12,12 +12,13 @@ paths:
   "/identifiers/{identifier}":
     get:
       summary: Resolve a DID / Dereference a DID URL
-      description: <p>This endpoint resolves a DID. As input it takes the DID, plus
-        DID resolution <a href="https://www.w3.org/TR/did-core/#did-resolution-options">options</a>.
-        The output is a DID document in one of the supported representations, plus
+      description: <p>This endpoint resolves a DID or dereferences a DID URL. As input it takes the
+        DID or DID URL, plus resolution options or dereferencing options.
+        The output is a DID document plus
         metadata. The same endpoint can also be used to dereference a DID URL. In
         this case, the output is a DID document, or part of a DID document, or some
-        other resource identified by the DID URL.</p> <p>See the <a href="https://w3c-ccg.github.io/did-resolution/">DID
+        other resource identified by the DID URL.</p>
+        <p>See the <a href="<a href="https://www.w3.org/TR/did-resolution/">DID
         Resolution</a> specification for additional details.</p>
       operationId: resolve
       tags:
@@ -51,46 +52,47 @@ paths:
           schema:
             type: string
           description: The requested media type of the DID document representation or
-            DID resolution result. See <a href="https://www.w3.org/TR/did-core/#representations">https://www.w3.org/TR/did-core/#representations</a>
-            and <a href="https://w3c-ccg.github.io/did-resolution/#did-resolution-result">https://w3c-ccg.github.io/did-resolution/#did-resolution-result</a>.
+            DID resolution result.
           examples:
-            application/did+json:
-              value: application/json
-              description: Media type of a DID document (JSON representation).
-            application/did+ld+json:
-              value: application/did+ld+json
-              description: Media type of a DID document (JSON-LD representation).
-            application/ld+json;profile="https://w3id.org/did-resolution":
-              value: application/ld+json;profile="https://w3id.org/did-resolution"
-              description: Media type of a DID resolution result (JSON-LD representation).
+            application/did:
+              value: application/did
+              description: Media type of a DID document.
+            application/did-resolution:
+              value: application/did-resolution
+              description: Media type of a DID resolution result.
+            application/did-url-dereferencing:
+              value: application/did-url-dereferencing
+              description: Media type of a DID URL dereferencing result.
+        - in: query
+          name: options
+          schema:
+            type: object
+            additionalProperties:
+              type: string
+          description: The options for resolving the DID or dereferencing the DID URL.
+          style: form
+          explode: true
       responses:
         "200":
           description: successfully resolved!
           content:
-            application/did+json:
+            application/did:
               schema:
                 type: object
-                description: The DID document (JSON representation).
+                description: The DID document.
                 example:
+                  "@context": https://www.w3.org/ns/did/v1.1
                   id: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
                   verificationMethod:
                     - id: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw#key-1
                       type: Ed25519VerificationKey2018
                       publicKeyBase58: H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV
-            application/did+ld+json:
-              schema:
-                type: object
-                description: The DID document (JSON-LD representation).
-                example:
-                  "@context": https://www.w3.org/ns/did/v1
-                  id: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
-                  verificationMethod:
-                    - id: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw#key-1
-                      type: Ed25519VerificationKey2018
-                      publicKeyBase58: H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV
-            application/ld+json;profile="https://w3id.org/did-resolution":
+            application/did-resolution:
               schema:
                 $ref: "#/components/schemas/ResolutionResult"
+            application/did-url-dereferencing:
+              schema:
+                $ref: "#/components/schemas/DereferencingResult"
         "400":
           description: Invalid DID or DID URL.
         "404":
@@ -100,17 +102,16 @@ paths:
         "410":
           description: Successfully resolved, but DID is deactivated.
           content:
-            application/did+json:
+            application/did:
               schema:
                 type: object
-                description: The deactivated DID document (JSON representation).
-            application/did+ld+json:
-              schema:
-                type: object
-                description: The deactivated DID document (JSON-LD representation).
-            application/ld+json;profile="https://w3id.org/did-resolution":
+                description: The deactivated DID document.
+            application/did-resolution:
               schema:
                 $ref: "#/components/schemas/ResolutionResult"
+            application/did-url-dereferencing:
+              schema:
+                $ref: "#/components/schemas/DereferencingResult"
         "500":
           description: Internal Error.
         "501":
@@ -215,5 +216,17 @@ components:
           type: object
           additionalProperties: { }
         didDocumentMetadata:
+          type: object
+          additionalProperties: { }
+    DereferencingResult:
+      description: The DID URL dereferencing result.
+      type: object
+      properties:
+        content:
+          type: object
+        dereferencingMetadata:
+          type: object
+          additionalProperties: { }
+        contentMetadata:
           type: object
           additionalProperties: { }

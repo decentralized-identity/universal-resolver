@@ -1,5 +1,6 @@
 package uniresolver.driver.http;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DID;
 import foundation.identity.did.DIDURL;
@@ -105,13 +106,11 @@ public class HttpDriver implements Driver {
 		} else {
 
 			if (! uriString.toString().endsWith("/")) uriString.append("/");
-			if (this.getSupportsOptions() && ! optionsForHttpUriQuery(resolutionOptions).isEmpty()) {
+			Map<String, Object> optionsForDriver = optionsForDriver(resolutionOptions);
+			if (this.getSupportsOptions() && ! optionsForDriver.isEmpty()) {
 				uriString.append(URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
 				uriString.append("?");
-				for (Map.Entry<String, Object> entry : optionsForHttpUriQuery(resolutionOptions).entrySet()) {
-					uriString.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
-				}
-				if (uriString.lastIndexOf("&") == uriString.length() - 1) uriString.deleteCharAt(uriString.length() - 1);
+				uriString.append(driverHttpQueryStringForOptions(optionsForDriver));
 			} else {
 				uriString.append(matchedString);
 			}
@@ -242,13 +241,11 @@ public class HttpDriver implements Driver {
 		} else {
 
 			if (! uriString.toString().endsWith("/")) uriString.append("/");
-			if (this.getSupportsOptions() && ! optionsForHttpUriQuery(dereferenceOptions).isEmpty()) {
+			Map<String, Object> optionsForDriver = optionsForDriver(dereferenceOptions);
+			if (this.getSupportsOptions() && ! optionsForDriver.isEmpty()) {
 				uriString.append(URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
 				uriString.append("?");
-				for (Map.Entry<String, Object> entry : optionsForHttpUriQuery(dereferenceOptions).entrySet()) {
-					uriString.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
-				}
-				if (uriString.lastIndexOf("&") == uriString.length() - 1) uriString.deleteCharAt(uriString.length() - 1);
+				uriString.append(driverHttpQueryStringForOptions(optionsForDriver));
 			} else {
 				uriString.append(matchedString);
 			}
@@ -435,13 +432,38 @@ public class HttpDriver implements Driver {
 	 * Helper methods
 	 */
 
-	private static Map<String, Object> optionsForHttpUriQuery(Map<String, Object> options) {
+	private static Map<String, Object> optionsForDriver(Map<String, Object> options) {
+
 		return options
 				.entrySet()
 				.stream()
 				.filter(x -> ! "accept".equals(x.getKey()))
 				.filter(x -> ! x.getKey().startsWith("_"))
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+	}
+
+	private static String driverHttpQueryStringForOptions(Map<String, Object> options) {
+
+		boolean containsOnlyStrings = options.values().stream().allMatch(value -> value instanceof String);
+
+		String driverHttpQueryString;
+		if (containsOnlyStrings) {
+			StringBuilder queryString = new StringBuilder();
+			for (Map.Entry<String, Object> option : options.entrySet()) {
+				queryString.append(option.getKey()).append("=").append(option.getValue()).append("&");
+			}
+			if (queryString.lastIndexOf("&") == queryString.length() - 1) queryString.deleteCharAt(queryString.length() - 1);
+			driverHttpQueryString = URLEncoder.encode(queryString.toString(), StandardCharsets.UTF_8);
+		} else {
+            try {
+				driverHttpQueryString = URLEncoder.encode(objectMapper.writeValueAsString(options), StandardCharsets.UTF_8);
+            } catch (JsonProcessingException ex) {
+                throw new IllegalArgumentException("Cannot serialize options " + options + ": " + ex.getMessage(), ex);
+            }
+        }
+
+		if (log.isDebugEnabled()) log.debug("driverHttpQueryStringForOptions: " + driverHttpQueryString);
+		return driverHttpQueryString;
 	}
 
 	/*

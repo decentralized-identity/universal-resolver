@@ -62,12 +62,18 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		if (path.startsWith("did%3A")) {
 			identifier = URLDecoder.decode(path, StandardCharsets.UTF_8);
-			if (request.getParameterMap() != null) {
-				for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
-					String parameterName = e.nextElement();
-					String parameterValue = request.getParameter(parameterName);
-					options.put(parameterName, parameterValue);
+			if (request.getQueryString() != null) {
+				if (request.getQueryString().contains("=")) {
+					for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
+						String parameterName = e.nextElement();
+						String parameterValue = request.getParameter(parameterName);
+						options.put(parameterName, parameterValue);
+					}
+				} else {
+					options = objectMapper.readValue(URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8), LinkedHashMap.class);
 				}
+			} else if (request.getQueryString() != null) {
+				options.putAll(objectMapper.readValue(request.getQueryString(), Map.class));
 			}
 		} else {
 			identifier = path;

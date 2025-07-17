@@ -1,4 +1,4 @@
-FROM python:3.8.0-slim
+FROM python:3.8-slim
 
 LABEL "name"="Deployment of the Universal Resolver to a Kubernetes Cluster"
 LABEL "maintainer"="Bernhard Fuchs <bernhard.fuchs@danubetech.com>"
