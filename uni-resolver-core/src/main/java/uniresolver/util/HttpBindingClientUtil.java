@@ -80,13 +80,15 @@ public class HttpBindingClientUtil {
 
         Object error = resolveResult.getDidResolutionMetadata().get("error");
         if (error instanceof String errorString) {
-            String errorMessage = (String) resolveResult.getFunctionMetadata().get("errorMessage");
+            String errorMessage = (String) resolveResult.getDidResolutionMetadata().get("errorMessage");
+            if (errorMessage == null) errorMessage = (String) resolveResult.getDidResolutionMetadata().get("message");
             String errorType = ResolutionException.determineErrorType(errorString);
             String errorTitle = ResolutionException.determineErrorTitle(errorType);
             String errorDetail = errorMessage;
             resolveResult.getDidResolutionMetadata().remove("error");
+            resolveResult.getDidResolutionMetadata().remove("errorMessage");
             resolveResult.setError(errorType, errorTitle);
-            resolveResult.setErrorDetail(errorDetail);
+            if (errorDetail != null) resolveResult.setErrorDetail(errorDetail);
             if (log.isDebugEnabled()) log.debug("Determined error metadata property from '" + error + "' and '" + errorMessage + "'.");
         }
 
@@ -146,12 +148,14 @@ public class HttpBindingClientUtil {
         Object error = dereferenceResult.getDereferencingMetadata().get("error");
         if (error instanceof String errorString) {
             String errorMessage = (String) dereferenceResult.getDereferencingMetadata().get("errorMessage");
+            if (errorMessage == null) errorMessage = (String) dereferenceResult.getDereferencingMetadata().get("message");
             String errorType = DereferencingException.determineErrorType(errorString);
             String errorTitle = DereferencingException.determineErrorTitle(errorType);
             String errorDetail = errorMessage;
             dereferenceResult.getDereferencingMetadata().remove("error");
+            dereferenceResult.getDereferencingMetadata().remove("errorMessage");
             dereferenceResult.setError(errorType, errorTitle);
-            dereferenceResult.setErrorDetail(errorDetail);
+            if (errorDetail != null) dereferenceResult.setErrorDetail(errorDetail);
             if (log.isDebugEnabled()) log.debug("Determined error metadata property from '" + error + "' and '" + errorMessage + "'.");
         }
 
