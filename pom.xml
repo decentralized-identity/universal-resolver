@@ -103,12 +103,6 @@
 		<springframework.version>6.2.5</springframework.version>
 		<fasterxml.jackson.version>2.18.3</fasterxml.jackson.version>
 
-		<!-- OpenAPI Versions -->
-
-		<openapi-generator.version>7.4.0</openapi-generator.version>
-		<jakarta-annotation.version>3.0.0</jakarta-annotation.version>
-		<jakarta-validation.version>3.1.1</jakarta-validation.version>
-
 		<!-- DIF Versions -->
 
 		<did-common-java.version>1.18.0</did-common-java.version>
@@ -166,11 +160,6 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>${maven-release-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.openapitools</groupId>
-					<artifactId>openapi-generator-maven-plugin</artifactId>
-					<version>${openapi-generator.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -404,19 +393,6 @@
 				<groupId>decentralized-identity</groupId>
 				<artifactId>did-common-java</artifactId>
 				<version>${did-common-java.version}</version>
-			</dependency>
-
-			<!-- OpenAPI Dependencies -->
-
-			<dependency>
-				<groupId>jakarta.annotation</groupId>
-				<artifactId>jakarta.annotation-api</artifactId>
-				<version>${jakarta-annotation.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>jakarta.validation</groupId>
-				<artifactId>jakarta.validation-api</artifactId>
-				<version>${jakarta-validation.version}</version>
 			</dependency>
 
 			<!-- Other Dependencies -->

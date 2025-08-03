@@ -11,67 +11,6 @@
 		<version>0.36-SNAPSHOT</version>
 	</parent>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clean-plugin</artifactId>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>${project.basedir}/openapi/java-client-generated/</directory>
-							<includes>
-								<include>**/*</include>
-							</includes>
-							<excludes>
-								<exclude>.gitignore</exclude>
-								<exclude>.openapi-generator-ignore</exclude>
-							</excludes>
-							<followSymlinks>false</followSymlinks>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.openapitools</groupId>
-				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>execution-universal-resolver</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<generatorName>java</generatorName>
-							<inputSpec>${project.parent.basedir}/openapi/openapi.yaml</inputSpec>
-							<output>openapi/java-client-generated/</output>
-							<apiPackage>uniresolver.openapi.api</apiPackage>
-							<modelPackage>uniresolver.openapi.model</modelPackage>
-							<invokerPackage>uniresolver.openapi</invokerPackage>
-							<openapiNormalizer>REF_AS_PARENT_IN_ALLOF=true</openapiNormalizer>
-							<configOptions>
-								<basePackage>uniresolver</basePackage>
-								<sourceFolder>src/main/java/</sourceFolder>
-								<groupId>decentralized-identity</groupId>
-								<artifactId>uniresolver-openapi</artifactId>
-								<artifactVersion>${project.version}</artifactVersion>
-								<configPackage>uniresolver.openapi.config</configPackage>
-								<asyncNative>false</asyncNative>
-								<disallowAdditionalPropertiesIfNotPresent>false</disallowAdditionalPropertiesIfNotPresent>
-								<library>native</library>
-								<useBeanValidation>true</useBeanValidation>
-								<dateLibrary>java8</dateLibrary>
-								<hideGenerationTimestamp>true</hideGenerationTimestamp>
-								<openApiNullable>false</openApiNullable>
-								<useJakartaEe>true</useJakartaEe>
-							</configOptions>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-
 	<dependencies>
 		<dependency>
 			<groupId>decentralized-identity</groupId>
@@ -88,14 +27,6 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.annotation</groupId>
-			<artifactId>jakarta.annotation-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.validation</groupId>
-			<artifactId>jakarta.validation-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
