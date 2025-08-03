@@ -11,6 +11,8 @@ import foundation.identity.did.representations.consumption.RepresentationConsume
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uniresolver.DereferencingException;
+import uniresolver.ResolutionException;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
 
@@ -74,6 +76,20 @@ public class HttpBindingClientUtil {
             resolveResult.setContentType(contentType);
         }
 
+        // error
+
+        Object error = resolveResult.getDidResolutionMetadata().get("error");
+        if (error instanceof String errorString) {
+            String errorMessage = (String) resolveResult.getFunctionMetadata().get("errorMessage");
+            String errorType = ResolutionException.determineErrorType(errorString);
+            String errorTitle = ResolutionException.determineErrorTitle(errorType);
+            String errorDetail = errorMessage;
+            resolveResult.getDidResolutionMetadata().remove("error");
+            resolveResult.setError(errorType, errorTitle);
+            resolveResult.setErrorDetail(errorDetail);
+            if (log.isDebugEnabled()) log.debug("Determined error metadata property from '" + error + "' and '" + errorMessage + "'.");
+        }
+
         // finish result
 
         DIDDocument didDocument = didDocumentBytes == null ? null : RepresentationConsumer.consume(didDocumentBytes, contentType);
@@ -123,6 +139,20 @@ public class HttpBindingClientUtil {
             contentType = Representations.DEFAULT_MEDIA_TYPE;
             if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
             dereferenceResult.setContentType(contentType);
+        }
+
+        // error
+
+        Object error = dereferenceResult.getDereferencingMetadata().get("error");
+        if (error instanceof String errorString) {
+            String errorMessage = (String) dereferenceResult.getDereferencingMetadata().get("errorMessage");
+            String errorType = DereferencingException.determineErrorType(errorString);
+            String errorTitle = DereferencingException.determineErrorTitle(errorType);
+            String errorDetail = errorMessage;
+            dereferenceResult.getDereferencingMetadata().remove("error");
+            dereferenceResult.setError(errorType, errorTitle);
+            dereferenceResult.setErrorDetail(errorDetail);
+            if (log.isDebugEnabled()) log.debug("Determined error metadata property from '" + error + "' and '" + errorMessage + "'.");
         }
 
         // finish result

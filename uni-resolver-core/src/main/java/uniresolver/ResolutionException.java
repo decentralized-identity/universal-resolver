@@ -23,7 +23,7 @@ public class ResolutionException extends Exception {
 			ERROR_NOT_FOUND, "The DID or DID document was not found.",
 			ERROR_METHOD_NOT_SUPPORTED, "The DID method is not supported.",
 			ERROR_REPRESENTATION_NOT_SUPPORTED, "The representation is not supported.",
-			ERROR_INTERNAL_ERROR, "An internall error has occurred."
+			ERROR_INTERNAL_ERROR, "An internal error has occurred."
 	);
 
 	public static final String DEFAULT_ERROR_TITLE = "DID Resolution error.";
@@ -38,15 +38,15 @@ public class ResolutionException extends Exception {
 
 	public ResolutionException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata, Throwable ex) {
 		super(errorDetail, ex);
-		this.errorType = errorType(errorType);
-		this.errorTitle = errorTitle(errorType, errorTitle);
+		this.errorType = determineErrorType(errorType);
+		this.errorTitle = determineErrorTitle(errorType, errorTitle);
 		this.errorMetadata = errorMetadata;
 	}
 
 	public ResolutionException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata) {
 		super(errorDetail);
-		this.errorType = errorType(errorType);
-		this.errorTitle = errorTitle(errorType, errorTitle);
+		this.errorType = determineErrorType(errorType);
+		this.errorTitle = determineErrorTitle(errorType, errorTitle);
 		this.errorMetadata = errorMetadata;
 	}
 
@@ -115,16 +115,24 @@ public class ResolutionException extends Exception {
 	 * Helper methods
 	 */
 
-	private static String errorType(String errorType) {
+	public static String determineErrorType(String errorType) {
+		for (String determineErrorType : ERROR_TITLES.keySet()) {
+			if (determineErrorType.equalsIgnoreCase(errorType)) return determineErrorType;
+			if (determineErrorType.replace("_", "").equalsIgnoreCase(errorType)) return determineErrorType;
+		}
 		if (errorType != null) return errorType;
 		return ERROR_INTERNAL_ERROR;
 	}
 
-	private static String errorTitle(String errorType, String errorTitle) {
+	public static String determineErrorTitle(String errorType, String errorTitle) {
 		if (errorTitle != null) return errorTitle;
 		errorTitle = ERROR_TITLES.get(errorType);
 		if (errorTitle == null) errorTitle = DEFAULT_ERROR_TITLE;
 		return errorTitle;
+	}
+
+	public static String determineErrorTitle(String errorType) {
+		return determineErrorTitle(errorType, null);
 	}
 
 	/*
