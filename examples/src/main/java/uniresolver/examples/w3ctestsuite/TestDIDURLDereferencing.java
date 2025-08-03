@@ -37,7 +37,7 @@ public class TestDIDURLDereferencing {
 	public static void main(String[] args) throws Exception {
 
 		Map<String, Object> dereferenceOptions = new HashMap<>();
-		dereferenceOptions.put("accept", "application/did+ld+json");
+		dereferenceOptions.put("accept", "application/did");
 
 		ClientUniResolver uniResolver = new ClientUniResolver();
 		uniResolver.setResolveUri("http://localhost:8080/1.0/identifiers/");

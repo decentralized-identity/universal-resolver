@@ -14,7 +14,7 @@ Your driver will be invoked via an HTTP GET call to:
 
 `http://<your-image-url>/1.0/identifiers/<your-did>`
 
-Your driver will receive an `Accept` header with the value `application/ld+json`, and it should return either a valid [DID Document](https://w3c.github.io/did-resolution/#output-diddocument) or a [DID Resolution Result](https://w3c.github.io/did-resolution/#did-resolution-result) in the HTTP body. Your driver should also return an appropriate value in the `Content-Type` header, such as `application/did+ld+json`.
+Your driver will receive an `Accept` header with the value `application/ld+json`, and it should return either a valid [DID Document](https://w3c.github.io/did-resolution/#output-diddocument) or a [DID Resolution Result](https://w3c.github.io/did-resolution/#did-resolution-result) in the HTTP body. Your driver should also return an appropriate value in the `Content-Type` header, such as `application/did`.
 
 An OpenAPI definition for DID Resolution is available [here](https://github.com/decentralized-identity/universal-resolver/blob/main/openapi/openapi.yaml).
 

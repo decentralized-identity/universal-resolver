@@ -18,7 +18,7 @@ public class TestDriverDidSov {
 		driver.setPoolVersions("_;2");
 
 		Map<String, Object> resolveOptions = new HashMap<>();
-		resolveOptions.put("accept", "application/did+ld+json");
+		resolveOptions.put("accept", "application/did");
 
 		ResolveResult resolveResult;
 		resolveResult = driver.resolve(DID.fromString("did:sov:WRfXPg8dantKVubE3HX8pw"), resolveOptions);

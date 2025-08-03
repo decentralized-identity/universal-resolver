@@ -33,7 +33,7 @@ public class TestDIDResolution {
 	static final List<Map<String, Object>> resolutionOptions = List.of(
 			Map.of(),
 			Map.of(
-					"accept", "application/did+ld+json"
+					"accept", "application/did"
 			),
 			Map.of(),
 			Map.of()

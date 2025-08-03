@@ -106,8 +106,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
 
-	curl -H "Accept: application/did+ld+json" https://dev.uniresolver.io/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
-	curl -H "Accept: application/did+json" https://dev.uniresolver.io/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
+	curl -H "Accept: application/did" https://dev.uniresolver.io/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
 	curl -H "Accept: application/did+cbor" https://dev.uniresolver.io/1.0/identifiers/did:sov:WRfXPg8dantKVubE3HX8pw
 
 If this doesn't work, see [Troubleshooting](/docs/troubleshooting.md).

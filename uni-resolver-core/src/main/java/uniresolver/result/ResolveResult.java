@@ -17,7 +17,7 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class ResolveResult implements Result {
 
-    public static final String MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
+    public static final String MEDIA_TYPE = "application/did-resolution";
     public static final ContentType CONTENT_TYPE = ContentType.parse(MEDIA_TYPE);
 
     private static final URI DEFAULT_JSONLD_CONTEXT = URI.create("https://w3id.org/did-resolution/v1");
@@ -148,9 +148,7 @@ public class ResolveResult implements Result {
 
     @JsonIgnore
     public static boolean isMediaType(ContentType mediaType) {
-        boolean isResolveResultMimeTypeEquals = CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType());
-        boolean isResolveResultProfileEquals = CONTENT_TYPE.getParameter("profile").equals(mediaType.getParameter("profile"));
-        return isResolveResultMimeTypeEquals && isResolveResultProfileEquals;
+        return CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType());
     }
 
     /*
