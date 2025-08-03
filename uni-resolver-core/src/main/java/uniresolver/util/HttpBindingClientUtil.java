@@ -84,7 +84,6 @@ public class HttpBindingClientUtil {
                     RepresentationProducerDIDCBOR.MEDIA_TYPE;
             default -> determinedContentType;
         };
-
         if (log.isDebugEnabled()) log.debug("Determined 'contentType' metadata property from value " + contentType + ": " + determinedContentType);
         resolveResult.setContentType(determinedContentType);
 
@@ -149,11 +148,20 @@ public class HttpBindingClientUtil {
         // contentType
 
         String contentType = dereferenceResult.getContentType();
-        if (contentType == null) {
-            contentType = Representations.DEFAULT_MEDIA_TYPE;
-            if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default DID document representation media type " + Representations.DEFAULT_MEDIA_TYPE);
-            dereferenceResult.setContentType(contentType);
-        }
+        String determinedContentType = contentType;
+        if (determinedContentType == null) determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
+        determinedContentType = switch (determinedContentType) {
+            case "application/did+ld+json",
+                 "application/did+json",
+                 "application/ld+json",
+                 "application/json" ->
+                    RepresentationProducerDID.MEDIA_TYPE;
+            case "application/cbor" ->
+                    RepresentationProducerDIDCBOR.MEDIA_TYPE;
+            default -> determinedContentType;
+        };
+        if (log.isDebugEnabled()) log.debug("Determined 'contentType' metadata property from value " + contentType + ": " + determinedContentType);
+        dereferenceResult.setContentType(determinedContentType);
 
         // error
 

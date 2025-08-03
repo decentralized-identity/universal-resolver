@@ -9,7 +9,6 @@ import org.apache.http.entity.ContentType;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,7 +19,8 @@ public class ResolveResult implements Result {
     public static final String MEDIA_TYPE = "application/did-resolution";
     public static final ContentType CONTENT_TYPE = ContentType.parse(MEDIA_TYPE);
 
-    private static final URI DEFAULT_JSONLD_CONTEXT = URI.create("https://w3id.org/did-resolution/v1");
+    public static final String LEGACY_MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
+    public static final ContentType LEGACY_CONTENT_TYPE = ContentType.parse(LEGACY_MEDIA_TYPE);
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -143,7 +143,7 @@ public class ResolveResult implements Result {
 
     @JsonIgnore
     public static boolean isMediaType(ContentType mediaType) {
-        return CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType());
+        return CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType()) || LEGACY_CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType());
     }
 
     /*

@@ -22,6 +22,9 @@ public class DereferenceResult implements Result {
 	public static final String MEDIA_TYPE = "application/did-url-dereferencing";
 	public static final ContentType CONTENT_TYPE = ContentType.parse(MEDIA_TYPE);
 
+	public static final String LEGACY_MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-url-dereferencing\"";
+	public static final ContentType LEGACY_CONTENT_TYPE = ContentType.parse(LEGACY_MEDIA_TYPE);
+
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@JsonProperty("dereferencingMetadata")
@@ -168,7 +171,7 @@ public class DereferenceResult implements Result {
 
 	@JsonIgnore
 	public static boolean isMediaType(ContentType mediaType) {
-		return CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType());
+		return CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType()) || LEGACY_CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType());
 	}
 
 	/*

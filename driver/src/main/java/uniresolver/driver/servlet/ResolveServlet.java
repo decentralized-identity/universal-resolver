@@ -171,7 +171,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
-			if (result instanceof ResolveResult && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
+			if (result instanceof ResolveResult && (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE) || MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.LEGACY_MEDIA_TYPE))) {
 				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default resolve result content type " + ResolveResult.MEDIA_TYPE);
 				ServletUtil.sendResponse(
 						response,
@@ -181,7 +181,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 				return;
 			}
 
-			if (result instanceof DereferenceResult && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) {
+			if (result instanceof DereferenceResult && (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE) || MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.LEGACY_MEDIA_TYPE))) {
 				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default dereference result content type " + DereferenceResult.MEDIA_TYPE);
 				ServletUtil.sendResponse(
 						response,
