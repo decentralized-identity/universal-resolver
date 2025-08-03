@@ -12,9 +12,9 @@ public class ResolutionException extends Exception {
 	public static final String ERROR_INVALID_DID_DOCUMENT = "INVALID_DID_DOCUMENT";
 	public static final String ERROR_INVALID_OPTIONS = "INVALID_OPTIONS";
 	public static final String ERROR_NOT_FOUND = "NOT_FOUND";
-	public static final String ERROR_METHOD_NOT_SUPPORTED = "methodNotSupported";
-	public static final String ERROR_REPRESENTATION_NOT_SUPPORTED = "representationNotSupported";
-	public static final String ERROR_INTERNAL_ERROR = "internalError";
+	public static final String ERROR_METHOD_NOT_SUPPORTED = "METHOD_NOT_SUPPORTED";
+	public static final String ERROR_REPRESENTATION_NOT_SUPPORTED = "REPRESENTATION_NOT_SUPPORTED";
+	public static final String ERROR_INTERNAL_ERROR = "INTERNAL_ERROR";
 
 	public static final Map<String, String> ERROR_TITLES = Map.of(
 			ERROR_INVALID_DID, "Invalid DID.",
