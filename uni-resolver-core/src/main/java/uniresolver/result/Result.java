@@ -114,7 +114,7 @@ public interface Result {
     default public void setErrorDetail(String errorDetail) {
         if (this.getFunctionMetadata() == null) throw new NullPointerException();
         Map<String, Object> error = (Map<String, Object>) this.getFunctionMetadata().computeIfAbsent("error", k -> new LinkedHashMap<>());
-        if (errorDetail != null) error.put("type", errorDetail); else error.remove("detail");
+        if (errorDetail != null) error.put("detail", errorDetail); else error.remove("detail");
     }
 
     @JsonIgnore
