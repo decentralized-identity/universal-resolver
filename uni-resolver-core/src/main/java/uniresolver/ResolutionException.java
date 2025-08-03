@@ -8,54 +8,66 @@ import java.util.Map;
 
 public class ResolutionException extends Exception {
 
-	public static final String ERROR_INVALIDDID = "invalidDid";
-	public static final String ERROR_NOTFOUND = "notFound";
-	public static final String ERROR_REPRESENTATIONNOTSUPPORTED = "representationNotSupported";
-	public static final String ERROR_METHODNOTSUPPORTED = "methodNotSupported";
-	public static final String ERROR_INTERNALERROR = "internalError";
+	public static final String ERROR_INVALID_DID = "INVALID_DID";
+	public static final String ERROR_INVALID_OPTIONS = "INVALID_OPTIONS";
+	public static final String ERROR_NOT_FOUND = "NOT_FOUND";
+	public static final String ERROR_REPRESENTATION_NOT_SUPPORTED = "representationNotSupported";
+	public static final String ERROR_METHOD_NOT_SUPPORTED = "methodNotSupported";
+	public static final String ERROR_INTERNAL_ERROR = "internalError";
+
+	public static final Map<String, String> ERROR_TITLES = Map.of(
+			ERROR_INVALID_DID, "Invalid DID.",
+			ERROR_INVALID_OPTIONS, "Invalid DID resolution options.",
+			ERROR_NOT_FOUND, "The DID or DID document was not found.",
+			ERROR_REPRESENTATION_NOT_SUPPORTED, "The representation is not supported.",
+			ERROR_METHOD_NOT_SUPPORTED, "The DID method is not supported.",
+			ERROR_INTERNAL_ERROR, "An internall error has occurred."
+	);
 
 	private static final Logger log = LoggerFactory.getLogger(ResolutionException.class);
 
-	private final String error;
-	private final Map<String, Object> didResolutionMetadata;
+	private final String errorType;
+	private final String errorTitle;
+	private final Map<String, Object> errorMetadata;
 
 	private ResolveResult resolveResult;
 
-	public ResolutionException(String error, String message, Map<String, Object> didResolutionMetadata, Throwable ex) {
-		super(message, ex);
-		this.error = error;
-		this.didResolutionMetadata = didResolutionMetadata;
+	public ResolutionException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata, Throwable ex) {
+		super(errorDetail, ex);
+		this.errorType = errorType;
+		this.errorTitle = errorTitle;
+		this.errorMetadata = errorMetadata;
 	}
 
-	public ResolutionException(String error, String message, Map<String, Object> didResolutionMetadata) {
-		super(message);
-		this.error = error;
-		this.didResolutionMetadata = didResolutionMetadata;
+	public ResolutionException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata) {
+		super(errorDetail);
+		this.errorType = errorType;
+		this.errorTitle = errorTitle;
+		this.errorMetadata = errorMetadata;
 	}
 
-	public ResolutionException(String error, String message, Throwable ex) {
-		this(error, message, (Map<String, Object>) null, ex);
+	public ResolutionException(String errorType, String errorTitle, String errorDetail, Throwable ex) {
+		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null, ex);
 	}
 
-	public ResolutionException(String error, String message) {
-		this(error, message, (Map<String, Object>) null);
+	public ResolutionException(String errorType, String errorTitle, String errorDetail) {
+		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null);
 	}
 
-	public ResolutionException(String message, Throwable ex) {
-		this(ERROR_INTERNALERROR, message, ex);
+	public ResolutionException(String errorDetail, Throwable ex) {
+		this(ERROR_INTERNAL_ERROR, null, errorDetail, ex);
 	}
 
-	public ResolutionException(String message) {
-		this(ERROR_INTERNALERROR, message);
-	}
-
-	public ResolutionException(Throwable ex) {
-		this(ex.getMessage(), ex);
+	public ResolutionException(String errorDetail) {
+		this(ERROR_INTERNAL_ERROR, null, errorDetail);
 	}
 
 	public static ResolutionException fromResolveResult(ResolveResult resolveResult) {
 		if (resolveResult != null && resolveResult.isErrorResult()) {
-			ResolutionException resolutionException = new ResolutionException(resolveResult.getError(), resolveResult.getErrorMessage(), resolveResult.getDidResolutionMetadata());
+			ResolutionException resolutionException = new ResolutionException(
+					resolveResult.getError(),
+					resolveResult.getErrorMessage(),
+					resolveResult.getDidResolutionMetadata());
 			resolutionException.resolveResult = resolveResult;
 			return resolutionException;
 		} else {
@@ -72,7 +84,7 @@ public class ResolutionException extends Exception {
 		ResolveResult resolveResult = ResolveResult.build();
 		if (this.getError() != null) resolveResult.setError(this.getError());
 		if (this.getMessage() != null) resolveResult.setErrorMessage(this.getMessage());
-		if (this.getDidResolutionMetadata() != null) resolveResult.getDidResolutionMetadata().putAll(this.getDidResolutionMetadata());
+		if (this.getErrorMetadata() != null) resolveResult.getDidResolutionMetadata().putAll(this.getErrorMetadata());
 		resolveResult.setDidDocument(null);
 		if (log.isDebugEnabled()) log.debug("Created error resolve result: " + resolveResult);
 		return resolveResult;
@@ -86,7 +98,7 @@ public class ResolutionException extends Exception {
 		return error;
 	}
 
-	public Map<String, Object> getDidResolutionMetadata() {
-		return didResolutionMetadata;
+	public Map<String, Object> getErrorMetadata() {
+		return errorMetadata;
 	}
 }

@@ -91,7 +91,7 @@ public class LocalUniResolver implements UniResolver {
 
 			String errorMessage = ex.getMessage();
 			if (log.isWarnEnabled()) log.warn(errorMessage);
-			throw new ResolutionException(ResolutionException.ERROR_INVALIDDID, errorMessage);
+			throw new ResolutionException(ResolutionException.ERROR_INVALID_DID, errorMessage);
 		}
 
 		// [before resolve]
@@ -111,7 +111,7 @@ public class LocalUniResolver implements UniResolver {
 
 			if (driverResolveResult == null) {
 				if (log.isInfoEnabled()) log.info("Method not supported: " + did.getMethodName());
-				throw new ResolutionException(ResolutionException.ERROR_METHODNOTSUPPORTED, "Method not supported: " + did.getMethodName());
+				throw new ResolutionException(ResolutionException.ERROR_METHOD_NOT_SUPPORTED, "Method not supported: " + did.getMethodName());
 			}
 
 			resolveResult.setDidDocument(driverResolveResult.getDidDocument());
@@ -123,7 +123,7 @@ public class LocalUniResolver implements UniResolver {
 
 		if (! resolveResult.isComplete()) {
 			if (log.isInfoEnabled()) log.info("Resolve result is incomplete: " + resolveResult);
-			throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "No resolve result for " + didString);
+			throw new ResolutionException(ResolutionException.ERROR_NOT_FOUND, "No resolve result for " + didString);
 		}
 
 		// [after resolve]

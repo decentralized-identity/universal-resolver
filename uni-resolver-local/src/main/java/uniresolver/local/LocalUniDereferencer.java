@@ -11,7 +11,6 @@ import uniresolver.UniDereferencer;
 import uniresolver.UniResolver;
 import uniresolver.driver.Driver;
 import uniresolver.driver.http.HttpDriver;
-import uniresolver.driver.util.HttpBindingServerUtil;
 import uniresolver.local.configuration.LocalUniResolverConfigurator;
 import uniresolver.local.extensions.DereferencerExtension;
 import uniresolver.local.extensions.ExtensionStatus;
@@ -105,7 +104,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
             String errorMessage = ex.getMessage();
             if (log.isWarnEnabled()) log.warn(errorMessage);
-            throw new DereferencingException(DereferencingException.ERROR_INVALIDDIDURL, errorMessage, ex);
+            throw new DereferencingException(DereferencingException.ERROR_INVALID_DID_URL, errorMessage, ex);
         }
 
         // [before dereference]
@@ -170,7 +169,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         if (! dereferenceResult.isComplete()) {
             if (log.isInfoEnabled()) log.info("Primary dereference result is incomplete: " + dereferenceResult);
-            throw new DereferencingException(DereferencingException.ERROR_NOTFOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
+            throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
         }
 
         // [dereference secondary]
@@ -181,7 +180,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         if (! dereferenceResult.isComplete()) {
             if (log.isInfoEnabled()) log.info("Secondary dereference result is incomplete: " + dereferenceResult);
-            throw new DereferencingException(DereferencingException.ERROR_NOTFOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
+            throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
         }
 
         // [after dereference]
