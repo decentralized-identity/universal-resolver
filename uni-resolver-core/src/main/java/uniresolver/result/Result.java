@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,19 +138,16 @@ public interface Result {
     }
 
     @JsonIgnore
-    default public void addWarning(String message, Map<String, Object> warningMetadata) {
-        if (message == null) throw new NullPointerException();
+    default public void addWarning(String warningType, String warningTitle, String warningDetail, Map<String, Object> warningMetadata) {
+        if (warningType == null) throw new NullPointerException();
+        if (warningTitle == null) throw new NullPointerException();
         if (this.getFunctionMetadata() == null) throw new NullPointerException();
-        List<Map<String, Object>> warnings = (List<Map<String, Object>>) this.getFunctionMetadata().get("warnings");
-        if (warnings == null) { warnings = new ArrayList<>(); this.getFunctionMetadata().put("warnings", warnings); }
+        List<Map<String, Object>> warnings = (List<Map<String, Object>>) this.getFunctionMetadata().computeIfAbsent("warnings", k -> new LinkedHashMap<>());
         Map<String, Object> warning = new LinkedHashMap<>();
-        if (message != null) warning.put("message", message);
+        warning.put("type", warningType);
+        warning.put("title", warningTitle);
+        if (warningDetail != null) warning.put("detail", warningDetail);
         if (warningMetadata != null) warning.putAll(warningMetadata);
         warnings.add(warning);
-    }
-
-    @JsonIgnore
-    default public void addWarning(String message) {
-        this.addWarning(message, null);
     }
 }
