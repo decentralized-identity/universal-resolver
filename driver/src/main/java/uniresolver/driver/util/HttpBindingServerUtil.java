@@ -115,14 +115,27 @@ public class HttpBindingServerUtil {
 
     public static String resolveAcceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
         for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
+
             if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
             if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
 
-            ContentType mediaType = ContentType.parse(httpAcceptMediaType.toString());
-            if (Representations.isProducibleMediaType(mediaType.getMimeType())) return mediaType.getMimeType();
-            else if ("application/ld+json".equals(mediaType.getMimeType())) return RepresentationProducerDIDJSONLD.MEDIA_TYPE;
-            else if ("application/json".equals(mediaType.getMimeType())) return RepresentationProducerDIDJSON.MEDIA_TYPE;
-            else if ("application/cbor".equals(mediaType.getMimeType())) return RepresentationProducerDIDCBOR.MEDIA_TYPE;
+            String accept = ContentType.parse(httpAcceptMediaType.toString()).getMimeType();
+            String determinedAccept = accept;
+            determinedAccept = switch (determinedAccept) {
+                case "application/did+ld+json",
+                     "application/did+json",
+                     "application/ld+json",
+                     "application/json" ->
+                        RepresentationProducerDID.MEDIA_TYPE;
+                case "application/cbor" ->
+                        RepresentationProducerDIDCBOR.MEDIA_TYPE;
+                default -> determinedAccept;
+            };
+
+            if (Representations.isProducibleMediaType(determinedAccept)) {
+                if (log.isDebugEnabled()) log.debug("Determined 'accept' resolution option from value " + accept + ": " + determinedAccept);
+                return determinedAccept;
+            }
         }
         return RESOLVE_DEFAULT_ACCEPT;
     }
