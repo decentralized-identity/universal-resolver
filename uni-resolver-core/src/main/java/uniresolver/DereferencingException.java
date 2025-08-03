@@ -9,6 +9,7 @@ import java.util.Map;
 public class DereferencingException extends Exception {
 
 	public static final String ERROR_INVALID_DID_URL = "INVALID_DID_URL";
+	public static final String ERROR_INVALID_OPTIONS = "INVALID_OPTIONS";
 	public static final String ERROR_NOT_FOUND = "NOT_FOUND";
 	public static final String ERROR_CONTENT_TYPE_NOT_SUPPORTED = "CONTENT_TYPE_NOT_SUPPORTED";
 	public static final String ERROR_INTERNAL_ERROR = "INTERNAL_ERROR";

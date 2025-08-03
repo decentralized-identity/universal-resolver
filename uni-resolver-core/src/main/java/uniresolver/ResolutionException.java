@@ -9,18 +9,20 @@ import java.util.Map;
 public class ResolutionException extends Exception {
 
 	public static final String ERROR_INVALID_DID = "INVALID_DID";
+	public static final String ERROR_INVALID_DID_DOCUMENT = "INVALID_DID_DOCUMENT";
 	public static final String ERROR_INVALID_OPTIONS = "INVALID_OPTIONS";
 	public static final String ERROR_NOT_FOUND = "NOT_FOUND";
-	public static final String ERROR_REPRESENTATION_NOT_SUPPORTED = "representationNotSupported";
 	public static final String ERROR_METHOD_NOT_SUPPORTED = "methodNotSupported";
+	public static final String ERROR_REPRESENTATION_NOT_SUPPORTED = "representationNotSupported";
 	public static final String ERROR_INTERNAL_ERROR = "internalError";
 
 	public static final Map<String, String> ERROR_TITLES = Map.of(
 			ERROR_INVALID_DID, "Invalid DID.",
+			ERROR_INVALID_DID_DOCUMENT, "Invalid DID document.",
 			ERROR_INVALID_OPTIONS, "Invalid DID resolution options.",
 			ERROR_NOT_FOUND, "The DID or DID document was not found.",
-			ERROR_REPRESENTATION_NOT_SUPPORTED, "The representation is not supported.",
 			ERROR_METHOD_NOT_SUPPORTED, "The DID method is not supported.",
+			ERROR_REPRESENTATION_NOT_SUPPORTED, "The representation is not supported.",
 			ERROR_INTERNAL_ERROR, "An internall error has occurred."
 	);
 
