@@ -8,9 +8,11 @@ server:
       testIdentifiers: "/1.0/testIdentifiers"
       traits: "/1.0/traits"
   port: "8080"
+
 spring:
   profiles:
     active: ${uniresolver_web_spring_profiles_active:default}
+
 uniresolver:
   drivers:
     - pattern: "^(did:btcr:.+)$"
