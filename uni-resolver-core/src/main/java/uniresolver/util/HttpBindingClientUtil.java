@@ -82,7 +82,7 @@ public class HttpBindingClientUtil {
                     RepresentationProducerDID.MEDIA_TYPE;
             case "application/cbor" ->
                     RepresentationProducerDIDCBOR.MEDIA_TYPE;
-            default -> contentType;
+            default -> determinedContentType;
         };
 
         if (log.isDebugEnabled()) log.debug("Determined 'contentType' metadata property from value " + contentType + ": " + determinedContentType);
@@ -106,7 +106,7 @@ public class HttpBindingClientUtil {
 
         // finish result
 
-        DIDDocument didDocument = didDocumentBytes == null ? null : RepresentationConsumer.consume(didDocumentBytes, contentType);
+        DIDDocument didDocument = didDocumentBytes == null ? null : RepresentationConsumer.consume(didDocumentBytes, determinedContentType);
         resolveResult.setDidDocument(didDocument);
 
         // done
