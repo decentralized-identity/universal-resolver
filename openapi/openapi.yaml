@@ -12,11 +12,13 @@ paths:
   "/identifiers/{identifier}":
     get:
       summary: Resolve a DID / Dereference a DID URL
-      description: <p>This endpoint resolves a DID or dereferences a DID URL. As input it takes the
-        DID or DID URL, plus resolution options or dereferencing options.
-        The output is a DID document plus
-        metadata. The same endpoint can also be used to dereference a DID URL. In
-        this case, the output is a DID document, or part of a DID document, or some
+      description: <p>This endpoint either resolves a DID, or dereferences a DID URL.
+        When resolving a DID,
+        it takes the DID and resolution options as inputs, and
+        the output is a DID document plus metadata.
+        When dereferencing a DID URL,
+        it takes the DID URL and dereferencing options as inputs, and
+        the output is a DID document, a part of a DID document, or some
         other resource identified by the DID URL.</p>
         <p>See the <a href="<a href="https://www.w3.org/TR/did-resolution/">DID
         Resolution</a> specification for additional details.</p>
