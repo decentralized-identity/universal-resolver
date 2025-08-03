@@ -99,11 +99,6 @@ public class ResolveResult implements Result {
     }
 
     @Override
-    public URI getDefaultContext() {
-        return DEFAULT_JSONLD_CONTEXT;
-    }
-
-    @Override
     public boolean isComplete() {
         return this.getContentType() != null && this.getDidDocument() != null;
     }

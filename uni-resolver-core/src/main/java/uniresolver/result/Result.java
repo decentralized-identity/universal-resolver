@@ -3,7 +3,6 @@ package uniresolver.result;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,9 +32,6 @@ public interface Result {
 
     @JsonIgnore
     public String toJson();
-
-    @JsonIgnore
-    public URI getDefaultContext();
 
     @JsonIgnore
     public boolean isComplete();

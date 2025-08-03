@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.production.RepresentationProducerDID;
 import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
-import foundation.identity.did.representations.production.RepresentationProducerDIDJSON;
-import foundation.identity.did.representations.production.RepresentationProducerDIDJSONLD;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
@@ -80,7 +78,6 @@ public class HttpBindingServerUtil {
         }
 
         Map<String, Object> json = new LinkedHashMap<>();
-        json.put("@context", result.getDefaultContext());
         byte[] content = result.getFunctionContent();
         if (content == null || content.length == 0) {
             json.put(functionContentProperty, null);

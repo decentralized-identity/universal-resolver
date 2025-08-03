@@ -22,8 +22,6 @@ public class DereferenceResult implements Result {
 	public static final String MEDIA_TYPE = "application/did-url-dereferencing";
 	public static final ContentType CONTENT_TYPE = ContentType.parse(MEDIA_TYPE);
 
-	private static final URI DEFAULT_JSONLD_CONTEXT = URI.create("https://w3id.org/did-resolution/v1");
-
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@JsonProperty("dereferencingMetadata")
@@ -97,11 +95,6 @@ public class DereferenceResult implements Result {
 		} catch (JsonProcessingException ex) {
 			throw new RuntimeException("Cannot write JSON: " + ex.getMessage(), ex);
 		}
-	}
-
-	@Override
-	public URI getDefaultContext() {
-		return DEFAULT_JSONLD_CONTEXT;
 	}
 
 	@Override
