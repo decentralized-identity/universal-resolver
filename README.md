@@ -198,8 +198,6 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-tgrid](https://github.com/tgrid-usa/uni-resolver-driver-did-trustgrid)                              | 1.0.0          | [1.0.0](https://github.com/tgrid-usa/uni-resolver-driver-did-trustgrid/blob/main/README.md)                | [trustgrid/uni-resolver-driver-did-tgrid](https://hub.docker.com/r/trustgrid01/uni-resolver-driver-did-tgrid)                                                                | TrustGrid DID                                                                   
 
 
-[did-tgrid](https://github.com/tgrid-usa/Universal-did-proxy-resolver)                              | 1.0.0          | [1.0.0](https://github.com/tgrid-usa/uni-resolver-driver-did-trustgrid/blob/main/README.md)                | [trustgrid/uni-resolver-driver-did-tgrid](https://hub.docker.com/r/trustgrid01/uni-resolver-driver-did-tgrid)                                                                | Trustgrid DID (tgrid)                                                                      
-
 
 ## More Information
 
