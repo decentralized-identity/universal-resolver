@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.IOException;
 import java.net.URI;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -142,7 +143,7 @@ public interface Result {
         if (warningType == null) throw new NullPointerException();
         if (warningTitle == null) throw new NullPointerException();
         if (this.getFunctionMetadata() == null) throw new NullPointerException();
-        List<Map<String, Object>> warnings = (List<Map<String, Object>>) this.getFunctionMetadata().computeIfAbsent("warnings", k -> new LinkedHashMap<>());
+        List<Map<String, Object>> warnings = (List<Map<String, Object>>) this.getFunctionMetadata().computeIfAbsent("warnings", k -> new LinkedList<>());
         Map<String, Object> warning = new LinkedHashMap<>();
         warning.put("type", warningType);
         warning.put("title", warningTitle);
