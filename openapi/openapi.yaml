@@ -42,12 +42,6 @@ paths:
             example3:
               value: did:ebsi:z25ZZFS7FweHsm9MX2Qvc6gc
               description: A DID using the `ebsi` method.
-            example4:
-              value: did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx#key-1
-              description: A DID URL with a fragment.
-            example5:
-              value: did:ebsi:z25ZZFS7FweHsm9MX2Qvc6gc#keys-1
-              description: A DID URL with a fragment.
         - in: header
           required: false
           name: Accept
@@ -68,9 +62,9 @@ paths:
         - in: query
           name: options
           schema:
-            type: object
-            additionalProperties:
-              type: string
+            oneOf:
+              - $ref: "#/components/schemas/ResolutionOptions"
+              - $ref: "#/components/schemas/DereferencingOptions"
           description: The options for resolving the DID or dereferencing the DID URL.
           style: form
           explode: true
@@ -208,6 +202,25 @@ paths:
                     humanReadable: false
 components:
   schemas:
+    ResolutionOptions:
+      description: The DID resolution options. See https://www.w3.org/TR/did-resolution/#did-resolution-options
+      type: object
+      properties:
+        expandRelativeUrls:
+          type: boolean
+        versionId:
+          type: string
+        versionTime:
+          type: string
+          format: date-time
+      additionalProperties: { }
+    DereferencingOptions:
+      description: The DID URL dereferencing options. See https://www.w3.org/TR/did-resolution/#did-url-dereferencing-options
+      type: object
+      properties:
+        verificationRelationship:
+          type: string
+      additionalProperties: { }
     ResolutionResult:
       description: The DID resolution result.
       type: object
@@ -215,11 +228,42 @@ components:
         didDocument:
           type: object
         didResolutionMetadata:
-          type: object
-          additionalProperties: { }
+          $ref: "#/components/schemas/DidResolutionMetadata"
         didDocumentMetadata:
-          type: object
-          additionalProperties: { }
+          $ref: "#/components/schemas/DidDocumentMetadata"
+    DidResolutionMetadata:
+      type: object
+      properties:
+        contentType:
+          type: string
+        error:
+          $ref: "#/components/schemas/RFC9457ProblemDetails"
+      additionalProperties: { }
+    DidDocumentMetadata:
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        deactivated:
+          type: string
+        nextUpdate:
+          type: string
+          format: date-time
+        versionId:
+          type: string
+        nextVersionId:
+          type: string
+        equivalentId:
+          type: array
+          items:
+            type: string
+        canonicalId:
+          type: string
+      additionalProperties: { }
     DereferencingResult:
       description: The DID URL dereferencing result.
       type: object
@@ -227,8 +271,34 @@ components:
         content:
           type: object
         dereferencingMetadata:
-          type: object
-          additionalProperties: { }
+          $ref: "#/components/schemas/DereferencingMetadata"
         contentMetadata:
-          type: object
-          additionalProperties: { }
+          $ref: "#/components/schemas/ContentMetadata"
+    DereferencingMetadata:
+      type: object
+      properties:
+        contentType:
+          type: string
+        error:
+          $ref: "#/components/schemas/RFC9457ProblemDetails"
+      additionalProperties: { }
+    ContentMetadata:
+      type: object
+      additionalProperties: { }
+    RFC9457ProblemDetails:
+      type: object
+      required:
+        - type
+        - title
+      properties:
+        type:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        detail:
+          type: string
+        instance:
+          type: string
+      additionalProperties: { }
