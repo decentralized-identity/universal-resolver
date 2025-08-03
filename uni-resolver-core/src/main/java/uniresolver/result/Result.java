@@ -63,21 +63,43 @@ public interface Result {
 
     @JsonIgnore
     default public boolean isErrorResult() {
-        return this.getError() != null;
+        return this.getFunctionMetadata().containsKey("error");
     }
 
     @JsonIgnore
     default public String getErrorType() {
         if (this.getFunctionMetadata() == null) throw new NullPointerException();
         Map<String, Object> error = (Map<String, Object>) this.getFunctionMetadata().get("error");
-        return error == null ? null : (String) error.get("type");
+        if (error == null) return null;
+        return (String) error.get("type");
     }
 
     @JsonIgnore
     default public String getErrorTitle() {
         if (this.getFunctionMetadata() == null) throw new NullPointerException();
         Map<String, Object> error = (Map<String, Object>) this.getFunctionMetadata().get("error");
-        return error == null ? null : (String) error.get("title");
+        if (error == null) return null;
+        return (String) error.get("title");
+    }
+
+    @JsonIgnore
+    default public String getErrorDetail() {
+        if (this.getFunctionMetadata() == null) throw new NullPointerException();
+        Map<String, Object> error = (Map<String, Object>) this.getFunctionMetadata().get("error");
+        if (error == null) return null;
+        return (String) error.get("detail");
+    }
+
+    @JsonIgnore
+    default public Map<String, Object> getErrorMetadata() {
+        if (this.getFunctionMetadata() == null) throw new NullPointerException();
+        Map<String, Object> error = (Map<String, Object>) this.getFunctionMetadata().get("error");
+        if (error == null) return null;
+        Map<String, Object> errorMetadata = new LinkedHashMap<>(error);
+        errorMetadata.remove("type");
+        errorMetadata.remove("title");
+        errorMetadata.remove("detail");
+        return errorMetadata;
     }
 
     @JsonIgnore
@@ -89,17 +111,17 @@ public interface Result {
     }
 
     @JsonIgnore
-    default public String getErrorDetail() {
-        if (this.getFunctionMetadata() == null) throw new NullPointerException();
-        Map<String, Object> error = (Map<String, Object>) this.getFunctionMetadata().get("error");
-        return error == null ? null : (String) error.get("detail");
-    }
-
-    @JsonIgnore
     default public void setErrorDetail(String errorDetail) {
         if (this.getFunctionMetadata() == null) throw new NullPointerException();
         Map<String, Object> error = (Map<String, Object>) this.getFunctionMetadata().computeIfAbsent("error", k -> new LinkedHashMap<>());
         if (errorDetail != null) error.put("type", errorDetail); else error.remove("detail");
+    }
+
+    @JsonIgnore
+    default public void setErrorMetadata(Map<String, Object> errorMetadata) {
+        if (this.getFunctionMetadata() == null) throw new NullPointerException();
+        Map<String, Object> error = (Map<String, Object>) this.getFunctionMetadata().computeIfAbsent("error", k -> new LinkedHashMap<>());
+        if (errorMetadata != null) error.putAll(errorMetadata);
     }
 
     /*

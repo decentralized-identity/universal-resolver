@@ -42,13 +42,13 @@ public class HttpBindingServerUtil {
     public static int httpStatusCodeForResult(Result result) {
         if (result.getFunctionMetadata() != null && result.getFunctionMetadata().containsKey("_http_code"))
             return (Integer) result.getFunctionMetadata().get("_http_code");
-        if (ResolutionException.ERROR_NOT_FOUND.equals(result.getError()))
+        if (ResolutionException.ERROR_NOT_FOUND.equals(result.getErrorType()))
             return HttpStatus.SC_NOT_FOUND;
-        else if (ResolutionException.ERROR_INVALID_DID.equals(result.getError()) || DereferencingException.ERROR_INVALID_DID_URL.equals(result.getError()))
+        else if (ResolutionException.ERROR_INVALID_DID.equals(result.getErrorType()) || DereferencingException.ERROR_INVALID_DID_URL.equals(result.getErrorType()))
             return HttpStatus.SC_BAD_REQUEST;
-        else if (ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED.equals(result.getError()) || DereferencingException.ERROR_CONTENT_TYPE_NOT_SUPPORTED.equals(result.getError()))
+        else if (ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED.equals(result.getErrorType()) || DereferencingException.ERROR_CONTENT_TYPE_NOT_SUPPORTED.equals(result.getErrorType()))
             return HttpStatus.SC_NOT_ACCEPTABLE;
-        else if (ResolutionException.ERROR_METHOD_NOT_SUPPORTED.equals(result.getError()))
+        else if (ResolutionException.ERROR_METHOD_NOT_SUPPORTED.equals(result.getErrorType()))
             return HttpStatus.SC_NOT_IMPLEMENTED;
         else if (result.isErrorResult())
             return HttpStatus.SC_INTERNAL_SERVER_ERROR;

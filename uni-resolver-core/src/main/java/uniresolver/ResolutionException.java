@@ -24,6 +24,8 @@ public class ResolutionException extends Exception {
 			ERROR_INTERNAL_ERROR, "An internall error has occurred."
 	);
 
+	public static final String DEFAULT_ERROR_TITLE = "DID Resolution error.";
+
 	private static final Logger log = LoggerFactory.getLogger(ResolutionException.class);
 
 	private final String errorType;
@@ -34,15 +36,15 @@ public class ResolutionException extends Exception {
 
 	public ResolutionException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata, Throwable ex) {
 		super(errorDetail, ex);
-		this.errorType = errorType;
-		this.errorTitle = errorTitle;
+		this.errorType = errorType(errorType);
+		this.errorTitle = errorTitle(errorType, errorTitle);
 		this.errorMetadata = errorMetadata;
 	}
 
 	public ResolutionException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata) {
 		super(errorDetail);
-		this.errorType = errorType;
-		this.errorTitle = errorTitle;
+		this.errorType = errorType(errorType);
+		this.errorTitle = errorTitle(errorType, errorTitle);
 		this.errorMetadata = errorMetadata;
 	}
 
@@ -54,20 +56,37 @@ public class ResolutionException extends Exception {
 		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null);
 	}
 
+	public ResolutionException(String errorType, String errorDetail, Map<String, Object> errorMetadata, Throwable ex) {
+		this(errorType, null, errorDetail, errorMetadata, ex);
+	}
+
+	public ResolutionException(String errorType, String errorDetail, Map<String, Object> errorMetadata) {
+		this(errorType, null, errorDetail, errorMetadata);
+	}
+
+	public ResolutionException(String errorType, String errorDetail, Throwable ex) {
+		this(errorType, null, errorDetail, (Map<String, Object>) null, ex);
+	}
+
+	public ResolutionException(String errorType, String errorDetail) {
+		this(errorType, null, errorDetail, (Map<String, Object>) null);
+	}
+
 	public ResolutionException(String errorDetail, Throwable ex) {
-		this(ERROR_INTERNAL_ERROR, null, errorDetail, ex);
+		this(ERROR_INTERNAL_ERROR, errorDetail, ex);
 	}
 
 	public ResolutionException(String errorDetail) {
-		this(ERROR_INTERNAL_ERROR, null, errorDetail);
+		this(ERROR_INTERNAL_ERROR, errorDetail);
 	}
 
 	public static ResolutionException fromResolveResult(ResolveResult resolveResult) {
 		if (resolveResult != null && resolveResult.isErrorResult()) {
 			ResolutionException resolutionException = new ResolutionException(
-					resolveResult.getError(),
-					resolveResult.getErrorMessage(),
-					resolveResult.getDidResolutionMetadata());
+					resolveResult.getErrorType(),
+					resolveResult.getErrorTitle(),
+					resolveResult.getErrorDetail(),
+					resolveResult.getErrorMetadata());
 			resolutionException.resolveResult = resolveResult;
 			return resolutionException;
 		} else {
@@ -82,23 +101,47 @@ public class ResolutionException extends Exception {
 	public ResolveResult toErrorResolveResult() {
 		if (this.resolveResult != null) return this.resolveResult;
 		ResolveResult resolveResult = ResolveResult.build();
-		if (this.getError() != null) resolveResult.setError(this.getError());
-		if (this.getMessage() != null) resolveResult.setErrorMessage(this.getMessage());
-		if (this.getErrorMetadata() != null) resolveResult.getDidResolutionMetadata().putAll(this.getErrorMetadata());
+		resolveResult.setError(this.getErrorType(), this.getErrorTitle());
+		if (this.getErrorDetail() != null) resolveResult.setErrorDetail(this.getErrorDetail());
+		if (this.getErrorMetadata() != null) resolveResult.setErrorMetadata(this.getErrorMetadata());
 		resolveResult.setDidDocument(null);
 		if (log.isDebugEnabled()) log.debug("Created error resolve result: " + resolveResult);
 		return resolveResult;
 	}
 
 	/*
+	 * Helper methods
+	 */
+
+	private static String errorType(String errorType) {
+		if (errorType != null) return errorType;
+		return ERROR_INTERNAL_ERROR;
+	}
+
+	private static String errorTitle(String errorType, String errorTitle) {
+		if (errorTitle != null) return errorTitle;
+		errorTitle = ERROR_TITLES.get(errorType);
+		if (errorTitle == null) errorTitle = DEFAULT_ERROR_TITLE;
+		return errorTitle;
+	}
+
+	/*
 	 * Getters and setters
 	 */
 
-	public String getError() {
-		return error;
+	public String getErrorType() {
+		return this.errorType;
+	}
+
+	public String getErrorTitle() {
+		return this.errorTitle;
+	}
+
+	public String getErrorDetail() {
+		return this.getMessage();
 	}
 
 	public Map<String, Object> getErrorMetadata() {
-		return errorMetadata;
+		return this.errorMetadata;
 	}
 }

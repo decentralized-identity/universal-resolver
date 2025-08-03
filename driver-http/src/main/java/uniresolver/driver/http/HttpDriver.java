@@ -176,7 +176,7 @@ public class HttpDriver implements Driver {
 			}
 
 			if (resolveResult != null && resolveResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn("Driver received RESOLVE result: " + resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
+				if (log.isWarnEnabled()) log.warn("Driver received RESOLVE result: " + resolveResult.getErrorType() + " (" + resolveResult.getErrorTitle() + ")" + " -> " + resolveResult.getErrorDetail());
 				throw ResolutionException.fromResolveResult(resolveResult);
 			}
 
@@ -310,7 +310,7 @@ public class HttpDriver implements Driver {
 			}
 
 			if (dereferenceResult != null && dereferenceResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn(dereferenceResult.getError() + " -> " + dereferenceResult.getErrorMessage());
+				if (log.isWarnEnabled()) log.warn("Driver received DEREFERENCE result: " + dereferenceResult.getErrorType() + " (" + dereferenceResult.getErrorTitle() + ")" + " -> " + dereferenceResult.getErrorDetail());
 				throw DereferencingException.fromDereferenceResult(dereferenceResult);
 			}
 

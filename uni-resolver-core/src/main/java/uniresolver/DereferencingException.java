@@ -20,6 +20,8 @@ public class DereferencingException extends Exception {
 			ERROR_INTERNAL_ERROR, "An internal error has occurred."
 	);
 
+	public static final String DEFAULT_ERROR_TITLE = "DID URL Dereferencing error.";
+
 	private static final Logger log = LoggerFactory.getLogger(DereferencingException.class);
 
 	private final String errorType;
@@ -30,15 +32,15 @@ public class DereferencingException extends Exception {
 
 	public DereferencingException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata, Throwable ex) {
 		super(errorDetail, ex);
-		this.errorType = errorType;
-		this.errorTitle = errorTitle;
+		this.errorType = errorType(errorType);
+		this.errorTitle = errorTitle(errorType, errorTitle);
 		this.errorMetadata = errorMetadata;
 	}
 
 	public DereferencingException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata) {
 		super(errorDetail);
-		this.errorType = errorType;
-		this.errorTitle = errorTitle;
+		this.errorType = errorType(errorType);
+		this.errorTitle = errorTitle(errorType, errorTitle);
 		this.errorMetadata = errorMetadata;
 	}
 
@@ -50,20 +52,37 @@ public class DereferencingException extends Exception {
 		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null);
 	}
 
+	public DereferencingException(String errorType, String errorDetail, Map<String, Object> errorMetadata, Throwable ex) {
+		this(errorType, null, errorDetail, errorMetadata, ex);
+	}
+
+	public DereferencingException(String errorType, String errorDetail, Map<String, Object> errorMetadata) {
+		this(errorType, null, errorDetail, errorMetadata);
+	}
+
+	public DereferencingException(String errorType, String errorDetail, Throwable ex) {
+		this(errorType, null, errorDetail, (Map<String, Object>) null, ex);
+	}
+
+	public DereferencingException(String errorType, String errorDetail) {
+		this(errorType, null, errorDetail, (Map<String, Object>) null);
+	}
+
 	public DereferencingException(String errorDetail, Throwable ex) {
-		this(ERROR_INTERNAL_ERROR, null, errorDetail, ex);
+		this(ERROR_INTERNAL_ERROR, errorDetail, ex);
 	}
 
 	public DereferencingException(String errorDetail) {
-		this(ERROR_INTERNAL_ERROR, null, errorDetail);
+		this(ERROR_INTERNAL_ERROR, errorDetail);
 	}
 
 	public static DereferencingException fromDereferenceResult(DereferenceResult dereferenceResult) {
 		if (dereferenceResult != null && dereferenceResult.isErrorResult()) {
 			DereferencingException dereferencingException = new DereferencingException(
-					dereferenceResult.getError(),
-					dereferenceResult.getErrorMessage(),
-					dereferenceResult.getDereferencingMetadata());
+					dereferenceResult.getErrorType(),
+					dereferenceResult.getErrorTitle(),
+					dereferenceResult.getErrorDetail(),
+					dereferenceResult.getErrorMetadata());
 			dereferencingException.dereferenceResult = dereferenceResult;
 			return dereferencingException;
 		} else {
@@ -78,12 +97,28 @@ public class DereferencingException extends Exception {
 	public DereferenceResult toErrorDereferenceResult() {
 		if (this.dereferenceResult != null) return this.dereferenceResult;
 		DereferenceResult dereferenceResult = DereferenceResult.build();
-		if (this.getErrorType() != null) dereferenceResult.setError(this.getErrorType());
-		if (this.getMessage() != null) dereferenceResult.setErrorMessage(this.getMessage());
-		if (this.getErrorMetadata() != null) dereferenceResult.getDereferencingMetadata().putAll(this.getErrorMetadata());
+		dereferenceResult.setError(this.getErrorType(), this.getErrorTitle());
+		if (this.getErrorDetail() != null) dereferenceResult.setErrorDetail(this.getErrorDetail());
+		if (this.getErrorMetadata() != null) dereferenceResult.setErrorMetadata(this.getErrorMetadata());
 		dereferenceResult.setContent(null);
 		if (log.isDebugEnabled()) log.debug("Created error dereference result: " + dereferenceResult);
 		return dereferenceResult;
+	}
+
+	/*
+	 * Helper methods
+	 */
+
+	private static String errorType(String errorType) {
+		if (errorType != null) return errorType;
+		return ERROR_INTERNAL_ERROR;
+	}
+
+	private static String errorTitle(String errorType, String errorTitle) {
+		if (errorTitle != null) return errorTitle;
+		errorTitle = ERROR_TITLES.get(errorType);
+		if (errorTitle == null) errorTitle = DEFAULT_ERROR_TITLE;
+		return errorTitle;
 	}
 
 	/*
@@ -94,8 +129,16 @@ public class DereferencingException extends Exception {
 		return this.errorType;
 	}
 
+	public String getErrorTitle() {
+		return this.errorTitle;
+	}
+
+	public String getErrorDetail() {
+		return this.getMessage();
+	}
+
 	public Map<String, Object> getErrorMetadata() {
-		return errorMetadata;
+		return this.errorMetadata;
 	}
 }
 

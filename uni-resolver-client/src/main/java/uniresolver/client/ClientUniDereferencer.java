@@ -124,7 +124,7 @@ public class ClientUniDereferencer implements UniDereferencer {
 			}
 
 			if (dereferenceResult != null && dereferenceResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn("Received DEREFERENCE result: " + dereferenceResult.getError() + " -> " + dereferenceResult.getErrorMessage());
+				if (log.isWarnEnabled()) log.warn("Received DEREFERENCE result: " + dereferenceResult.getErrorType() + " (" + dereferenceResult.getErrorTitle() + ")" + " -> " + dereferenceResult.getErrorDetail());
 				throw DereferencingException.fromDereferenceResult(dereferenceResult);
 			}
 

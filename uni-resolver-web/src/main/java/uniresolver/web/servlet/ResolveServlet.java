@@ -125,7 +125,7 @@ public class ResolveServlet extends WebUniResolver {
 				if (result == null) throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, "No dereference result for " + identifier);
 			} catch (Exception ex) {
 				if (log.isWarnEnabled()) log.warn("Dereference problem for " + identifier + ": " + ex.getMessage(), ex);
-				if (ex instanceof ResolutionException) ex = new DereferencingException(((ResolutionException) ex).getError(), "Error " + ((ResolutionException) ex).getError() + " from resolver: " + ex.getMessage(), ((ResolutionException) ex).getErrorMetadata(), ex);
+				if (ex instanceof ResolutionException rex) ex = new DereferencingException(rex.getErrorType(), rex.getErrorTitle(), "Error " + rex.getErrorType() + " from resolver: " + rex.getMessage(), rex.getErrorMetadata(), ex);
 				if (! (ex instanceof DereferencingException)) ex = new DereferencingException("Dereference problem for " + identifier + ": " + ex.getMessage(), ex);
 				result = ((DereferencingException) ex).toErrorDereferenceResult();
 			}
