@@ -169,7 +169,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         if (! dereferenceResult.isComplete()) {
             if (log.isInfoEnabled()) log.info("Primary dereference result is incomplete: " + dereferenceResult);
-            throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
+            throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, "No dereference result for " + didUrlString, null, dereferenceResult.getDereferencingMetadata());
         }
 
         // [dereference secondary]
@@ -180,7 +180,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
         if (! dereferenceResult.isComplete()) {
             if (log.isInfoEnabled()) log.info("Secondary dereference result is incomplete: " + dereferenceResult);
-            throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, "No dereference result for " + didUrlString, dereferenceResult.getDereferencingMetadata());
+            throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, "No dereference result for " + didUrlString, null, dereferenceResult.getDereferencingMetadata());
         }
 
         // [after dereference]

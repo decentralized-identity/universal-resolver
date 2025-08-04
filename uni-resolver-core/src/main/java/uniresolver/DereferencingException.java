@@ -28,45 +28,48 @@ public class DereferencingException extends Exception {
 	private final String errorType;
 	private final String errorTitle;
 	private final Map<String, Object> errorMetadata;
+	private final Map<String, Object> dereferencingMetadata;
 
 	private DereferenceResult dereferenceResult;
 
-	public DereferencingException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata, Throwable ex) {
+	public DereferencingException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata, Map<String, Object> dereferencingMetadata, Throwable ex) {
 		super(errorDetail, ex);
 		this.errorType = determineErrorType(errorType);
 		this.errorTitle = determineErrorTitle(errorType, errorTitle);
 		this.errorMetadata = errorMetadata;
+		this.dereferencingMetadata = dereferencingMetadata;
 	}
 
-	public DereferencingException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata) {
+	public DereferencingException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata, Map<String, Object> dereferencingMetadata) {
 		super(errorDetail);
 		this.errorType = determineErrorType(errorType);
 		this.errorTitle = determineErrorTitle(errorType, errorTitle);
 		this.errorMetadata = errorMetadata;
+		this.dereferencingMetadata = dereferencingMetadata;
 	}
 
 	public DereferencingException(String errorType, String errorTitle, String errorDetail, Throwable ex) {
-		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null, ex);
+		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null, (Map<String, Object>) null, ex);
 	}
 
 	public DereferencingException(String errorType, String errorTitle, String errorDetail) {
-		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null);
+		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null, (Map<String, Object>) null);
 	}
 
-	public DereferencingException(String errorType, String errorDetail, Map<String, Object> errorMetadata, Throwable ex) {
-		this(errorType, null, errorDetail, errorMetadata, ex);
+	public DereferencingException(String errorType, String errorDetail, Map<String, Object> errorMetadata, Map<String, Object> dereferencingMetadata, Throwable ex) {
+		this(errorType, null, errorDetail, errorMetadata, dereferencingMetadata, ex);
 	}
 
-	public DereferencingException(String errorType, String errorDetail, Map<String, Object> errorMetadata) {
-		this(errorType, null, errorDetail, errorMetadata);
+	public DereferencingException(String errorType, String errorDetail, Map<String, Object> errorMetadata, Map<String, Object> dereferencingMetadata) {
+		this(errorType, null, errorDetail, errorMetadata, dereferencingMetadata);
 	}
 
 	public DereferencingException(String errorType, String errorDetail, Throwable ex) {
-		this(errorType, null, errorDetail, (Map<String, Object>) null, ex);
+		this(errorType, null, errorDetail, (Map<String, Object>) null, (Map<String, Object>) null, ex);
 	}
 
 	public DereferencingException(String errorType, String errorDetail) {
-		this(errorType, null, errorDetail, (Map<String, Object>) null);
+		this(errorType, null, errorDetail, (Map<String, Object>) null, (Map<String, Object>) null);
 	}
 
 	public DereferencingException(String errorDetail, Throwable ex) {
@@ -83,7 +86,8 @@ public class DereferencingException extends Exception {
 					dereferenceResult.getErrorType(),
 					dereferenceResult.getErrorTitle(),
 					dereferenceResult.getErrorDetail(),
-					dereferenceResult.getErrorMetadata());
+					dereferenceResult.getErrorMetadata(),
+					dereferenceResult.getDereferencingMetadata());
 			dereferencingException.dereferenceResult = dereferenceResult;
 			return dereferencingException;
 		} else {
@@ -102,6 +106,7 @@ public class DereferencingException extends Exception {
 		if (this.getErrorDetail() != null) dereferenceResult.setErrorDetail(this.getErrorDetail());
 		if (this.getErrorMetadata() != null) dereferenceResult.setErrorMetadata(this.getErrorMetadata());
 		dereferenceResult.setContent(null);
+		if (this.getDereferencingMetadata() != null) dereferenceResult.getDereferencingMetadata().putAll(this.getDereferencingMetadata());
 		if (log.isDebugEnabled()) log.debug("Created error dereference result: " + dereferenceResult);
 		return dereferenceResult;
 	}
@@ -149,5 +154,8 @@ public class DereferencingException extends Exception {
 	public Map<String, Object> getErrorMetadata() {
 		return this.errorMetadata;
 	}
-}
 
+	public Map<String, Object> getDereferencingMetadata() {
+		return this.dereferencingMetadata;
+	}
+}

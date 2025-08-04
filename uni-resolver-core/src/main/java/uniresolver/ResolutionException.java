@@ -33,45 +33,48 @@ public class ResolutionException extends Exception {
 	private final String errorType;
 	private final String errorTitle;
 	private final Map<String, Object> errorMetadata;
+	private final Map<String, Object> didResolutionMetadata;
 
 	private ResolveResult resolveResult;
 
-	public ResolutionException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata, Throwable ex) {
+	public ResolutionException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata, Map<String, Object> didResolutionMetadata, Throwable ex) {
 		super(errorDetail, ex);
 		this.errorType = determineErrorType(errorType);
 		this.errorTitle = determineErrorTitle(errorType, errorTitle);
 		this.errorMetadata = errorMetadata;
+		this.didResolutionMetadata = didResolutionMetadata;
 	}
 
-	public ResolutionException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata) {
+	public ResolutionException(String errorType, String errorTitle, String errorDetail, Map<String, Object> errorMetadata, Map<String, Object> didResolutionMetadata) {
 		super(errorDetail);
 		this.errorType = determineErrorType(errorType);
 		this.errorTitle = determineErrorTitle(errorType, errorTitle);
 		this.errorMetadata = errorMetadata;
+		this.didResolutionMetadata = didResolutionMetadata;
 	}
 
 	public ResolutionException(String errorType, String errorTitle, String errorDetail, Throwable ex) {
-		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null, ex);
+		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null, (Map<String, Object>) null, ex);
 	}
 
 	public ResolutionException(String errorType, String errorTitle, String errorDetail) {
-		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null);
+		this(errorType, errorTitle, errorDetail, (Map<String, Object>) null, (Map<String, Object>) null);
 	}
 
-	public ResolutionException(String errorType, String errorDetail, Map<String, Object> errorMetadata, Throwable ex) {
-		this(errorType, null, errorDetail, errorMetadata, ex);
+	public ResolutionException(String errorType, String errorDetail, Map<String, Object> errorMetadata, Map<String, Object> didResolutionMetadata, Throwable ex) {
+		this(errorType, null, errorDetail, errorMetadata, didResolutionMetadata, ex);
 	}
 
-	public ResolutionException(String errorType, String errorDetail, Map<String, Object> errorMetadata) {
-		this(errorType, null, errorDetail, errorMetadata);
+	public ResolutionException(String errorType, String errorDetail, Map<String, Object> errorMetadata, Map<String, Object> didResolutionMetadata) {
+		this(errorType, null, errorDetail, errorMetadata, didResolutionMetadata);
 	}
 
 	public ResolutionException(String errorType, String errorDetail, Throwable ex) {
-		this(errorType, null, errorDetail, (Map<String, Object>) null, ex);
+		this(errorType, null, errorDetail, (Map<String, Object>) null, (Map<String, Object>) null, ex);
 	}
 
 	public ResolutionException(String errorType, String errorDetail) {
-		this(errorType, null, errorDetail, (Map<String, Object>) null);
+		this(errorType, null, errorDetail, (Map<String, Object>) null, (Map<String, Object>) null);
 	}
 
 	public ResolutionException(String errorDetail, Throwable ex) {
@@ -88,7 +91,8 @@ public class ResolutionException extends Exception {
 					resolveResult.getErrorType(),
 					resolveResult.getErrorTitle(),
 					resolveResult.getErrorDetail(),
-					resolveResult.getErrorMetadata());
+					resolveResult.getErrorMetadata(),
+					resolveResult.getDidResolutionMetadata());
 			resolutionException.resolveResult = resolveResult;
 			return resolutionException;
 		} else {
@@ -107,6 +111,7 @@ public class ResolutionException extends Exception {
 		if (this.getErrorDetail() != null) resolveResult.setErrorDetail(this.getErrorDetail());
 		if (this.getErrorMetadata() != null) resolveResult.setErrorMetadata(this.getErrorMetadata());
 		resolveResult.setDidDocument(null);
+		if (this.getDidResolutionMetadata() != null) resolveResult.getDidResolutionMetadata().putAll(this.getDidResolutionMetadata());
 		if (log.isDebugEnabled()) log.debug("Created error resolve result: " + resolveResult);
 		return resolveResult;
 	}
@@ -153,5 +158,9 @@ public class ResolutionException extends Exception {
 
 	public Map<String, Object> getErrorMetadata() {
 		return this.errorMetadata;
+	}
+
+	public Map<String, Object> getDidResolutionMetadata() {
+		return this.didResolutionMetadata;
 	}
 }
