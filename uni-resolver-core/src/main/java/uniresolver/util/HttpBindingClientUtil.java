@@ -5,9 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DIDDocument;
 import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.consumption.RepresentationConsumer;
-import foundation.identity.did.representations.consumption.RepresentationConsumerDIDCBOR;
-import foundation.identity.did.representations.consumption.RepresentationConsumerDIDJSON;
-import foundation.identity.did.representations.consumption.RepresentationConsumerDIDJSONLD;
 import foundation.identity.did.representations.production.RepresentationProducerDID;
 import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
 import org.apache.http.entity.ContentType;
@@ -17,12 +14,15 @@ import uniresolver.DereferencingException;
 import uniresolver.ResolutionException;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
+import uniresolver.result.Result;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 public class HttpBindingClientUtil {
 
@@ -71,41 +71,16 @@ public class HttpBindingClientUtil {
 
         // contentType
 
-        String contentType = resolveResult.getContentType();
-        String determinedContentType = contentType;
-        if (determinedContentType == null) determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
-        determinedContentType = switch (determinedContentType) {
-            case "application/did+ld+json",
-                 "application/did+json",
-                 "application/ld+json",
-                 "application/json" ->
-                    RepresentationProducerDID.MEDIA_TYPE;
-            case "application/cbor" ->
-                    RepresentationProducerDIDCBOR.MEDIA_TYPE;
-            default -> determinedContentType;
-        };
-        if (log.isDebugEnabled()) log.debug("Determined 'contentType' metadata property from value " + contentType + ": " + determinedContentType);
-        resolveResult.setContentType(determinedContentType);
+        String contentType = resolveResultContentTypeFromHttpBodyResolveResult(resolveResult);
+        resolveResult.setContentType(contentType);
 
         // error
 
-        Object error = resolveResult.getDidResolutionMetadata().get("error");
-        if (error instanceof String errorString) {
-            String errorMessage = (String) resolveResult.getDidResolutionMetadata().get("errorMessage");
-            if (errorMessage == null) errorMessage = (String) resolveResult.getDidResolutionMetadata().get("message");
-            String errorType = ResolutionException.determineErrorType(errorString);
-            String errorTitle = ResolutionException.determineErrorTitle(errorType);
-            String errorDetail = errorMessage;
-            resolveResult.getDidResolutionMetadata().remove("error");
-            resolveResult.getDidResolutionMetadata().remove("errorMessage");
-            resolveResult.setError(errorType, errorTitle);
-            if (errorDetail != null) resolveResult.setErrorDetail(errorDetail);
-            if (log.isDebugEnabled()) log.debug("Determined error metadata property from '" + error + "' and '" + errorMessage + "'.");
-        }
+        resultError(resolveResult, ResolutionException::determineErrorType, ResolutionException::determineErrorTitle);
 
         // finish result
 
-        DIDDocument didDocument = didDocumentBytes == null ? null : RepresentationConsumer.consume(didDocumentBytes, determinedContentType);
+        DIDDocument didDocument = didDocumentBytes == null ? null : RepresentationConsumer.consume(didDocumentBytes, contentType);
         resolveResult.setDidDocument(didDocument);
 
         // done
@@ -147,37 +122,12 @@ public class HttpBindingClientUtil {
 
         // contentType
 
-        String contentType = dereferenceResult.getContentType();
-        String determinedContentType = contentType;
-        if (determinedContentType == null) determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
-        determinedContentType = switch (determinedContentType) {
-            case "application/did+ld+json",
-                 "application/did+json",
-                 "application/ld+json",
-                 "application/json" ->
-                    RepresentationProducerDID.MEDIA_TYPE;
-            case "application/cbor" ->
-                    RepresentationProducerDIDCBOR.MEDIA_TYPE;
-            default -> determinedContentType;
-        };
-        if (log.isDebugEnabled()) log.debug("Determined 'contentType' metadata property from value " + contentType + ": " + determinedContentType);
-        dereferenceResult.setContentType(determinedContentType);
+        String contentType = dereferenceResultContentTypeFromHttpBodyDereferenceResult(dereferenceResult);
+        dereferenceResult.setContentType(contentType);
 
         // error
 
-        Object error = dereferenceResult.getDereferencingMetadata().get("error");
-        if (error instanceof String errorString) {
-            String errorMessage = (String) dereferenceResult.getDereferencingMetadata().get("errorMessage");
-            if (errorMessage == null) errorMessage = (String) dereferenceResult.getDereferencingMetadata().get("message");
-            String errorType = DereferencingException.determineErrorType(errorString);
-            String errorTitle = DereferencingException.determineErrorTitle(errorType);
-            String errorDetail = errorMessage;
-            dereferenceResult.getDereferencingMetadata().remove("error");
-            dereferenceResult.getDereferencingMetadata().remove("errorMessage");
-            dereferenceResult.setError(errorType, errorTitle);
-            if (errorDetail != null) dereferenceResult.setErrorDetail(errorDetail);
-            if (log.isDebugEnabled()) log.debug("Determined error metadata property from '" + error + "' and '" + errorMessage + "'.");
-        }
+        resultError(dereferenceResult, DereferencingException::determineErrorType, DereferencingException::determineErrorTitle);
 
         // finish result
 
@@ -188,7 +138,7 @@ public class HttpBindingClientUtil {
         return dereferenceResult;
     }
 
-    public static ResolveResult fromHttpBodyDidDocument(byte[] httpBodyBytes, ContentType httpContentType) throws IOException {
+    public static ResolveResult fromHttpBodyDidDocument(ContentType httpContentType, byte[] httpBodyBytes) throws IOException {
 
         if (log.isDebugEnabled()) log.debug("Deserializing DID document from HTTP body.");
 
@@ -196,25 +146,14 @@ public class HttpBindingClientUtil {
 
         ResolveResult resolveResult = ResolveResult.build();
 
+        // contentType
+
+        String contentType = resolveResultContentTypeFromHttpBodyDidDocument(httpContentType, httpBodyBytes);
+        resolveResult.setContentType(contentType);
+
         // didDocument
 
         byte[] didDocumentBytes = httpBodyBytes;
-
-        // contentType
-
-        String contentType = null;
-        if (httpContentType != null) {
-            contentType = resolveResultContentTypeForHttpContentTypeAndContent(httpContentType.getMimeType(), didDocumentBytes);
-            if (log.isDebugEnabled()) log.debug("No contentType metadata property. Based on HTTP Content-Type " + httpContentType + " and content, determined contentType: " + contentType);
-        }
-        if (contentType == null) {
-            contentType = RESOLVE_RESULT_DEFAULT_CONTENT_TYPE;
-            if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default " + RESOLVE_RESULT_DEFAULT_CONTENT_TYPE);
-        }
-        resolveResult.setContentType(contentType);
-
-        // finish result
-
         DIDDocument didDocument = RepresentationConsumer.consume(didDocumentBytes, contentType);
         resolveResult.setDidDocument(didDocument);
 
@@ -223,7 +162,7 @@ public class HttpBindingClientUtil {
         return resolveResult;
     }
 
-    public static DereferenceResult fromHttpBodyContent(byte[] httpBodyBytes, ContentType httpContentType) throws IOException {
+    public static DereferenceResult fromHttpBodyContent(ContentType httpContentType, byte[] httpBodyBytes) throws IOException {
 
         if (log.isDebugEnabled()) log.debug("Deserializing content from HTTP body.");
 
@@ -231,25 +170,14 @@ public class HttpBindingClientUtil {
 
         DereferenceResult dereferenceResult = DereferenceResult.build();
 
+        // contentType
+
+        String contentType = dereferenceResultContentTypeFromHttpBodyContent(httpContentType, httpBodyBytes);
+        dereferenceResult.setContentType(contentType);
+
         // content
 
         byte[] contentBytes = httpBodyBytes;
-
-        // contentType
-
-        String contentType = null;
-        if (httpContentType != null) {
-            contentType = dereferenceResultContentTypeForHttpContentTypeAndContent(httpContentType.getMimeType(), contentBytes);
-            if (log.isDebugEnabled()) log.debug("No contentType metadata property. Based on HTTP Content-Type " + httpContentType + " and content, determined contentType: " + contentType);
-        }
-        if (contentType == null) {
-            contentType = DEREFERENCE_RESULT_DEFAULT_CONTENT_TYPE;
-            if (log.isDebugEnabled()) log.debug("Could not determine contentType metadata property. Assuming default " + DEREFERENCE_RESULT_DEFAULT_CONTENT_TYPE);
-        }
-        dereferenceResult.setContentType(contentType);
-
-        // finish result
-
         dereferenceResult.setContent(contentBytes);
 
         // done
@@ -261,27 +189,110 @@ public class HttpBindingClientUtil {
      * Media Type methods
      */
 
-    public static String resolveResultContentTypeForHttpContentTypeAndContent(String mediaTypeString, byte[] content) {
-        if (mediaTypeString == null) throw new NullPointerException();
-        ContentType mediaType = ContentType.parse(mediaTypeString);
-        String contentType = null;
-        if (Representations.isConsumableMediaType(mediaType.getMimeType())) contentType = mediaType.getMimeType();
-        else if ("application/ld+json".equals(mediaType.getMimeType())) contentType = RepresentationConsumerDIDJSONLD.MEDIA_TYPE;
-        else if ("application/json".equals(mediaType.getMimeType())) contentType = isJsonLdHttpContent(content) ? RepresentationConsumerDIDJSONLD.MEDIA_TYPE : RepresentationConsumerDIDJSON.MEDIA_TYPE;
-        else if ("application/cbor".equals(mediaType.getMimeType())) contentType = RepresentationConsumerDIDCBOR.MEDIA_TYPE;
-        return contentType;
+    private static String resolveResultContentTypeFromHttpBodyResolveResult(ResolveResult resolveResult) {
+        String contentType = resolveResult.getContentType();
+        String determinedContentType;
+        if (contentType == null) {
+            determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
+        } else {
+            determinedContentType = switch (contentType) {
+                case "application/did+ld+json",
+                     "application/did+json",
+                     "application/ld+json",
+                     "application/json" ->
+                        RepresentationProducerDID.MEDIA_TYPE;
+                case "application/cbor" ->
+                        RepresentationProducerDIDCBOR.MEDIA_TYPE;
+                default -> contentType;
+            };
+        }
+        if (log.isDebugEnabled()) log.debug("Based on content type " + contentType + " and content, determined resolve result 'contentType': " + determinedContentType);
+        return determinedContentType;
     }
 
-    public static String dereferenceResultContentTypeForHttpContentTypeAndContent(String mediaTypeString, byte[] content) {
-        if (mediaTypeString == null) throw new NullPointerException();
-        ContentType mediaType = ContentType.parse(mediaTypeString);
-        String contentType = mediaType.getMimeType();
-        return contentType;
+    private static String dereferenceResultContentTypeFromHttpBodyDereferenceResult(DereferenceResult dereferenceResult) {
+        String contentType = dereferenceResult.getContentType();
+        String determinedContentType;
+        if (contentType == null) {
+            determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
+        } else {
+            determinedContentType = contentType;
+        }
+        if (log.isDebugEnabled()) log.debug("Based on content type " + contentType + " and content, determined dereference result 'contentType': " + determinedContentType);
+        return determinedContentType;
+    }
+
+    private static String resolveResultContentTypeFromHttpBodyDidDocument(ContentType httpContentType, byte[] httpBodyBytes) {
+        String contentType = httpContentType.getMimeType();
+        String determinedContentType;
+        if (contentType == null) {
+            determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
+        } else {
+            determinedContentType = switch (contentType) {
+                case "application/did+ld+json",
+                     "application/did+json",
+                     "application/ld+json",
+                     "application/json" ->
+                        RepresentationProducerDID.MEDIA_TYPE;
+                case "application/cbor" ->
+                        RepresentationProducerDIDCBOR.MEDIA_TYPE;
+                default -> contentType;
+            };
+        }
+        if (log.isDebugEnabled()) log.debug("Based on HTTP Content-Type " + httpContentType + " and content, determined resolve result 'contentType': " + determinedContentType);
+        return determinedContentType;
+    }
+
+    private static String dereferenceResultContentTypeFromHttpBodyContent(ContentType httpContentType, byte[] httpBodyBytes) {
+        String determinedContentType = null;
+        if (httpContentType != null) {
+            determinedContentType = httpContentType.getMimeType();
+        }
+        if (determinedContentType == null) determinedContentType = DEREFERENCE_RESULT_DEFAULT_CONTENT_TYPE;
+        if (log.isDebugEnabled()) log.debug("Based on HTTP Content-Type " + httpContentType + " and content, determined dereference result 'contentType': " + determinedContentType);
+        return determinedContentType;
+    }
+
+    private static void resultError(Result result, Function<String, String> determineErrorType, Function<String, String> determineErrorTitle) {
+        Object error = result.getFunctionMetadata().get("error");
+        if (error instanceof String errorString) {
+            String errorMessage = (String) result.getFunctionMetadata().get("errorMessage");
+            if (errorMessage == null) errorMessage = (String) result.getFunctionMetadata().get("message");
+            String errorType = determineErrorType.apply(errorString);
+            String errorTitle = determineErrorTitle.apply(errorType);
+            String errorDetail = errorMessage;
+            result.getFunctionMetadata().remove("error");
+            result.getFunctionMetadata().remove("errorMessage");
+            result.setError(errorType, errorTitle);
+            if (errorDetail != null) result.setErrorDetail(errorDetail);
+            if (log.isDebugEnabled()) log.debug("Determined error metadata property from '" + error + "' and '" + errorMessage + "'.");
+            if (log.isDebugEnabled()) log.debug("Based on error '" + error + "' and '" + errorMessage + "', determined error object: " + result.getFunctionMetadata().get("error"));
+        }
     }
 
     /*
      * Helper methods
      */
+
+    public static boolean isResolveResultContentType(ContentType contentType) {
+        boolean isResolveResultContentType = false;
+        if (Objects.equals(ResolveResult.CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
+                Objects.equals(ResolveResult.CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isResolveResultContentType = true;
+        if (Objects.equals(ResolveResult.LEGACY_CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
+                Objects.equals(ResolveResult.LEGACY_CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isResolveResultContentType = true;
+        if (log.isDebugEnabled()) log.debug("isResolveResultContentType({}): {}", contentType, isResolveResultContentType);
+        return isResolveResultContentType;
+    }
+
+    public static boolean isDereferenceResultContentType(ContentType contentType) {
+        boolean isDereferenceResultContentType = false;
+        if (Objects.equals(DereferenceResult.CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
+                Objects.equals(DereferenceResult.CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isDereferenceResultContentType = true;
+        if (Objects.equals(DereferenceResult.LEGACY_CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
+                Objects.equals(DereferenceResult.LEGACY_CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isDereferenceResultContentType = true;
+        if (log.isDebugEnabled()) log.debug("isDereferenceResultContentType({}): {}", contentType, isDereferenceResultContentType);
+        return isDereferenceResultContentType;
+    }
 
     public static boolean isResolveResultHttpContent(String httpContentString) {
         try {

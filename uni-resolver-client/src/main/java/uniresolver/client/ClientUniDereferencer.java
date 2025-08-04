@@ -107,7 +107,7 @@ public class ClientUniDereferencer implements UniDereferencer {
 
 			if (log.isDebugEnabled()) log.debug("Response HTTP body from " + uriString + ": " + httpBodyString);
 
-			if (httpContentType != null && (DereferenceResult.isMediaType(httpContentType) || HttpBindingClientUtil.isDereferenceResultHttpContent(httpBodyString))) {
+			if (httpContentType != null && (HttpBindingClientUtil.isDereferenceResultContentType(httpContentType) || HttpBindingClientUtil.isDereferenceResultHttpContent(httpBodyString))) {
 				dereferenceResult = HttpBindingClientUtil.fromHttpBodyDereferenceResult(httpBodyString);
 			}
 
@@ -129,7 +129,7 @@ public class ClientUniDereferencer implements UniDereferencer {
 			}
 
 			if (dereferenceResult == null) {
-				dereferenceResult = HttpBindingClientUtil.fromHttpBodyContent(httpBodyBytes, httpContentType);
+				dereferenceResult = HttpBindingClientUtil.fromHttpBodyContent(httpContentType, httpBodyBytes);
 			}
 		} catch (DereferencingException ex) {
 

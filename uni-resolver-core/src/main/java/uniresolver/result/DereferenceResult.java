@@ -10,7 +10,6 @@ import org.apache.http.entity.ContentType;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -163,15 +162,6 @@ public class DereferenceResult implements Result {
 	@JsonSetter("contentMetadata")
 	public final void setContentMetadata(Map<String, Object> contentMetadata) {
 		this.contentMetadata = contentMetadata;
-	}
-
-	/*
-	 * Helper methods
-	 */
-
-	@JsonIgnore
-	public static boolean isMediaType(ContentType mediaType) {
-		return CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType()) || LEGACY_CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType());
 	}
 
 	/*

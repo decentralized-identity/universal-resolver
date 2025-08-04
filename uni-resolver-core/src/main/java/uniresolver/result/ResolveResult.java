@@ -138,15 +138,6 @@ public class ResolveResult implements Result {
     }
 
     /*
-     * Helper methods
-     */
-
-    @JsonIgnore
-    public static boolean isMediaType(ContentType mediaType) {
-        return CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType()) || LEGACY_CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType());
-    }
-
-    /*
      * Object methods
      */
 

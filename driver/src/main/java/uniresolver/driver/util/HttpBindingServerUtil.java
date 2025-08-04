@@ -113,8 +113,8 @@ public class HttpBindingServerUtil {
     public static String resolveAcceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
         for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
-            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
-            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
+            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE) || MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.LEGACY_MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
+            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE) || MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.LEGACY_MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
 
             String accept = ContentType.parse(httpAcceptMediaType.toString()).getMimeType();
             String determinedAccept = accept;
@@ -139,10 +139,15 @@ public class HttpBindingServerUtil {
 
     public static String dereferenceAcceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
         for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
+
             if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) return DEREFERENCE_DEFAULT_ACCEPT;
             if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) return DEREFERENCE_DEFAULT_ACCEPT;
 
-            return httpAcceptMediaType.toString();
+            String accept = ContentType.parse(httpAcceptMediaType.toString()).getMimeType();
+            String determinedAccept = accept;
+
+            if (log.isDebugEnabled()) log.debug("Determined 'accept' dereference option from value " + accept + ": " + determinedAccept);
+            return determinedAccept;
         }
         return DEREFERENCE_DEFAULT_ACCEPT;
     }

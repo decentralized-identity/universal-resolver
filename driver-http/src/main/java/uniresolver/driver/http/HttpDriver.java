@@ -159,7 +159,7 @@ public class HttpDriver implements Driver {
 
 			if (log.isDebugEnabled()) log.debug("Driver response HTTP body from " + uriString + ": " + httpBodyString);
 
-			if (httpContentType != null && (ResolveResult.isMediaType(httpContentType) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString))) {
+			if (httpContentType != null && (HttpBindingClientUtil.isResolveResultContentType(httpContentType) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString))) {
 				resolveResult = HttpBindingClientUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
@@ -181,7 +181,7 @@ public class HttpDriver implements Driver {
 			}
 
 			if (resolveResult == null) {
-				resolveResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
+				resolveResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpContentType, httpBodyBytes);
 			}
 		} catch (ResolutionException ex) {
 
@@ -293,7 +293,7 @@ public class HttpDriver implements Driver {
 
 			if (log.isDebugEnabled()) log.debug("Driver response HTTP body from " + uriString + ": " + httpBodyString);
 
-			if (httpContentType != null && (DereferenceResult.isMediaType(httpContentType) || HttpBindingClientUtil.isDereferenceResultHttpContent(httpBodyString))) {
+			if (httpContentType != null && (HttpBindingClientUtil.isDereferenceResultContentType(httpContentType) || HttpBindingClientUtil.isDereferenceResultHttpContent(httpBodyString))) {
 				dereferenceResult = HttpBindingClientUtil.fromHttpBodyDereferenceResult(httpBodyString);
 			}
 
@@ -315,7 +315,7 @@ public class HttpDriver implements Driver {
 			}
 
 			if (dereferenceResult == null) {
-				dereferenceResult = HttpBindingClientUtil.fromHttpBodyContent(httpBodyBytes, httpContentType);
+				dereferenceResult = HttpBindingClientUtil.fromHttpBodyContent(httpContentType, httpBodyBytes);
 			}
 		} catch (DereferencingException ex) {
 
