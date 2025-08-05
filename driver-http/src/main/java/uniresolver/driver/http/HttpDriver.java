@@ -47,6 +47,7 @@ public class HttpDriver implements Driver {
 	private boolean supportsOptions = false;
 	private boolean supportsDereference = false;
 	private String acceptHeaderValue = null;
+	private String acceptHeaderValueDereference = null;
 	private List<String> testIdentifiers = Collections.emptyList();
 	private Map<String, Object> traits = Collections.emptyMap();
 
@@ -254,7 +255,8 @@ public class HttpDriver implements Driver {
 		// set Accept header
 
 		String accept = (String) dereferenceOptions.get("accept");
-		if (accept == null) throw new ResolutionException("No 'accept' provided in 'dereferenceOptions' for dereference().");
+		if (this.getAcceptHeaderValueDereference() != null) accept = this.getAcceptHeaderValueDereference();
+		if (accept == null) throw new ResolutionException("No 'accept' provided in 'dereferenceOptions' for dereference(), or in driver configuration.");
 
 		List<String> acceptMediaTypes = Arrays.asList(DereferenceResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
@@ -536,6 +538,14 @@ public class HttpDriver implements Driver {
 
 	public void setAcceptHeaderValue(String acceptHeaderValue) {
 		this.acceptHeaderValue = acceptHeaderValue;
+	}
+
+	public String getAcceptHeaderValueDereference() {
+		return this.acceptHeaderValueDereference;
+	}
+
+	public void setAcceptHeaderValueDereference(String acceptHeaderValueDereference) {
+		this.acceptHeaderValueDereference = acceptHeaderValueDereference;
 	}
 
 	public List<String> getTestIdentifiers() {

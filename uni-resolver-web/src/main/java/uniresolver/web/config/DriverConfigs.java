@@ -29,6 +29,7 @@ public class DriverConfigs {
 		private String supportsOptions;
 		private String supportsDereference;
 		private String acceptHeaderValue;
+		private String acceptHeaderValueDereference;
 		private List<String> testIdentifiers;
 		private Map<String, Object> traits;
 
@@ -80,6 +81,14 @@ public class DriverConfigs {
 			this.acceptHeaderValue = acceptHeaderValue;
 		}
 
+		public String getAcceptHeaderValueDereference() {
+			return this.acceptHeaderValueDereference;
+		}
+
+		public void setAcceptHeaderValueDereference(String acceptHeaderValueDereference) {
+			this.acceptHeaderValueDereference = acceptHeaderValueDereference;
+		}
+
 		public List<String> getTestIdentifiers() {
 			return testIdentifiers;
 		}
@@ -105,6 +114,7 @@ public class DriverConfigs {
 					", supportsOptions='" + supportsOptions + '\'' +
 					", supportsDereference='" + supportsDereference + '\'' +
 					", acceptHeaderValue='" + acceptHeaderValue + '\'' +
+					", acceptHeaderValueDereference='" + acceptHeaderValueDereference + '\'' +
 					", testIdentifiers=" + testIdentifiers +
 					", traits=" + traits +
 					'}';
