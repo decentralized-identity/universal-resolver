@@ -49,7 +49,7 @@ public class DIDDocumentExtension implements DereferencerExtension.DereferencePr
         else if ("application/json".equals(accept)) accept = RepresentationProducerDIDJSON.MEDIA_TYPE;
         else if ("application/cbor".equals(accept)) accept = RepresentationProducerDIDCBOR.MEDIA_TYPE;
         if (! Representations.isProducibleMediaType(accept)) {
-            throw new DereferencingException(DereferencingException.ERROR_CONTENT_TYPE_NOT_SUPPORTED, "Content type not supported: " + accept);
+            throw new DereferencingException(DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED, "Content type not supported: " + accept);
         }
 
         if (log.isDebugEnabled()) log.debug("Dereferencing DID URL that has no path (assuming DID document): " + didUrlWithoutFragment);
@@ -60,7 +60,7 @@ public class DIDDocumentExtension implements DereferencerExtension.DereferencePr
             representationProducer = Representations.getProducer(accept);
             content = representationProducer.produce(resolveResult.getDidDocument());
         } catch (IOException ex) {
-            throw new DereferencingException(DereferencingException.ERROR_CONTENT_TYPE_NOT_SUPPORTED, "Cannot produce DID document: " + ex.getMessage(), ex);
+            throw new DereferencingException(DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED, "Cannot produce DID document: " + ex.getMessage(), ex);
         }
 
         if (log.isDebugEnabled()) log.debug("Dereferenced DID document with content type " + resolveResult.getContentType() + " using producer for " + representationProducer.getMediaType());

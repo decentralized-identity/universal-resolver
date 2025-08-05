@@ -11,13 +11,13 @@ public class DereferencingException extends Exception {
 	public static final String ERROR_INVALID_DID_URL = "INVALID_DID_URL";
 	public static final String ERROR_INVALID_OPTIONS = "INVALID_OPTIONS";
 	public static final String ERROR_NOT_FOUND = "NOT_FOUND";
-	public static final String ERROR_CONTENT_TYPE_NOT_SUPPORTED = "CONTENT_TYPE_NOT_SUPPORTED";
+	public static final String ERROR_REPRESENTATION_NOT_SUPPORTED = "REPRESENTATION_NOT_SUPPORTED";
 	public static final String ERROR_INTERNAL_ERROR = "INTERNAL_ERROR";
 
 	public static final Map<String, String> ERROR_TITLES = Map.of(
 			ERROR_INVALID_DID_URL, "Invalid DID URL.",
 			ERROR_NOT_FOUND, "The DID URL or DID URL resource was not found.",
-			ERROR_CONTENT_TYPE_NOT_SUPPORTED, "The content type is not supported.",
+			ERROR_REPRESENTATION_NOT_SUPPORTED, "The representation is not supported.",
 			ERROR_INTERNAL_ERROR, "An internal error has occurred."
 	);
 

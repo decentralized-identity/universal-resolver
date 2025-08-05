@@ -265,7 +265,6 @@ public class HttpBindingClientUtil {
             result.getFunctionMetadata().remove("errorMessage");
             result.setError(errorType, errorTitle);
             if (errorDetail != null) result.setErrorDetail(errorDetail);
-            if (log.isDebugEnabled()) log.debug("Determined error metadata property from '" + error + "' and '" + errorMessage + "'.");
             if (log.isDebugEnabled()) log.debug("Based on error '" + error + "' and '" + errorMessage + "', determined error object: " + result.getFunctionMetadata().get("error"));
         }
     }

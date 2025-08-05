@@ -44,7 +44,7 @@ public class HttpBindingServerUtil {
             return HttpStatus.SC_NOT_FOUND;
         else if (ResolutionException.ERROR_INVALID_DID.equals(result.getErrorType()) || DereferencingException.ERROR_INVALID_DID_URL.equals(result.getErrorType()))
             return HttpStatus.SC_BAD_REQUEST;
-        else if (ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED.equals(result.getErrorType()) || DereferencingException.ERROR_CONTENT_TYPE_NOT_SUPPORTED.equals(result.getErrorType()))
+        else if (ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED.equals(result.getErrorType()) || DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED.equals(result.getErrorType()))
             return HttpStatus.SC_NOT_ACCEPTABLE;
         else if (ResolutionException.ERROR_METHOD_NOT_SUPPORTED.equals(result.getErrorType()))
             return HttpStatus.SC_NOT_IMPLEMENTED;

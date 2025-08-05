@@ -302,7 +302,7 @@ public class HttpDriver implements Driver {
 			}
 
 			if (httpStatusCode == 406 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_CONTENT_TYPE_NOT_SUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new DereferencingException(DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode != 200 && dereferenceResult == null) {
