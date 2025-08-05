@@ -452,10 +452,10 @@ public class HttpDriver implements Driver {
 		if (containsOnlyStrings) {
 			StringBuilder queryString = new StringBuilder();
 			for (Map.Entry<String, Object> option : options.entrySet()) {
-				queryString.append(option.getKey()).append("=").append(option.getValue()).append("&");
+				queryString.append(URLEncoder.encode(option.getKey(), StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode((String) option.getValue(), StandardCharsets.UTF_8)).append("&");
 			}
 			if (queryString.lastIndexOf("&") == queryString.length() - 1) queryString.deleteCharAt(queryString.length() - 1);
-			driverHttpQueryString = URLEncoder.encode(queryString.toString(), StandardCharsets.UTF_8);
+            driverHttpQueryString = queryString.toString();
 		} else {
             try {
 				driverHttpQueryString = URLEncoder.encode(objectMapper.writeValueAsString(options), StandardCharsets.UTF_8);
