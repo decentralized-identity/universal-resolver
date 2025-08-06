@@ -301,6 +301,7 @@ public class HttpBindingClientUtil {
         } catch (JsonProcessingException ex) {
             isResolveResultHttpContent = false;
         }
+        if (log.isDebugEnabled()) log.debug("isResolveResultHttpContent: {}", isResolveResultHttpContent);
         return isResolveResultHttpContent;
     }
 
