@@ -123,7 +123,7 @@ public class HttpDriver implements Driver {
 		if (this.getAcceptHeaderValue() != null) accept = this.getAcceptHeaderValue();
 		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolve(), or in driver configuration.");
 
-		List<String> acceptMediaTypes = Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
+		List<String> acceptMediaTypes = accept.isBlank() ? Collections.singletonList(ResolveResult.MEDIA_TYPE) : Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
 
 		if (log.isDebugEnabled()) log.debug("Setting Accept: header to " + acceptMediaTypesString);
