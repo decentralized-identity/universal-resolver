@@ -294,29 +294,25 @@ public class HttpBindingClientUtil {
     }
 
     public static boolean isResolveResultHttpContent(String httpContentString) {
+        boolean isResolveResultHttpContent;
         try {
             Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
-            return json.containsKey("didDocument") || json.containsKey("didDocumentStream");
+            isResolveResultHttpContent = json.containsKey("didDocument") || json.containsKey("didDocumentStream");
         } catch (JsonProcessingException ex) {
-            return false;
+            isResolveResultHttpContent = false;
         }
+        return isResolveResultHttpContent;
     }
 
     public static boolean isDereferenceResultHttpContent(String httpContentString) {
+        boolean isDereferenceResultHttpContent;
         try {
             Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
-            return json.containsKey("content") || json.containsKey("contentStream");
+            isDereferenceResultHttpContent = json.containsKey("content") || json.containsKey("contentStream");
         } catch (JsonProcessingException ex) {
-            return false;
+            isDereferenceResultHttpContent = false;
         }
-    }
-
-    public static boolean isJsonLdHttpContent(byte[] httpContentBytes) {
-        try {
-            Map<String, Object> json = objectMapper.readValue(httpContentBytes, Map.class);
-            return json.containsKey("@context");
-        } catch (IOException ex) {
-            return false;
-        }
+        if (log.isDebugEnabled()) log.debug("isDereferenceResultHttpContent: {}", isDereferenceResultHttpContent);
+        return isDereferenceResultHttpContent;
     }
 }
