@@ -79,7 +79,7 @@ public class ClientUniResolver implements UniResolver {
 		String accept = (String) resolutionOptions.get("accept");
 		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolve().");
 
-		List<String> acceptMediaTypes = Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
+        List<String> acceptMediaTypes = accept.isBlank() ? Collections.singletonList(ResolveResult.MEDIA_TYPE) : Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
 
 		if (log.isDebugEnabled()) log.debug("Setting Accept: header to " + acceptMediaTypesString);
@@ -116,29 +116,29 @@ public class ClientUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Response HTTP body from " + uriString + ": " + httpBodyString);
 
-			if (httpContentType != null && (ResolveResult.isMediaType(httpContentType) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString))) {
+			if (httpContentType != null && (HttpBindingClientUtil.isResolveResultContentType(httpContentType) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString))) {
 				resolveResult = HttpBindingClientUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
 			if (httpStatusCode == 404 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_NOT_FOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode == 406 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode != 200 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_INTERNALERROR, "Cannot retrieve RESOLVE result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_INTERNAL_ERROR, "Cannot retrieve RESOLVE result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (resolveResult != null && resolveResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn("Received RESOLVE result: " + resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
+				if (log.isWarnEnabled()) log.warn("Received RESOLVE result: " + resolveResult.getErrorType() + " (" + resolveResult.getErrorTitle() + ")" + " -> " + resolveResult.getErrorDetail());
 				throw ResolutionException.fromResolveResult(resolveResult);
 			}
 
 			if (resolveResult == null) {
-				resolveResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
+				resolveResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpContentType, httpBodyBytes);
 			}
 		} catch (ResolutionException ex) {
 

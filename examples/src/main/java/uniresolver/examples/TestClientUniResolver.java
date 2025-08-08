@@ -14,7 +14,7 @@ public class TestClientUniResolver {
 	public static void main(String[] args) throws Exception {
 
 		Map<String, Object> resolveOptions = new HashMap<>();
-		resolveOptions.put("accept", "application/did+ld+json");
+		resolveOptions.put("accept", "application/did");
 
 		ClientUniResolver uniResolver = new ClientUniResolver();
 		uniResolver.setResolveUri("http://localhost:8080/1.0/identifiers/");

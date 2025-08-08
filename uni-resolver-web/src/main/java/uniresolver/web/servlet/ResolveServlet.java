@@ -113,7 +113,7 @@ public class ResolveServlet extends WebUniResolver {
 		if (isResolve) {
 			try {
 				result = this.resolve(identifier, options);
-				if (result == null) throw new ResolutionException(DereferencingException.ERROR_NOTFOUND, "No resolve result for " + identifier);
+				if (result == null) throw new ResolutionException(DereferencingException.ERROR_NOT_FOUND, "No resolve result for " + identifier);
 			} catch (Exception ex) {
 				if (log.isWarnEnabled()) log.warn("Resolve problem for " + identifier + ": " + ex.getMessage(), ex);
 				if (! (ex instanceof ResolutionException)) ex = new ResolutionException("Resolve problem for " + identifier + ": " + ex.getMessage(), ex);
@@ -122,10 +122,10 @@ public class ResolveServlet extends WebUniResolver {
 		} else {
 			try {
 				result = this.dereference(identifier, options);
-				if (result == null) throw new DereferencingException(DereferencingException.ERROR_NOTFOUND, "No dereference result for " + identifier);
+				if (result == null) throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, "No dereference result for " + identifier);
 			} catch (Exception ex) {
 				if (log.isWarnEnabled()) log.warn("Dereference problem for " + identifier + ": " + ex.getMessage(), ex);
-				if (ex instanceof ResolutionException) ex = new DereferencingException(((ResolutionException) ex).getError(), "Error " + ((ResolutionException) ex).getError() + " from resolver: " + ex.getMessage(), ((ResolutionException) ex).getDidResolutionMetadata(), ex);
+				if (ex instanceof ResolutionException rex) ex = new DereferencingException(rex.getErrorType(), rex.getErrorTitle(), "Error " + rex.getErrorType() + " from resolver: " + rex.getMessage(), rex.getErrorMetadata(), rex.getDidResolutionMetadata() == null ? null : Map.of("didResolutionMetadata", rex.getDidResolutionMetadata()), ex);
 				if (! (ex instanceof DereferencingException)) ex = new DereferencingException("Dereference problem for " + identifier + ": " + ex.getMessage(), ex);
 				result = ((DereferencingException) ex).toErrorDereferenceResult();
 			}
@@ -168,8 +168,8 @@ public class ResolveServlet extends WebUniResolver {
 
 		for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
-			if (result instanceof ResolveResult && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) {
-				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default resolve result content type " + ResolveResult.MEDIA_TYPE);
+			if (result instanceof ResolveResult && (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE) || MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.LEGACY_MEDIA_TYPE))) {
+				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default resolve result content type.");
 				ServletUtil.sendResponse(
 						response,
 						httpStatusCode,
@@ -178,8 +178,8 @@ public class ResolveServlet extends WebUniResolver {
 				return;
 			}
 
-			if (result instanceof DereferenceResult && MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) {
-				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default dereference result content type " + DereferenceResult.MEDIA_TYPE);
+			if (result instanceof DereferenceResult && (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE) || MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.LEGACY_MEDIA_TYPE))) {
+				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default dereference result content type.");
 				ServletUtil.sendResponse(
 						response,
 						httpStatusCode,

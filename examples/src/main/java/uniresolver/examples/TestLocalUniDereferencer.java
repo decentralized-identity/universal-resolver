@@ -22,7 +22,7 @@ public class TestLocalUniDereferencer {
 		uniDereferencer.setUniResolver(uniResolver);
 
 		Map<String, Object> dereferenceOptions = new HashMap<>();
-		dereferenceOptions.put("accept", "application/did+ld+json");
+		dereferenceOptions.put("accept", "application/did");
 		DereferenceResult dereferenceResult = uniDereferencer.dereference("did:sov:WRfXPg8dantKVubE3HX8pw#key-1", dereferenceOptions);
 		System.out.println(dereferenceResult.toJson());
 	}

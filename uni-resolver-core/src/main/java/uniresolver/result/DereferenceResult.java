@@ -10,7 +10,6 @@ import org.apache.http.entity.ContentType;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,10 +18,11 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class DereferenceResult implements Result {
 
-	public static final String MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-url-dereferencing\"";
+	public static final String MEDIA_TYPE = "application/did-url-dereferencing";
 	public static final ContentType CONTENT_TYPE = ContentType.parse(MEDIA_TYPE);
 
-	private static final URI DEFAULT_JSONLD_CONTEXT = URI.create("https://w3id.org/did-resolution/v1");
+	public static final String LEGACY_MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-url-dereferencing\"";
+	public static final ContentType LEGACY_CONTENT_TYPE = ContentType.parse(LEGACY_MEDIA_TYPE);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -100,11 +100,6 @@ public class DereferenceResult implements Result {
 	}
 
 	@Override
-	public URI getDefaultContext() {
-		return DEFAULT_JSONLD_CONTEXT;
-	}
-
-	@Override
 	public boolean isComplete() {
 		return this.getContentType() != null && this.getContent() != null;
 	}
@@ -167,17 +162,6 @@ public class DereferenceResult implements Result {
 	@JsonSetter("contentMetadata")
 	public final void setContentMetadata(Map<String, Object> contentMetadata) {
 		this.contentMetadata = contentMetadata;
-	}
-
-	/*
-	 * Helper methods
-	 */
-
-	@JsonIgnore
-	public static boolean isMediaType(ContentType mediaType) {
-		boolean isResolveResultMimeTypeEquals = CONTENT_TYPE.getMimeType().equals(mediaType.getMimeType());
-		boolean isResolveResultProfileEquals = CONTENT_TYPE.getParameter("profile").equals(mediaType.getParameter("profile"));
-		return isResolveResultMimeTypeEquals && isResolveResultProfileEquals;
 	}
 
 	/*

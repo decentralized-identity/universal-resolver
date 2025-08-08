@@ -47,6 +47,7 @@ public class HttpDriver implements Driver {
 	private boolean supportsOptions = false;
 	private boolean supportsDereference = false;
 	private String acceptHeaderValue = null;
+	private String acceptHeaderValueDereference = null;
 	private List<String> testIdentifiers = Collections.emptyList();
 	private Map<String, Object> traits = Collections.emptyMap();
 
@@ -122,7 +123,7 @@ public class HttpDriver implements Driver {
 		if (this.getAcceptHeaderValue() != null) accept = this.getAcceptHeaderValue();
 		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolve(), or in driver configuration.");
 
-		List<String> acceptMediaTypes = Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
+		List<String> acceptMediaTypes = accept.isBlank() ? Collections.singletonList(ResolveResult.MEDIA_TYPE) : Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
 
 		if (log.isDebugEnabled()) log.debug("Setting Accept: header to " + acceptMediaTypesString);
@@ -159,29 +160,29 @@ public class HttpDriver implements Driver {
 
 			if (log.isDebugEnabled()) log.debug("Driver response HTTP body from " + uriString + ": " + httpBodyString);
 
-			if (httpContentType != null && (ResolveResult.isMediaType(httpContentType) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString))) {
+			if (httpContentType != null && (HttpBindingClientUtil.isResolveResultContentType(httpContentType) || HttpBindingClientUtil.isResolveResultHttpContent(httpBodyString))) {
 				resolveResult = HttpBindingClientUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
 			if (httpStatusCode == 404 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_NOT_FOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode == 406 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode != 200 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_INTERNALERROR, "Driver cannot retrieve result for " + did + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_INTERNAL_ERROR, "Driver cannot retrieve result for " + did + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (resolveResult != null && resolveResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn("Driver received RESOLVE result: " + resolveResult.getError() + " -> " + resolveResult.getErrorMessage());
+				if (log.isWarnEnabled()) log.warn("Driver received RESOLVE result: " + resolveResult.getErrorType() + " (" + resolveResult.getErrorTitle() + ")" + " -> " + resolveResult.getErrorDetail());
 				throw ResolutionException.fromResolveResult(resolveResult);
 			}
 
 			if (resolveResult == null) {
-				resolveResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpBodyBytes, httpContentType);
+				resolveResult = HttpBindingClientUtil.fromHttpBodyDidDocument(httpContentType, httpBodyBytes);
 			}
 		} catch (ResolutionException ex) {
 
@@ -254,7 +255,8 @@ public class HttpDriver implements Driver {
 		// set Accept header
 
 		String accept = (String) dereferenceOptions.get("accept");
-		if (accept == null) throw new ResolutionException("No 'accept' provided in 'dereferenceOptions' for dereference().");
+		if (this.getAcceptHeaderValueDereference() != null) accept = this.getAcceptHeaderValueDereference();
+		if (accept == null) throw new ResolutionException("No 'accept' provided in 'dereferenceOptions' for dereference(), or in driver configuration.");
 
 		List<String> acceptMediaTypes = Arrays.asList(DereferenceResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
@@ -293,29 +295,29 @@ public class HttpDriver implements Driver {
 
 			if (log.isDebugEnabled()) log.debug("Driver response HTTP body from " + uriString + ": " + httpBodyString);
 
-			if (httpContentType != null && (DereferenceResult.isMediaType(httpContentType) || HttpBindingClientUtil.isDereferenceResultHttpContent(httpBodyString))) {
+			if (httpContentType != null && (HttpBindingClientUtil.isDereferenceResultContentType(httpContentType) || HttpBindingClientUtil.isDereferenceResultHttpContent(httpBodyString))) {
 				dereferenceResult = HttpBindingClientUtil.fromHttpBodyDereferenceResult(httpBodyString);
 			}
 
 			if (httpStatusCode == 404 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode == 406 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_CONTENTTYPENOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new DereferencingException(DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode != 200 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_INTERNALERROR, "Driver cannot retrieve result for " + didUrl + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new DereferencingException(DereferencingException.ERROR_INTERNAL_ERROR, "Driver cannot retrieve result for " + didUrl + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (dereferenceResult != null && dereferenceResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn(dereferenceResult.getError() + " -> " + dereferenceResult.getErrorMessage());
+				if (log.isWarnEnabled()) log.warn("Driver received DEREFERENCE result: " + dereferenceResult.getErrorType() + " (" + dereferenceResult.getErrorTitle() + ")" + " -> " + dereferenceResult.getErrorDetail());
 				throw DereferencingException.fromDereferenceResult(dereferenceResult);
 			}
 
 			if (dereferenceResult == null) {
-				dereferenceResult = HttpBindingClientUtil.fromHttpBodyContent(httpBodyBytes, httpContentType);
+				dereferenceResult = HttpBindingClientUtil.fromHttpBodyContent(httpContentType, httpBodyBytes);
 			}
 		} catch (DereferencingException ex) {
 
@@ -450,10 +452,10 @@ public class HttpDriver implements Driver {
 		if (containsOnlyStrings) {
 			StringBuilder queryString = new StringBuilder();
 			for (Map.Entry<String, Object> option : options.entrySet()) {
-				queryString.append(option.getKey()).append("=").append(option.getValue()).append("&");
+				queryString.append(URLEncoder.encode(option.getKey(), StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode((String) option.getValue(), StandardCharsets.UTF_8)).append("&");
 			}
 			if (queryString.lastIndexOf("&") == queryString.length() - 1) queryString.deleteCharAt(queryString.length() - 1);
-			driverHttpQueryString = URLEncoder.encode(queryString.toString(), StandardCharsets.UTF_8);
+            driverHttpQueryString = queryString.toString();
 		} else {
             try {
 				driverHttpQueryString = URLEncoder.encode(objectMapper.writeValueAsString(options), StandardCharsets.UTF_8);
@@ -536,6 +538,14 @@ public class HttpDriver implements Driver {
 
 	public void setAcceptHeaderValue(String acceptHeaderValue) {
 		this.acceptHeaderValue = acceptHeaderValue;
+	}
+
+	public String getAcceptHeaderValueDereference() {
+		return this.acceptHeaderValueDereference;
+	}
+
+	public void setAcceptHeaderValueDereference(String acceptHeaderValueDereference) {
+		this.acceptHeaderValueDereference = acceptHeaderValueDereference;
 	}
 
 	public List<String> getTestIdentifiers() {

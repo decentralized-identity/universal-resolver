@@ -107,29 +107,29 @@ public class ClientUniDereferencer implements UniDereferencer {
 
 			if (log.isDebugEnabled()) log.debug("Response HTTP body from " + uriString + ": " + httpBodyString);
 
-			if (httpContentType != null && (DereferenceResult.isMediaType(httpContentType) || HttpBindingClientUtil.isDereferenceResultHttpContent(httpBodyString))) {
+			if (httpContentType != null && (HttpBindingClientUtil.isDereferenceResultContentType(httpContentType) || HttpBindingClientUtil.isDereferenceResultHttpContent(httpBodyString))) {
 				dereferenceResult = HttpBindingClientUtil.fromHttpBodyDereferenceResult(httpBodyString);
 			}
 
 			if (httpStatusCode == 404 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_NOTFOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode == 406 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_CONTENTTYPENOTSUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new DereferencingException(DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (httpStatusCode != 200 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_INTERNALERROR, "Cannot retrieve DEREFERENCE result for " + didUrlString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new DereferencingException(DereferencingException.ERROR_INTERNAL_ERROR, "Cannot retrieve DEREFERENCE result for " + didUrlString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (dereferenceResult != null && dereferenceResult.isErrorResult()) {
-				if (log.isWarnEnabled()) log.warn("Received DEREFERENCE result: " + dereferenceResult.getError() + " -> " + dereferenceResult.getErrorMessage());
+				if (log.isWarnEnabled()) log.warn("Received DEREFERENCE result: " + dereferenceResult.getErrorType() + " (" + dereferenceResult.getErrorTitle() + ")" + " -> " + dereferenceResult.getErrorDetail());
 				throw DereferencingException.fromDereferenceResult(dereferenceResult);
 			}
 
 			if (dereferenceResult == null) {
-				dereferenceResult = HttpBindingClientUtil.fromHttpBodyContent(httpBodyBytes, httpContentType);
+				dereferenceResult = HttpBindingClientUtil.fromHttpBodyContent(httpContentType, httpBodyBytes);
 			}
 		} catch (DereferencingException ex) {
 

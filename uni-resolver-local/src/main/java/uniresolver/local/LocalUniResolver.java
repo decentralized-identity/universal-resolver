@@ -76,7 +76,6 @@ public class LocalUniResolver implements UniResolver {
 		// prepare resolve result
 
 		final DID did;
-		final DIDURL didUrl;
 		final ResolveResult resolveResult = ResolveResult.build();
 		ExtensionStatus extensionStatus = new ExtensionStatus();
 
@@ -85,13 +84,12 @@ public class LocalUniResolver implements UniResolver {
 		try {
 
 			did = DID.fromString(didString);
-			didUrl = DIDURL.fromUri(did.toUri());
 			if (log.isDebugEnabled()) log.debug("DID " + didString + " is valid: " + did);
 		} catch (IllegalArgumentException | ParserException ex) {
 
 			String errorMessage = ex.getMessage();
 			if (log.isWarnEnabled()) log.warn(errorMessage);
-			throw new ResolutionException(ResolutionException.ERROR_INVALIDDID, errorMessage);
+			throw new ResolutionException(ResolutionException.ERROR_INVALID_DID, errorMessage);
 		}
 
 		// [before resolve]
@@ -111,7 +109,7 @@ public class LocalUniResolver implements UniResolver {
 
 			if (driverResolveResult == null) {
 				if (log.isInfoEnabled()) log.info("Method not supported: " + did.getMethodName());
-				throw new ResolutionException(ResolutionException.ERROR_METHODNOTSUPPORTED, "Method not supported: " + did.getMethodName());
+				throw new ResolutionException(ResolutionException.ERROR_METHOD_NOT_SUPPORTED, "Method not supported: " + did.getMethodName());
 			}
 
 			resolveResult.setDidDocument(driverResolveResult.getDidDocument());
@@ -123,7 +121,7 @@ public class LocalUniResolver implements UniResolver {
 
 		if (! resolveResult.isComplete()) {
 			if (log.isInfoEnabled()) log.info("Resolve result is incomplete: " + resolveResult);
-			throw new ResolutionException(ResolutionException.ERROR_NOTFOUND, "No resolve result for " + didString);
+			throw new ResolutionException(ResolutionException.ERROR_NOT_FOUND, "No resolve result for " + didString);
 		}
 
 		// [after resolve]
@@ -135,7 +133,6 @@ public class LocalUniResolver implements UniResolver {
 		long stop = System.currentTimeMillis();
 		resolveResult.getDidResolutionMetadata().put("duration", stop - start);
 		resolveResult.getDidResolutionMetadata().put("did", did.toMap(false));
-		resolveResult.getDidResolutionMetadata().put("didUrl", didUrl.toMap(false));
 
 		// done
 

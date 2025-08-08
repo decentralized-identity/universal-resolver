@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.production.RepresentationProducerDID;
 import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
-import foundation.identity.did.representations.production.RepresentationProducerDIDJSON;
-import foundation.identity.did.representations.production.RepresentationProducerDIDJSONLD;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
@@ -42,13 +40,13 @@ public class HttpBindingServerUtil {
     public static int httpStatusCodeForResult(Result result) {
         if (result.getFunctionMetadata() != null && result.getFunctionMetadata().containsKey("_http_code"))
             return (Integer) result.getFunctionMetadata().get("_http_code");
-        if (ResolutionException.ERROR_NOTFOUND.equals(result.getError()))
+        if (ResolutionException.ERROR_NOT_FOUND.equals(result.getErrorType()))
             return HttpStatus.SC_NOT_FOUND;
-        else if (ResolutionException.ERROR_INVALIDDID.equals(result.getError()) || DereferencingException.ERROR_INVALIDDIDURL.equals(result.getError()))
+        else if (ResolutionException.ERROR_INVALID_DID.equals(result.getErrorType()) || DereferencingException.ERROR_INVALID_DID_URL.equals(result.getErrorType()))
             return HttpStatus.SC_BAD_REQUEST;
-        else if (ResolutionException.ERROR_REPRESENTATIONNOTSUPPORTED.equals(result.getError()) || DereferencingException.ERROR_CONTENTTYPENOTSUPPORTED.equals(result.getError()))
+        else if (ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED.equals(result.getErrorType()) || DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED.equals(result.getErrorType()))
             return HttpStatus.SC_NOT_ACCEPTABLE;
-        else if (ResolutionException.ERROR_METHODNOTSUPPORTED.equals(result.getError()))
+        else if (ResolutionException.ERROR_METHOD_NOT_SUPPORTED.equals(result.getErrorType()))
             return HttpStatus.SC_NOT_IMPLEMENTED;
         else if (result.isErrorResult())
             return HttpStatus.SC_INTERNAL_SERVER_ERROR;
@@ -80,7 +78,6 @@ public class HttpBindingServerUtil {
         }
 
         Map<String, Object> json = new LinkedHashMap<>();
-        json.put("@context", result.getDefaultContext());
         byte[] content = result.getFunctionContent();
         if (content == null || content.length == 0) {
             json.put(functionContentProperty, null);
@@ -115,24 +112,42 @@ public class HttpBindingServerUtil {
 
     public static String resolveAcceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
         for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
-            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
-            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
 
-            ContentType mediaType = ContentType.parse(httpAcceptMediaType.toString());
-            if (Representations.isProducibleMediaType(mediaType.getMimeType())) return mediaType.getMimeType();
-            else if ("application/ld+json".equals(mediaType.getMimeType())) return RepresentationProducerDIDJSONLD.MEDIA_TYPE;
-            else if ("application/json".equals(mediaType.getMimeType())) return RepresentationProducerDIDJSON.MEDIA_TYPE;
-            else if ("application/cbor".equals(mediaType.getMimeType())) return RepresentationProducerDIDCBOR.MEDIA_TYPE;
+            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE) || MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.LEGACY_MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
+            if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE) || MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.LEGACY_MEDIA_TYPE)) return RESOLVE_DEFAULT_ACCEPT;
+
+            String accept = ContentType.parse(httpAcceptMediaType.toString()).getMimeType();
+            String determinedAccept = accept;
+            determinedAccept = switch (determinedAccept) {
+                case "application/did+ld+json",
+                     "application/did+json",
+                     "application/ld+json",
+                     "application/json" ->
+                        RepresentationProducerDID.MEDIA_TYPE;
+                case "application/cbor" ->
+                        RepresentationProducerDIDCBOR.MEDIA_TYPE;
+                default -> determinedAccept;
+            };
+
+            if (Representations.isProducibleMediaType(determinedAccept)) {
+                if (log.isDebugEnabled()) log.debug("Determined 'accept' resolution option from value " + accept + ": " + determinedAccept);
+                return determinedAccept;
+            }
         }
         return RESOLVE_DEFAULT_ACCEPT;
     }
 
     public static String dereferenceAcceptForHttpAccepts(List<MediaType> httpAcceptMediaTypes) {
         for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
+
             if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE)) return DEREFERENCE_DEFAULT_ACCEPT;
             if (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE)) return DEREFERENCE_DEFAULT_ACCEPT;
 
-            return httpAcceptMediaType.toString();
+            String accept = ContentType.parse(httpAcceptMediaType.toString()).getMimeType();
+            String determinedAccept = accept;
+
+            if (log.isDebugEnabled()) log.debug("Determined 'accept' dereference option from value " + accept + ": " + determinedAccept);
+            return determinedAccept;
         }
         return DEREFERENCE_DEFAULT_ACCEPT;
     }
