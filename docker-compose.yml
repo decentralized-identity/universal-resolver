@@ -335,9 +335,9 @@ services:
     ports:
       - "8145:8080"
   driver-did-keri:
-    image: gleif/did-keri-resolver-service:latest
+    image: gleif/did-webs-resolver-service:0.2.6
     ports:
-      - "8146:7678"
+      - "8146:7677"
   driver-did-webs:
     image: gleif/did-webs-resolver-service:0.2.6
     ports:
