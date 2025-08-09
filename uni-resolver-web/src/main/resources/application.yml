@@ -323,10 +323,14 @@ uniresolver:
         - did:evrc:issuer:polygon:62eeb90e-eee4-4d31-8927-1075e82b2a74
     - pattern: "^(did:keri:.+)$"
       url: ${uniresolver_web_driver_url_did_keri:http://driver-did-keri:7677/}
+      supportsOptions: true
+      supportsDereference: true
       testIdentifiers:
         - did:keri:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
     - pattern: "^(did:webs:.+)$"
       url: ${uniresolver_web_driver_url_did_webs:http://driver-did-webs:7677/}
+      supportsOptions: true
+      supportsDereference: true
       testIdentifiers:
         - did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
     - pattern: "^(did:content:.+)$"
