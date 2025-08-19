@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@master
 
     - name: Import Secrets
-      uses: hashicorp/vault-action@v2.3.0
+      uses: hashicorp/vault-action@v3.4.0
       with:
         url: ${{ secrets.VAULT_ADDR }}
         token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
