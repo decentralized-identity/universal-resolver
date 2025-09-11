@@ -1,7 +1,7 @@
 package uniresolver.examples;
 import foundation.identity.did.DID;
 import info.weboftrust.btctxlookup.bitcoinconnection.BlockcypherAPIBitcoinConnection;
-import uniresolver.driver.did.btc1.DidBtcrDriver;
+import uniresolver.driver.did.btcr2.DidBtcrDriver;
 import uniresolver.result.ResolveDataModelResult;
 import uniresolver.result.ResolveResult;
 
