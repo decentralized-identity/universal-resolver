@@ -403,3 +403,8 @@ uniresolver:
       testIdentifiers:
         - did:near:CF5RiJYh4EVmEt8UADTjoP3XaZo1NPWxv6w5TmkLqjpR
 
+    - pattern: "^(did:empe:.+)$"
+      url: ${uniresolver_web_driver_url_did_empe:http://driver-did-empe:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:empe:02bbae4a3c51a3134d0aa4bfe1e7ed19c6debe84
+
