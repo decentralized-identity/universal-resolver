@@ -102,6 +102,9 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:tgrid:trustgrid:dev:QjA1qdXKmxzgK4u8mFoBpF
 
 	curl -X GET http://localhost:8080/1.0/identifiers/did:near:CF5RiJYh4EVmEt8UADTjoP3XaZo1NPWxv6w5TmkLqjpR
+    curl -X GET http://localhost:8080/1.0/identifiers/did:bsv:49e48f452457524f036a3f386388500a6256a9fd21e0e003295bbf3a0455baab
+
+
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
