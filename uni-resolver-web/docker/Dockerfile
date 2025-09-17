@@ -1,6 +1,6 @@
 # Dockerfile for universalresolver/uni-resolver-web
 
-FROM maven:3-eclipse-temurin-17-focal AS build
+FROM maven:3-eclipse-temurin-21 AS build
 MAINTAINER Markus Sabadello <markus@danubetech.com>
 
 # build uni-resolver-web
@@ -15,7 +15,7 @@ RUN cd /opt/universal-resolver/uni-resolver-web && mvn clean package -N
 
 # build image
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 # For amd64 architecture use amd64/eclipse-temurin:17-jre-alpine
 
 MAINTAINER Markus Sabadello <markus@danubetech.com>
