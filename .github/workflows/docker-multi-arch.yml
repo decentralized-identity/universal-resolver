@@ -1,0 +1,155 @@
+name: Docker Multi-Arch
+
+on:
+  workflow_call:
+    inputs:
+      GLOBAL_FRAMEWORK:
+        required: false
+        type: string
+        default: maven
+        description: Framework used for the build (e.g., maven, node, nodejs, etc.)
+      GLOBAL_IMAGE_NAME:
+        required: true
+        type: string
+      GLOBAL_REPO_NAME:
+        type: string
+        default: docker.io
+      IMAGE_TAG:
+        required: false
+        type: string
+      IS_RELEASE:
+        required: false
+        type: boolean
+        default: false
+      PATH_TO_DOCKERFILE:
+        required: true
+        type: string
+      RELEASE_TYPE:
+        required: false
+        type: string
+        default: minor
+        description: Type of release - Major, Minor, or Patch
+    secrets:
+      CI_SECRET_READER_PERIODIC_TOKEN:
+        required: true
+      VAULT_ADDR:
+        required: true
+      VAULTCA:
+        required: true
+
+jobs:
+  docker-build:
+    name: Docker Build
+    runs-on: ${{ matrix.runs-on }}
+
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
+        include:
+          - arch: amd64
+            runs-on: ubuntu-24.04
+          - arch: arm64
+            runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Import Secrets
+        uses: hashicorp/vault-action@v3
+        with:
+          url: ${{ secrets.VAULT_ADDR }}
+          token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
+          caCertificate: ${{ secrets.VAULTCA }}
+          secrets: |
+            ci/data/gh-workflows/maven-danubetech-nexus username | MAVEN_USERNAME ;
+            ci/data/gh-workflows/maven-danubetech-nexus password | MAVEN_PASSWORD
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          version: latest
+
+      - name: Docker Build and Cache
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ inputs.PATH_TO_DOCKERFILE }}
+          push: false
+          build-args: |
+            DANUBETECH_MAVEN_INTERNAL_USERNAME=${{ env.MAVEN_USERNAME }}
+            DANUBETECH_MAVEN_INTERNAL_PASSWORD=${{ env.MAVEN_PASSWORD }}
+          cache-from: type=gha,scope=docker-build-${{ matrix.arch }}
+          cache-to: type=gha,scope=docker-build-${{ matrix.arch }},mode=max
+          platforms: linux/${{ matrix.arch }}
+
+  docker-publish:
+    name: Docker Publish
+    runs-on: ubuntu-24.04
+    needs: docker-build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Import Secrets
+        uses: hashicorp/vault-action@v3
+        with:
+          url: ${{ secrets.VAULT_ADDR }}
+          token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
+          caCertificate: ${{ secrets.VAULTCA }}
+          secrets: |
+            ci/data/gh-workflows/${{ inputs.GLOBAL_REPO_NAME }} username | DOCKER_USERNAME ;
+            ci/data/gh-workflows/${{ inputs.GLOBAL_REPO_NAME }} password | DOCKER_PASSWORD ;
+            ci/data/gh-workflows/maven-danubetech-nexus username | MAVEN_USERNAME ;
+            ci/data/gh-workflows/maven-danubetech-nexus password | MAVEN_PASSWORD
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          version: latest
+
+      - name: Get version
+        if: inputs.IS_RELEASE
+        id: get_version
+        uses: danubetech/github-action-read-version@main
+        with:
+          framework: ${{ inputs.GLOBAL_FRAMEWORK }}
+          version-core: ${{ inputs.RELEASE_TYPE }}
+
+      - name: Docker Metadata
+        id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ inputs.GLOBAL_REPO_NAME }}/${{ inputs.GLOBAL_IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ inputs.IMAGE_TAG }},enable=${{ inputs.IMAGE_TAG != '' }}
+            type=sha,prefix=${{ steps.get_version.outputs.version }},enable=${{ inputs.IS_RELEASE }}
+
+      - name: Login to Docker Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ inputs.GLOBAL_REPO_NAME }}
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Docker Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ inputs.PATH_TO_DOCKERFILE }}
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          build-args: |
+            DANUBETECH_MAVEN_INTERNAL_USERNAME=${{ env.MAVEN_USERNAME }}
+            DANUBETECH_MAVEN_INTERNAL_PASSWORD=${{ env.MAVEN_PASSWORD }}
+          cache-from: |
+            type=gha,scope=docker-build-arm64
+            type=gha,scope=docker-build-amd64
+          platforms: linux/amd64,linux/arm64

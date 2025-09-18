@@ -34,6 +34,19 @@ jobs:
       VAULTCA: ${{ secrets.VAULTCA }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
+  docker-latest-multi-arch:
+    needs: docker-latest
+    uses: ./.github/workflows/docker-multi-arch.yml
+    with:
+      GLOBAL_IMAGE_NAME: universalresolver/uni-resolver-web
+      GLOBAL_REPO_NAME: docker.io
+      IMAGE_TAG: latest
+      PATH_TO_DOCKERFILE: uni-resolver-web/docker/Dockerfile
+    secrets:
+      CI_SECRET_READER_PERIODIC_TOKEN: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
+      VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+      VAULTCA: ${{ secrets.VAULTCA }}
+
   trigger-deployment:
     needs: [ docker-latest ]
     runs-on: ubuntu-latest
