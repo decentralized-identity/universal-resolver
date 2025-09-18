@@ -38,7 +38,7 @@ jobs:
     needs: docker-latest
     uses: decentralized-identity/universal-registrar/.github/workflows/docker-multi-arch.yml@main
     with:
-      GLOBAL_IMAGE_NAME: universalregistrar/uni-resolver-web
+      GLOBAL_IMAGE_NAME: universalresolver/uni-resolver-web
       GLOBAL_REPO_NAME: docker.io
       IMAGE_TAG: latest
       PATH_TO_DOCKERFILE: uni-resolver-web/docker/Dockerfile

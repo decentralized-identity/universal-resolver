@@ -44,7 +44,7 @@ jobs:
     uses: decentralized-identity/universal-registrar/.github/workflows/docker-multi-arch.yml@main
     with:
       GLOBAL_FRAMEWORK: maven
-      GLOBAL_IMAGE_NAME: universalregistrar/uni-resolver-web
+      GLOBAL_IMAGE_NAME: universalresolver/uni-resolver-web
       GLOBAL_REPO_NAME: docker.io
       IS_RELEASE: true
       PATH_TO_DOCKERFILE: uni-resolver-web/docker/Dockerfile
