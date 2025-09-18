@@ -36,7 +36,7 @@ jobs:
 
   docker-latest-multi-arch:
     needs: docker-latest
-    uses: decentralized-identity/universal-registrar/.github/workflows/docker-multi-arch.yml@main
+    uses: ./.github/workflows/docker-multi-arch.yml
     with:
       GLOBAL_IMAGE_NAME: universalresolver/uni-resolver-web
       GLOBAL_REPO_NAME: docker.io
