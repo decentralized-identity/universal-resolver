@@ -53,3 +53,7 @@ driver-did-near:
       value: "https://rpc.testnet.near.org"
     - name: NETWORK_ID
       value: "testnet"
+driver-did-empe:
+  env:
+    - name: DID_METHODS
+      value: '[{"method":"empe","network":"testnet","url":"https://rpc-testnet.empe.io"},{"method":"empe","url":"https://rpc.empe.io"}]'

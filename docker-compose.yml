@@ -78,6 +78,7 @@ services:
       uniresolver_web_driver_url_did_iden3:
       uniresolver_web_driver_url_did_cndid:
       uniresolver_web_driver_url_did_tgrid:
+      uniresolver_web_driver_url_did_empe:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -411,3 +412,9 @@ services:
     ports:
       - "8162:8000"
 
+  driver-did-empe:
+    image: ghcr.io/empe-io/uni-resolver-driver-did-empe:latest
+    environment:
+      DID_METHODS: ${uniresolver_driver_did_empe_did_methods}
+    ports:
+      - "8163:8080"
