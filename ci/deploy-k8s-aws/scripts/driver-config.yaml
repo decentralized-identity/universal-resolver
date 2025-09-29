@@ -55,5 +55,5 @@ driver-did-near:
       value: "testnet"
 driver-did-empe:
   env:
-    - name: uniresolver_driver_did_empe_did_methods
+    - name: DID_METHODS
       value: '[{"method":"empe","network":"testnet","url":"https://rpc-testnet.empe.io"},{"method":"empe","url":"https://rpc.empe.io"}]'
