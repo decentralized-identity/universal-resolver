@@ -132,6 +132,14 @@ echo "===================================================================="
 
 # Decode and save Kubernetes config
 echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
+
+# Fix deprecated apiVersion in kubeconfig (v1alpha1 -> v1beta1)
+# kubectl 1.24+ no longer supports v1alpha1
+if grep -q "client.authentication.k8s.io/v1alpha1" /tmp/config; then
+    echo "Updating deprecated apiVersion in kubeconfig (v1alpha1 -> v1beta1)..."
+    sed -i 's/client\.authentication\.k8s\.io\/v1alpha1/client.authentication.k8s.io\/v1beta1/g' /tmp/config
+fi
+
 export KUBECONFIG=/tmp/config
 
 # Debug: Verify AWS credentials and region are set
