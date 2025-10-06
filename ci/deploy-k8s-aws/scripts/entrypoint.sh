@@ -80,7 +80,8 @@ echo "===================================================================="
 echo "Step 0: Installing kubectl matching EKS cluster version"
 echo "===================================================================="
 
-# Configure AWS region
+# Configure AWS region for both AWS CLI and aws-iam-authenticator
+export AWS_DEFAULT_REGION="$AWS_REGION"
 aws configure set region "$AWS_REGION"
 
 # Query EKS cluster version
@@ -133,13 +134,32 @@ echo "===================================================================="
 echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
 export KUBECONFIG=/tmp/config
 
+# Debug: Verify AWS credentials and region are set
+echo "Verifying AWS configuration..."
+echo "  AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-NOT SET}"
+echo "  AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:0:10}... (length: ${#AWS_ACCESS_KEY_ID})"
+echo "  Kubeconfig location: $KUBECONFIG"
+
 # Verify kubectl connectivity
+echo ""
 echo "Testing kubectl connectivity..."
-if kubectl cluster-info &>/dev/null; then
+if kubectl cluster-info 2>&1; then
     echo "✓ Successfully connected to Kubernetes cluster"
     kubectl version --short 2>/dev/null || kubectl version
 else
+    echo ""
     echo "✗ Failed to connect to Kubernetes cluster"
+    echo ""
+    echo "Debug information:"
+    echo "  kubectl version:"
+    kubectl version --client
+    echo ""
+    echo "  Checking if aws-iam-authenticator is accessible:"
+    which aws-iam-authenticator
+    aws-iam-authenticator version
+    echo ""
+    echo "  AWS CLI version:"
+    aws --version
     exit 1
 fi
 

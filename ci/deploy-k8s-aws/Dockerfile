@@ -17,8 +17,8 @@ RUN apt-get update -y && \
     unzip awscliv2.zip && \
     ./aws/install && \
     rm -rf awscliv2.zip aws && \
-    # Install AWS IAM Authenticator
-    curl -Lso /bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/aws-iam-authenticator && \
+    # Install AWS IAM Authenticator (latest version compatible with EKS 1.33)
+    curl -Lso /bin/aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.6.30/aws-iam-authenticator_0.6.30_linux_amd64 && \
     chmod +x /bin/aws-iam-authenticator && \
     # Note: kubectl will be installed dynamically in entrypoint.sh to match EKS cluster version
     # Install yq for YAML parsing
