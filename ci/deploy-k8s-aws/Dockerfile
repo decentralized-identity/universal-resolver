@@ -20,10 +20,7 @@ RUN apt-get update -y && \
     # Install AWS IAM Authenticator
     curl -Lso /bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/aws-iam-authenticator && \
     chmod +x /bin/aws-iam-authenticator && \
-    # Install kubectl (latest stable)
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
-    chmod +x ./kubectl && \
-    mv ./kubectl /usr/local/bin/kubectl && \
+    # Note: kubectl will be installed dynamically in entrypoint.sh to match EKS cluster version
     # Install yq for YAML parsing
     curl -Lso /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && \
     chmod +x /usr/local/bin/yq && \

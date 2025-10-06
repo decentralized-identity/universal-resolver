@@ -43,10 +43,16 @@ echo "Version: 2.0.0"
 echo "===================================================================="
 echo ""
 
+# Hardcoded EKS cluster configuration
+export EKS_CLUSTER_NAME="dif-universal-resolver-prod"
+export AWS_REGION="us-east-2"
+
 # Set default namespace if not provided
 export NAMESPACE="${NAMESPACE:-uni-resolver}"
 
 echo "Configuration:"
+echo "  EKS Cluster: $EKS_CLUSTER_NAME"
+echo "  AWS Region: $AWS_REGION"
 echo "  Namespace: $NAMESPACE"
 echo "  Working Directory: $(pwd)"
 echo ""
@@ -65,6 +71,55 @@ fi
 if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
     echo "Warning: AWS_SECRET_ACCESS_KEY is not set"
 fi
+
+################################################################################
+# Step 0: Install kubectl matching EKS cluster version
+################################################################################
+
+echo "===================================================================="
+echo "Step 0: Installing kubectl matching EKS cluster version"
+echo "===================================================================="
+
+# Configure AWS region
+aws configure set region "$AWS_REGION"
+
+# Query EKS cluster version
+echo "Querying EKS cluster version..."
+CLUSTER_VERSION=$(aws eks describe-cluster --name "$EKS_CLUSTER_NAME" --region "$AWS_REGION" --query 'cluster.version' --output text)
+
+if [ -z "$CLUSTER_VERSION" ]; then
+    echo "Error: Failed to query EKS cluster version"
+    exit 1
+fi
+
+echo "EKS Cluster version: v$CLUSTER_VERSION"
+
+# Download and install matching kubectl version
+echo "Downloading kubectl v$CLUSTER_VERSION..."
+KUBECTL_URL="https://dl.k8s.io/release/v${CLUSTER_VERSION}.0/bin/linux/amd64/kubectl"
+
+if curl -LO "$KUBECTL_URL" 2>/dev/null; then
+    chmod +x ./kubectl
+    mv ./kubectl /usr/local/bin/kubectl
+    echo "✓ Successfully installed kubectl v$CLUSTER_VERSION"
+else
+    echo "Warning: Failed to download kubectl v$CLUSTER_VERSION, trying latest patch version..."
+    # Try without the patch version
+    KUBECTL_URL="https://dl.k8s.io/release/v${CLUSTER_VERSION}.1/bin/linux/amd64/kubectl"
+    if curl -LO "$KUBECTL_URL" 2>/dev/null; then
+        chmod +x ./kubectl
+        mv ./kubectl /usr/local/bin/kubectl
+        echo "✓ Successfully installed kubectl v${CLUSTER_VERSION}.1"
+    else
+        echo "Error: Failed to install compatible kubectl version"
+        exit 1
+    fi
+fi
+
+# Verify kubectl installation
+kubectl version --client
+
+echo ""
 
 ################################################################################
 # Step 1: Setup Kubernetes Configuration
