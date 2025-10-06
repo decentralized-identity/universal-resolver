@@ -1,0 +1,330 @@
+name: Deploy to Kubernetes
+description: 'Smart deployment to K8s cluster from docker-compose.yml'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docker-compose.yml'
+      - '.env'
+      - '.github/workflows/deploy-k8s.yml'
+
+env:
+  NAMESPACE: your-namespace  # Configure your namespace here
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install required tools
+        run: |
+          # Install yq for YAML parsing
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+          
+          # Install jq for JSON parsing
+          sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Parse docker-compose.yml
+        id: parse-compose
+        run: |
+          echo "Parsing docker-compose.yml..."
+          
+          # Extract services information
+          yq eval '.services | to_entries | .[] | {
+            "name": .key,
+            "image": .value.image,
+            "ports": .value.ports,
+            "environment": .value.environment,
+            "env_file": .value.env_file,
+            "volumes": .value.volumes,
+            "command": .value.command,
+            "restart": .value.restart
+          }' docker-compose.yml > services.json
+          
+          echo "Services parsed:"
+          cat services.json
+
+      - name: Process environment variables
+        run: |
+          #!/bin/bash
+          set -e
+          
+          echo "Processing environment variables from .env file..."
+          
+          # Create a ConfigMap from .env file
+          if [ -f .env ]; then
+            kubectl create configmap app-config \
+              --from-env-file=.env \
+              --namespace=$NAMESPACE \
+              --dry-run=client -o yaml > configmap.yaml
+          
+            # Apply the ConfigMap
+            kubectl apply -f configmap.yaml
+            echo "ConfigMap 'app-config' created/updated from .env file"
+          else
+            echo "No .env file found, skipping ConfigMap creation"
+          fi
+
+      - name: Deploy or Update Services
+        run: |
+          #!/bin/bash
+          set -e
+          
+          echo "Starting deployment process..."
+          
+          # Function to extract image name and tag
+          extract_image_info() {
+            local image=$1
+            local name=$(echo $image | cut -d: -f1 | rev | cut -d/ -f1 | rev)
+            local tag=$(echo $image | cut -d: -f2)
+            [ "$tag" == "$image" ] && tag="latest"
+            echo "$name $tag"
+          }
+          
+          # Function to create deployment YAML
+          create_deployment_yaml() {
+            local service_name=$1
+            local image=$2
+            local ports=$3
+            local env_vars=$4
+            local env_file=$5
+          
+            cat << EOF > deployment-${service_name}.yaml
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: ${service_name}
+            namespace: ${NAMESPACE}
+            labels:
+              app: ${service_name}
+              managed-by: github-action
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: ${service_name}
+            template:
+              metadata:
+                labels:
+                  app: ${service_name}
+              spec:
+                containers:
+                - name: ${service_name}
+                  image: ${image}
+                  imagePullPolicy: $([ "${image##*:}" == "latest" ] && echo "Always" || echo "IfNotPresent")
+          EOF
+          
+            # Add ports if defined
+            if [ ! -z "$ports" ] && [ "$ports" != "null" ]; then
+              echo "        ports:" >> deployment-${service_name}.yaml
+              echo "$ports" | jq -r '.[] | "        - containerPort: " + (. | split(":") | .[1] // .[0])' >> deployment-${service_name}.yaml
+            fi
+          
+            # Add environment variables
+            if [ "$env_file" != "null" ] || [ "$env_vars" != "null" ]; then
+              echo "        envFrom:" >> deployment-${service_name}.yaml
+              echo "        - configMapRef:" >> deployment-${service_name}.yaml
+              echo "            name: app-config" >> deployment-${service_name}.yaml
+            fi
+          
+            # Add specific env vars if defined
+            if [ "$env_vars" != "null" ]; then
+              echo "        env:" >> deployment-${service_name}.yaml
+              echo "$env_vars" | jq -r 'to_entries | .[] | "        - name: " + .key + "\n          value: \"" + .value + "\""' >> deployment-${service_name}.yaml
+            fi
+          }
+          
+          # Function to create service YAML
+          create_service_yaml() {
+            local service_name=$1
+            local ports=$2
+          
+            if [ -z "$ports" ] || [ "$ports" == "null" ]; then
+              return
+            fi
+          
+            cat << EOF > service-${service_name}.yaml
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: ${service_name}
+            namespace: ${NAMESPACE}
+            labels:
+              app: ${service_name}
+              managed-by: github-action
+          spec:
+            selector:
+              app: ${service_name}
+            ports:
+          EOF
+          
+            echo "$ports" | jq -r '.[] | 
+              split(":") | 
+              "    - port: " + (.[0] // .[1]) + "\n      targetPort: " + (.[1] // .[0]) + "\n      protocol: TCP"' >> service-${service_name}.yaml
+          }
+          
+          # Get current deployments in namespace
+          echo "Fetching current deployments..."
+          kubectl get deployments -n $NAMESPACE -o json | jq -r '.items[].metadata.name' > current_deployments.txt
+          
+          # Process each service from docker-compose
+          cat services.json | jq -c '.' | while read -r service; do
+            name=$(echo "$service" | jq -r '.name')
+            image=$(echo "$service" | jq -r '.image')
+            ports=$(echo "$service" | jq '.ports')
+            env_vars=$(echo "$service" | jq '.environment')
+            env_file=$(echo "$service" | jq '.env_file')
+          
+            echo "Processing service: $name with image: $image"
+          
+            # Check if deployment exists
+            if kubectl get deployment $name -n $NAMESPACE &>/dev/null; then
+              # Deployment exists, check if image needs update
+              current_image=$(kubectl get deployment $name -n $NAMESPACE -o jsonpath='{.spec.template.spec.containers[0].image}')
+          
+              if [ "$current_image" != "$image" ]; then
+                echo "Image mismatch for $name. Current: $current_image, Expected: $image"
+                echo "Updating deployment..."
+                kubectl set image deployment/$name $name=$image -n $NAMESPACE
+                kubectl rollout status deployment/$name -n $NAMESPACE --timeout=300s
+              else
+                echo "Image for $name is up to date"
+              fi
+            else
+              # Deployment doesn't exist, create it
+              echo "Creating new deployment for $name"
+              create_deployment_yaml "$name" "$image" "$ports" "$env_vars" "$env_file"
+              kubectl apply -f deployment-${name}.yaml
+          
+              # Create service if ports are defined
+              if [ ! -z "$ports" ] && [ "$ports" != "null" ]; then
+                create_service_yaml "$name" "$ports"
+                kubectl apply -f service-${name}.yaml
+              fi
+            fi
+          
+            # Mark as processed
+            echo "$name" >> processed_services.txt
+          done
+          
+          echo "All services from docker-compose.yml processed"
+
+      - name: Handle driver-did-btcr Secret
+        run: |
+          #!/bin/bash
+          set -e
+          
+          # Check if driver-did-btcr is in the services
+          if grep -q "driver-did-btcr" processed_services.txt 2>/dev/null; then
+            echo "Handling special case for driver-did-btcr..."
+          
+            # Assuming secrets are in a specific directory or file
+            # Adjust the path according to your repository structure
+            if [ -f secrets/driver-did-btcr-secret.yaml ]; then
+              kubectl apply -f secrets/driver-did-btcr-secret.yaml -n $NAMESPACE
+              echo "Secret for driver-did-btcr applied"
+            elif [ -f secrets/driver-did-btcr.json ]; then
+              # Create secret from JSON file
+              kubectl create secret generic driver-did-btcr-secret \
+                --from-file=config=secrets/driver-did-btcr.json \
+                --namespace=$NAMESPACE \
+                --dry-run=client -o yaml | kubectl apply -f -
+              echo "Secret for driver-did-btcr created from JSON"
+            else
+              echo "Warning: No secret files found for driver-did-btcr"
+            fi
+          
+            # Update the deployment to use the secret
+            kubectl patch deployment driver-did-btcr -n $NAMESPACE --type='json' \
+              -p='[{"op": "add", "path": "/spec/template/spec/containers/0/volumeMounts", "value": [{"name": "secret-volume", "mountPath": "/secrets"}]}]' 2>/dev/null || true
+          
+            kubectl patch deployment driver-did-btcr -n $NAMESPACE --type='json' \
+              -p='[{"op": "add", "path": "/spec/template/spec/volumes", "value": [{"name": "secret-volume", "secret": {"secretName": "driver-did-btcr-secret"}}]}]' 2>/dev/null || true
+          fi
+
+      - name: Clean up orphaned deployments
+        run: |
+          #!/bin/bash
+          set -e
+          
+          echo "Checking for orphaned deployments..."
+          
+          # Get all deployments managed by this action
+          kubectl get deployments -n $NAMESPACE -l managed-by=github-action -o json | \
+            jq -r '.items[].metadata.name' > managed_deployments.txt
+          
+          # Get services from docker-compose
+          cat services.json | jq -r '.name' > compose_services.txt
+          
+          # Find orphaned deployments
+          while read deployment; do
+            if ! grep -q "^${deployment}$" compose_services.txt; then
+              echo "Found orphaned deployment: $deployment"
+              echo "Removing deployment and associated resources..."
+          
+              # Delete deployment
+              kubectl delete deployment $deployment -n $NAMESPACE --ignore-not-found=true
+          
+              # Delete service if exists
+              kubectl delete service $deployment -n $NAMESPACE --ignore-not-found=true
+          
+              # Delete configmap if exists (service-specific)
+              kubectl delete configmap ${deployment}-config -n $NAMESPACE --ignore-not-found=true
+          
+              echo "Cleaned up resources for $deployment"
+            fi
+          done < managed_deployments.txt
+          
+          echo "Cleanup completed"
+
+      - name: Verify deployment status
+        run: |
+          #!/bin/bash
+          set -e
+          
+          echo "Verifying deployment status..."
+          
+          # Check all deployments are ready
+          failed=0
+          cat services.json | jq -r '.name' | while read service; do
+            if kubectl get deployment $service -n $NAMESPACE &>/dev/null; then
+              ready=$(kubectl get deployment $service -n $NAMESPACE -o jsonpath='{.status.readyReplicas}')
+              desired=$(kubectl get deployment $service -n $NAMESPACE -o jsonpath='{.spec.replicas}')
+          
+              if [ "$ready" == "$desired" ]; then
+                echo "✓ $service: $ready/$desired replicas ready"
+              else
+                echo "✗ $service: $ready/$desired replicas ready"
+                failed=$((failed + 1))
+              fi
+            fi
+          done
+          
+          if [ $failed -gt 0 ]; then
+            echo "Warning: Some deployments are not fully ready"
+            exit 1
+          else
+            echo "All deployments are healthy!"
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Namespace: $NAMESPACE" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### Deployed Services:" >> $GITHUB_STEP_SUMMARY
+          kubectl get deployments -n $NAMESPACE -o wide | head -20 >> $GITHUB_STEP_SUMMARY
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Services:" >> $GITHUB_STEP_SUMMARY
+          kubectl get services -n $NAMESPACE -o wide | head -20 >> $GITHUB_STEP_SUMMARY
