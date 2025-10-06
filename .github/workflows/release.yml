@@ -41,6 +41,7 @@ jobs:
 
   docker-release-multi-arch:
     needs: docker-release
+    if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/docker-multi-arch.yml
     with:
       GLOBAL_FRAMEWORK: maven
