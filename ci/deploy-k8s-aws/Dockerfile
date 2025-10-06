@@ -18,8 +18,8 @@ RUN apt-get update -y && \
     ./aws/install && \
     rm -rf awscliv2.zip aws && \
     # Install AWS IAM Authenticator
-    curl -Lso /usr/local/bin/aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.6.14/aws-iam-authenticator_0.6.14_linux_amd64 && \
-    chmod +x /usr/local/bin/aws-iam-authenticator && \
+    curl -Lso /bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/aws-iam-authenticator && \
+    chmod +x /bin/aws-iam-authenticator && \
     # Install kubectl (latest stable)
     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
     chmod +x ./kubectl && \
