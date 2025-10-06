@@ -4,13 +4,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Import Secrets
-      uses: hashicorp/vault-action@v2.3.0
+      uses: hashicorp/vault-action@v3
       with:
         url: ${{ secrets.VAULT_ADDR }}
         token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
@@ -23,20 +24,21 @@ jobs:
           ci/data/gh-workflows/universal-resolver-cluster rpc-cert-testnet | RPC_CERT_TESTNET ;
           ci/data/gh-workflows/deployment-status slack-webhook-url | SLACK_WEBHOOK_URL
 
-    - name: Deploy to AWS
+    - name: Deploy to AWS Kubernetes Cluster
       uses: ./ci/deploy-k8s-aws
-      env:
-        KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG_DATA_BASE64_UNI_RESOLVER_PROD}}
-        AWS_ACCESS_KEY_ID: ${{env.AWS_ACCESS_KEY_ID}}
-        AWS_SECRET_ACCESS_KEY: ${{env.AWS_SECRET_ACCESS_KEY}}
-        RPC_URL_TESTNET: ${{env.RPC_URL_TESTNET}}
-        RPC_CERT_TESTNET: ${{env.RPC_CERT_TESTNET}}
+      with:
+        kube-config-data: ${{ env.KUBE_CONFIG_DATA }}
+        aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        namespace: 'uni-resolver'
+        rpc-url-testnet: ${{ env.RPC_URL_TESTNET }}
+        rpc-cert-testnet: ${{ env.RPC_CERT_TESTNET }}
 
     - name: Slack notification
-      if: failure() # Send message only on failure
+      if: failure()
       uses: 8398a7/action-slack@v3
       with:
         status: ${{ job.status }}
-        fields: repo,commit,action,eventName,ref,workflow # selectable (default: repo,message)
+        fields: repo,commit,action,eventName,ref,workflow
       env:
-        SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }} # required
+        SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
