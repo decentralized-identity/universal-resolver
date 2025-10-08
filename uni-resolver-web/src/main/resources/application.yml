@@ -408,3 +408,9 @@ uniresolver:
       testIdentifiers:
         - did:empe:02bbae4a3c51a3134d0aa4bfe1e7ed19c6debe84
 
+    - pattern: "^(did:andorra:.+)$"
+      url: ${uniresolver_web_driver_url_did_andorra:http://driver-did-andorra:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:andorra:NRTAD-710646J
+        - did:andorra:NRTAD-059888N_ISS
+        - did:andorra:NRTAD-059888N_SP

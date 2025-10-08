@@ -418,3 +418,10 @@ services:
       DID_METHODS: ${uniresolver_driver_did_empe_did_methods}
     ports:
       - "8163:8080"
+
+  driver-did-andorra:
+    image: davidgbvargroup/uni-resolver-driver-did-andorra:1.0.0
+    ports:
+      - "8164:8080"
+    networks:
+      - universal-resolver
