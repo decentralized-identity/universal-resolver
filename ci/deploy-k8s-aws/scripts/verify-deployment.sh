@@ -42,82 +42,101 @@ echo "Verifying deployment status in namespace: $NAMESPACE"
 echo "===================================================================="
 echo ""
 
-# Counter for failed deployments
-failed=0
-total=0
+# Create temporary directory for parallel processing results
+TEMP_DIR=$(mktemp -d)
+trap "rm -rf $TEMP_DIR" EXIT
 
-# Check each service defined in docker-compose.yml
-cat services.json | jq -r '.name' | while read -r service; do
-    total=$((total + 1))
-    echo "Checking service: $service"
+# Function to check a single service
+check_service() {
+    local service=$1
+    local output_file="$TEMP_DIR/${service}.txt"
+    local status_file="$TEMP_DIR/${service}.status"
 
-    # Check if deployment exists
-    if ! kubectl get deployment "$service" -n "$NAMESPACE" &>/dev/null; then
-        echo "  ✗ Deployment not found"
-        failed=$((failed + 1))
-        continue
-    fi
+    {
+        echo "Checking service: $service"
 
-    # Get deployment status
-    ready=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
-    desired=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "0")
-    available=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.status.availableReplicas}' 2>/dev/null || echo "0")
-
-    # Handle empty responses (convert to 0)
-    ready=${ready:-0}
-    desired=${desired:-1}
-    available=${available:-0}
-
-    # Check if deployment is healthy
-    if [ "$ready" == "$desired" ] && [ "$available" == "$desired" ]; then
-        echo "  ✓ Healthy: $ready/$desired replicas ready"
-
-        # Get image information
-        image=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.spec.template.spec.containers[0].image}')
-        echo "    Image: $image"
-
-        # Get pod status
-        pod_name=$(kubectl get pods -n "$NAMESPACE" -l app="$service" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
-        if [ ! -z "$pod_name" ]; then
-            pod_status=$(kubectl get pod "$pod_name" -n "$NAMESPACE" -o jsonpath='{.status.phase}')
-            echo "    Pod status: $pod_status"
+        # Check if deployment exists
+        if ! kubectl get deployment "$service" -n "$NAMESPACE" &>/dev/null; then
+            echo "  ✗ Deployment not found"
+            echo "unhealthy" > "$status_file"
+            return
         fi
-    else
-        echo "  ✗ Unhealthy: $ready/$desired replicas ready, $available available"
-        failed=$((failed + 1))
 
-        # Show pod status for debugging
-        echo "    Pod status:"
-        kubectl get pods -n "$NAMESPACE" -l app="$service" -o wide 2>/dev/null || echo "    No pods found"
-
-        # Show recent events
-        echo "    Recent events:"
-        kubectl get events -n "$NAMESPACE" --field-selector involvedObject.name="$service" --sort-by='.lastTimestamp' | tail -5 || echo "    No events found"
-    fi
-
-    echo ""
-done
-
-# Read the failed count from the last iteration
-# Note: Due to the pipe, the failed variable inside the loop is in a subshell
-# We need to recalculate it
-failed=0
-total=0
-cat services.json | jq -r '.name' | while read -r service; do
-    total=$((total + 1))
-    if kubectl get deployment "$service" -n "$NAMESPACE" &>/dev/null; then
+        # Get deployment status
         ready=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
-        desired=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "1")
+        desired=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "0")
         available=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.status.availableReplicas}' 2>/dev/null || echo "0")
 
+        # Handle empty responses (convert to 0)
         ready=${ready:-0}
         desired=${desired:-1}
         available=${available:-0}
 
-        if [ "$ready" != "$desired" ] || [ "$available" != "$desired" ]; then
+        # Check if deployment is healthy
+        if [ "$ready" == "$desired" ] && [ "$available" == "$desired" ]; then
+            echo "  ✓ Healthy: $ready/$desired replicas ready"
+            echo "healthy" > "$status_file"
+
+            # Get image information
+            image=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.spec.template.spec.containers[0].image}')
+            echo "    Image: $image"
+
+            # Get pod status
+            pod_name=$(kubectl get pods -n "$NAMESPACE" -l app="$service" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
+            if [ ! -z "$pod_name" ]; then
+                pod_status=$(kubectl get pod "$pod_name" -n "$NAMESPACE" -o jsonpath='{.status.phase}')
+                echo "    Pod status: $pod_status"
+            fi
+        else
+            echo "  ✗ Unhealthy: $ready/$desired replicas ready, $available available"
+            echo "unhealthy" > "$status_file"
+
+            # Show pod status for debugging
+            echo "    Pod status:"
+            kubectl get pods -n "$NAMESPACE" -l app="$service" -o wide 2>/dev/null || echo "    No pods found"
+
+            # Show recent events
+            echo "    Recent events:"
+            kubectl get events -n "$NAMESPACE" --field-selector involvedObject.name="$service" --sort-by='.lastTimestamp' | tail -5 || echo "    No events found"
+        fi
+
+        echo ""
+    } > "$output_file"
+}
+
+# Launch parallel checks for all services
+pids=()
+for service in $(cat services.json | jq -r '.name'); do
+    check_service "$service" &
+    pids+=($!)
+done
+
+# Wait for all background processes to complete
+echo "Checking $(cat services.json | jq -s 'length') services in parallel..."
+for pid in "${pids[@]}"; do
+    wait "$pid"
+done
+echo ""
+
+# Display results in order
+for service in $(cat services.json | jq -r '.name'); do
+    if [ -f "$TEMP_DIR/${service}.txt" ]; then
+        cat "$TEMP_DIR/${service}.txt"
+    fi
+done
+
+# Count healthy/unhealthy services from status files
+failed=0
+total=0
+for service in $(cat services.json | jq -r '.name'); do
+    total=$((total + 1))
+    if [ -f "$TEMP_DIR/${service}.status" ]; then
+        status=$(cat "$TEMP_DIR/${service}.status")
+        if [ "$status" != "healthy" ]; then
             failed=$((failed + 1))
         fi
     else
+        # Service check didn't complete
         failed=$((failed + 1))
     fi
 done
@@ -148,33 +167,11 @@ echo ""
 echo "===================================================================="
 
 # Determine exit code based on failures
-# Since we can't easily get the failed count from the loop, let's check directly
-all_healthy=true
-for service in $(cat services.json | jq -r '.name'); do
-    if kubectl get deployment "$service" -n "$NAMESPACE" &>/dev/null; then
-        ready=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
-        desired=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "1")
-        available=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.status.availableReplicas}' 2>/dev/null || echo "0")
-
-        ready=${ready:-0}
-        desired=${desired:-1}
-        available=${available:-0}
-
-        if [ "$ready" != "$desired" ] || [ "$available" != "$desired" ]; then
-            all_healthy=false
-            break
-        fi
-    else
-        all_healthy=false
-        break
-    fi
-done
-
-if [ "$all_healthy" = true ]; then
+if [ "$failed" -eq 0 ]; then
     echo "✓ All deployments are healthy!"
     exit 0
 else
-    echo "✗ Warning: Some deployments are not fully ready"
+    echo "✗ Warning: $failed out of $total deployments are not fully ready"
     echo "  Check the logs above for details"
     exit 1
 fi
