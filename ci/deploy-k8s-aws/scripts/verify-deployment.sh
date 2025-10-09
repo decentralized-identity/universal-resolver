@@ -51,6 +51,7 @@ check_service() {
     local service=$1
     local output_file="$TEMP_DIR/${service}.txt"
     local status_file="$TEMP_DIR/${service}.status"
+    local issues_file="$TEMP_DIR/${service}.issues"
 
     {
         echo "Checking service: $service"
@@ -59,6 +60,7 @@ check_service() {
         if ! kubectl get deployment "$service" -n "$NAMESPACE" &>/dev/null; then
             echo "  ✗ Deployment not found"
             echo "unhealthy" > "$status_file"
+            echo "Deployment not found" > "$issues_file"
             return
         fi
 
@@ -72,10 +74,47 @@ check_service() {
         desired=${desired:-1}
         available=${available:-0}
 
+        # Check for terminated pods
+        terminated_pods=$(kubectl get pods -n "$NAMESPACE" -l app="$service" -o json 2>/dev/null | \
+            jq -r '.items[] | select(.status.phase == "Failed" or .status.phase == "Succeeded" or
+                   (.status.containerStatuses[]? | select(.state.terminated != null))) | .metadata.name' 2>/dev/null || echo "")
+
+        running_pods=$(kubectl get pods -n "$NAMESPACE" -l app="$service" -o json 2>/dev/null | \
+            jq -r '.items[] | select(.status.phase == "Running") | .metadata.name' 2>/dev/null || echo "")
+
+        # Handle terminated pods
+        if [ ! -z "$terminated_pods" ]; then
+            if [ ! -z "$running_pods" ]; then
+                # Running pods exist, clean up terminated ones
+                echo "  ⚠ Found terminated pods, cleaning up..."
+                for pod in $terminated_pods; do
+                    reason=$(kubectl get pod "$pod" -n "$NAMESPACE" -o jsonpath='{.status.reason}' 2>/dev/null || \
+                             kubectl get pod "$pod" -n "$NAMESPACE" -o jsonpath='{.status.containerStatuses[0].state.terminated.reason}' 2>/dev/null || echo "Terminated")
+                    echo "    Deleting terminated pod: $pod (Reason: $reason)"
+                    kubectl delete pod "$pod" -n "$NAMESPACE" --wait=false 2>/dev/null || true
+                done
+            else
+                # No running pods, this is an issue
+                echo "  ✗ Found terminated pods with no running replacements"
+                for pod in $terminated_pods; do
+                    reason=$(kubectl get pod "$pod" -n "$NAMESPACE" -o jsonpath='{.status.reason}' 2>/dev/null || \
+                             kubectl get pod "$pod" -n "$NAMESPACE" -o jsonpath='{.status.containerStatuses[0].state.terminated.reason}' 2>/dev/null || echo "Terminated")
+                    echo "    Terminated pod: $pod (Reason: $reason)"
+                    echo "Pod terminated without replacement: $pod (Reason: $reason)" >> "$issues_file"
+                done
+            fi
+        fi
+
         # Check if deployment is healthy
         if [ "$ready" == "$desired" ] && [ "$available" == "$desired" ]; then
             echo "  ✓ Healthy: $ready/$desired replicas ready"
-            echo "healthy" > "$status_file"
+
+            # Mark as healthy only if no unresolved terminated pods
+            if [ ! -f "$issues_file" ]; then
+                echo "healthy" > "$status_file"
+            else
+                echo "unhealthy" > "$status_file"
+            fi
 
             # Get image information
             image=$(kubectl get deployment "$service" -n "$NAMESPACE" -o jsonpath='{.spec.template.spec.containers[0].image}')
@@ -90,6 +129,7 @@ check_service() {
         else
             echo "  ✗ Unhealthy: $ready/$desired replicas ready, $available available"
             echo "unhealthy" > "$status_file"
+            echo "Unhealthy: $ready/$desired replicas ready, $available available" >> "$issues_file"
 
             # Show pod status for debugging
             echo "    Pod status:"
@@ -164,6 +204,30 @@ echo "Secrets in namespace:"
 kubectl get secrets -n "$NAMESPACE"
 
 echo ""
+
+# Check for deployments with issues
+deployments_with_issues=()
+for service in $(cat services.json | jq -r '.name'); do
+    if [ -f "$TEMP_DIR/${service}.issues" ]; then
+        deployments_with_issues+=("$service")
+    fi
+done
+
+# Display deployments with issues if any exist
+if [ ${#deployments_with_issues[@]} -gt 0 ]; then
+    echo "===================================================================="
+    echo "Deployments with Issues"
+    echo "===================================================================="
+    echo ""
+    for service in "${deployments_with_issues[@]}"; do
+        echo "Service: $service"
+        cat "$TEMP_DIR/${service}.issues" | while read -r issue; do
+            echo "  - $issue"
+        done
+        echo ""
+    done
+fi
+
 echo "===================================================================="
 
 # Determine exit code based on failures
