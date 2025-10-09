@@ -38,7 +38,7 @@ echo "Parsing $COMPOSE_FILE..."
 
 # Extract services information using yq
 # For each service, create a JSON object with all relevant fields
-yq eval '.services | to_entries | .[] | {
+yq eval -o=json '.services | to_entries | .[] | {
   "name": .key,
   "image": .value.image,
   "ports": .value.ports,
