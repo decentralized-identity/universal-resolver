@@ -82,6 +82,12 @@ check_service() {
         running_pods=$(kubectl get pods -n "$NAMESPACE" -l app="$service" -o json 2>/dev/null | \
             jq -r '.items[] | select(.status.phase == "Running") | .metadata.name' 2>/dev/null || echo "")
 
+        # Check for waiting pods with issues
+        waiting_pods=$(kubectl get pods -n "$NAMESPACE" -l app="$service" -o json 2>/dev/null | \
+            jq -r '.items[] | select(.status.phase == "Pending" or
+                   (.status.containerStatuses[]? | select(.state.waiting != null)) or
+                   (.status.initContainerStatuses[]? | select(.state.waiting != null))) | .metadata.name' 2>/dev/null || echo "")
+
         # Handle terminated pods
         if [ ! -z "$terminated_pods" ]; then
             if [ ! -z "$running_pods" ]; then
@@ -100,9 +106,38 @@ check_service() {
                     reason=$(kubectl get pod "$pod" -n "$NAMESPACE" -o jsonpath='{.status.reason}' 2>/dev/null || \
                              kubectl get pod "$pod" -n "$NAMESPACE" -o jsonpath='{.status.containerStatuses[0].state.terminated.reason}' 2>/dev/null || echo "Terminated")
                     echo "    Terminated pod: $pod (Reason: $reason)"
-                    echo "Pod terminated without replacement: $pod (Reason: $reason)" >> "$issues_file"
+                    echo "TERMINATED|$pod|$reason" >> "$issues_file"
                 done
             fi
+        fi
+
+        # Handle waiting pods
+        if [ ! -z "$waiting_pods" ]; then
+            echo "  ⚠ Found pods in waiting state"
+            for pod in $waiting_pods; do
+                # Check init containers first
+                init_reason=$(kubectl get pod "$pod" -n "$NAMESPACE" -o jsonpath='{.status.initContainerStatuses[?(@.state.waiting)].state.waiting.reason}' 2>/dev/null || echo "")
+                init_message=$(kubectl get pod "$pod" -n "$NAMESPACE" -o jsonpath='{.status.initContainerStatuses[?(@.state.waiting)].state.waiting.message}' 2>/dev/null || echo "")
+
+                # Check regular containers
+                container_reason=$(kubectl get pod "$pod" -n "$NAMESPACE" -o jsonpath='{.status.containerStatuses[?(@.state.waiting)].state.waiting.reason}' 2>/dev/null || echo "")
+                container_message=$(kubectl get pod "$pod" -n "$NAMESPACE" -o jsonpath='{.status.containerStatuses[?(@.state.waiting)].state.waiting.message}' 2>/dev/null || echo "")
+
+                # Use whichever has a value
+                reason="${init_reason:-$container_reason}"
+                message="${init_message:-$container_message}"
+
+                if [ -z "$reason" ]; then
+                    reason="PodInitializing"
+                fi
+
+                echo "    Waiting pod: $pod (Reason: $reason)"
+                if [ ! -z "$message" ]; then
+                    echo "      Message: $message"
+                fi
+
+                echo "WAITING|$pod|$reason|$message" >> "$issues_file"
+            done
         fi
 
         # Check if deployment is healthy
@@ -221,10 +256,57 @@ if [ ${#deployments_with_issues[@]} -gt 0 ]; then
     echo ""
     for service in "${deployments_with_issues[@]}"; do
         echo "Service: $service"
-        cat "$TEMP_DIR/${service}.issues" | while read -r issue; do
-            echo "  - $issue"
-        done
         echo ""
+
+        # Separate terminated and waiting issues
+        has_terminated=false
+        has_waiting=false
+        has_other=false
+
+        # Check what types of issues exist
+        if grep -q "^TERMINATED|" "$TEMP_DIR/${service}.issues" 2>/dev/null; then
+            has_terminated=true
+        fi
+        if grep -q "^WAITING|" "$TEMP_DIR/${service}.issues" 2>/dev/null; then
+            has_waiting=true
+        fi
+        if grep -qv "^TERMINATED|" "$TEMP_DIR/${service}.issues" 2>/dev/null && \
+           grep -qv "^WAITING|" "$TEMP_DIR/${service}.issues" 2>/dev/null; then
+            has_other=true
+        fi
+
+        # Display terminated pods
+        if [ "$has_terminated" = true ]; then
+            echo "  Terminated State:"
+            grep "^TERMINATED|" "$TEMP_DIR/${service}.issues" 2>/dev/null | while IFS='|' read -r type pod reason; do
+                echo "    - Pod: $pod"
+                echo "      Reason: $reason"
+            done
+            echo ""
+        fi
+
+        # Display waiting pods
+        if [ "$has_waiting" = true ]; then
+            echo "  Waiting State:"
+            grep "^WAITING|" "$TEMP_DIR/${service}.issues" 2>/dev/null | while IFS='|' read -r type pod reason message; do
+                echo "    - Pod: $pod"
+                echo "      Reason: $reason"
+                if [ ! -z "$message" ]; then
+                    echo "      Message: $message"
+                fi
+            done
+            echo ""
+        fi
+
+        # Display other issues (unhealthy, deployment not found, etc.)
+        if [ "$has_other" = true ]; then
+            echo "  Other Issues:"
+            grep -v "^TERMINATED|" "$TEMP_DIR/${service}.issues" 2>/dev/null | \
+            grep -v "^WAITING|" 2>/dev/null | while read -r issue; do
+                echo "    - $issue"
+            done
+            echo ""
+        fi
     done
 fi
 
