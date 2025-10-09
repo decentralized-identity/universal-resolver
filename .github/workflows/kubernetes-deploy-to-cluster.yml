@@ -17,7 +17,6 @@ jobs:
         token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
         caCertificate: ${{ secrets.VAULTCA }}
         secrets: |
-          ci/data/gh-workflows/universal-resolver-cluster dif-cluster-kube-config | KUBE_CONFIG_DATA ;
           ci/data/gh-workflows/universal-resolver-cluster aws-access-key-id | AWS_ACCESS_KEY_ID ;
           ci/data/gh-workflows/universal-resolver-cluster aws-secret-access-key | AWS_SECRET_ACCESS_KEY ;
           ci/data/gh-workflows/universal-resolver-cluster rpc-url-testnet | RPC_URL_TESTNET ;
@@ -27,10 +26,9 @@ jobs:
     - name: Deploy to AWS Kubernetes Cluster
       uses: ./ci/deploy-k8s-aws
       with:
-        kube-config-data: ${{ env.KUBE_CONFIG_DATA }}
+        kube-config-data: ${{ secrets.KUBE_CONFIG_DATA_BASE64_UNI_RESOLVER_PROD }}
         aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-        namespace: 'uni-resolver'
         rpc-url-testnet: ${{ env.RPC_URL_TESTNET }}
         rpc-cert-testnet: ${{ env.RPC_CERT_TESTNET }}
 
