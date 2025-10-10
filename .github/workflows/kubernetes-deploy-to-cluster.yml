@@ -20,8 +20,7 @@ jobs:
           ci/data/gh-workflows/universal-resolver-cluster aws-access-key-id | AWS_ACCESS_KEY_ID ;
           ci/data/gh-workflows/universal-resolver-cluster aws-secret-access-key | AWS_SECRET_ACCESS_KEY ;
           ci/data/gh-workflows/universal-resolver-cluster rpc-url-testnet | RPC_URL_TESTNET ;
-          ci/data/gh-workflows/universal-resolver-cluster rpc-cert-testnet | RPC_CERT_TESTNET ;
-          ci/data/gh-workflows/deployment-status slack-webhook-url | SLACK_WEBHOOK_URL
+          ci/data/gh-workflows/universal-resolver-cluster rpc-cert-testnet | RPC_CERT_TESTNET
 
     - name: Deploy to AWS Kubernetes Cluster
       uses: ./ci/deploy-k8s-aws
@@ -31,7 +30,7 @@ jobs:
         aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
         rpc-url-testnet: ${{ env.RPC_URL_TESTNET }}
         rpc-cert-testnet: ${{ env.RPC_CERT_TESTNET }}
-        slack-webhook-url: ${{ env.SLACK_WEBHOOK_URL }}
+        slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
         github-server-url: ${{ github.server_url }}
         github-repository: ${{ github.repository }}
         github-run-id: ${{ github.run_id }}
@@ -43,4 +42,4 @@ jobs:
         status: ${{ job.status }}
         fields: repo,commit,action,eventName,ref,workflow
       env:
-        SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

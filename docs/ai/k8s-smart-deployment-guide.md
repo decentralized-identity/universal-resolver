@@ -267,9 +267,10 @@ Detects pods stuck in waiting states:
 - "View Workflow Run" button linking directly to GitHub Actions run
 
 **Configuration**:
-- Webhook URL: Provided via `SLACK_WEBHOOK_URL` environment variable (from Vault)
+- Webhook URL: Provided via `SLACK_WEBHOOK_URL` GitHub secret (not from Vault)
 - Posts to the channel configured in the webhook URL
 - Automatically includes GitHub context (repository, run ID, workflow URL)
+- Uses GitHub secrets directly to ensure availability even if Vault step fails
 
 **JSON Payload Construction**:
 - Uses `jq` to build payload with proper escaping
@@ -336,13 +337,13 @@ export AWS_REGION="us-east-2"                          # Line 48
 
 **GitHub Secrets**:
 - `KUBE_CONFIG_DATA_BASE64_UNI_RESOLVER_PROD`: Base64-encoded kubeconfig
+- `SLACK_WEBHOOK_URL`: Slack incoming webhook URL for notifications (optional, but recommended)
 
 **Vault Secrets** (via `hashicorp/vault-action@v3`):
 - `AWS_ACCESS_KEY_ID`: AWS access key for EKS authentication
 - `AWS_SECRET_ACCESS_KEY`: AWS secret key for EKS authentication
 - `RPC_URL_TESTNET`: RPC URL for driver-did-btcr (optional)
 - `RPC_CERT_TESTNET`: RPC certificate for driver-did-btcr (optional)
-- `SLACK_WEBHOOK_URL`: Slack incoming webhook URL for notifications (optional)
 
 **GitHub Context** (automatically provided):
 - `github.server_url`: GitHub server URL
@@ -361,18 +362,28 @@ The action runs in a Debian Bookworm container with:
 
 ### Slack Webhook Setup
 
-**Option 1: Use Existing Webhook**
-If your `SLACK_WEBHOOK_URL` is already configured, no additional setup needed. Notifications will post to the channel configured in the webhook.
+**IMPORTANT**: `SLACK_WEBHOOK_URL` must be stored as a **GitHub Secret**, not in Vault. This ensures notifications work even if the Vault extraction step fails.
 
-**Option 2: Create New Webhook**
+**Setup Steps**:
 1. Go to https://api.slack.com/messaging/webhooks
 2. Create a Slack app or use existing
 3. Add "Incoming Webhook" integration
-4. Select your desired channel
-5. Copy webhook URL and store in Vault
-6. Update Vault secret path in workflow
+4. Select your desired channel for notifications
+5. Copy the webhook URL
+6. Add it as a GitHub Secret:
+   - Go to your repository → Settings → Secrets and variables → Actions
+   - Click "New repository secret"
+   - Name: `SLACK_WEBHOOK_URL`
+   - Value: Paste your webhook URL
+   - Click "Add secret"
 
-**Note**: The Slack app needs permission to post to channels if you want to override the default channel.
+**Why GitHub Secret instead of Vault?**
+- GitHub secrets are always available during workflow execution
+- Vault secrets require a separate import step that may fail
+- Slack notifications are critical for deployment monitoring
+- Using GitHub secrets ensures reliability
+
+**Note**: The webhook will post to the channel configured when you created it. The Slack app needs appropriate permissions to post messages.
 
 ## Troubleshooting
 
@@ -446,11 +457,14 @@ The script now provides detailed debug output on connection failure:
 - `ci/deploy-k8s-aws/scripts/parse-compose.sh`
 - `ci/deploy-k8s-aws/scripts/verify-deployment.sh`
 - `.github/workflows/kubernetes-deploy-to-cluster.yml`
+- `.github/workflows/nightly-did-test-suite.yml`
+- `.github/workflows/nightly-did-lint-check.yml`
 
 **Breaking Changes**:
 - Cluster name and region now hardcoded (update in entrypoint.sh for different clusters)
 - kubectl no longer installed in Dockerfile (dynamically installed per deployment)
 - Requires additional GitHub context variables (server_url, repository, run_id)
+- **SLACK_WEBHOOK_URL must be a GitHub Secret** (not from Vault) - ensures availability even if Vault step fails
 
 ### Version 1.0 (Initial Release)
 **Core Features**:
