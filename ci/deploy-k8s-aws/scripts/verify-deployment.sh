@@ -37,6 +37,104 @@ if [ ! -f "services.json" ]; then
     exit 1
 fi
 
+################################################################################
+# Slack Notification Function
+################################################################################
+
+send_slack_notification() {
+    local service=$1
+    local pod=$2
+    local waiting_state=$3
+    local logs=$4
+
+    # Skip if webhook URL not set
+    if [ -z "$SLACK_WEBHOOK_URL" ]; then
+        echo "    ⚠ Skipping Slack notification (SLACK_WEBHOOK_URL not set)"
+        return
+    fi
+
+    # Build GitHub workflow URL
+    local workflow_url="${GITHUB_SERVER_URL:-https://github.com}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+    # Escape logs for JSON (basic escaping)
+    local logs_escaped=$(echo "$logs" | sed 's/"/\\"/g' | sed 's/$/\\n/' | tr -d '\n' | sed 's/\\n$//')
+
+    # Create Slack message using Block Kit format
+    local slack_payload=$(cat <<EOF
+{
+  "channel": "#github-notifications",
+  "username": "K8s Deployment Bot",
+  "icon_emoji": ":warning:",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "⚠️ Pod in Waiting State Detected",
+        "emoji": true
+      }
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*Service:*\n\`$service\`"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Pod:*\n\`$pod\`"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Waiting State:*\n\`$waiting_state\`"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Namespace:*\n\`$NAMESPACE\`"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*Pod Logs (last 50 lines):*\n\`\`\`$logs_escaped\`\`\`"
+      }
+    },
+    {
+      "type": "actions",
+      "elements": [
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": "View Workflow Run",
+            "emoji": true
+          },
+          "url": "$workflow_url",
+          "style": "primary"
+        }
+      ]
+    }
+  ]
+}
+EOF
+)
+
+    # Send to Slack
+    echo "    📤 Sending Slack notification to #github-notifications..."
+    response=$(curl -s -X POST "$SLACK_WEBHOOK_URL" \
+        -H "Content-Type: application/json" \
+        -d "$slack_payload")
+
+    if [ "$response" = "ok" ]; then
+        echo "    ✓ Slack notification sent successfully"
+    else
+        echo "    ✗ Failed to send Slack notification: $response"
+    fi
+}
+
 echo "===================================================================="
 echo "Verifying deployment status in namespace: $NAMESPACE"
 echo "===================================================================="
@@ -136,7 +234,20 @@ check_service() {
                     echo "      Message: $message"
                 fi
 
-                echo "WAITING|$pod|$reason|$message" >> "$issues_file"
+                # Get logs from the pod (if available)
+                echo "    Fetching logs..."
+                logs=$(kubectl logs "$pod" -n "$NAMESPACE" --tail=50 --all-containers=true 2>&1 || echo "No logs available")
+
+                # Truncate logs if too long (keep last 1000 chars for Slack)
+                logs_truncated="${logs: -1000}"
+
+                # Save to temp file for Slack notification
+                echo "$logs" > "$TEMP_DIR/${service}_${pod}.logs"
+
+                # Send Slack notification
+                send_slack_notification "$service" "$pod" "$reason" "$logs_truncated"
+
+                echo "WAITING|$pod|$reason|$message|$logs_truncated" >> "$issues_file"
             done
         fi
 
@@ -288,11 +399,15 @@ if [ ${#deployments_with_issues[@]} -gt 0 ]; then
         # Display waiting pods
         if [ "$has_waiting" = true ]; then
             echo "  Waiting State:"
-            grep "^WAITING|" "$TEMP_DIR/${service}.issues" 2>/dev/null | while IFS='|' read -r type pod reason message; do
+            grep "^WAITING|" "$TEMP_DIR/${service}.issues" 2>/dev/null | while IFS='|' read -r type pod reason message logs; do
                 echo "    - Pod: $pod"
                 echo "      Reason: $reason"
                 if [ ! -z "$message" ]; then
                     echo "      Message: $message"
+                fi
+                if [ -f "$TEMP_DIR/${service}_${pod}.logs" ]; then
+                    echo "      Logs (last 50 lines):"
+                    cat "$TEMP_DIR/${service}_${pod}.logs" | sed 's/^/        /'
                 fi
             done
             echo ""

@@ -28,6 +28,22 @@ inputs:
     description: 'RPC certificate for driver-did-btcr (optional)'
     required: false
     default: ''
+  slack-webhook-url:
+    description: 'Slack webhook URL for notifications (optional)'
+    required: false
+    default: ''
+  github-server-url:
+    description: 'GitHub server URL (automatically set by GitHub Actions)'
+    required: false
+    default: 'https://github.com'
+  github-repository:
+    description: 'GitHub repository (automatically set by GitHub Actions)'
+    required: false
+    default: ''
+  github-run-id:
+    description: 'GitHub run ID (automatically set by GitHub Actions)'
+    required: false
+    default: ''
 
 runs:
   using: 'docker'
@@ -39,3 +55,7 @@ runs:
     NAMESPACE: ${{ inputs.namespace }}
     RPC_URL_TESTNET: ${{ inputs.rpc-url-testnet }}
     RPC_CERT_TESTNET: ${{ inputs.rpc-cert-testnet }}
+    SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook-url }}
+    GITHUB_SERVER_URL: ${{ inputs.github-server-url }}
+    GITHUB_REPOSITORY: ${{ inputs.github-repository }}
+    GITHUB_RUN_ID: ${{ inputs.github-run-id }}
