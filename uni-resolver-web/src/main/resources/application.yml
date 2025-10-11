@@ -337,10 +337,6 @@ uniresolver:
       acceptHeaderValueDereference:
       testIdentifiers:
         - did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
-    - pattern: "^(did:content:.+)$"
-      url: ${uniresolver_web_driver_url_did_content:http://driver-did-content:8888/}
-      testIdentifiers:
-        - did:content:3SqTXtoMpiPeNo5vEP2p7yNGQUeCGjqW1wnctv8yaCWXojD29GYcUEo
     - pattern: "^(did:algo:.+)$"
       url: http://driver-did-algo:9091/
       testIdentifiers:
