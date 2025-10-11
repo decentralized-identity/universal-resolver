@@ -1,0 +1,61 @@
+name: 'Deploy Universal Resolver to AWS Kubernetes'
+description: 'Deploy the Universal Resolver to AWS EKS cluster using smart deployment strategy'
+author: 'Bernhard Fuchs <bernhard.fuchs@danubetech.com>'
+
+branding:
+  icon: 'package'
+  color: 'blue'
+
+inputs:
+  kube-config-data:
+    description: 'Base64-encoded Kubernetes configuration data'
+    required: true
+  aws-access-key-id:
+    description: 'AWS Access Key ID for authentication'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key for authentication'
+    required: true
+  namespace:
+    description: 'Kubernetes namespace to deploy to'
+    required: false
+    default: 'uni-resolver'
+  rpc-url-testnet:
+    description: 'RPC URL for driver-did-btcr (optional)'
+    required: false
+    default: ''
+  rpc-cert-testnet:
+    description: 'RPC certificate for driver-did-btcr (optional)'
+    required: false
+    default: ''
+  slack-webhook-url:
+    description: 'Slack webhook URL for notifications (optional)'
+    required: false
+    default: ''
+  github-server-url:
+    description: 'GitHub server URL (automatically set by GitHub Actions)'
+    required: false
+    default: 'https://github.com'
+  github-repository:
+    description: 'GitHub repository (automatically set by GitHub Actions)'
+    required: false
+    default: ''
+  github-run-id:
+    description: 'GitHub run ID (automatically set by GitHub Actions)'
+    required: false
+    default: ''
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    KUBE_CONFIG_DATA: ${{ inputs.kube-config-data }}
+    AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+    AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+    NAMESPACE: ${{ inputs.namespace }}
+    RPC_URL_TESTNET: ${{ inputs.rpc-url-testnet }}
+    RPC_CERT_TESTNET: ${{ inputs.rpc-cert-testnet }}
+    SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook-url }}
+    GITHUB_SERVER_URL: ${{ inputs.github-server-url }}
+    GITHUB_REPOSITORY: ${{ inputs.github-repository }}
+    GITHUB_RUN_ID: ${{ inputs.github-run-id }}
