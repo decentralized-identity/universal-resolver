@@ -227,17 +227,19 @@ EOF
 
     # Add port mappings
     # Handles both "host:container" and "container" port formats
+    # In Kubernetes, Service should expose the container port, not the docker-compose host port
     echo "$ports" | jq -r '.[] | gsub("^\""; "") | gsub("\"$"; "")' | while read -r port_mapping; do
         if [[ "$port_mapping" == *:* ]]; then
-            # Format: "host:container"
-            host_port=$(echo "$port_mapping" | cut -d: -f1)
+            # Format: "host:container" (e.g., "8083:8081")
+            # Use container port for both service port and targetPort
             container_port=$(echo "$port_mapping" | cut -d: -f2)
+            service_port="$container_port"
         else
             # Format: "container" only
-            host_port="$port_mapping"
+            service_port="$port_mapping"
             container_port="$port_mapping"
         fi
-        echo "  - port: $host_port" >> "service-${service_name}.yaml"
+        echo "  - port: $service_port" >> "service-${service_name}.yaml"
         echo "    targetPort: $container_port" >> "service-${service_name}.yaml"
         echo "    protocol: TCP" >> "service-${service_name}.yaml"
     done
