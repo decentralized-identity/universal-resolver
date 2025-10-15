@@ -140,29 +140,33 @@ EOF
         done
     fi
 
-    # Add environment variables from ConfigMap
-    if [ "$env_file" != "null" ] || [ "$env_vars" != "null" ]; then
-        echo "        envFrom:" >> "deployment-${service_name}.yaml"
-        echo "        - configMapRef:" >> "deployment-${service_name}.yaml"
-        echo "            name: app-config" >> "deployment-${service_name}.yaml"
-    fi
+    # Skip environment variables for uni-resolver-web (uses defaults from application.yml)
+    if [ "$service_name" = "uni-resolver-web" ]; then
+        echo "  Skipping environment variables for uni-resolver-web (uses container defaults)"
+    else
+        # Add environment variables from ConfigMap
+        if [ "$env_file" != "null" ] || [ "$env_vars" != "null" ]; then
+            echo "        envFrom:" >> "deployment-${service_name}.yaml"
+            echo "        - configMapRef:" >> "deployment-${service_name}.yaml"
+            echo "            name: app-config" >> "deployment-${service_name}.yaml"
+        fi
 
-    # Add specific environment variables if defined in docker-compose
-    if [ "$env_vars" != "null" ] && [ "$env_vars" != "{}" ]; then
-        echo "        env:" >> "deployment-${service_name}.yaml"
+        # Add specific environment variables if defined in docker-compose
+        if [ "$env_vars" != "null" ] && [ "$env_vars" != "{}" ]; then
+            echo "        env:" >> "deployment-${service_name}.yaml"
 
-        # Process each environment variable
-        echo "$env_vars" | jq -r 'to_entries | .[]' | jq -c '.' | while read -r entry; do
-            key=$(echo "$entry" | jq -r '.key')
-            value=$(echo "$entry" | jq -r '.value // ""')
+            # Process each environment variable
+            echo "$env_vars" | jq -r 'to_entries | .[]' | jq -c '.' | while read -r entry; do
+                key=$(echo "$entry" | jq -r '.key')
+                value=$(echo "$entry" | jq -r '.value // ""')
 
-            # Check if value is a variable reference like ${VAR_NAME}
-            if [[ "$value" =~ ^\$\{([^}]+)\}$ ]]; then
-                # Extract the ConfigMap key name (remove ${ and })
-                configmap_key="${BASH_REMATCH[1]}"
+                # Check if value is a variable reference like ${VAR_NAME}
+                if [[ "$value" =~ ^\$\{([^}]+)\}$ ]]; then
+                    # Extract the ConfigMap key name (remove ${ and })
+                    configmap_key="${BASH_REMATCH[1]}"
 
-                # Use valueFrom to reference the ConfigMap key
-                cat >> "deployment-${service_name}.yaml" << EOF
+                    # Use valueFrom to reference the ConfigMap key
+                    cat >> "deployment-${service_name}.yaml" << EOF
         - name: $key
           valueFrom:
             configMapKeyRef:
@@ -170,12 +174,13 @@ EOF
               key: $configmap_key
               optional: true
 EOF
-            else
-                # Use literal value (for non-variable-reference values)
-                echo "        - name: $key" >> "deployment-${service_name}.yaml"
-                echo "          value: \"$value\"" >> "deployment-${service_name}.yaml"
-            fi
-        done
+                else
+                    # Use literal value (for non-variable-reference values)
+                    echo "        - name: $key" >> "deployment-${service_name}.yaml"
+                    echo "          value: \"$value\"" >> "deployment-${service_name}.yaml"
+                fi
+            done
+        fi
     fi
 
     echo "✓ Deployment manifest created: deployment-${service_name}.yaml"
