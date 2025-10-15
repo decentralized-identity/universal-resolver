@@ -9,6 +9,10 @@
 # Orphaned resources are those that:
 # - Have the label 'managed-by=github-action'
 # - Do NOT have corresponding services in docker-compose.yml
+# - Are NOT in the exclusion list (special deployments managed separately)
+#
+# Excluded deployments:
+# - uni-resolver-frontend: Web UI deployed separately, not in docker-compose.yml
 #
 # The script removes:
 # - Orphaned Deployments
@@ -41,6 +45,10 @@ echo "===================================================================="
 echo "Checking for orphaned deployments in namespace: $NAMESPACE"
 echo "===================================================================="
 
+# Deployments that are not in docker-compose.yml but should be kept
+# These are special deployments managed separately
+EXCLUDED_DEPLOYMENTS="uni-resolver-frontend"
+
 # Get all deployments managed by this GitHub Action
 kubectl get deployments -n "$NAMESPACE" -l managed-by=github-action -o json 2>/dev/null | \
     jq -r '.items[].metadata.name' > managed_deployments.txt || touch managed_deployments.txt
@@ -69,6 +77,13 @@ orphans_found=0
 
 # Find and remove orphaned deployments
 while read -r deployment; do
+    # Check if this deployment is in the exclusion list
+    if echo "$EXCLUDED_DEPLOYMENTS" | grep -qw "$deployment"; then
+        echo ""
+        echo "ℹ Skipping deployment: $deployment (excluded from cleanup)"
+        continue
+    fi
+
     # Check if this deployment exists in docker-compose.yml
     if ! grep -q "^${deployment}$" compose_services.txt; then
         echo ""
