@@ -131,7 +131,32 @@ EOF
     # Add specific environment variables if defined in docker-compose
     if [ "$env_vars" != "null" ] && [ "$env_vars" != "{}" ]; then
         echo "        env:" >> "deployment-${service_name}.yaml"
-        echo "$env_vars" | jq -r 'to_entries | .[] | "        - name: " + .key + "\n          value: \"" + (.value | tostring) + "\""' >> "deployment-${service_name}.yaml"
+
+        # Process each environment variable
+        echo "$env_vars" | jq -r 'to_entries | .[]' | jq -c '.' | while read -r entry; do
+            key=$(echo "$entry" | jq -r '.key')
+            value=$(echo "$entry" | jq -r '.value // ""')
+
+            # Check if value is a variable reference like ${VAR_NAME}
+            if [[ "$value" =~ ^\$\{([^}]+)\}$ ]]; then
+                # Extract the ConfigMap key name (remove ${ and })
+                configmap_key="${BASH_REMATCH[1]}"
+
+                # Use valueFrom to reference the ConfigMap key
+                cat >> "deployment-${service_name}.yaml" << EOF
+        - name: $key
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: $configmap_key
+              optional: true
+EOF
+            else
+                # Use literal value (for non-variable-reference values)
+                echo "        - name: $key" >> "deployment-${service_name}.yaml"
+                echo "          value: \"$value\"" >> "deployment-${service_name}.yaml"
+            fi
+        done
     fi
 
     echo "✓ Deployment manifest created: deployment-${service_name}.yaml"
