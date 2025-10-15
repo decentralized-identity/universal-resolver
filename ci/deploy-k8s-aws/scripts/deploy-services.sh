@@ -240,7 +240,12 @@ cat services.json | jq -c '.' | while read -r service; do
         if [ "$current_image" != "$image" ]; then
             echo "⚠ Image mismatch detected!"
             echo "  Updating deployment with new image..."
-            kubectl set image deployment/"$name" "$name=$image" -n "$NAMESPACE"
+
+            # Generate full deployment manifest (includes managed-by label)
+            create_deployment_yaml "$name" "$image" "$ports" "$env_vars" "$env_file"
+
+            # Apply deployment manifest (this updates labels too)
+            kubectl apply -f "deployment-${name}.yaml"
 
             echo "  Waiting for rollout to complete (timeout: 5 minutes)..."
             if kubectl rollout status deployment/"$name" -n "$NAMESPACE" --timeout=300s; then
@@ -251,6 +256,20 @@ cat services.json | jq -c '.' | while read -r service; do
             fi
         else
             echo "✓ Image is up to date, no action needed"
+
+            # Ensure deployment has proper labels even if image hasn't changed
+            echo "  Ensuring deployment has proper labels..."
+            create_deployment_yaml "$name" "$image" "$ports" "$env_vars" "$env_file"
+            kubectl apply -f "deployment-${name}.yaml"
+            echo "✓ Labels synchronized"
+        fi
+
+        # Ensure service exists and has proper configuration (ports may have changed)
+        if [ ! -z "$ports" ] && [ "$ports" != "null" ]; then
+            echo "  Ensuring service exists with correct ports..."
+            create_service_yaml "$name" "$ports"
+            kubectl apply -f "service-${name}.yaml"
+            echo "✓ Service synchronized"
         fi
     else
         echo "⚡ Deployment '$name' does not exist, creating new deployment..."
