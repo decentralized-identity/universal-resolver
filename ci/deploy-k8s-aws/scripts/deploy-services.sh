@@ -111,9 +111,9 @@ spec:
         imagePullPolicy: $([ "${image##*:}" == "latest" ] && echo "Always" || echo "IfNotPresent")
 EOF
 
-    # Add command if defined
+    # Add command as args if defined (docker-compose command -> k8s args)
     if [ ! -z "$command" ] && [ "$command" != "null" ]; then
-        echo "        command:" >> "deployment-${service_name}.yaml"
+        echo "        args:" >> "deployment-${service_name}.yaml"
         # Check if command is a JSON array or a string
         if echo "$command" | jq -e 'type == "array"' >/dev/null 2>&1; then
             # Command is an array
