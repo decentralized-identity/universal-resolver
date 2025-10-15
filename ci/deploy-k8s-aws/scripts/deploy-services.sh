@@ -140,29 +140,33 @@ EOF
         done
     fi
 
-    # Add environment variables from ConfigMap
-    if [ "$env_file" != "null" ] || [ "$env_vars" != "null" ]; then
-        echo "        envFrom:" >> "deployment-${service_name}.yaml"
-        echo "        - configMapRef:" >> "deployment-${service_name}.yaml"
-        echo "            name: app-config" >> "deployment-${service_name}.yaml"
-    fi
+    # Skip environment variables for uni-resolver-web (uses defaults from application.yml)
+    if [ "$service_name" = "uni-resolver-web" ]; then
+        echo "  Skipping environment variables for uni-resolver-web (uses container defaults)"
+    else
+        # Add environment variables from ConfigMap
+        if [ "$env_file" != "null" ] || [ "$env_vars" != "null" ]; then
+            echo "        envFrom:" >> "deployment-${service_name}.yaml"
+            echo "        - configMapRef:" >> "deployment-${service_name}.yaml"
+            echo "            name: app-config" >> "deployment-${service_name}.yaml"
+        fi
 
-    # Add specific environment variables if defined in docker-compose
-    if [ "$env_vars" != "null" ] && [ "$env_vars" != "{}" ]; then
-        echo "        env:" >> "deployment-${service_name}.yaml"
+        # Add specific environment variables if defined in docker-compose
+        if [ "$env_vars" != "null" ] && [ "$env_vars" != "{}" ]; then
+            echo "        env:" >> "deployment-${service_name}.yaml"
 
-        # Process each environment variable
-        echo "$env_vars" | jq -r 'to_entries | .[]' | jq -c '.' | while read -r entry; do
-            key=$(echo "$entry" | jq -r '.key')
-            value=$(echo "$entry" | jq -r '.value // ""')
+            # Process each environment variable
+            echo "$env_vars" | jq -r 'to_entries | .[]' | jq -c '.' | while read -r entry; do
+                key=$(echo "$entry" | jq -r '.key')
+                value=$(echo "$entry" | jq -r '.value // ""')
 
-            # Check if value is a variable reference like ${VAR_NAME}
-            if [[ "$value" =~ ^\$\{([^}]+)\}$ ]]; then
-                # Extract the ConfigMap key name (remove ${ and })
-                configmap_key="${BASH_REMATCH[1]}"
+                # Check if value is a variable reference like ${VAR_NAME}
+                if [[ "$value" =~ ^\$\{([^}]+)\}$ ]]; then
+                    # Extract the ConfigMap key name (remove ${ and })
+                    configmap_key="${BASH_REMATCH[1]}"
 
-                # Use valueFrom to reference the ConfigMap key
-                cat >> "deployment-${service_name}.yaml" << EOF
+                    # Use valueFrom to reference the ConfigMap key
+                    cat >> "deployment-${service_name}.yaml" << EOF
         - name: $key
           valueFrom:
             configMapKeyRef:
@@ -170,12 +174,13 @@ EOF
               key: $configmap_key
               optional: true
 EOF
-            else
-                # Use literal value (for non-variable-reference values)
-                echo "        - name: $key" >> "deployment-${service_name}.yaml"
-                echo "          value: \"$value\"" >> "deployment-${service_name}.yaml"
-            fi
-        done
+                else
+                    # Use literal value (for non-variable-reference values)
+                    echo "        - name: $key" >> "deployment-${service_name}.yaml"
+                    echo "          value: \"$value\"" >> "deployment-${service_name}.yaml"
+                fi
+            done
+        fi
     fi
 
     echo "✓ Deployment manifest created: deployment-${service_name}.yaml"
@@ -214,6 +219,7 @@ metadata:
     app: ${service_name}
     managed-by: github-action
 spec:
+  type: NodePort
   selector:
     app: ${service_name}
   ports:
@@ -221,17 +227,19 @@ EOF
 
     # Add port mappings
     # Handles both "host:container" and "container" port formats
+    # In Kubernetes, Service should expose the container port, not the docker-compose host port
     echo "$ports" | jq -r '.[] | gsub("^\""; "") | gsub("\"$"; "")' | while read -r port_mapping; do
         if [[ "$port_mapping" == *:* ]]; then
-            # Format: "host:container"
-            host_port=$(echo "$port_mapping" | cut -d: -f1)
+            # Format: "host:container" (e.g., "8083:8081")
+            # Use container port for both service port and targetPort
             container_port=$(echo "$port_mapping" | cut -d: -f2)
+            service_port="$container_port"
         else
             # Format: "container" only
-            host_port="$port_mapping"
+            service_port="$port_mapping"
             container_port="$port_mapping"
         fi
-        echo "  - port: $host_port" >> "service-${service_name}.yaml"
+        echo "  - port: $service_port" >> "service-${service_name}.yaml"
         echo "    targetPort: $container_port" >> "service-${service_name}.yaml"
         echo "    protocol: TCP" >> "service-${service_name}.yaml"
     done
@@ -300,6 +308,18 @@ cat services.json | jq -c '.' | while read -r service; do
             fi
         else
             echo "✓ Image is up to date, no action needed"
+        fi
+
+        # Ensure service exists if ports are defined (may be missing from previous deployments)
+        if [ ! -z "$ports" ] && [ "$ports" != "null" ]; then
+            if kubectl get service "$name" -n "$NAMESPACE" &>/dev/null; then
+                echo "  ✓ Service exists"
+            else
+                echo "  ⚠ Service missing, creating..."
+                create_service_yaml "$name" "$ports"
+                kubectl apply -f "service-${name}.yaml"
+                echo "  ✓ Service created"
+            fi
         fi
     else
         echo "⚡ Deployment '$name' does not exist, creating new deployment..."
