@@ -12,8 +12,9 @@
 # 3. Process environment variables and create ConfigMaps
 # 4. Deploy or update services (only changes are applied)
 # 5. Handle special cases (e.g., driver-did-btcr secrets)
-# 6. Clean up orphaned resources
-# 7. Verify all deployments are healthy
+# 6. Deploy Ingress (AWS ALB for routing)
+# 7. Clean up orphaned resources
+# 8. Verify all deployments are healthy
 #
 # Required Environment Variables:
 # - KUBE_CONFIG_DATA: Base64-encoded Kubernetes config
@@ -257,11 +258,29 @@ fi
 echo ""
 
 ################################################################################
-# Step 6: Clean Up Orphaned Resources
+# Step 6: Deploy Ingress
 ################################################################################
 
 echo "===================================================================="
-echo "Step 6: Cleaning up orphaned resources"
+echo "Step 6: Deploying Ingress"
+echo "===================================================================="
+
+# Execute ingress deployment script
+if /scripts/deploy-ingress.sh; then
+    echo "✓ Ingress deployment completed"
+else
+    echo "⚠ Warning: Ingress deployment encountered issues"
+    echo "Continuing with deployment..."
+fi
+
+echo ""
+
+################################################################################
+# Step 7: Clean Up Orphaned Resources
+################################################################################
+
+echo "===================================================================="
+echo "Step 7: Cleaning up orphaned resources"
 echo "===================================================================="
 
 # Execute cleanup script
@@ -275,11 +294,11 @@ fi
 echo ""
 
 ################################################################################
-# Step 7: Verify Deployment Status
+# Step 8: Verify Deployment Status
 ################################################################################
 
 echo "===================================================================="
-echo "Step 7: Verifying deployment status"
+echo "Step 8: Verifying deployment status"
 echo "===================================================================="
 
 # Execute verification script
