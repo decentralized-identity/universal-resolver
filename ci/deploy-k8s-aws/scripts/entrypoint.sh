@@ -12,9 +12,10 @@
 # 3. Process environment variables and create ConfigMaps
 # 4. Deploy or update services (only changes are applied)
 # 5. Handle special cases (e.g., driver-did-btcr secrets)
-# 6. Deploy Ingress (AWS ALB for routing)
-# 7. Clean up orphaned resources
-# 8. Verify all deployments are healthy
+# 6. Deploy frontend application (uni-resolver-frontend)
+# 7. Deploy Ingress (AWS ALB for routing)
+# 8. Clean up orphaned resources
+# 9. Verify all deployments are healthy
 #
 # Required Environment Variables:
 # - KUBE_CONFIG_DATA: Base64-encoded Kubernetes config
@@ -258,11 +259,29 @@ fi
 echo ""
 
 ################################################################################
-# Step 6: Deploy Ingress
+# Step 6: Deploy Frontend Application
 ################################################################################
 
 echo "===================================================================="
-echo "Step 6: Deploying Ingress"
+echo "Step 6: Deploying frontend application"
+echo "===================================================================="
+
+# Execute frontend deployment script
+if /scripts/deploy-frontend.sh; then
+    echo "✓ Frontend deployment completed"
+else
+    echo "⚠ Warning: Frontend deployment encountered issues"
+    echo "Continuing with deployment..."
+fi
+
+echo ""
+
+################################################################################
+# Step 7: Deploy Ingress
+################################################################################
+
+echo "===================================================================="
+echo "Step 7: Deploying Ingress"
 echo "===================================================================="
 
 # Execute ingress deployment script
@@ -276,11 +295,11 @@ fi
 echo ""
 
 ################################################################################
-# Step 7: Clean Up Orphaned Resources
+# Step 8: Clean Up Orphaned Resources
 ################################################################################
 
 echo "===================================================================="
-echo "Step 7: Cleaning up orphaned resources"
+echo "Step 8: Cleaning up orphaned resources"
 echo "===================================================================="
 
 # Execute cleanup script
@@ -294,11 +313,11 @@ fi
 echo ""
 
 ################################################################################
-# Step 8: Verify Deployment Status
+# Step 9: Verify Deployment Status
 ################################################################################
 
 echo "===================================================================="
-echo "Step 8: Verifying deployment status"
+echo "Step 9: Verifying deployment status"
 echo "===================================================================="
 
 # Execute verification script
