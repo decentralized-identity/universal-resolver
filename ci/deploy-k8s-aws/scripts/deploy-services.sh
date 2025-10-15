@@ -202,6 +202,9 @@ EOF
 # Initialize processed services tracker
 > processed_services.txt
 
+# Initialize failed deployments tracker
+> failed_deployments.txt
+
 # Get list of current deployments in namespace
 echo "Fetching current deployments in namespace $NAMESPACE..."
 kubectl get deployments -n "$NAMESPACE" -o json 2>/dev/null | jq -r '.items[].metadata.name' > current_deployments.txt || touch current_deployments.txt
@@ -247,7 +250,8 @@ cat services.json | jq -c '.' | while read -r service; do
                 echo "✓ Deployment updated successfully"
             else
                 echo "✗ Deployment rollout failed or timed out"
-                exit 1
+                echo "  ⚠ Continuing with remaining deployments..."
+                echo "$name|update-timeout" >> failed_deployments.txt
             fi
         else
             echo "✓ Image is up to date, no action needed"
@@ -275,7 +279,8 @@ cat services.json | jq -c '.' | while read -r service; do
             echo "✓ Deployment is ready"
         else
             echo "✗ Deployment failed to become ready"
-            exit 1
+            echo "  ⚠ Continuing with remaining deployments..."
+            echo "$name|create-timeout" >> failed_deployments.txt
         fi
     fi
 
@@ -287,3 +292,28 @@ echo ""
 echo "===================================================================="
 echo "All services from docker-compose.yml have been processed"
 echo "===================================================================="
+
+# Check for failed deployments
+if [ -s failed_deployments.txt ]; then
+    echo ""
+    echo "⚠ WARNING: Some deployments encountered issues:"
+    echo ""
+    while IFS='|' read -r service reason; do
+        case "$reason" in
+            update-timeout)
+                echo "  - $service: Update rollout timed out"
+                ;;
+            create-timeout)
+                echo "  - $service: New deployment failed to become ready"
+                ;;
+        esac
+    done < failed_deployments.txt
+    echo ""
+    echo "These services were deployed but may not be fully operational."
+    echo "Check the verification step for current status."
+    echo ""
+else
+    echo ""
+    echo "✓ All deployments completed successfully"
+    echo ""
+fi
