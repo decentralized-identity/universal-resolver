@@ -70,6 +70,7 @@ extract_image_info() {
 #   $3 - Ports (JSON array)
 #   $4 - Environment variables (JSON object)
 #   $5 - Environment file reference (from docker-compose)
+#   $6 - Command (string or JSON array)
 #
 # Output:
 #   deployment-${service_name}.yaml
@@ -80,6 +81,7 @@ create_deployment_yaml() {
     local ports=$3
     local env_vars=$4
     local env_file=$5
+    local command=$6
 
     echo "Generating deployment manifest for $service_name..."
 
@@ -108,6 +110,23 @@ spec:
         image: ${image}
         imagePullPolicy: $([ "${image##*:}" == "latest" ] && echo "Always" || echo "IfNotPresent")
 EOF
+
+    # Add command if defined
+    if [ ! -z "$command" ] && [ "$command" != "null" ]; then
+        echo "        command:" >> "deployment-${service_name}.yaml"
+        # Check if command is a JSON array or a string
+        if echo "$command" | jq -e 'type == "array"' >/dev/null 2>&1; then
+            # Command is an array
+            echo "$command" | jq -r '.[]' | while read -r cmd_part; do
+                echo "        - \"$cmd_part\"" >> "deployment-${service_name}.yaml"
+            done
+        else
+            # Command is a string - split by spaces or use as single entry
+            cmd_str=$(echo "$command" | jq -r '.')
+            # For a simple string command like "start", add it as a single array element
+            echo "        - \"$cmd_str\"" >> "deployment-${service_name}.yaml"
+        fi
+    fi
 
     # Add container ports if defined
     if [ ! -z "$ports" ] && [ "$ports" != "null" ]; then
@@ -247,6 +266,7 @@ cat services.json | jq -c '.' | while read -r service; do
     ports=$(echo "$service" | jq -c '.ports')
     env_vars=$(echo "$service" | jq -c '.environment')
     env_file=$(echo "$service" | jq -c '.env_file')
+    command=$(echo "$service" | jq -c '.command')
 
     echo ""
     echo "===================================================================="
@@ -285,7 +305,7 @@ cat services.json | jq -c '.' | while read -r service; do
         echo "⚡ Deployment '$name' does not exist, creating new deployment..."
 
         # Create deployment manifest
-        create_deployment_yaml "$name" "$image" "$ports" "$env_vars" "$env_file"
+        create_deployment_yaml "$name" "$image" "$ports" "$env_vars" "$env_file" "$command"
 
         # Apply deployment
         kubectl apply -f "deployment-${name}.yaml"
