@@ -309,6 +309,18 @@ cat services.json | jq -c '.' | while read -r service; do
         else
             echo "✓ Image is up to date, no action needed"
         fi
+
+        # Ensure service exists if ports are defined (may be missing from previous deployments)
+        if [ ! -z "$ports" ] && [ "$ports" != "null" ]; then
+            if kubectl get service "$name" -n "$NAMESPACE" &>/dev/null; then
+                echo "  ✓ Service exists"
+            else
+                echo "  ⚠ Service missing, creating..."
+                create_service_yaml "$name" "$ports"
+                kubectl apply -f "service-${name}.yaml"
+                echo "  ✓ Service created"
+            fi
+        fi
     else
         echo "⚡ Deployment '$name' does not exist, creating new deployment..."
 
