@@ -37,6 +37,28 @@ echo "===================================================================="
 echo "Checking Ingress: $INGRESS_NAME"
 echo "===================================================================="
 
+# First, ensure required services exist and are of type NodePort
+echo "Checking required services..."
+echo ""
+
+for service in uni-resolver-web uni-resolver-frontend; do
+    if kubectl get service "$service" -n "$NAMESPACE" &>/dev/null; then
+        service_type=$(kubectl get service "$service" -n "$NAMESPACE" -o jsonpath='{.spec.type}')
+        echo "  Service '$service' exists (type: $service_type)"
+
+        if [ "$service_type" != "NodePort" ] && [ "$service_type" != "LoadBalancer" ]; then
+            echo "    ⚠ Service type is '$service_type', patching to 'NodePort'..."
+            kubectl patch service "$service" -n "$NAMESPACE" -p '{"spec":{"type":"NodePort"}}'
+            echo "    ✓ Service patched to NodePort"
+        fi
+    else
+        echo "  ⚠ Warning: Service '$service' does not exist"
+        echo "    The Ingress will be created but may not work until the service is deployed"
+    fi
+done
+
+echo ""
+
 # Check if ingress exists
 if kubectl get ingress "$INGRESS_NAME" -n "$NAMESPACE" &>/dev/null; then
     echo "✓ Ingress '$INGRESS_NAME' already exists"

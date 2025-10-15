@@ -214,6 +214,7 @@ metadata:
     app: ${service_name}
     managed-by: github-action
 spec:
+  type: NodePort
   selector:
     app: ${service_name}
   ports:
