@@ -9,10 +9,14 @@
 # Orphaned resources are those that:
 # - Have the label 'managed-by=github-action'
 # - Do NOT have corresponding services in docker-compose.yml
+# - Are NOT in the exclusion list (special deployments managed separately)
+#
+# Excluded deployments:
+# - uni-resolver-frontend: Web UI deployed separately, not in docker-compose.yml
 #
 # The script removes:
-# - Orphaned Deployments
-# - Orphaned Services
+# - Orphaned Deployments (not in docker-compose.yml and not excluded)
+# - Orphaned Services (not in docker-compose.yml AND no matching deployment)
 # - Service-specific ConfigMaps (not the global app-config)
 #
 # Prerequisites:
@@ -40,6 +44,10 @@ fi
 echo "===================================================================="
 echo "Checking for orphaned deployments in namespace: $NAMESPACE"
 echo "===================================================================="
+
+# Deployments that are not in docker-compose.yml but should be kept
+# These are special deployments managed separately
+EXCLUDED_DEPLOYMENTS="uni-resolver-frontend"
 
 # Get all deployments managed by this GitHub Action
 kubectl get deployments -n "$NAMESPACE" -l managed-by=github-action -o json 2>/dev/null | \
@@ -69,6 +77,13 @@ orphans_found=0
 
 # Find and remove orphaned deployments
 while read -r deployment; do
+    # Check if this deployment is in the exclusion list
+    if echo "$EXCLUDED_DEPLOYMENTS" | grep -qw "$deployment"; then
+        echo ""
+        echo "ℹ Skipping deployment: $deployment (excluded from cleanup)"
+        continue
+    fi
+
     # Check if this deployment exists in docker-compose.yml
     if ! grep -q "^${deployment}$" compose_services.txt; then
         echo ""
@@ -111,5 +126,82 @@ if [ $orphans_found -eq 0 ]; then
     echo "  All managed deployments match docker-compose.yml"
 else
     echo "✓ Cleanup completed: $orphans_found orphaned deployment(s) removed"
+fi
+echo "===================================================================="
+
+echo ""
+echo "===================================================================="
+echo "Checking for orphaned services in namespace: $NAMESPACE"
+echo "===================================================================="
+
+# Get all services managed by this GitHub Action
+kubectl get services -n "$NAMESPACE" -l managed-by=github-action -o json 2>/dev/null | \
+    jq -r '.items[].metadata.name' > managed_services.txt || touch managed_services.txt
+
+# Check if there are any managed services
+if [ ! -s managed_services.txt ]; then
+    echo "No managed services found in namespace"
+    echo "===================================================================="
+    exit 0
+fi
+
+echo "Managed services in cluster:"
+cat managed_services.txt
+
+echo ""
+echo "Services in docker-compose.yml:"
+cat compose_services.txt
+
+echo ""
+echo "Comparing services with docker-compose.yml and deployments..."
+
+# Track orphaned services
+orphaned_services=0
+
+# Find and remove orphaned services
+while read -r service; do
+    # Check if this service is in the exclusion list
+    if echo "$EXCLUDED_DEPLOYMENTS" | grep -qw "$service"; then
+        echo ""
+        echo "ℹ Skipping service: $service (excluded from cleanup)"
+        continue
+    fi
+
+    # Check if service exists in docker-compose.yml OR has a matching deployment
+    service_in_compose=false
+    deployment_exists=false
+
+    if grep -q "^${service}$" compose_services.txt; then
+        service_in_compose=true
+    fi
+
+    if kubectl get deployment "$service" -n "$NAMESPACE" &>/dev/null; then
+        deployment_exists=true
+    fi
+
+    # Service is orphaned if it's not in compose AND has no matching deployment
+    if [ "$service_in_compose" = false ] && [ "$deployment_exists" = false ]; then
+        echo ""
+        echo "⚠ Found orphaned service: $service"
+        echo "  This service is not defined in docker-compose.yml and has no matching deployment"
+        echo "  Removing service..."
+
+        orphaned_services=$((orphaned_services + 1))
+
+        if kubectl delete service "$service" -n "$NAMESPACE" --ignore-not-found=true; then
+            echo "  ✓ Service '$service' deleted"
+        else
+            echo "  ✗ Failed to delete service '$service'"
+        fi
+    fi
+done < managed_services.txt
+
+echo ""
+echo "===================================================================="
+if [ $orphaned_services -eq 0 ]; then
+    echo "✓ No orphaned services found"
+    echo "  All managed services match docker-compose.yml or have deployments"
+else
+    echo "✓ Cleanup completed: $orphaned_services orphaned service(s) removed"
 fi
 echo "===================================================================="
