@@ -375,7 +375,7 @@ services:
     ports:
       - 8155:8080
     environment:
-              #- NODE_1_URL:https://quarkid-main.extrimian.com/
+      #- NODE_1_URL:https://quarkid-main.extrimian.com/
       NODE_1_URL: ${uniresolver_driver_did_quarkid_node_url} #https://lbquarkid2.extrimian.com/
       NODE_1_PATTERN: ${uniresolver_driver_did_quarkid_node_pattern} #did:quarkid
       NODE_1_BEHAVIOR: ${uniresolver_driver_did_quarkid_node_behavior} #1
@@ -413,3 +413,8 @@ services:
       DID_METHODS: ${uniresolver_driver_did_empe_did_methods}
     ports:
       - "8163:8080"
+
+  driver-did-bsv:
+    image: teranodegroup/universalresolver:1.3.1-RC-v10-g06ab24e
+    ports:
+      - "8115:9115"

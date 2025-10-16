@@ -101,6 +101,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:tgrid:trustgrid:dev:QjA1qdXKmxzgK4u8mFoBpF
 	curl -X GET http://localhost:8080/1.0/identifiers/did:near:CF5RiJYh4EVmEt8UADTjoP3XaZo1NPWxv6w5TmkLqjpR
 	curl -X GET http://localhost:8080/1.0/identifiers/did:empe:testnet:006308981b61932c5eaae1c39ace8ee3892f4a1f
+    curl -X GET http://localhost:8080/1.0/identifiers/did:bsv:49e48f452457524f036a3f386388500a6256a9fd21e0e003295bbf3a0455baab
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -194,18 +195,18 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-cndid](https://github.com/teleinfo-bif/uni-resolver-driver-did-cndid)                                     | 1.0.0          | [1.0.0](https://github.com/teleinfo-bif/cndid/blob/main/doc/en/CNDID%20Protocol%20Specification.md)               | [teleinfo/driver-did-cndid](https://hub.docker.com/repository/docker/teleinfo/driver-did-cndid)                                                                    | CN DID                                                                              |
 | [did-near](https://github.com/KayTrust/driver-did-near)                                                        | 1.0.0          | [0.1.0](https://github.com/DTI-web3/did-near/blob/master/README.md)                                               | [kaytrust/driver-did-near](https://github.com/KayTrust/driver-did-near/pkgs/container/driver-did-near)                                                             | NEAR DID                                                                            |
 | [did-tgrid](https://github.com/tgrid-usa/uni-resolver-driver-did-trustgrid)                                    | 1.0.0          | [1.0.0](https://github.com/tgrid-usa/uni-resolver-driver-did-trustgrid/blob/main/README.md)                       | [trustgrid/uni-resolver-driver-did-tgrid](https://hub.docker.com/r/trustgrid01/uni-resolver-driver-did-tgrid)                                                      | TrustGrid DID                                                                       
-| [did-empe](https://github.com/empe-io/uni-resolver-driver-did-empe)                                                        | 1.0.0          | [1.0.0](https://github.com/empe-io/uni-resolver-driver-did-empe/blob/main/README.md)                                               | [empe/driver-did-empe](https://github.com/empe-io/uni-resolver-driver-did-empe/pkgs/container/uni-resolver-driver-did-empe)                                                                 | EMPE DID                                                                            |
-
+| [did-empe](https://github.com/empe-io/uni-resolver-driver-did-empe)                                            | 1.0.0          | [1.0.0](https://github.com/empe-io/uni-resolver-driver-did-empe/blob/main/README.md)                                               | [empe/driver-did-empe](https://github.com/empe-io/uni-resolver-driver-did-empe/pkgs/container/uni-resolver-driver-did-empe)                                                                 | EMPE DID                                                                            |
+| [did-bsv](https://github.com/teranode-group/uni-resolver-driver-did-bsv)                                       | 1.3.1          | [1.0.0](https://github.com/teranode-group/TNG-Identity-bsvdid-method)                                             | [teranodegroup/universalresolver](https://hub.docker.com/repository/docker/teranodegroup/universalresolver/general)                                                                | BSV DID|
 
 ## More Information
 
- * [Driver Development](/docs/driver-development.md)
- * [Continuous Integration and Delivery](/docs/continuous-integration-and-delivery.md)
- * [Development System](/docs/dev-system.md)
- * [Branching Strategy](/docs/branching-strategy.md)
- * [Design Goals](/docs/design-goals.md)
- * [Troubleshooting](/docs/troubleshooting.md)
- * [Java Components](/docs/java-components.md)
+* [Driver Development](/docs/driver-development.md)
+* [Continuous Integration and Delivery](/docs/continuous-integration-and-delivery.md)
+* [Development System](/docs/dev-system.md)
+* [Branching Strategy](/docs/branching-strategy.md)
+* [Design Goals](/docs/design-goals.md)
+* [Troubleshooting](/docs/troubleshooting.md)
+* [Java Components](/docs/java-components.md)
 
 ## About
 
