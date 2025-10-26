@@ -61,6 +61,36 @@ extract_image_info() {
 }
 
 ################################################################################
+# Function: extract_container_port
+# Extracts the container port from a ports JSON array
+#
+# Arguments:
+#   $1 - Ports (JSON array)
+#
+# Returns:
+#   Echoes: The first container port found, or empty string if none
+################################################################################
+extract_container_port() {
+    local ports=$1
+
+    if [ -z "$ports" ] || [ "$ports" == "null" ]; then
+        echo ""
+        return
+    fi
+
+    # Extract the first port mapping and get container port
+    local port_mapping=$(echo "$ports" | jq -r '.[0] | gsub("^\""; "") | gsub("\"$"; "")')
+
+    if [[ "$port_mapping" == *:* ]]; then
+        # Format: "host:container" (e.g., "8081:8080")
+        echo "$port_mapping" | cut -d: -f2
+    else
+        # Format: "container" only
+        echo "$port_mapping"
+    fi
+}
+
+################################################################################
 # Function: create_deployment_yaml
 # Generates a Kubernetes Deployment manifest for a service
 #
@@ -313,7 +343,27 @@ cat services.json | jq -c '.' | while read -r service; do
         # Ensure service exists if ports are defined (may be missing from previous deployments)
         if [ ! -z "$ports" ] && [ "$ports" != "null" ]; then
             if kubectl get service "$name" -n "$NAMESPACE" &>/dev/null; then
-                echo "  ✓ Service exists"
+                echo "  ✓ Service exists, checking port configuration..."
+
+                # Extract expected container port from docker-compose
+                expected_port=$(extract_container_port "$ports")
+
+                # Get current service port configuration
+                current_port=$(kubectl get service "$name" -n "$NAMESPACE" -o jsonpath='{.spec.ports[0].targetPort}')
+
+                echo "  Current service targetPort: $current_port"
+                echo "  Expected service targetPort: $expected_port"
+
+                # Compare ports and update service if different
+                if [ "$current_port" != "$expected_port" ]; then
+                    echo "  ⚠ Port mismatch detected!"
+                    echo "  Updating service with new port configuration..."
+                    create_service_yaml "$name" "$ports"
+                    kubectl apply -f "service-${name}.yaml"
+                    echo "  ✓ Service port updated successfully"
+                else
+                    echo "  ✓ Service port is up to date"
+                fi
             else
                 echo "  ⚠ Service missing, creating..."
                 create_service_yaml "$name" "$ports"
