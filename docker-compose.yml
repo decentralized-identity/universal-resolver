@@ -73,7 +73,6 @@ services:
       uniresolver_web_driver_url_did_evrc:
       uniresolver_web_driver_url_did_keri:
       uniresolver_web_driver_url_did_webs:
-      uniresolver_web_driver_url_did_content:
       uniresolver_web_driver_url_did_prism:
       uniresolver_web_driver_url_did_iden3:
       uniresolver_web_driver_url_did_cndid:
@@ -343,10 +342,6 @@ services:
     image: gleif/did-webs-resolver-service:0.2.7
     ports:
       - "8147:7677"
-  driver-did-content:
-    image: kataru/content-did-driver:0.1.0
-    ports:
-      - "8148:8888"
   driver-did-algo:
     image: ghcr.io/algorandfoundation/did-algo:v1.1.0
     ports:
@@ -380,7 +375,7 @@ services:
     ports:
       - 8155:8080
     environment:
-              #- NODE_1_URL:https://quarkid-main.extrimian.com/
+      #- NODE_1_URL:https://quarkid-main.extrimian.com/
       NODE_1_URL: ${uniresolver_driver_did_quarkid_node_url} #https://lbquarkid2.extrimian.com/
       NODE_1_PATTERN: ${uniresolver_driver_did_quarkid_node_pattern} #did:quarkid
       NODE_1_BEHAVIOR: ${uniresolver_driver_did_quarkid_node_behavior} #1
@@ -394,7 +389,7 @@ services:
     ports:
       - "8160:8080"
   driver-did-btcr2:
-    image: universalresolver/driver-did-btcr2:0.4.0-f1de6aa
+    image: universalresolver/driver-did-btcr2:0.5.0-4f1406a
     ports:
       - "8161:8080"
 
@@ -418,6 +413,11 @@ services:
       DID_METHODS: ${uniresolver_driver_did_empe_did_methods}
     ports:
       - "8163:8080"
+
+  driver-did-bsv:
+    image: teranodegroup/universalresolver:1.3.1-RC-v10-g06ab24e
+    ports:
+      - "8115:9115"
 
   driver-did-andorra:
     image: davidgbvargroup/uni-resolver-driver-did-andorra:1.0.1

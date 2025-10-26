@@ -337,10 +337,6 @@ uniresolver:
       acceptHeaderValueDereference:
       testIdentifiers:
         - did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
-    - pattern: "^(did:content:.+)$"
-      url: ${uniresolver_web_driver_url_did_content:http://driver-did-content:8888/}
-      testIdentifiers:
-        - did:content:3SqTXtoMpiPeNo5vEP2p7yNGQUeCGjqW1wnctv8yaCWXojD29GYcUEo
     - pattern: "^(did:algo:.+)$"
       url: http://driver-did-algo:9091/
       testIdentifiers:
@@ -389,7 +385,7 @@ uniresolver:
       propertiesEndpoint: "true"
       supportsOptions: true
       testIdentifiers:
-        - did:btcr2:k1qypcylxwhf8sykn2dztm6z8lxm43kwkyzf07qmp9jafv3zfntmpwtks9hmnrw
+        - did:btcr2:k1q5ppmnfjqp0qe5klmnll9tazz9jd5ds43x5xfsr3hu9jdgaldu0d3jgs0vj4r
 
     - pattern: "^(did:tgrid:.+)$"
       url: ${uniresolver_web_driver_url_did_tgrid:http://driver-did-tgrid:8080/}
@@ -407,6 +403,12 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_empe:http://driver-did-empe:8080/1.0/identifiers/$1}
       testIdentifiers:
         - did:empe:02bbae4a3c51a3134d0aa4bfe1e7ed19c6debe84
+
+    - pattern: "^(did:bsv:.+)$"
+      url: ${uniresolver_web_driver_url_bsv:http://driver-did-bsv:9115/}
+      testIdentifiers:
+          - did:bsv:adaf8c37db395b05bde08ddfb47eb898108dcdef8cf8dac3d9d1bc587d57828e
+          - did:bsv:49e48f452457524f036a3f386388500a6256a9fd21e0e003295bbf3a0455baab
 
     - pattern: "^(did:andorra:.+)$"
       url: ${uniresolver_web_driver_url_did_andorra:http://driver-did-andorra:8080/1.0/identifiers/$1}

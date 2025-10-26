@@ -85,7 +85,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:evrc:issuer:polygon:62eeb90e-eee4-4d31-8927-1075e82b2a74
 	curl -X GET http://localhost:8080/1.0/identifiers/did:keri:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
 	curl -X GET http://localhost:8080/1.0/identifiers/did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
-	curl -X GET http://localhost:8080/1.0/identifiers/did:content:3SqTXtoMpiPeNo5vEP2p7yNGQUeCGjqW1wnctv8yaCWXojD29GYcUEo
 	curl -X GET http://localhost:8080/1.0/identifiers/did:algo:mainnet:app:1845671812:da490f2d15a625459bf970a3d55e1a646dfd3a956d011546e953e945d39fdada
 	curl -X GET http://localhost:8080/1.0/identifiers/did:itn:PA7xLNkMAqzzrDp4UBnrZm
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iota:0xf4d6f08f5a1b80dd578da7dc1b49c886d580acd4cf7d48119dfeb82b538ad88a
@@ -97,13 +96,11 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET 'http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw?gist=f12d4f6fddeed78cb8b1faf1c6f4f171a590c1b05c484118a09847f5caa74d03'
 	curl -X GET 'http://localhost:8080/1.0/identifiers/did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw?state=7a1a45d22b686cf1bd2f9fbecbed38b725a555e6d8ad68d3780feda9124b1a13'
     curl -X GET http://localhost:8080/1.0/identifiers/did:cndid:sf24eYrmwXt6nx4fig3XJm7n9UP6PNRJ3
-	curl -X GET http://localhost:8080/1.0/identifiers/did:btcr2:k1qypcylxwhf8sykn2dztm6z8lxm43kwkyzf07qmp9jafv3zfntmpwtks9hmnrw
-
+	curl -X GET http://localhost:8080/1.0/identifiers/did:btcr2:k1q5ppmnfjqp0qe5klmnll9tazz9jd5ds43x5xfsr3hu9jdgaldu0d3jgs0vj4r
 	curl -X GET http://localhost:8080/1.0/identifiers/did:tgrid:trustgrid:dev:QjA1qdXKmxzgK4u8mFoBpF
-
 	curl -X GET http://localhost:8080/1.0/identifiers/did:near:CF5RiJYh4EVmEt8UADTjoP3XaZo1NPWxv6w5TmkLqjpR
-
 	curl -X GET http://localhost:8080/1.0/identifiers/did:empe:testnet:006308981b61932c5eaae1c39ace8ee3892f4a1f
+    curl -X GET http://localhost:8080/1.0/identifiers/did:bsv:49e48f452457524f036a3f386388500a6256a9fd21e0e003295bbf3a0455baab
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -186,7 +183,6 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-evrc](https://github.com/vcian/uni-resolver-driver-did-evrc)                                              | 1.0            | 1.0                                                                                                               | [viitorcloud/uni-resolver-driver-did-evrc](https://hub.docker.com/r/viitorcloud/uni-resolver-driver-did-evrc)                                                      | EveryCRED DID Method                                                                |
 | [did-keri](https://github.com/hyperledger-labs/did-webs-resolver)                                              | 0.1            | [0.1](https://trustoverip.github.io/tswg-did-method-webs-specification/)                                          | [gleif/did-keri-resolver](https://hub.docker.com/r/gleif/did-keri-resolver)                                                                                        | KERI                                                                                |
 | [did-webs](https://github.com/hyperledger-labs/did-webs-resolver)                                              | 0.2.1            | [0.1](https://trustoverip.github.io/tswg-did-method-webs-specification/)                                          | [gleif/did-webs-resolver](https://hub.docker.com/r/gleif/did-webs-resolver)                                                                                        | KERI, Web                                                                           |
-| [did-content](https://github.com/KataruInc/did-content-spec)                                                   | 0.1            | [0.1](https://github.com/KataruInc/did-content-spec)                                                              | [kataru/content-did-driver](https://hub.docker.com/repository/docker/kataru/content-did-driver)                                                                    | Content DID                                                                         |
 | [did-algo](https://github.com/algorandfoundation/did-algo)                                                     | 1.0.0          | [2.0](https://github.com/algorandfoundation/did-algo/blob/main/SPEC.md)                                           | [ghcr.io/algorandfoundation/did-algo](https://ghcr.io/algorandfoundation/did-algo)                                                                                 | Algorand Blockchain DID Method                                                      |
 | [did-itn](https://github.com/itn-trust/uni-resolver-driver-did-itn)                                            | 1.0.0          | [1.0](https://github.com/itn-trust/itn-did-spec)                                                                  | [ghcr.io/itn-trust/driver-did-itn](https://ghcr.io/itn-trust/driver-did-itn)                                                                                       | Integrated Trust Network (ITN) DID Method                                           |
 | [did-iota](https://github.com/iotaledger/uni-resolver-driver-iota)									                                    | 0.2		 	 | 2.0																												                                                                                   | [iotaledger/uni-resolver-driver-iota](https://hub.docker.com/r/iotaledger/uni-resolver-driver-iota)															  	                                              | IOTA DID																			                                                         |
@@ -198,19 +194,20 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-cndid](https://github.com/teleinfo-bif/uni-resolver-driver-did-cndid)                                     | 1.0.0          | [1.0.0](https://github.com/teleinfo-bif/cndid/blob/main/doc/en/CNDID%20Protocol%20Specification.md)               | [teleinfo/driver-did-cndid](https://hub.docker.com/repository/docker/teleinfo/driver-did-cndid)                                                                    | CN DID                                                                              |
 | [did-near](https://github.com/KayTrust/driver-did-near)                                                        | 1.0.0          | [0.1.0](https://github.com/DTI-web3/did-near/blob/master/README.md)                                               | [kaytrust/driver-did-near](https://github.com/KayTrust/driver-did-near/pkgs/container/driver-did-near)                                                             | NEAR DID                                                                            |
 | [did-tgrid](https://github.com/tgrid-usa/uni-resolver-driver-did-trustgrid)                                    | 1.0.0          | [1.0.0](https://github.com/tgrid-usa/uni-resolver-driver-did-trustgrid/blob/main/README.md)                       | [trustgrid/uni-resolver-driver-did-tgrid](https://hub.docker.com/r/trustgrid01/uni-resolver-driver-did-tgrid)                                                      | TrustGrid DID                                                                       
-| [did-empe](https://github.com/empe-io/uni-resolver-driver-did-empe)                                                        | 1.0.0          | [1.0.0](https://github.com/empe-io/uni-resolver-driver-did-empe/blob/main/README.md)                                               | [empe/driver-did-empe](https://github.com/empe-io/uni-resolver-driver-did-empe/pkgs/container/uni-resolver-driver-did-empe)                                                                 | EMPE DID                                                                            |
+| [did-empe](https://github.com/empe-io/uni-resolver-driver-did-empe)                                            | 1.0.0          | [1.0.0](https://github.com/empe-io/uni-resolver-driver-did-empe/blob/main/README.md)                                               | [empe/driver-did-empe](https://github.com/empe-io/uni-resolver-driver-did-empe/pkgs/container/uni-resolver-driver-did-empe)                                                                 | EMPE DID                                                                            |
+| [did-bsv](https://github.com/teranode-group/uni-resolver-driver-did-bsv)                                       | 1.3.1          | [1.0.0](https://github.com/teranode-group/TNG-Identity-bsvdid-method)                                             | [teranodegroup/universalresolver](https://hub.docker.com/repository/docker/teranodegroup/universalresolver/general)                                                                | BSV DID|
 | [did-andorra](https://github.com/davidgbvargroup/uni-resolver-driver-did-andorra)                              | 1.0.0          | [0.1.1](https://github.com/davidgbvargroup/did-andorra-method-spec/blob/main/spec.md)                             | [davidgbvargroup/uni-resolver-driver-did-andorra](https://hub.docker.com/r/davidgbvargroup/uni-resolver-driver-did-andorra)                                        | Andorra DID                                                                         |
 
 
 ## More Information
 
- * [Driver Development](/docs/driver-development.md)
- * [Continuous Integration and Delivery](/docs/continuous-integration-and-delivery.md)
- * [Development System](/docs/dev-system.md)
- * [Branching Strategy](/docs/branching-strategy.md)
- * [Design Goals](/docs/design-goals.md)
- * [Troubleshooting](/docs/troubleshooting.md)
- * [Java Components](/docs/java-components.md)
+* [Driver Development](/docs/driver-development.md)
+* [Continuous Integration and Delivery](/docs/continuous-integration-and-delivery.md)
+* [Development System](/docs/dev-system.md)
+* [Branching Strategy](/docs/branching-strategy.md)
+* [Design Goals](/docs/design-goals.md)
+* [Troubleshooting](/docs/troubleshooting.md)
+* [Java Components](/docs/java-components.md)
 
 ## About
 
