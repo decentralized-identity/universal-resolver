@@ -409,3 +409,10 @@ uniresolver:
       testIdentifiers:
           - did:bsv:adaf8c37db395b05bde08ddfb47eb898108dcdef8cf8dac3d9d1bc587d57828e
           - did:bsv:49e48f452457524f036a3f386388500a6256a9fd21e0e003295bbf3a0455baab
+
+    - pattern: "^(did:andorra:.+)$"
+      url: ${uniresolver_web_driver_url_did_andorra:http://driver-did-andorra:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:andorra:NRTAD-710646J
+        - did:andorra:NRTAD-059888N_ISS
+        - did:andorra:NRTAD-059888N_SP

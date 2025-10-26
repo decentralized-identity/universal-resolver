@@ -418,3 +418,10 @@ services:
     image: teranodegroup/universalresolver:1.3.1-RC-v10-g06ab24e
     ports:
       - "8115:9115"
+
+  driver-did-andorra:
+    image: davidgbvargroup/uni-resolver-driver-did-andorra:1.0.1
+    ports:
+      - "8164:8080"
+    networks:
+      - universal-resolver

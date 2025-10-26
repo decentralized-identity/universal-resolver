@@ -85,7 +85,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:evrc:issuer:polygon:62eeb90e-eee4-4d31-8927-1075e82b2a74
 	curl -X GET http://localhost:8080/1.0/identifiers/did:keri:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
 	curl -X GET http://localhost:8080/1.0/identifiers/did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
-	curl -X GET http://localhost:8080/1.0/identifiers/did:content:3SqTXtoMpiPeNo5vEP2p7yNGQUeCGjqW1wnctv8yaCWXojD29GYcUEo
 	curl -X GET http://localhost:8080/1.0/identifiers/did:algo:mainnet:app:1845671812:da490f2d15a625459bf970a3d55e1a646dfd3a956d011546e953e945d39fdada
 	curl -X GET http://localhost:8080/1.0/identifiers/did:itn:PA7xLNkMAqzzrDp4UBnrZm
 	curl -X GET http://localhost:8080/1.0/identifiers/did:iota:0xf4d6f08f5a1b80dd578da7dc1b49c886d580acd4cf7d48119dfeb82b538ad88a
@@ -197,6 +196,8 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-tgrid](https://github.com/tgrid-usa/uni-resolver-driver-did-trustgrid)                                    | 1.0.0          | [1.0.0](https://github.com/tgrid-usa/uni-resolver-driver-did-trustgrid/blob/main/README.md)                       | [trustgrid/uni-resolver-driver-did-tgrid](https://hub.docker.com/r/trustgrid01/uni-resolver-driver-did-tgrid)                                                      | TrustGrid DID                                                                       
 | [did-empe](https://github.com/empe-io/uni-resolver-driver-did-empe)                                            | 1.0.0          | [1.0.0](https://github.com/empe-io/uni-resolver-driver-did-empe/blob/main/README.md)                                               | [empe/driver-did-empe](https://github.com/empe-io/uni-resolver-driver-did-empe/pkgs/container/uni-resolver-driver-did-empe)                                                                 | EMPE DID                                                                            |
 | [did-bsv](https://github.com/teranode-group/uni-resolver-driver-did-bsv)                                       | 1.3.1          | [1.0.0](https://github.com/teranode-group/TNG-Identity-bsvdid-method)                                             | [teranodegroup/universalresolver](https://hub.docker.com/repository/docker/teranodegroup/universalresolver/general)                                                                | BSV DID|
+| [did-andorra](https://github.com/davidgbvargroup/uni-resolver-driver-did-andorra)                              | 1.0.0          | [0.1.1](https://github.com/davidgbvargroup/did-andorra-method-spec/blob/main/spec.md)                             | [davidgbvargroup/uni-resolver-driver-did-andorra](https://hub.docker.com/r/davidgbvargroup/uni-resolver-driver-did-andorra)                                        | Andorra DID                                                                         |
+
 
 ## More Information
 
