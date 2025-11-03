@@ -68,7 +68,6 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dock:5EAp6DB2pkKuAfbhQiqAXFY4XPZkJrvtWKad4ChDmWwDrC8n
 	curl -X GET http://localhost:8080/1.0/identifiers/did:mydata:z6MkjgVfx2YE7SUBZBej65E7UHSjAyMLukPvdPjPytpTy1ZM
 	curl -X GET http://localhost:8080/1.0/identifiers/did:dns:danubetech.com
-	curl -X GET http://localhost:8080/1.0/identifiers/did:indy:idunion:2GMSLg2A8JXcdYVsPC4Jui
 	curl -X GET http://localhost:8080/1.0/identifiers/did:everscale:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15
 	curl -X GET http://localhost:8080/1.0/identifiers/did:cheqd:mainnet:Ps1ysXP2Ae6GBfxNhNQNKN
