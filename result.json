@@ -6,7 +6,7 @@
         "did:btcr:xz35-jznz-q9yu-ply": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:xz35-jznz-q9yu-ply",
-          "duration": 3.911325252,
+          "duration": 4.363740335,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -15,7 +15,7 @@
         "did:btcr:xkrn-xz7q-qsye-28p": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:xkrn-xz7q-qsye-28p",
-          "duration": 3.983179668,
+          "duration": 3.54199986,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -24,7 +24,7 @@
         "did:btcr:x705-jznz-q3nl-srs": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:x705-jznz-q3nl-srs",
-          "duration": 3.011255884,
+          "duration": 3.156910948,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -38,7 +38,7 @@
         "did:sov:WRfXPg8dantKVubE3HX8pw": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:sov:WRfXPg8dantKVubE3HX8pw",
-          "duration": 3.093674774,
+          "duration": 3.404950699,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -46,89 +46,133 @@
       {
         "did:sov:test:6cgbu8ZPoWTnR5Rv5JcSMB": {
           "error": "no response",
-          "duration": 62.561382108
+          "duration": 62.780968094
         }
       },
       {
         "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx": {
           "error": "no response",
-          "duration": 62.636654065
+          "duration": 62.96542744
         }
       },
       {
         "did:sov:indicio:demo:KKyAeG7woJMV6MhhAREVKp": {
           "error": "no response",
-          "duration": 62.130985129
+          "duration": 62.940951312
         }
       }
     ]
   },
   "did:indy": {
-    "status": "partially compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:indy:sovrin:WRfXPg8dantKVubE3HX8pw": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 3.642793019,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 3.629404906
+          "valid_jsonld": true
         }
       },
       {
         "did:indy:sovrin:test:6cgbu8ZPoWTnR5Rv5JcSMB": {
           "error": "no response",
-          "duration": 62.43295227
+          "duration": 62.625149712
         }
       },
       {
         "did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx": {
           "error": "no response",
-          "duration": 62.259556889
+          "duration": 62.978276672
         }
       },
       {
         "did:indy:indicio:demo:KKyAeG7woJMV6MhhAREVKp": {
           "error": "no response",
-          "duration": 62.632332979
+          "duration": 63.107167557
         }
       },
       {
         "did:indy:nxd:LLDnZr8iaYM3F77pUWXnVX": {
           "error": "no response",
-          "duration": 62.593578574
+          "duration": 63.267993754
         }
       }
     ]
   },
   "did:v1": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:v1:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/did/v0.11' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/veres-one/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 4.653398457,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 4.324209663
+          "valid_jsonld": false
         }
       },
       {
         "did:v1:test:nym:z6MkgF4uJbLMoUin2uKaBf4Jb1F7SHzuALE8Ldq8FPPpHE9t": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/did/v0.11' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/veres-one/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.809844637,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 3.714778625
+          "valid_jsonld": false
         }
       },
       {
         "did:v1:test:nym:z6MkmWLiAt5FtfwgFJwMDGS1GiFn1KpUXsd7bn1v2hLyXvud": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/did/v0.11' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/veres-one/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.80967221,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 4.04835594
+          "valid_jsonld": false
         }
       }
     ]
@@ -139,21 +183,34 @@
       {
         "did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0": {
           "error": "no response",
-          "duration": 62.222217867
+          "duration": 62.811296779
         }
       }
     ]
   },
   "did:web": {
-    "status": "partially compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:web:identity.foundation": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://identity.foundation/.well-known/did-configuration/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://identity.foundation/linked-vp/contexts/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.49895064,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 3.15546102
+          "valid_jsonld": true
         }
       },
       {
@@ -161,15 +218,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "type",
-              "error": "there must be one 'type' in 'service'"
-            },
-            {
-              "value": "type",
-              "error": "there must be one 'type' in 'service'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 3.466640115,
+          "duration": 3.595524217,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -177,51 +230,116 @@
     ]
   },
   "did:ethr": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:ethr:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1recovery-2020/v2' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/security/v3-unstable' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.331224718,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 3.251661095
+          "valid_jsonld": false
         }
       },
       {
         "did:ethr:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1recovery-2020/v2' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/security/v3-unstable' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.235612194,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 3.771590929
+          "valid_jsonld": false
         }
       },
       {
         "did:ethr:0x1:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1recovery-2020/v2' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/security/v3-unstable' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.307536706,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 3.022138001
+          "valid_jsonld": false
         }
       },
       {
         "did:ethr:0x1:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1recovery-2020/v2' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/security/v3-unstable' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.328836393,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 3.187377265
+          "valid_jsonld": false
         }
       },
       {
         "did:ethr:sepolia:0x03fdd57adec3d438ea237fe46b33ee1e016eda6b585c3e27ea66686c2ea5358479": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1recovery-2020/v2' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/security/v3-unstable' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.099854925,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 3.579237388
+          "valid_jsonld": false
         }
       }
     ]
@@ -234,8 +352,8 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
           "infos": [
@@ -248,7 +366,7 @@
               "message": "add 'https://w3id.org/security/suites/secp256k1recovery-2020'"
             }
           ],
-          "duration": 7.487538746,
+          "duration": 7.843121411,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -256,24 +374,34 @@
     ]
   },
   "did:peer": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:peer:2.Ez6LSghwSE437wnDE1pt3X6hVDUQzSjsHzinpX3XFvMjRAm7y.Vz6Mkhh1e5CEYYq6JBUcTZ6Cp2ranCWRrv7Yax3Le4N59R6dd.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9hbGljZS5kaWQuZm1ncC5hcHAvIiwiciI6W10sImEiOlsiZGlkY29tbS92MiJdfQ": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.836991614,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 3.079905744
+          "valid_jsonld": false
         }
       },
       {
         "did:peer:2.Ez6LSpSrLxbAhg2SHwKk7kwpsH7DM7QjFS5iK6qP87eViohud.Vz6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9leGFtcGxlLmNvbS9lbmRwb2ludDEiLCJyIjpbImRpZDpleGFtcGxlOnNvbWVtZWRpYXRvciNzb21la2V5MSJdLCJhIjpbImRpZGNvbW0vdjIiLCJkaWRjb21tL2FpcDI7ZW52PXJmYzU4NyJdfQ": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.838734966,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 2.708401649
+          "valid_jsonld": false
         }
       }
     ]
@@ -286,35 +414,15 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             },
             {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 3.304973617,
+          "duration": 3.26018983,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -324,27 +432,15 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             },
             {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 3.028669009,
+          "duration": 3.099637244,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -357,7 +453,7 @@
       {
         "did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21": {
           "error": "no response",
-          "duration": 62.10751284
+          "duration": 62.630605152
         }
       }
     ]
@@ -368,7 +464,7 @@
       {
         "did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de": {
           "error": "no response",
-          "duration": 62.355045896
+          "duration": 62.956327648
         }
       }
     ]
@@ -380,7 +476,7 @@
         "did:elem:ropsten:EiCtwD11AV9e1oISQRHnMJsBC3OBdYDmx8xeKeASrKaw6A": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:elem:ropsten:EiCtwD11AV9e1oISQRHnMJsBC3OBdYDmx8xeKeASrKaw6A",
-          "duration": 2.407904289,
+          "duration": 2.650536298,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -393,7 +489,7 @@
       {
         "did:github:gjgd": {
           "error": "no response",
-          "duration": 62.120785346
+          "duration": 62.81740426
         }
       }
     ]
@@ -406,23 +502,15 @@
           "valid": false,
           "errors": [
             {
-              "value": "authentication",
-              "error": "invalid 'authentication'"
-            },
-            {
-              "value": "id",
-              "error": "there must be one 'id' in 'service'"
-            },
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             },
             {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 5.31358253,
+          "duration": 5.348980168,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -432,23 +520,15 @@
           "valid": false,
           "errors": [
             {
-              "value": "authentication",
-              "error": "invalid 'authentication'"
-            },
-            {
-              "value": "id",
-              "error": "there must be one 'id' in 'service'"
-            },
-            {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             },
             {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 3.865494458,
+          "duration": 4.190219665,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -462,7 +542,7 @@
         "did:ont:AN5g6gz9EoQ3sCNu7514GEghZurrktCMiH": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:ont:AN5g6gz9EoQ3sCNu7514GEghZurrktCMiH",
-          "duration": 4.122201665,
+          "duration": 4.323303398,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -476,7 +556,7 @@
         "did:kilt:4rNTX3ihuxyWkB7wG3oLgUWSBLa2gva1NBKJsBFm7jJZUYfc": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:kilt:4rNTX3ihuxyWkB7wG3oLgUWSBLa2gva1NBKJsBFm7jJZUYfc",
-          "duration": 2.49694679,
+          "duration": 2.632210022,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -485,7 +565,7 @@
         "did:kilt:light:004pqDzaWi3w7TzYzGnQDyrasK6UnyNnW6JQvWRrq6r8HzNNGy": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:kilt:light:004pqDzaWi3w7TzYzGnQDyrasK6UnyNnW6JQvWRrq6r8HzNNGy",
-          "duration": 2.335027351,
+          "duration": 2.764355209,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -494,7 +574,7 @@
         "did:kilt:light:004pqDzaWi3w7TzYzGnQDyrasK6UnyNnW6JQvWRrq6r8HzNNGy:z15dZSRuzEPTFnBErPxqJie4CmmQH1gYKSQYxmwW5Qhgz5Sr7EYJA3J65KoC5YbgF3NGoBsTY2v6zwj1uDnZzgXzLy8R72Fhjmp8ujY81y2AJc8uQ6s2pVbAMZ6bnvaZ3GVe8bMjY5MiKFySS27qRi": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:kilt:light:004pqDzaWi3w7TzYzGnQDyrasK6UnyNnW6JQvWRrq6r8HzNNGy:z15dZSRuzEPTFnBErPxqJie4CmmQH1gYKSQYxmwW5Qhgz5Sr7EYJA3J65KoC5YbgF3NGoBsTY2v6zwj1uDnZzgXzLy8R72Fhjmp8ujY81y2AJc8uQ6s2pVbAMZ6bnvaZ3GVe8bMjY5MiKFySS27qRi",
-          "duration": 2.388942895,
+          "duration": 2.791208778,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -508,7 +588,7 @@
         "did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764",
-          "duration": 2.493460109,
+          "duration": 2.664148805,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -517,7 +597,7 @@
         "did:factom:testnet:c2d5aa15943c93db313f140e7ed87ec9891d02acbde748932db583aa3080af08": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:factom:testnet:c2d5aa15943c93db313f140e7ed87ec9891d02acbde748932db583aa3080af08",
-          "duration": 2.369732434,
+          "duration": 2.66314807,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -531,7 +611,7 @@
         "did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A",
-          "duration": 3.269961479,
+          "duration": 3.535555755,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -539,24 +619,15 @@
     ]
   },
   "did:bba": {
-    "status": "partially compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf": {
-          "valid": true,
-          "valid_shacl": true,
-          "valid_json-schema": false,
-          "valid_jsonld": false,
-          "duration": 6.894881664
-        }
-      },
-      {
-        "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044": {
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
           "infos": [
@@ -564,7 +635,26 @@
               "message": "'https://w3id.org/security/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
             }
           ],
-          "duration": 6.571337895,
+          "duration": 7.077443592,
+          "valid_json-schema": false,
+          "valid_jsonld": false
+        }
+      },
+      {
+        "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044": {
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 6.824221851,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -578,7 +668,7 @@
         "did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J",
-          "duration": 2.55997535,
+          "duration": 2.789854708,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -588,11 +678,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 7.053876112,
+          "duration": 6.838307004,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -606,7 +696,7 @@
         "did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w",
-          "duration": 2.746022058,
+          "duration": 2.86903565,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -614,30 +704,64 @@
     ]
   },
   "did:gatc": {
-    "status": "partially compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:gatc:2xtSori9UQZdTqzxrkp7zqKM4Kj5B4C7": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "message": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "message": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
+            }
+          ],
+          "duration": 3.545262452,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 3.409792185
+          "valid_jsonld": false
         }
       },
       {
         "did:gatc:acYseLtTEVeqF8oBhJEejbCVHJ8auVupaRuo6gw4hmXjcc77uCKqyM3imEJH": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "message": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "message": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
+            }
+          ],
+          "duration": 3.184605026,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 2.866993641
+          "valid_jsonld": false
         }
       },
       {
         "did:gatc:32MxGGj4gpCEWMiKjPtCqsrbg9JF9Kn4": {
           "valid": false,
           "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            },
             {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/jws-2020/v1'"
@@ -647,18 +771,33 @@
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 2.962226045,
+          "duration": 3.074360186,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
       },
       {
         "did:gatc:25sPfKCaYnzV6f8ckJeqyqNcpsbeBPBS": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "message": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "message": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
+            }
+          ],
+          "duration": 3.012604729,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 2.906722068
+          "valid_jsonld": false
         }
       }
     ]
@@ -670,7 +809,7 @@
         "did:icon:01:64aa0a2a479cb47afbf2d18d6f9f216bcdcbecdda27ccba3": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:icon:01:64aa0a2a479cb47afbf2d18d6f9f216bcdcbecdda27ccba3",
-          "duration": 2.358796192,
+          "duration": 2.605540805,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -683,7 +822,7 @@
       {
         "did:vaa:3wJVWDQWtDFx27FqvSqyo5xsTsxC": {
           "error": "no response",
-          "duration": 62.221276726
+          "duration": 62.661204016
         }
       }
     ]
@@ -695,7 +834,7 @@
         "did:unisot:test:n1aAmTXAg4o44Z9k8YCQncEY91r3TV7WU4": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:unisot:test:n1aAmTXAg4o44Z9k8YCQncEY91r3TV7WU4",
-          "duration": 3.372323951,
+          "duration": 3.638511534,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -703,15 +842,28 @@
     ]
   },
   "did:sol": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:sol:devnet:2eK2DKs6vdzTEoj842Gfcs6DdtffPpw1iF6JbzQL4TuK": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/did/v1.0' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/sol/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 4.271017769,
           "valid_json-schema": false,
-          "valid_jsonld": false,
-          "duration": 4.676426704
+          "valid_jsonld": false
         }
       }
     ]
@@ -723,7 +875,7 @@
         "did:lit:AEZ87t1bi5bRxmVh3ksMUi": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:lit:AEZ87t1bi5bRxmVh3ksMUi",
-          "duration": 17.48493009,
+          "duration": 17.695358987,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -731,24 +883,34 @@
     ]
   },
   "did:ebsi": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:ebsi:zjUnExsyyweQ9p4cy3nvrVc": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 4.10112568,
           "valid_json-schema": false,
-          "valid_jsonld": true,
-          "duration": 4.10943314
+          "valid_jsonld": true
         }
       },
       {
         "did:ebsi:z24q53pA3pjcnoukP6fD5jXt": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 3.777923826,
           "valid_json-schema": false,
-          "valid_jsonld": true,
-          "duration": 3.455165701
+          "valid_jsonld": true
         }
       }
     ]
@@ -760,7 +922,7 @@
         "did:emtrust:0x242a5ac36676462bd58a": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:emtrust:0x242a5ac36676462bd58a",
-          "duration": 2.443651284,
+          "duration": 2.705788702,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -775,8 +937,8 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             },
             {
               "value": "@context",
@@ -787,7 +949,7 @@
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 4.158536806,
+          "duration": 4.444668702,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -795,115 +957,195 @@
     ]
   },
   "did:tz": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:tz:tz1YwA1FwpgLtc1G8DKbbZ6e6PTb1dQMRn5x": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'{\"Ed25519PublicKeyBLAKE2BDigestSize20Base58CheckEncoded2021\"=>\"https://w3id.org/security#Ed25519PublicKeyBLAKE2BDigestSize20Base58CheckEncoded2021\", \"blockchainAccountId\"=>\"https://w3id.org/security#blockchainAccountId\"}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.83754004,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 3.751449663
+          "valid_jsonld": true
         }
       }
     ]
   },
   "did:key": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'{\"Ed25519VerificationKey2018\"=>\"https://w3id.org/security#Ed25519VerificationKey2018\", \"publicKeyJwk\"=>{\"@id\"=>\"https://w3id.org/security#publicKeyJwk\", \"@type\"=>\"@json\"}}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 2.80917209,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 2.731981
+          "valid_jsonld": true
         }
       },
       {
         "did:key:zQ3shokFTS3brHcDQrn82RUDfCZESWL1ZdCEJwekUDPQiYBme": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'{\"EcdsaSecp256k1VerificationKey2019\"=>\"https://w3id.org/security#EcdsaSecp256k1VerificationKey2019\", \"publicKeyJwk\"=>{\"@id\"=>\"https://w3id.org/security#publicKeyJwk\", \"@type\"=>\"@json\"}}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 2.910194562,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 2.755354521
+          "valid_jsonld": true
         }
       },
       {
         "did:key:z4MXj1wBzi9jUstyPMS4jQqB6KdJaiatPkAtVtGc6bQEQEEsKTic4G7Rou3iBf9vPmT5dbkm9qsZsuVNjq8HCuW1w24nhBFGkRE4cd2Uf2tfrB3N7h4mnyPp1BF3ZttHTYv3DLUPi1zMdkULiow3M1GfXkoC6DoxDUm1jmN6GBj22SjVsr6dxezRVQc7aj9TxE7JLbMH1wh5X3kA58H3DFW8rnYMakFGbca5CB2Jf6CnGQZmL7o5uJAdTwXfy2iiiyPxXEGerMhHwhjTA1mKYobyk2CpeEcmvynADfNZ5MBvcCS7m3XkFCMNUYBS9NQ3fze6vMSUPsNa6GVYmKx2x6JrdEjCk3qRMMmyjnjCMfR4pXbRMZa3i": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'{\"JsonWebKey2020\"=>\"https://w3id.org/security#JsonWebKey2020\", \"publicKeyJwk\"=>{\"@id\"=>\"https://w3id.org/security#publicKeyJwk\", \"@type\"=>\"@json\"}}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 2.76640418,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 2.843916615
+          "valid_jsonld": true
         }
       },
       {
         "did:key:zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.870430197,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 2.755948892
+          "valid_jsonld": true
         }
       },
       {
         "did:key:z82Lkytz3HqpWiBmt2853ZgNgNG8qVoUJnyoMvGw6ZEBktGcwUVdKpUNJHct1wvp9pXjr7Y": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.829796661,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 2.745472822
+          "valid_jsonld": true
         }
       },
       {
         "did:key:z2J9gcGbsEDUmANXS8iJTVefK5t4eCx9x5k8jr8EyXWekTiEet6Jt6gwup2aWawzhHyMadvVMFcQ3ruwqg1Y8rYzjto1ccQu": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.813560951,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 2.752066973
+          "valid_jsonld": true
         }
       },
       {
         "did:key:z5TcEoNqw2THWrFNZP62f2UmKMsuDnxmtYiNFHbVvqyPKUVyt7XfYmJ6HUsxmMYh2QWRctQ65HEw6BcPXxQevdAAWsd2aTNSjVUZ6VoyuPv8g8BySddJG9bDLGzey9EHSdYMcHYrYV8ycwKeNxcSrLqTCqxzDBHmyW6zEzDyYUoa8S8SAzAhVXF2uT19iyczDekWKZoPw": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.812467128,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 2.72240396
+          "valid_jsonld": true
         }
       },
       {
         "did:key:z3tEFS9q2WkwvvVvr1BrYwNreqcudmcCQGGRSQ8r73recEqAUHGeLPWzwK6toBdKJgX3Fs": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.851824705,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 2.756785085
+          "valid_jsonld": true
         }
       },
       {
         "did:key:zUC7DWA2FazpvPXmiXeTWuLjdMGXXmmWXbwoKNo554L3E4PD5ZsoZPqzCvkFkkQGvWp6uLZ3PKQJMfXYzLGNoiMyqXYSQa19cvWTiH3QpzddfRVWW6FtFMWTcvUb7wg4o9khbDt": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.970365516,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 2.778058303
+          "valid_jsonld": true
         }
       }
     ]
   },
   "did:pkh": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:pkh:tz:tz2BFTyPeYRzxd5aiBchbXN3WCZhx7BqbMBq": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'{\"EcdsaSecp256k1RecoveryMethod2020\"=>\"https://identity.foundation/EcdsaSecp256k1RecoverySignature2020#EcdsaSecp256k1RecoveryMethod2020\", \"TezosMethod2021\"=>\"https://w3id.org/security#TezosMethod2021\", \"blockchainAccountId\"=>\"https://w3id.org/security#blockchainAccountId\"}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 2.810409154,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 2.676585497
+          "valid_jsonld": true
         }
       }
     ]
@@ -914,30 +1156,40 @@
       {
         "did:orb:hl:uEiBuxTFn4L_Hn8KsOWo8e9kqWP38MThBaToB_5yV3c5QTg:uoQ-BeEJpcGZzOi8vYmFma3JlaWRveXV5d3B5Zjd5NnA0Zmxiem5pNmh4d2prbGQ2N3ltanlpZnV0dWFwN3RzazUzdHNxank:EiD_igS1OSEftg5BGfisJGOS1rgcx5AkQhX0h1B4dHTUYA": {
           "error": "no response",
-          "duration": 62.252782222
+          "duration": 62.620308664
         }
       }
     ]
   },
   "did:oyd": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:oyd:zQmaBZTghndXTgxNwfbdpVLWdFf6faYE4oeuN2zzXdQt1kh": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.622969821,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 2.578795437
+          "valid_jsonld": false
         }
       },
       {
         "did:oyd:zQmNauTUUdkpi5TcrTZ2524SKM8dJAzuuw4xfW13iHrtY1W%40did2.data-container.net": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.630066954,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 2.506797846
+          "valid_jsonld": false
         }
       }
     ]
@@ -949,7 +1201,7 @@
         "did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA",
-          "duration": 2.369439095,
+          "duration": 2.692306809,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -962,25 +1214,30 @@
       {
         "did:dock:5CxUdCGtopZEJhdv6kfLBZ22PMZX7UK8mdcHbTVw2nw6MVZH": {
           "error": "no response",
-          "duration": 62.235292867
+          "duration": 63.145683274
         }
       },
       {
         "did:dock:5CDsD8HZa6TeSfgmMcxAkbSXYWeob4jFQmtU6sxr4XWTZzUA": {
           "error": "no response",
-          "duration": 62.486714717
+          "duration": 62.944064376
         }
       }
     ]
   },
   "did:mydata": {
-    "status": "no response",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:mydata:z6MktaWPDXK7qwt9YgcGVuCFAXBvrEP3WPtxJQg37jnULXWL": {
           "valid": false,
-          "error": "Uniresolver cannot resolve did:mydata:z6MktaWPDXK7qwt9YgcGVuCFAXBvrEP3WPtxJQg37jnULXWL",
-          "duration": 19.500278089,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 11.793747375,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -988,8 +1245,13 @@
       {
         "did:mydata:z6MkjgVfx2YE7SUBZBej65E7UHSjAyMLukPvdPjPytpTy1ZM": {
           "valid": false,
-          "error": "Uniresolver cannot resolve did:mydata:z6MkjgVfx2YE7SUBZBej65E7UHSjAyMLukPvdPjPytpTy1ZM",
-          "duration": 18.280367612,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 9.974646601,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1004,15 +1266,15 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             },
             {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 2.92638496,
+          "duration": 3.080678423,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1020,30 +1282,40 @@
     ]
   },
   "did:everscale": {
-    "status": "partially compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:everscale:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 8.432246746,
           "valid_json-schema": false,
-          "valid_jsonld": false,
-          "duration": 7.803188448
+          "valid_jsonld": false
         }
       },
       {
         "did:everscale:mainnet:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 7.893462762,
           "valid_json-schema": false,
-          "valid_jsonld": false,
-          "duration": 7.304775469
+          "valid_jsonld": false
         }
       },
       {
         "did:everscale:testnet:d760f69f830dfa0668f2e7923392217589ec8d62dcb90f2c06656665dba7fb4d": {
           "error": "no response",
-          "duration": 62.135003501
+          "duration": 62.798865903
         }
       }
     ]
@@ -1054,42 +1326,72 @@
       {
         "did:ala:quor:redT:706b3e4611a855b8b1267c4e9f0c77124af003fe": {
           "error": "no response",
-          "duration": 62.348038389
+          "duration": 62.793282148
         }
       },
       {
         "did:ala:quor:redT:3729a1872356dd5c5ac377c85d539fe63cb561d8": {
           "error": "no response",
-          "duration": 62.262534001
+          "duration": 62.955806157
         }
       },
       {
         "did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15": {
           "error": "no response",
-          "duration": 62.473787186
+          "duration": 62.934841636
         }
       }
     ]
   },
   "did:cheqd": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:cheqd:mainnet:Ps1ysXP2Ae6GBfxNhNQNKN": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "message": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "message": "add 'https://w3id.org/security/suites/ed25519-2020/v1'"
+            }
+          ],
+          "duration": 7.456007105,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 6.767804565
+          "valid_jsonld": false
         }
       },
       {
         "did:cheqd:testnet:55dbc8bf-fba3-4117-855c-1e0dc1d3bb47": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "message": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "message": "add 'https://w3id.org/security/suites/ed25519-2020/v1'"
+            }
+          ],
+          "duration": 5.13933858,
           "valid_json-schema": false,
-          "valid_jsonld": false,
-          "duration": 5.228741409
+          "valid_jsonld": false
         }
       }
     ]
@@ -1101,7 +1403,7 @@
         "did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3",
-          "duration": 3.27740975,
+          "duration": 3.417820448,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1110,7 +1412,7 @@
         "did:com:17rhmdzlv0zjuahw4mvpfhf3u5tuwyjhr4m06dr": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:com:17rhmdzlv0zjuahw4mvpfhf3u5tuwyjhr4m06dr",
-          "duration": 2.915302381,
+          "duration": 3.163871519,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1118,88 +1420,197 @@
     ]
   },
   "did:dyne": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:dyne:sandbox.test:JBdcDrTMkEuR8A2QnMQLRDXBL82AKxTpuHkxhmzgdkVH": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1-2019/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1-2020/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://dyne.github.io/W3C-DID/specs/ReflowBLS12381.json' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://dyne.github.io/W3C-DID/specs/Dilithium2.json' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'{\"description\"=>\"https://schema.org/description\"}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 4.150217212,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 4.103678138
+          "valid_jsonld": true
         }
       },
       {
         "did:dyne:demo_A:DBzNYB3ft2ncfeGaVV8aR5x95tU5hKUqGLYpDJifEVwu": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1-2019/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1-2020/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://dyne.github.io/W3C-DID/specs/ReflowBLS12381.json' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'{\"description\"=>\"https://schema.org/description\"}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 4.00771121,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 3.996591962
+          "valid_jsonld": true
         }
       },
       {
         "did:dyne:demo:2r1FxbRA1EyfgeXh9TgEYT5RfkbMFUwLEmbYqeBajNbp": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1-2019/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1-2020/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://dyne.github.io/W3C-DID/specs/ReflowBLS12381.json' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'{\"description\"=>\"https://schema.org/description\"}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 5.07791919,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 3.918282754
+          "valid_jsonld": true
         }
       },
       {
         "did:dyne:demo:FFqGYxShyDGAHd4QyLY1KFCSGBb1mBP9sZebEyBM7JPi": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1-2019/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1-2020/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://dyne.github.io/W3C-DID/specs/ReflowBLS12381.json' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'{\"description\"=>\"https://schema.org/description\"}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.970891991,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 3.920862144
+          "valid_jsonld": true
         }
       }
     ]
   },
   "did:jwk": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpGZk1iek9qTW1RNGVmVDZrdndUSUpqZWxUcWpsMHhqRUlXUTJxb2JzUk1NIiwia3R5IjoiT0tQIiwiY3J2IjoiRWQyNTUxOSIsImFsZyI6IkVkRFNBIiwieCI6IkFOUmpIX3p4Y0tCeHNqUlBVdHpSYnA3RlNWTEtKWFE5QVBYOU1QMWo3azQifQ": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'{\"@vocab\"=>\"https://www.iana.org/assignments/jose#\"}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 2.83108619,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 2.87200868
+          "valid_jsonld": false
         }
       },
       {
         "did:jwk:eyJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1Njpnc0w0VTRxX1J6VFhRckpwQUNnZGkwb1lCdUV1QjNZNWZFanhDd1NPUFlBIiwia3R5IjoiRUMiLCJjcnYiOiJQLTM4NCIsImFsZyI6IkVTMzg0IiwieCI6ImEtRWV5T2hlRUNWcDJqRkdVRTNqR0RCNlAzVV80S0lyZHRzTU9RQXFQN0NBMlVvV3NERG1nOWdJUVhiOEthd0ciLCJ5Ijoib3cxWDJ6VFVRaG12elY4NnpHdGhKc0xLeDE2MmhmSmxmN1p0OTFYUnZBTzRScE4zR2RGaVl3Tmc0NXJWUmlUcSJ9": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'{\"@vocab\"=>\"https://www.iana.org/assignments/jose#\"}' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.081238121,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 2.763479112
+          "valid_jsonld": false
         }
       }
     ]
   },
   "did:kscirc": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:kscirc:k7745fAnbFGBeECS7xTDkowVXZZxEvMhpfbcQjaLYSiyed5du9MJ": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 4.321940541,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 4.227752665
+          "valid_jsonld": false
         }
       },
       {
         "did:kscirc:k2f2PhnVHabRenKbaKfLMyuxRU94S1HfAwsR2dMHxTqVeEzmPxsd": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 4.375051465,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 4.11943869
+          "valid_jsonld": false
         }
       }
     ]
@@ -1211,7 +1622,7 @@
         "did:iscc:miagwptv4j2z57ci": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:iscc:miagwptv4j2z57ci",
-          "duration": 2.498877509,
+          "duration": 3.020238882,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1225,7 +1636,7 @@
         "did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9",
-          "duration": 2.45815599,
+          "duration": 2.729719413,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1234,7 +1645,7 @@
         "did:ev:bmM8MpeJAGF2ky7YUnwgJGKxyHdCL6DGAUmEW": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:ev:bmM8MpeJAGF2ky7YUnwgJGKxyHdCL6DGAUmEW",
-          "duration": 2.444039843,
+          "duration": 2.612402577,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1247,7 +1658,7 @@
       {
         "did:iid:3QUs61mk7a9CdCpckriQbA5emw8pubj6RMtHXP6gD66YbcungS6w2sa": {
           "error": "no response",
-          "duration": 62.123274591
+          "duration": 62.781313279
         }
       }
     ]
@@ -1260,15 +1671,15 @@
           "valid": false,
           "errors": [
             {
-              "value": "Verification Relationship",
-              "error": "missing"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             },
             {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 3.995134226,
+          "duration": 3.838014146,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1282,7 +1693,7 @@
         "did:bid:ef214PmkhKndUcArDQPgD5J4fFVwqJFPt": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:bid:ef214PmkhKndUcArDQPgD5J4fFVwqJFPt",
-          "duration": 4.130548281,
+          "duration": 4.263999324,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1296,7 +1707,7 @@
         "did:pdc:8801:0xf47b66bc0d9b7c73f9ff27bf1f49a2b69dc167fc": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:pdc:8801:0xf47b66bc0d9b7c73f9ff27bf1f49a2b69dc167fc",
-          "duration": 2.603275179,
+          "duration": 3.228504618,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1309,44 +1720,69 @@
       {
         "did:tys:4B4AbVzzcJSnCZsdX4VaKyQgHRnC": {
           "error": "no response",
-          "duration": 62.102710443
+          "duration": 62.634514101
         }
       }
     ]
   },
   "did:plc": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:plc:yk4dd2qkboz2yv6tpubpc6co": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1-2019/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 4.196092885,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 2.874829121
+          "valid_jsonld": false
         }
       },
       {
         "did:plc:44ybard66vv44zksje25o7dz": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/secp256k1-2019/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 2.893156504,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 2.924111694
+          "valid_jsonld": false
         }
       }
     ]
   },
   "did:evrc": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:evrc:issuer:polygon:62eeb90e-eee4-4d31-8927-1075e82b2a74": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 3.783525749,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 5.863541006
+          "valid_jsonld": false
         }
       }
     ]
@@ -1358,7 +1794,7 @@
         "did:keri:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:keri:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP",
-          "duration": 2.566247588,
+          "duration": 2.648228673,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1373,8 +1809,8 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
           "infos": [
@@ -1383,7 +1819,7 @@
               "message": "add 'https://www.w3.org/ns/did/v1'"
             }
           ],
-          "duration": 2.973957484,
+          "duration": 3.063355022,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1391,24 +1827,44 @@
     ]
   },
   "did:algo": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:algo:mainnet:app:1845671812:da490f2d15a625459bf970a3d55e1a646dfd3a956d011546e953e945d39fdada": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/x25519-2020/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.671209187,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 3.401179793
+          "valid_jsonld": true
         }
       },
       {
         "did:algo:app:1845671812:da490f2d15a625459bf970a3d55e1a646dfd3a956d011546e953e945d39fdada": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://w3id.org/security/suites/x25519-2020/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.466081681,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 3.426095433
+          "valid_jsonld": true
         }
       }
     ]
@@ -1420,7 +1876,7 @@
         "did:itn:PA7xLNkMAqzzrDp4UBnrZm": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:itn:PA7xLNkMAqzzrDp4UBnrZm",
-          "duration": 2.576728123,
+          "duration": 2.798772669,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1429,7 +1885,7 @@
         "did:itn:EzfteTXcoHXh5W1PURHrS3": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:itn:EzfteTXcoHXh5W1PURHrS3",
-          "duration": 2.41903522,
+          "duration": 2.734673787,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1437,70 +1893,113 @@
     ]
   },
   "did:iota": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:iota:0xf4d6f08f5a1b80dd578da7dc1b49c886d580acd4cf7d48119dfeb82b538ad88a": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "value": "@context",
+              "message": "add 'https://www.w3.org/ns/did/v1'"
+            },
+            {
+              "value": "@context",
+              "message": "add 'https://w3id.org/security/suites/jws-2020/v1'"
+            }
+          ],
+          "duration": 3.584669567,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 3.16381256
+          "valid_jsonld": false
         }
       }
     ]
   },
   "did:prism": {
-    "status": "partially compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:prism:c36cd59bbc62dee1925e1343a8fed051416e417116d6169d060746f1e6816cd4": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://identity.foundation/.well-known/did-configuration/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://didcomm.org/messaging/contexts/v2' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 4.388295765,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 3.879979508
+          "valid_jsonld": false
         }
       },
       {
         "did:prism:0d8481c41b654794f02922601f84811763c655dcfc376acf841eb996846d5e68": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:prism:0d8481c41b654794f02922601f84811763c655dcfc376acf841eb996846d5e68",
-          "duration": 3.414440259,
+          "duration": 3.671870561,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
       },
       {
         "did:prism:52e163e8e53466b808e53df870bccd0a066aa4d05af9b689f5c73edcbe23d625": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 3.889505745,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 3.887507
+          "valid_jsonld": true
         }
       }
     ]
   },
   "did:webvh": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 3.248529548,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 3.113918346
+          "valid_jsonld": false
         }
       },
       {
         "did:webvh:QmVJ5nUYb9iugnUz4yDfbe8UFbhmnsvS2EAzSpSfPScRAn:opsecid.github.io": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "duration": 2.99666572,
           "valid_json-schema": true,
-          "valid_jsonld": false,
-          "duration": 2.797073235
+          "valid_jsonld": false
         }
       }
     ]
@@ -1512,7 +2011,7 @@
         "did:quarkid:EiA9SoiWkqduxPJcVk3UVoUGWm3WL2S6mox3qH3AWVCwMQ": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:quarkid:EiA9SoiWkqduxPJcVk3UVoUGWm3WL2S6mox3qH3AWVCwMQ",
-          "duration": 2.624597775,
+          "duration": 2.821211261,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1526,7 +2025,7 @@
         "did:zkjm:mainnet:d90e52b36a2e2306dc873ec0f7a94351": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:zkjm:mainnet:d90e52b36a2e2306dc873ec0f7a94351",
-          "duration": 2.443649793,
+          "duration": 2.720243166,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1534,15 +2033,28 @@
     ]
   },
   "did:iden3": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://schema.iden3.io/core/jsonld/auth.jsonld' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://schema.iden3.io/core/jsonld/iden3proofs.jsonld' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 3.294840876,
           "valid_json-schema": true,
-          "valid_jsonld": true,
-          "duration": 3.308462362
+          "valid_jsonld": true
         }
       }
     ]
@@ -1553,21 +2065,34 @@
       {
         "did:cndid:sf24eYrmwXt6nx4fig3XJm7n9UP6PNRJ3": {
           "error": "no response",
-          "duration": 62.224472575
+          "duration": 63.271717266
         }
       }
     ]
   },
   "did:btcr2": {
-    "status": "compliant",
+    "status": "non-compliant",
     "identifiers": [
       {
         "did:btcr2:k1q5ppmnfjqp0qe5klmnll9tazz9jd5ds43x5xfsr3hu9jdgaldu0d3jgs0vj4r": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "errors": [
+            {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            }
+          ],
+          "infos": [
+            {
+              "message": "'https://www.w3.org/TR/did-1.1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            },
+            {
+              "message": "'https://btcr2.dev/context/v1' is not yet listed as Verification Method Type in the <a href='https://www.w3.org/TR/did-spec-registries/#verification-method-types'>DID Specification Registries</a>"
+            }
+          ],
+          "duration": 4.321146075,
           "valid_json-schema": false,
-          "valid_jsonld": false,
-          "duration": 5.1024296
+          "valid_jsonld": false
         }
       }
     ]
@@ -1580,11 +2105,15 @@
           "valid": false,
           "errors": [
             {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            },
+            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 3.28823687,
+          "duration": 2.988257511,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1599,6 +2128,10 @@
           "valid": false,
           "errors": [
             {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            },
+            {
               "value": "@context",
               "error": "add 'https://www.w3.org/ns/did/v1'"
             },
@@ -1607,7 +2140,7 @@
               "error": "add 'https://w3id.org/security/suites/ed25519-2018/v1'"
             }
           ],
-          "duration": 3.761633981,
+          "duration": 4.579752068,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1622,15 +2155,11 @@
           "valid": false,
           "errors": [
             {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
-            },
-            {
-              "value": "verificationMethod",
-              "error": "invalid 'verificationMethod'"
+              "value": "soya-cli",
+              "error": "cannot validate input"
             }
           ],
-          "duration": 3.849160238,
+          "duration": 4.495684277,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1645,11 +2174,15 @@
           "valid": false,
           "errors": [
             {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            },
+            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/jws-2020/v1'"
             }
           ],
-          "duration": 3.63798366,
+          "duration": 3.587504265,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1659,11 +2192,15 @@
           "valid": false,
           "errors": [
             {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            },
+            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/jws-2020/v1'"
             }
           ],
-          "duration": 3.9983464,
+          "duration": 3.959784729,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1678,11 +2215,15 @@
           "valid": false,
           "errors": [
             {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            },
+            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/jws-2020/v1'"
             }
           ],
-          "duration": 4.003826543,
+          "duration": 3.436800304,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1692,11 +2233,15 @@
           "valid": false,
           "errors": [
             {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            },
+            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/jws-2020/v1'"
             }
           ],
-          "duration": 3.112022863,
+          "duration": 3.459809474,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1706,11 +2251,15 @@
           "valid": false,
           "errors": [
             {
+              "value": "soya-cli",
+              "error": "cannot validate input"
+            },
+            {
               "value": "@context",
               "error": "add 'https://w3id.org/security/suites/jws-2020/v1'"
             }
           ],
-          "duration": 3.123708305,
+          "duration": 3.215990386,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
