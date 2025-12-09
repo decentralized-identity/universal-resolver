@@ -425,3 +425,8 @@ services:
       - "8164:8080"
     networks:
       - universal-resolver
+
+  driver-did-nda:
+    image: hub.ndachain.vn/library/nda-resolver-driver-dev:latest
+    ports:
+      - "8165:8080"
