@@ -297,7 +297,7 @@ public class HttpBindingClientUtil {
         boolean isResolveResultHttpContent;
         try {
             Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
-            isResolveResultHttpContent = json.containsKey("didDocument") || json.containsKey("didDocumentStream");
+            isResolveResultHttpContent = json.containsKey("didResolutionMetadata") || json.containsKey("didDocumentMetadata") || json.containsKey("didDocument") || json.containsKey("didDocumentStream");
         } catch (JsonProcessingException ex) {
             isResolveResultHttpContent = false;
         }
@@ -309,7 +309,7 @@ public class HttpBindingClientUtil {
         boolean isDereferenceResultHttpContent;
         try {
             Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
-            isDereferenceResultHttpContent = json.containsKey("content") || json.containsKey("contentStream");
+            isDereferenceResultHttpContent = json.containsKey("dereferencingMetadata") || json.containsKey("contentMetadata") || json.containsKey("content") || json.containsKey("contentStream");
         } catch (JsonProcessingException ex) {
             isDereferenceResultHttpContent = false;
         }
