@@ -1,7 +1,6 @@
 package uniresolver.local;
 
 import foundation.identity.did.DID;
-import foundation.identity.did.DIDURL;
 import foundation.identity.did.parser.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
