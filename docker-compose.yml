@@ -78,6 +78,7 @@ services:
       uniresolver_web_driver_url_did_cndid:
       uniresolver_web_driver_url_did_tgrid:
       uniresolver_web_driver_url_did_empe:
+      uniresolver_web_driver_url_did_hedera:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -425,3 +426,8 @@ services:
       - "8164:8080"
     networks:
       - universal-resolver
+
+  driver-did-hedera:
+    image: ghcr.io/hiero-ledger/uni-resolver-driver-did-hedera:v0.1.7-8ae3a53
+    ports:
+        - "8165:8080"
