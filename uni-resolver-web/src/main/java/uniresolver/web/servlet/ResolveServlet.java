@@ -85,7 +85,10 @@ public class ResolveServlet extends WebUniResolver {
 		String httpXConfigHeader = request.getHeader("X-Config");
 		if (log.isInfoEnabled()) log.info("Incoming X-Config: header string: " + httpXConfigHeader);
 		Map<String, Object> httpXConfigHeaderMap = httpXConfigHeader == null ? null : (Map<String, Object>) objectMapper.readValue(httpXConfigHeader, Map.class);
-		if (httpXConfigHeaderMap != null) options.put("_http_x_config", httpXConfigHeaderMap);
+		if (httpXConfigHeaderMap != null) {
+			options.keySet().forEach(httpXConfigHeaderMap::remove);
+			options.putAll(httpXConfigHeaderMap);
+		}
 
 		String httpAcceptHeader = request.getHeader("Accept");
 		if (log.isInfoEnabled()) log.info("Incoming Accept: header string: " + httpAcceptHeader);
