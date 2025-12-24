@@ -412,3 +412,11 @@ uniresolver:
         - did:andorra:NRTAD-710646J
         - did:andorra:NRTAD-059888N_ISS
         - did:andorra:NRTAD-059888N_SP
+
+    - pattern: "^(did:hedera:.+)$"
+      url: ${uniresolver_web_driver_url_did_hedera:http://driver-did-hedera:8080/1.0/identifiers/$1}
+      supportsDereference: true
+      acceptHeaderValueDereference: application/ld+json;profile="https://w3id.org/did-resolution"
+      testIdentifiers:
+        - did:hedera:testnet:23g2MabDNq3KyB7oeH9yYZsJTRVeQ24DqX8o6scB98e3_0.0.5217215
+        - did:hedera:testnet:ChQreHtT3MgjuVchee9kimLxsWXxjQRzeTuCjcXvkh7j_0.0.7232365
