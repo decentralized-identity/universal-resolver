@@ -425,3 +425,8 @@ services:
       - "8164:8080"
     networks:
       - universal-resolver
+
+  driver-did-nda:
+    image: ghcr.io/pilacorp/driver-did-nda:1.0.0
+    ports:
+      - "8165:8080"
