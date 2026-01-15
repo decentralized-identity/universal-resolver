@@ -160,6 +160,11 @@ services:
     image: iotex/uni-resolver-driver-did-io:latest
     ports:
       - "8104:8080"
+
+  driver-did-operon:
+    image: ghcr.io/operonmaster/driver-did-operon:latest
+    ports:
+      - "8110:8080"
   bba-did-driver:
     container_name: bba-did-driver
     image: blobaa/bba-did-driver:0.2.2
