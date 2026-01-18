@@ -424,8 +424,6 @@ services:
     image: davidgbvargroup/uni-resolver-driver-did-andorra:1.0.1
     ports:
       - "8164:8080"
-    networks:
-      - universal-resolver
 
   driver-did-hedera:
     image: ghcr.io/hiero-ledger/uni-resolver-driver-did-hedera:v0.1.7-8ae3a53
