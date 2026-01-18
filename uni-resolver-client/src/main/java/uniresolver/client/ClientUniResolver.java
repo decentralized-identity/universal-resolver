@@ -28,6 +28,7 @@ public class ClientUniResolver implements UniResolver {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
+	public static final Map<String, String> DEFAULT_HTTP_HEADERS = Collections.emptyMap();
 	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers");
 	public static final URI DEFAULT_PROPERTIES_URI = URI.create("http://localhost:8080/1.0/properties");
 	public static final URI DEFAULT_METHODS_URI = URI.create("http://localhost:8080/1.0/methods");
@@ -35,6 +36,7 @@ public class ClientUniResolver implements UniResolver {
 	public static final URI DEFAULT_TRAITS_URI = URI.create("http://localhost:8080/1.0/traits");
 
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
+	private Map<String, String> httpHeaders = DEFAULT_HTTP_HEADERS;
 	private URI resolveUri = DEFAULT_RESOLVE_URI;
 	private URI propertiesUri = DEFAULT_PROPERTIES_URI;
 	private URI methodsUri = DEFAULT_METHODS_URI;
@@ -88,6 +90,7 @@ public class ClientUniResolver implements UniResolver {
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
 		httpGet.addHeader("Accept", acceptMediaTypesString);
+		if (this.getHttpHeaders() != null) this.getHttpHeaders().forEach(httpGet::addHeader);
 
 		// execute HTTP request and read response
 
@@ -365,6 +368,14 @@ public class ClientUniResolver implements UniResolver {
 
 	public void setHttpClient(HttpClient httpClient) {
 		this.httpClient = httpClient;
+	}
+
+	public Map<String, String> getHttpHeaders() {
+		return this.httpHeaders;
+	}
+
+	public void setHttpHeaders(Map<String, String> httpHeaders) {
+		this.httpHeaders = httpHeaders;
 	}
 
 	public URI getResolveUri() {

@@ -78,6 +78,7 @@ services:
       uniresolver_web_driver_url_did_cndid:
       uniresolver_web_driver_url_did_tgrid:
       uniresolver_web_driver_url_did_empe:
+      uniresolver_web_driver_url_did_hedera:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -367,7 +368,7 @@ services:
     ports:
       - "8153:9090"
   driver-did-webvh:
-    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.5.4-86a309b
+    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.5.6-9d9a267
     ports:
       - "8154:8080"
   driver-did-quarkid:
@@ -426,7 +427,12 @@ services:
     networks:
       - universal-resolver
 
+  driver-did-hedera:
+    image: ghcr.io/hiero-ledger/uni-resolver-driver-did-hedera:v0.1.7-8ae3a53
+    ports:
+        - "8165:8080"
+
   driver-did-nda:
     image: ghcr.io/pilacorp/driver-did-nda:1.0.0
     ports:
-      - "8165:8080"
+      - "8166:8080"

@@ -19,10 +19,7 @@ import uniresolver.util.HttpBindingClientUtil;
 
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ClientUniDereferencer implements UniDereferencer {
 
@@ -31,9 +28,11 @@ public class ClientUniDereferencer implements UniDereferencer {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
+	public static final Map<String, String> DEFAULT_HTTP_HEADERS = Collections.emptyMap();
 	public static final URI DEFAULT_DEREFERENCE_URI = URI.create("http://localhost:8080/1.0/identifiers");
 
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
+	private Map<String, String> httpHeaders = DEFAULT_HTTP_HEADERS;
 	private URI dereferenceUri = DEFAULT_DEREFERENCE_URI;
 
 	public ClientUniDereferencer() {
@@ -79,6 +78,7 @@ public class ClientUniDereferencer implements UniDereferencer {
 
 		HttpGet httpGet = new HttpGet(URI.create(uriString));
 		httpGet.addHeader("Accept", acceptMediaTypesString);
+		if (this.getHttpHeaders() != null) this.getHttpHeaders().forEach(httpGet::addHeader);
 
 		// execute HTTP request and read response
 
@@ -156,6 +156,14 @@ public class ClientUniDereferencer implements UniDereferencer {
 
 	public void setHttpClient(HttpClient httpClient) {
 		this.httpClient = httpClient;
+	}
+
+	public Map<String, String> getHttpHeaders() {
+		return this.httpHeaders;
+	}
+
+	public void setHttpHeaders(Map<String, String> httpHeaders) {
+		this.httpHeaders = httpHeaders;
 	}
 
 	public URI getDereferenceUri() {

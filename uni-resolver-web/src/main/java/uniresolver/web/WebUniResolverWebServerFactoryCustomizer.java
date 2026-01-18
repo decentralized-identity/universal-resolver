@@ -7,10 +7,9 @@ import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
+import org.springframework.boot.jetty.servlet.JettyServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.stereotype.Component;
-import uniresolver.web.servlet.ResolveServlet;
 
 @Component
 public class WebUniResolverWebServerFactoryCustomizer implements WebServerFactoryCustomizer<JettyServletWebServerFactory> {

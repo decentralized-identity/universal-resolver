@@ -173,7 +173,7 @@ public class HttpDriver implements Driver {
 			}
 
 			if (httpStatusCode != 200 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_INTERNAL_ERROR, "Driver cannot retrieve result for " + did + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new ResolutionException(ResolutionException.ERROR_INTERNAL_ERROR, "Driver cannot retrieve RESOLVE result for " + did + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (resolveResult != null && resolveResult.isErrorResult()) {
@@ -308,7 +308,7 @@ public class HttpDriver implements Driver {
 			}
 
 			if (httpStatusCode != 200 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_INTERNAL_ERROR, "Driver cannot retrieve result for " + didUrl + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+				throw new DereferencingException(DereferencingException.ERROR_INTERNAL_ERROR, "Driver cannot retrieve DEREFERENCE result for " + didUrl + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
 			}
 
 			if (dereferenceResult != null && dereferenceResult.isErrorResult()) {

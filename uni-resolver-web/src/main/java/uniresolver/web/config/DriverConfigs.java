@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
 
 @Configuration
 @ConfigurationProperties("uniresolver")
