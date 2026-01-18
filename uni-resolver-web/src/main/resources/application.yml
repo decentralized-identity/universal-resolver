@@ -420,3 +420,8 @@ uniresolver:
       testIdentifiers:
         - did:hedera:testnet:23g2MabDNq3KyB7oeH9yYZsJTRVeQ24DqX8o6scB98e3_0.0.5217215
         - did:hedera:testnet:ChQreHtT3MgjuVchee9kimLxsWXxjQRzeTuCjcXvkh7j_0.0.7232365
+
+    - pattern: "^(did:nda:.+)$"
+      url: ${uniresolver_web_driver_url_did_nda:http://driver-did-nda:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:nda:0x8c05abb015f5778ddeb0d0fa236fb8950f7bb637
