@@ -48,7 +48,6 @@
 							<apiPackage>uniresolver.openapi.api</apiPackage>
 							<modelPackage>uniresolver.openapi.model</modelPackage>
 							<invokerPackage>uniresolver.openapi</invokerPackage>
-							<openapiNormalizer>REF_AS_PARENT_IN_ALLOF=true</openapiNormalizer>
 							<configOptions>
 								<basePackage>uniresolver</basePackage>
 								<sourceFolder>src/main/java/</sourceFolder>
@@ -58,6 +57,7 @@
 								<configPackage>uniresolver.openapi.config</configPackage>
 								<asyncNative>false</asyncNative>
 								<disallowAdditionalPropertiesIfNotPresent>false</disallowAdditionalPropertiesIfNotPresent>
+								<legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
 								<library>native</library>
 								<useBeanValidation>true</useBeanValidation>
 								<dateLibrary>java8</dateLibrary>
