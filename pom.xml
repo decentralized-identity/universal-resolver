@@ -75,15 +75,15 @@
 
 		<!-- Plugin Versions -->
 
-		<maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
-		<maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
-		<maven-source-plugin.version>3.3.0</maven-source-plugin.version>
-		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
-		<maven-install-plugin.version>3.1.1</maven-install-plugin.version>
-		<maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
-		<maven-release-plugin.version>3.0.1</maven-release-plugin.version>
+		<maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
+		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+		<maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
+		<maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+		<maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+		<maven-install-plugin.version>3.1.4</maven-install-plugin.version>
+		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+		<maven-release-plugin.version>3.3.1</maven-release-plugin.version>
 
 		<!-- Testing Versions -->
 
@@ -106,7 +106,7 @@
 
 		<!-- OpenAPI Versions -->
 
-		<openapi-generator.version>7.4.0</openapi-generator.version>
+		<openapi-generator.version>7.18.0</openapi-generator.version>
 		<jakarta-annotation.version>3.0.0</jakarta-annotation.version>
 		<jakarta-validation.version>3.1.1</jakarta-validation.version>
 
@@ -192,7 +192,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<release>${java.version}</release>
-					<forceJavacCompilerUse>true</forceJavacCompilerUse>
+					<forceLegacyJavacApi>true</forceLegacyJavacApi>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -216,7 +216,7 @@
 						<configuration>
 							<rules>
 								<requireMavenVersion>
-									<version>3.2.5</version>
+									<version>3.6.3</version>
 								</requireMavenVersion>
 							</rules>
 							<fail>true</fail>
