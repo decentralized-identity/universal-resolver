@@ -100,8 +100,9 @@
 
 		<!-- Spring Versions -->
 
-		<springframework.version>7.0.3</springframework.version>
-		<fasterxml.jackson.version>2.21.1</fasterxml.jackson.version>
+		<springframework.version>7.0.2</springframework.version>
+		<fasterxml.jackson.version>2.21.0</fasterxml.jackson.version>
+		<fasterxml.jackson.annotations.version>2.21</fasterxml.jackson.annotations.version>
 
 		<!-- OpenAPI Versions -->
 
@@ -355,7 +356,7 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
-				<version>${fasterxml.jackson.version}</version>
+				<version>${fasterxml.jackson.annotations.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
