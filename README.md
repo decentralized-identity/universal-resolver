@@ -101,6 +101,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:empe:testnet:006308981b61932c5eaae1c39ace8ee3892f4a1f
     curl -X GET http://localhost:8080/1.0/identifiers/did:bsv:49e48f452457524f036a3f386388500a6256a9fd21e0e003295bbf3a0455baab
 	curl -X GET http://localhost:8080/1.0/identifiers/did:hedera:testnet:zHirM7oP62rzBmw4oSbWZTSeTLzb9zrDTfQa1cdMBWCPp_0.0.7280148
+	curl -X GET http://localhost:8080/1.0/identifiers/did:nda:0x8c05abb015f5778ddeb0d0fa236fb8950f7bb637
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -198,6 +199,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-bsv](https://github.com/teranode-group/uni-resolver-driver-did-bsv)                                       | 1.3.1          | [1.0.0](https://github.com/teranode-group/TNG-Identity-bsvdid-method)                                             | [teranodegroup/universalresolver](https://hub.docker.com/repository/docker/teranodegroup/universalresolver/general)                                                                | BSV DID|
 | [did-andorra](https://github.com/davidgbvargroup/uni-resolver-driver-did-andorra)                              | 1.0.0          | [0.1.1](https://github.com/davidgbvargroup/did-andorra-method-spec/blob/main/spec.md)                             | [davidgbvargroup/uni-resolver-driver-did-andorra](https://hub.docker.com/r/davidgbvargroup/uni-resolver-driver-did-andorra)                                        | Andorra DID                                                                         |
 | [did-hedera](https://github.com/hiero-ledger/identity-collaboration-hub/tree/main/universal-resolver-driver)                               | 0.1.7          | [1.0](https://github.com/hashgraph/did-method/blob/master/hedera-did-method-specification.md)                               | [ghcr.io/hiero-ledger/uni-resolver-driver-did-hedera](ghcr.io/hiero-ledger/uni-resolver-driver-did-hedera:v0.1.7-8ae3a53)                                        | Hedera DID Method                                                            |
+| [did-nda](https://github.com/pilacorp/nda-resolver-driver)                                                          | 1.0.0          | [1.0.0](https://did-specs.ndachain.vn/)                                         | [pilacorp/driver-did-nda](https://github.com/orgs/pilacorp/packages/container/package/driver-did-nda)                                                                    | NDA DID                                                                             |
 
 
 ## More Information
