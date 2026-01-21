@@ -301,10 +301,16 @@ components:
   schemas:
     ResolveGetQuery:
       oneOf:
+        - type: object
+          additionalProperties:
+            type: object
         - $ref: "#/components/schemas/ResolutionOptions"
         - $ref: "#/components/schemas/DereferencingOptions"
     ResolvePostBody:
       oneOf:
+        - type: object
+          additionalProperties:
+            type: object
         - $ref: "#/components/schemas/ResolutionOptions"
         - $ref: "#/components/schemas/DereferencingOptions"
     ResolutionOptions:
