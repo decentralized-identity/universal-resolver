@@ -22,7 +22,7 @@ paths:
         other resource identified by the DID URL.</p>
         <p>See the <a href="<a href="https://www.w3.org/TR/did-resolution/">DID
         Resolution</a> specification for additional details.</p>
-      operationId: resolve
+      operationId: resolveGet
       tags:
         - Universal Resolver
       parameters:
@@ -62,12 +62,109 @@ paths:
         - in: query
           name: options
           schema:
-            oneOf:
-              - $ref: "#/components/schemas/ResolutionOptions"
-              - $ref: "#/components/schemas/DereferencingOptions"
-          description: The options for resolving the DID or dereferencing the DID URL.
+            $ref: "#/components/schemas/ResolveGetQuery"
           style: form
           explode: true
+          description: The options for resolving the DID or dereferencing the DID URL.
+      responses:
+        "200":
+          description: successfully resolved!
+          content:
+            application/did:
+              schema:
+                type: object
+                description: The DID document.
+                example:
+                  "@context": https://www.w3.org/ns/did/v1.1
+                  id: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+                  verificationMethod:
+                    - id: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw#key-1
+                      type: Ed25519VerificationKey2018
+                      publicKeyBase58: H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV
+            application/did-resolution:
+              schema:
+                $ref: "#/components/schemas/ResolutionResult"
+            application/did-url-dereferencing:
+              schema:
+                $ref: "#/components/schemas/DereferencingResult"
+        "400":
+          description: Invalid DID or DID URL.
+        "404":
+          description: DID or DID URL not found.
+        "406":
+          description: Representation not supported.
+        "410":
+          description: Successfully resolved, but DID is deactivated.
+          content:
+            application/did:
+              schema:
+                type: object
+                description: The deactivated DID document.
+            application/did-resolution:
+              schema:
+                $ref: "#/components/schemas/ResolutionResult"
+            application/did-url-dereferencing:
+              schema:
+                $ref: "#/components/schemas/DereferencingResult"
+        "500":
+          description: Internal Error.
+        "501":
+          description: DID method not supported.
+    post:
+      summary: Resolve a DID / Dereference a DID URL
+      description: <p>This endpoint either resolves a DID, or dereferences a DID URL.
+        When resolving a DID,
+        it takes the DID and resolution options as inputs, and
+        the output is a DID document plus metadata.
+        When dereferencing a DID URL,
+        it takes the DID URL and dereferencing options as inputs, and
+        the output is a DID document, a part of a DID document, or some
+        other resource identified by the DID URL.</p>
+        <p>See the <a href="<a href="https://www.w3.org/TR/did-resolution/">DID
+        Resolution</a> specification for additional details.</p>
+      operationId: resolvePost
+      tags:
+        - Universal Resolver
+      parameters:
+        - in: path
+          required: true
+          name: identifier
+          schema:
+            type: string
+          description: The DID to be resolved, or the DID URL to be dereferenced.
+          examples:
+            example1:
+              value: did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx
+              description: A DID using the `indy` method.
+            example2:
+              value: did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w
+              description: A DID using the `ion` method.
+            example3:
+              value: did:ebsi:z25ZZFS7FweHsm9MX2Qvc6gc
+              description: A DID using the `ebsi` method.
+        - in: header
+          required: false
+          name: Accept
+          schema:
+            type: string
+          description: The requested media type of the DID document representation or
+            DID resolution result.
+          examples:
+            application/did:
+              value: application/did
+              description: Media type of a DID document.
+            application/did-resolution:
+              value: application/did-resolution
+              description: Media type of a DID resolution result.
+            application/did-url-dereferencing:
+              value: application/did-url-dereferencing
+              description: Media type of a DID URL dereferencing result.
+      requestBody:
+        description: The options for resolving the DID or dereferencing the DID URL.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResolvePostBody"
       responses:
         "200":
           description: successfully resolved!
@@ -202,6 +299,14 @@ paths:
                     humanReadable: false
 components:
   schemas:
+    ResolveGetQuery:
+      oneOf:
+        - $ref: "#/components/schemas/ResolutionOptions"
+        - $ref: "#/components/schemas/DereferencingOptions"
+    ResolvePostBody:
+      oneOf:
+        - $ref: "#/components/schemas/ResolutionOptions"
+        - $ref: "#/components/schemas/DereferencingOptions"
     ResolutionOptions:
       description: The DID resolution options. See https://www.w3.org/TR/did-resolution/#did-resolution-options
       type: object
