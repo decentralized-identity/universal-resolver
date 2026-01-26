@@ -400,7 +400,7 @@ services:
       - "8080:8080"
 
   driver-did-near:
-    image: ghcr.io/kaytrust/driver-did-near:latest
+    image: ghcr.io/kaytrust/driver-did-near:2.0.0
     environment:
       CONTRACT_ID: ${uniresolver_driver_did_near_contract_id}
       RPC_URL: ${uniresolver_driver_did_near_rpc_url}
