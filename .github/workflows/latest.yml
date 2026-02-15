@@ -59,7 +59,7 @@ jobs:
           echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
 
       - name: Trigger AWS Kubernetes deployment
-        uses: actions/github-script@v6
+        uses: actions/github-script@v8
         env:
           BRANCH: ${{ steps.branch.outputs.branch_name }}
         with:
