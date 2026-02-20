@@ -427,3 +427,9 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_nda:http://driver-did-nda:8080/1.0/identifiers/$1}
       testIdentifiers:
         - did:nda:0x8c05abb015f5778ddeb0d0fa236fb8950f7bb637
+
+    - pattern: "^(did:webplus:.+)$"
+      url: ${uniresolver_web_driver_url_did_webplus:http://driver-did-webplus:80/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
+        - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug
