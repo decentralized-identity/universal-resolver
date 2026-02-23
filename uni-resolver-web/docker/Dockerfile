@@ -3,6 +3,13 @@
 FROM maven:3-eclipse-temurin-21 AS build
 MAINTAINER Markus Sabadello <markus@danubetech.com>
 
+# install dependencies
+
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get -y update && \
+    apt-get install -y --no-install-recommends patch && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # build uni-resolver-web
 
 ADD . /opt/universal-resolver
@@ -16,8 +23,6 @@ RUN cd /opt/universal-resolver/uni-resolver-web && mvn clean package -N
 # build image
 
 FROM eclipse-temurin:21-jre-alpine
-# For amd64 architecture use amd64/eclipse-temurin:17-jre-alpine
-
 MAINTAINER Markus Sabadello <markus@danubetech.com>
 
 WORKDIR /opt/universal-resolver/uni-resolver-web/

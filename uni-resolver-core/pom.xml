@@ -70,6 +70,25 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-patch-plugin</artifactId>
+				<configuration>
+					<patchDirectory>src/main/patches/</patchDirectory>
+					<targetDirectory>openapi/java-client-generated/</targetDirectory>
+					<naturalOrderProcessing>true</naturalOrderProcessing>
+					<skipApplication>false</skipApplication>
+				</configuration>
+				<executions>
+					<execution>
+						<id>patch</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>apply</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

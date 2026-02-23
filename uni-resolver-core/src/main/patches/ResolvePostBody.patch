@@ -1,0 +1,68 @@
+--- src/main/java/uniresolver/openapi/model/ResolvePostBody.java	2025-06-11 12:21:41.220700406 +0200
++++ src/main/java/uniresolver/openapi/model/ResolvePostBody.patched.java	2025-06-11 12:44:00.069400511 +0200
+@@ -129,17 +129,17 @@
+             try {
+                 boolean attemptParsing = true;
+                 // ensure that we respect type coercion as set on the client ObjectMapper
+-                if (Map<String, Object>.class.equals(Integer.class) || Map<String, Object>.class.equals(Long.class) || Map<String, Object>.class.equals(Float.class) || Map<String, Object>.class.equals(Double.class) || Map<String, Object>.class.equals(Boolean.class) || Map<String, Object>.class.equals(String.class)) {
++                if (Map.class.equals(Integer.class) || Map.class.equals(Long.class) || Map.class.equals(Float.class) || Map.class.equals(Double.class) || Map.class.equals(Boolean.class) || Map.class.equals(String.class)) {
+                     attemptParsing = typeCoercion;
+                     if (!attemptParsing) {
+-                        attemptParsing |= ((Map<String, Object>.class.equals(Integer.class) || Map<String, Object>.class.equals(Long.class)) && token == JsonToken.VALUE_NUMBER_INT);
+-                        attemptParsing |= ((Map<String, Object>.class.equals(Float.class) || Map<String, Object>.class.equals(Double.class)) && token == JsonToken.VALUE_NUMBER_FLOAT);
+-                        attemptParsing |= (Map<String, Object>.class.equals(Boolean.class) && (token == JsonToken.VALUE_FALSE || token == JsonToken.VALUE_TRUE));
+-                        attemptParsing |= (Map<String, Object>.class.equals(String.class) && token == JsonToken.VALUE_STRING);
++                        attemptParsing |= ((Map.class.equals(Integer.class) || Map.class.equals(Long.class)) && token == JsonToken.VALUE_NUMBER_INT);
++                        attemptParsing |= ((Map.class.equals(Float.class) || Map.class.equals(Double.class)) && token == JsonToken.VALUE_NUMBER_FLOAT);
++                        attemptParsing |= (Map.class.equals(Boolean.class) && (token == JsonToken.VALUE_FALSE || token == JsonToken.VALUE_TRUE));
++                        attemptParsing |= (Map.class.equals(String.class) && token == JsonToken.VALUE_STRING);
+                     }
+                 }
+                 if (attemptParsing) {
+-                    deserialized = tree.traverse(jp.getCodec()).readValueAs(Map<String, Object>.class);
++                    deserialized = tree.traverse(jp.getCodec()).readValueAs(Map.class);
+                     // TODO: there is no validation against JSON schema constraints
+                     // (min, max, enum, pattern...), this does not perform a strict JSON
+                     // validation, which means the 'match' count may be higher than it should be.
+@@ -273,7 +273,7 @@
+
+     static {
+         schemas.put("DereferencingOptions", DereferencingOptions.class);
+-        schemas.put("Map<String, Object>", Map<String, Object>.class);
++        schemas.put("Map<String, Object>", Map.class);
+         schemas.put("ResolutionOptions", ResolutionOptions.class);
+         JSON.registerDescendants(ResolvePostBody.class, Collections.unmodifiableMap(schemas));
+     }
+@@ -298,7 +298,7 @@
+             return;
+         }
+
+-        if (JSON.isInstanceOf(Map<String, Object>.class, instance, new HashSet<Class<?>>())) {
++        if (JSON.isInstanceOf(Map.class, instance, new HashSet<Class<?>>())) {
+             super.setActualInstance(instance);
+             return;
+         }
+@@ -340,7 +340,7 @@
+      * @return The actual instance of `Map<String, Object>`
+      * @throws ClassCastException if the instance is not `Map<String, Object>`
+      */
+-    public Map<String, Object> getMap<String, Object>() throws ClassCastException {
++    public Map<String, Object> getMap() throws ClassCastException {
+         return (Map<String, Object>)super.getActualInstance();
+     }
+
+@@ -389,12 +389,12 @@
+
+     StringJoiner joiner = new StringJoiner("&");
+
+-    if (getActualInstance() instanceof Map<String, Object>) {
++    if (getActualInstance() instanceof Map) {
+         if (getActualInstance() != null) {
+           for (String _key : ((Map<String, Object>)getActualInstance()).keySet()) {
+             joiner.add(String.format(java.util.Locale.ROOT, "%sone_of_0%s%s=%s", prefix, suffix,
+                 "".equals(suffix) ? "" : String.format(java.util.Locale.ROOT, "%s%d%s", containerPrefix, _key, containerSuffix),
+-                getActualInstance().get(_key), ApiClient.urlEncode(String.valueOf(((Map<String, Object>)getActualInstance()).get(_key)))));
++                ((Map<String, Object>)getActualInstance()).get(_key), ApiClient.urlEncode(String.valueOf(((Map<String, Object>)getActualInstance()).get(_key)))));
+           }
+         }
+         return joiner.toString();
