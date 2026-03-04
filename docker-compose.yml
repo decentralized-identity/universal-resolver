@@ -79,6 +79,7 @@ services:
       uniresolver_web_driver_url_did_tgrid:
       uniresolver_web_driver_url_did_empe:
       uniresolver_web_driver_url_did_hedera:
+      uniresolver_web_driver_url_did_nfd:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -434,3 +435,11 @@ services:
     image: ghcr.io/pilacorp/driver-did-nda:1.0.0
     ports:
       - "8166:8080"
+
+  driver-did-nfd:
+    image: ghcr.io/txnlab/did-nfd-resolver:v1.0.0
+    ports:
+      - "8167:8080"
+    environment:
+      ALGOD_URL: ${uniresolver_driver_did_nfd_algod_url}
+      ALGOD_TOKEN: ${uniresolver_driver_did_nfd_algod_token}
