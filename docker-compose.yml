@@ -437,7 +437,7 @@ services:
       - "8166:8080"
 
   driver-did-webplus:
-    image: ghcr.io/ledgerdomain/did-webplus-urd:v0.1.0
+    image: ghcr.io/ledgerdomain/did-webplus-urd:v0.1.1
     environment:
       DID_WEBPLUS_URD_DATABASE_URL: ${uniresolver_driver_did_webplus_DID_WEBPLUS_URD_DATABASE_URL}
       DID_WEBPLUS_URD_LISTEN_PORT: ${uniresolver_driver_did_webplus_DID_WEBPLUS_URD_LISTEN_PORT}
