@@ -361,7 +361,7 @@ services:
     environment:
       NETWORK: ${uniresolver_driver_did_iota_network}
   driver-did-iden3:
-    image: ghcr.io/iden3/driver-did-iden3:v0.0.8
+    image: ghcr.io/iden3/driver-did-iden3:v1.0.6
     ports:
       - "8152:8080"
   driver-did-prism:
