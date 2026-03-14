@@ -427,3 +427,9 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_nda:http://driver-did-nda:8080/1.0/identifiers/$1}
       testIdentifiers:
         - did:nda:0x8c05abb015f5778ddeb0d0fa236fb8950f7bb637
+
+    - pattern: "^(did:nfd:.+)$"
+      url: ${uniresolver_web_driver_url_did_nfd:http://driver-did-nfd:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:nfd:nfdomains.algo
+        - did:nfd:algorand.algo
