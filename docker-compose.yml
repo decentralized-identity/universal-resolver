@@ -79,6 +79,7 @@ services:
       uniresolver_web_driver_url_did_tgrid:
       uniresolver_web_driver_url_did_empe:
       uniresolver_web_driver_url_did_hedera:
+      uniresolver_web_driver_url_did_nfd:
       uniresolver_web_driver_url_did_webplus:
 
   driver-did-btcr:
@@ -361,7 +362,7 @@ services:
     environment:
       NETWORK: ${uniresolver_driver_did_iota_network}
   driver-did-iden3:
-    image: ghcr.io/iden3/driver-did-iden3:v0.0.8
+    image: ghcr.io/iden3/driver-did-iden3:v1.0.6
     ports:
       - "8152:8080"
   driver-did-prism:
@@ -369,7 +370,7 @@ services:
     ports:
       - "8153:9090"
   driver-did-webvh:
-    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.5.6-9d9a267
+    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.7.2-8ce7982
     ports:
       - "8154:8080"
   driver-did-quarkid:
@@ -435,6 +436,14 @@ services:
     image: ghcr.io/pilacorp/driver-did-nda:1.0.0
     ports:
       - "8166:8080"
+
+  driver-did-nfd:
+    image: txnlab/did-nfd-resolver:0.1.0
+    ports:
+      - "8167:8080"
+    environment:
+      ALGOD_URL: ${uniresolver_driver_did_nfd_algod_url}
+      ALGOD_TOKEN: ${uniresolver_driver_did_nfd_algod_token}
 
   driver-did-webplus:
     image: ghcr.io/ledgerdomain/did-webplus-urd:v0.1.2
