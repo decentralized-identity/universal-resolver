@@ -441,7 +441,7 @@ services:
     ports:
       - "8180:8081"
     environment:
-      - RESOLVER_API_URL=https://did-art.articulator.ai
+      RESOLVER_API_URL: ${uniresolver_driver_did_art_RESOLVER_API_URL}
 
   driver-did-nfd:
     image: txnlab/did-nfd-resolver:0.1.0
