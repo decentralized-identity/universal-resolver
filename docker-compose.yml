@@ -80,6 +80,7 @@ services:
       uniresolver_web_driver_url_did_empe:
       uniresolver_web_driver_url_did_hedera:
       uniresolver_web_driver_url_did_nfd:
+      uniresolver_web_driver_url_did_bluchain:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -443,3 +444,11 @@ services:
     environment:
       ALGOD_URL: ${uniresolver_driver_did_nfd_algod_url}
       ALGOD_TOKEN: ${uniresolver_driver_did_nfd_algod_token}
+
+  driver-did-bluchain:
+    image: bluchain/did-driver-bluchain:v1.0.0
+    environment:
+      BASE_URL: ${uniresolver_driver_did_bluchain_BASE_URL}
+      PORT: 8080
+    ports:
+      - "8168:8080"
