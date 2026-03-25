@@ -428,6 +428,11 @@ uniresolver:
       testIdentifiers:
         - did:nda:0x8c05abb015f5778ddeb0d0fa236fb8950f7bb637
 
+    - pattern: "^(did:art:.+)$"
+      url: ${uniresolver_web_driver_url_did_art:http://driver-did-art:8081/1.0/identifiers/$1}
+      testIdentifiers:
+        - "did:art:hkust:0x471feeca903f59d2c196c710b9ac8de3d6fa985be65447fc54365c8557d6a955"
+        
     - pattern: "^(did:nfd:.+)$"
       url: ${uniresolver_web_driver_url_did_nfd:http://driver-did-nfd:8080/1.0/identifiers/$1}
       testIdentifiers:
