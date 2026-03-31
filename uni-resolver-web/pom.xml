@@ -12,8 +12,9 @@
 	</parent>
 
     <properties>
-        <spring.boot.version>4.0.1</spring.boot.version>
-        <io.micrometer.micrometer-registry-prometheus.version>1.16.2</io.micrometer.micrometer-registry-prometheus.version>
+        <spring.boot.version>4.0.5</spring.boot.version>
+        <org.apache.logging.log4j-log4j-layout-template-json.version>2.25.4</org.apache.logging.log4j-log4j-layout-template-json.version>
+        <io.micrometer.micrometer-registry-prometheus.version>1.16.4</io.micrometer.micrometer-registry-prometheus.version>
     </properties>
 
 	<build>
@@ -47,6 +48,11 @@
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-layout-template-json</artifactId>
+                <version>${org.apache.logging.log4j-log4j-layout-template-json.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.micrometer</groupId>
