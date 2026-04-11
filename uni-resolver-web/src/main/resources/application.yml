@@ -438,3 +438,9 @@ uniresolver:
       testIdentifiers:
         - did:nfd:nfdomains.algo
         - did:nfd:algorand.algo
+
+    - pattern: "^(did:moltrust:.+)$"
+      url: ${uniresolver_web_driver_url_did_moltrust:http://driver-did-moltrust:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:moltrust:d34ed796a4dc4698
+        - did:moltrust:ambassador0001

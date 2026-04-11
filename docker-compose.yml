@@ -450,3 +450,7 @@ services:
     environment:
       ALGOD_URL: ${uniresolver_driver_did_nfd_algod_url}
       ALGOD_TOKEN: ${uniresolver_driver_did_nfd_algod_token}
+  driver-did-moltrust:
+    image: moltycel/uni-resolver-driver-did-moltrust:latest
+    ports:
+      - "8122:8080"

@@ -206,6 +206,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-nfd](https://github.com/TxnLab/nfd-did)                                          | 0.1.0          | [1.0](https://github.com/TxnLab/nfd-did/blob/main/docs/DID_NFD_METHOD_SPEC.md)                                | [txnlab/did-nfd-resolver](https://hub.docker.com/repository/docker/txnlab/did-nfd-resolver)                                                                                  | NFDomains DID Method                                                                |
 
 | [did-art](https://github.com/ArtracID/ArtracID-DID-ART-Method) | 1.0.0 | [spec](https://github.com/ArtracID/ArtracID-DID-ART-Method) | [worthyopponent30/did-art-resolver](https://hub.docker.com/r/worthyopponent30/did-art-resolver) | DID:ART for digital artwork |
+| [did-moltrust](https://github.com/MoltyCel/uni-resolver-driver-did-moltrust) | 1.0.0 | [0.1](https://moltrust.ch/did-method-spec.html) | [moltycel/uni-resolver-driver-did-moltrust](https://hub.docker.com/r/moltycel/uni-resolver-driver-did-moltrust) | MolTrust AI Agent Identity |
 
 
 ## More Information
