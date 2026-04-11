@@ -450,3 +450,8 @@ services:
     environment:
       ALGOD_URL: ${uniresolver_driver_did_nfd_algod_url}
       ALGOD_TOKEN: ${uniresolver_driver_did_nfd_algod_token}
+
+  driver-did-moltrust:
+    image: moltrust/driver-did-moltrust:1.0.0
+    ports:
+      - "8168:8080"
