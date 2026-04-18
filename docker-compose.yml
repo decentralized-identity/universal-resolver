@@ -450,3 +450,8 @@ services:
     environment:
       ALGOD_URL: ${uniresolver_driver_did_nfd_algod_url}
       ALGOD_TOKEN: ${uniresolver_driver_did_nfd_algod_token}
+
+  driver-did-cuil:
+    image: firmared/uni-resolver-driver-did-cuil:1.0.0
+    ports:
+      - "8181:8080"

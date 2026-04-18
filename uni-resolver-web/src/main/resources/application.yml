@@ -438,3 +438,8 @@ uniresolver:
       testIdentifiers:
         - did:nfd:nfdomains.algo
         - did:nfd:algorand.algo
+    - pattern: "^(did:cuil:.+)$"
+      url: ${uniresolver_web_driver_url_did_cuil:http://driver-did-cuil:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:cuil:20378029067
+        - did:cuil:27371284609
