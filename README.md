@@ -206,6 +206,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-nfd](https://github.com/TxnLab/nfd-did)                                          | 0.1.0          | [1.0](https://github.com/TxnLab/nfd-did/blob/main/docs/DID_NFD_METHOD_SPEC.md)                                | [txnlab/did-nfd-resolver](https://hub.docker.com/repository/docker/txnlab/did-nfd-resolver)                                                                                  | NFDomains DID Method                                                                |
 
 | [did-art](https://github.com/ArtracID/ArtracID-DID-ART-Method) | 1.0.0 | [spec](https://github.com/ArtracID/ArtracID-DID-ART-Method) | [worthyopponent30/did-art-resolver](https://hub.docker.com/r/worthyopponent30/did-art-resolver) | DID:ART for digital artwork |
+| [did-cuil](https://github.com/firmared/uni-resolver-driver-did-cuil) | 1.0.0 | [1.0](https://firmared.com/did-spec/cuil/v1) | [firmared/uni-resolver-driver-did-cuil](https://hub.docker.com/r/firmared/uni-resolver-driver-did-cuil) | protocolo@firmared.com |
 
 
 ## More Information
