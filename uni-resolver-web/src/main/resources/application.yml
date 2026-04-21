@@ -438,3 +438,13 @@ uniresolver:
       testIdentifiers:
         - did:nfd:nfdomains.algo
         - did:nfd:algorand.algo
+
+    - pattern: "^(did:battua:.+)$"
+      url: ${uniresolver_web_driver_url_did_battua:http://driver-did-battua:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:battua:1:0x74b466c1dedba290b7e17db99fcaf824a1c10a75
+      traits:
+        deactivatable: false
+        enumerable: false
+        historyAvailable: true
+        humanReadable: false
