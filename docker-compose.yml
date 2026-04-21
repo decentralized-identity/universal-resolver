@@ -80,6 +80,7 @@ services:
       uniresolver_web_driver_url_did_empe:
       uniresolver_web_driver_url_did_hedera:
       uniresolver_web_driver_url_did_nfd:
+      uniresolver_web_driver_url_did_battua:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -450,3 +451,10 @@ services:
     environment:
       ALGOD_URL: ${uniresolver_driver_did_nfd_algod_url}
       ALGOD_TOKEN: ${uniresolver_driver_did_nfd_algod_token}
+
+  driver-did-battua:
+    image: aurigraph/did-battua-driver:0.1.0
+    ports:
+      - "8168:8080"
+    environment:
+      BATTUA_API_URL: ${uniresolver_driver_did_battua_api_url:-https://battua.io}
