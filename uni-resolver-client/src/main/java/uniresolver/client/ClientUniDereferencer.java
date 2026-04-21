@@ -66,8 +66,8 @@ public class ClientUniDereferencer implements UniDereferencer {
 		StringBuilder uriString = new StringBuilder(this.getDereferenceUri().toString());
 
 		if (! uriString.toString().endsWith("/")) uriString.append("/");
-		Map<String, Object> optionsForHttp = HttpBindingClientUtil.optionsForHttp(dereferenceOptions);
-		if (this.getSupportsOptions() && ! optionsForHttp.isEmpty()) {
+		Map<String, Object> optionsForHttp;
+		if (this.getSupportsOptions() && ! (optionsForHttp = HttpBindingClientUtil.optionsForHttp(dereferenceOptions)).isEmpty()) {
 			uriString.append(URLEncoder.encode(didUrlString, StandardCharsets.UTF_8));
 			uriString.append("?");
 			uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));

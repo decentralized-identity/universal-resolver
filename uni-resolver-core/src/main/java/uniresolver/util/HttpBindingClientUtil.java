@@ -193,12 +193,15 @@ public class HttpBindingClientUtil {
 
     public static Map<String, Object> optionsForHttp(Map<String, Object> options) {
 
-        return options
+        Map<String, Object> optionsForHttp = options
                 .entrySet()
                 .stream()
                 .filter(x -> ! "accept".equals(x.getKey()))
                 .filter(x -> ! x.getKey().startsWith("_"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        if (log.isDebugEnabled()) log.debug("optionsForHttp: " + optionsForHttp);
+        return optionsForHttp;
     }
 
     public static String httpQueryStringForOptions(Map<String, Object> options) {

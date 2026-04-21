@@ -107,8 +107,8 @@ public class HttpDriver implements Driver {
 		} else {
 
 			if (! uriString.toString().endsWith("/")) uriString.append("/");
-			Map<String, Object> optionsForHttp = HttpBindingClientUtil.optionsForHttp(resolutionOptions);
-			if (this.getSupportsOptions() && ! optionsForHttp.isEmpty()) {
+			Map<String, Object> optionsForHttp;
+			if (this.getSupportsOptions() && ! (optionsForHttp = HttpBindingClientUtil.optionsForHttp(resolutionOptions)).isEmpty()) {
 				uriString.append(URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
 				uriString.append("?");
 				uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));
