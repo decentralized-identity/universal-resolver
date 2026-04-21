@@ -438,3 +438,13 @@ uniresolver:
       testIdentifiers:
         - did:nfd:nfdomains.algo
         - did:nfd:algorand.algo
+    - pattern: "^(did:pki:.+)$"
+      url: ${uniresolver_web_driver_url_did_pki:http://driver-did-pki:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:pki:cr:raiz-nacional
+        - did:pki:cr:sinpe:persona-fisica
+    - pattern: "^(did:sns:.+)$"
+      url: ${uniresolver_web_driver_url_did_sns:http://driver-did-sns:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:sns:chongkan.attestto
+        - did:sns:attestto

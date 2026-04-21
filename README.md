@@ -206,6 +206,8 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-nfd](https://github.com/TxnLab/nfd-did)                                          | 0.1.0          | [1.0](https://github.com/TxnLab/nfd-did/blob/main/docs/DID_NFD_METHOD_SPEC.md)                                | [txnlab/did-nfd-resolver](https://hub.docker.com/repository/docker/txnlab/did-nfd-resolver)                                                                                  | NFDomains DID Method                                                                |
 
 | [did-art](https://github.com/ArtracID/ArtracID-DID-ART-Method) | 1.0.0 | [spec](https://github.com/ArtracID/ArtracID-DID-ART-Method) | [worthyopponent30/did-art-resolver](https://hub.docker.com/r/worthyopponent30/did-art-resolver) | DID:ART for digital artwork |
+| [did-pki](https://github.com/Attestto-com/did-pki-spec) | 0.1.0 | [0.1.0](https://github.com/Attestto-com/did-pki-spec) | [attestto/attestto-did-resolver](https://github.com/Attestto-com/attestto-did-resolver) | National PKI hierarchies bridge to DID ecosystem |
+| [did-sns](https://github.com/Attestto-com/did-sns-spec) | 0.1.0 | [0.4.0](https://github.com/Attestto-com/did-sns-spec) | [attestto/attestto-did-resolver](https://github.com/Attestto-com/attestto-did-resolver) | Solana Name Service (alias-anchored identity) |
 
 
 ## More Information

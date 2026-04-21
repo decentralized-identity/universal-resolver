@@ -450,3 +450,15 @@ services:
     environment:
       ALGOD_URL: ${uniresolver_driver_did_nfd_algod_url}
       ALGOD_TOKEN: ${uniresolver_driver_did_nfd_algod_token}
+
+  driver-did-pki:
+    image: attestto/attestto-did-resolver:0.1.0
+    ports:
+      - "8168:8080"
+
+  driver-did-sns:
+    image: attestto/attestto-did-resolver:0.1.0
+    ports:
+      - "8169:8080"
+    environment:
+      SOLANA_RPC_URL: ${uniresolver_driver_did_sns_solanaRpcUrl}
