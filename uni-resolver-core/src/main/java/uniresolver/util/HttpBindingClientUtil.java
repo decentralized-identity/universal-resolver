@@ -17,12 +17,14 @@ import uniresolver.result.ResolveResult;
 import uniresolver.result.Result;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class HttpBindingClientUtil {
 
@@ -186,7 +188,93 @@ public class HttpBindingClientUtil {
     }
 
     /*
-     * Media Type methods
+     * Options
+     */
+
+    public static Map<String, Object> optionsForHttp(Map<String, Object> options) {
+
+        return options
+                .entrySet()
+                .stream()
+                .filter(x -> ! "accept".equals(x.getKey()))
+                .filter(x -> ! x.getKey().startsWith("_"))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public static String httpQueryStringForOptions(Map<String, Object> options) {
+
+        boolean containsOnlyStrings = options.values().stream().allMatch(value -> value instanceof String);
+
+        String httpQueryString;
+        if (containsOnlyStrings) {
+            StringBuilder queryString = new StringBuilder();
+            for (Map.Entry<String, Object> option : options.entrySet()) {
+                queryString.append(URLEncoder.encode(option.getKey(), StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode((String) option.getValue(), StandardCharsets.UTF_8)).append("&");
+            }
+            if (queryString.lastIndexOf("&") == queryString.length() - 1) queryString.deleteCharAt(queryString.length() - 1);
+            httpQueryString = queryString.toString();
+        } else {
+            try {
+                httpQueryString = URLEncoder.encode(objectMapper.writeValueAsString(options), StandardCharsets.UTF_8);
+            } catch (JsonProcessingException ex) {
+                throw new IllegalArgumentException("Cannot serialize options " + options + ": " + ex.getMessage(), ex);
+            }
+        }
+
+        if (log.isDebugEnabled()) log.debug("httpQueryStringForOptions: " + httpQueryString);
+        return httpQueryString;
+    }
+
+    /*
+     * Content type
+     */
+
+    public static boolean isResolveResultContentType(ContentType contentType) {
+        boolean isResolveResultContentType = false;
+        if (Objects.equals(ResolveResult.CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
+                Objects.equals(ResolveResult.CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isResolveResultContentType = true;
+        if (Objects.equals(ResolveResult.LEGACY_CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
+                Objects.equals(ResolveResult.LEGACY_CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isResolveResultContentType = true;
+        if (log.isDebugEnabled()) log.debug("isResolveResultContentType({}): {}", contentType, isResolveResultContentType);
+        return isResolveResultContentType;
+    }
+
+    public static boolean isDereferenceResultContentType(ContentType contentType) {
+        boolean isDereferenceResultContentType = false;
+        if (Objects.equals(DereferenceResult.CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
+                Objects.equals(DereferenceResult.CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isDereferenceResultContentType = true;
+        if (Objects.equals(DereferenceResult.LEGACY_CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
+                Objects.equals(DereferenceResult.LEGACY_CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isDereferenceResultContentType = true;
+        if (log.isDebugEnabled()) log.debug("isDereferenceResultContentType({}): {}", contentType, isDereferenceResultContentType);
+        return isDereferenceResultContentType;
+    }
+
+    public static boolean isResolveResultHttpContent(String httpContentString) {
+        boolean isResolveResultHttpContent;
+        try {
+            Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
+            isResolveResultHttpContent = json.containsKey("didResolutionMetadata") || json.containsKey("didDocumentMetadata") || json.containsKey("didDocument") || json.containsKey("didDocumentStream");
+        } catch (JsonProcessingException ex) {
+            isResolveResultHttpContent = false;
+        }
+        if (log.isDebugEnabled()) log.debug("isResolveResultHttpContent: {}", isResolveResultHttpContent);
+        return isResolveResultHttpContent;
+    }
+
+    public static boolean isDereferenceResultHttpContent(String httpContentString) {
+        boolean isDereferenceResultHttpContent;
+        try {
+            Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
+            isDereferenceResultHttpContent = json.containsKey("dereferencingMetadata") || json.containsKey("contentMetadata") || json.containsKey("content") || json.containsKey("contentStream");
+        } catch (JsonProcessingException ex) {
+            isDereferenceResultHttpContent = false;
+        }
+        if (log.isDebugEnabled()) log.debug("isDereferenceResultHttpContent: {}", isDereferenceResultHttpContent);
+        return isDereferenceResultHttpContent;
+    }
+
+    /*
+     * Helper methods
      */
 
     private static String resolveResultContentTypeFromHttpBodyResolveResult(ResolveResult resolveResult) {
@@ -267,53 +355,5 @@ public class HttpBindingClientUtil {
             if (errorDetail != null) result.setErrorDetail(errorDetail);
             if (log.isDebugEnabled()) log.debug("Based on error '" + error + "' and '" + errorMessage + "', determined error object: " + result.getFunctionMetadata().get("error"));
         }
-    }
-
-    /*
-     * Helper methods
-     */
-
-    public static boolean isResolveResultContentType(ContentType contentType) {
-        boolean isResolveResultContentType = false;
-        if (Objects.equals(ResolveResult.CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
-                Objects.equals(ResolveResult.CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isResolveResultContentType = true;
-        if (Objects.equals(ResolveResult.LEGACY_CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
-                Objects.equals(ResolveResult.LEGACY_CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isResolveResultContentType = true;
-        if (log.isDebugEnabled()) log.debug("isResolveResultContentType({}): {}", contentType, isResolveResultContentType);
-        return isResolveResultContentType;
-    }
-
-    public static boolean isDereferenceResultContentType(ContentType contentType) {
-        boolean isDereferenceResultContentType = false;
-        if (Objects.equals(DereferenceResult.CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
-                Objects.equals(DereferenceResult.CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isDereferenceResultContentType = true;
-        if (Objects.equals(DereferenceResult.LEGACY_CONTENT_TYPE.getMimeType(), contentType.getMimeType()) &&
-                Objects.equals(DereferenceResult.LEGACY_CONTENT_TYPE.getParameter("profile"), contentType.getParameter("profile"))) isDereferenceResultContentType = true;
-        if (log.isDebugEnabled()) log.debug("isDereferenceResultContentType({}): {}", contentType, isDereferenceResultContentType);
-        return isDereferenceResultContentType;
-    }
-
-    public static boolean isResolveResultHttpContent(String httpContentString) {
-        boolean isResolveResultHttpContent;
-        try {
-            Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
-            isResolveResultHttpContent = json.containsKey("didResolutionMetadata") || json.containsKey("didDocumentMetadata") || json.containsKey("didDocument") || json.containsKey("didDocumentStream");
-        } catch (JsonProcessingException ex) {
-            isResolveResultHttpContent = false;
-        }
-        if (log.isDebugEnabled()) log.debug("isResolveResultHttpContent: {}", isResolveResultHttpContent);
-        return isResolveResultHttpContent;
-    }
-
-    public static boolean isDereferenceResultHttpContent(String httpContentString) {
-        boolean isDereferenceResultHttpContent;
-        try {
-            Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
-            isDereferenceResultHttpContent = json.containsKey("dereferencingMetadata") || json.containsKey("contentMetadata") || json.containsKey("content") || json.containsKey("contentStream");
-        } catch (JsonProcessingException ex) {
-            isDereferenceResultHttpContent = false;
-        }
-        if (log.isDebugEnabled()) log.debug("isDereferenceResultHttpContent: {}", isDereferenceResultHttpContent);
-        return isDereferenceResultHttpContent;
     }
 }
