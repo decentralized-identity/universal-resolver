@@ -423,6 +423,13 @@ uniresolver:
         - did:hedera:testnet:23g2MabDNq3KyB7oeH9yYZsJTRVeQ24DqX8o6scB98e3_0.0.5217215
         - did:hedera:testnet:ChQreHtT3MgjuVchee9kimLxsWXxjQRzeTuCjcXvkh7j_0.0.7232365
 
+    - pattern: "^(did:bluchain:.+)$"
+      url: ${uniresolver_web_driver_url_did_bluchain:http://driver-did-bluchain:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:bluchain:issuer:9scF2JkUWfgcXhCdnn4QtBDkLFk5y4q5RD7316y8jEjR
+        - did:bluchain:badge:5aoCyvG4c4A15hZxSbzoAYhnWBH2Hfqzhrh1d3w5KYHo
+        - did:bluchain:certificate:8x9ufHvHg41Xvmu1F8aZdvoxn9CwHiRSqTGjpqzr6fEk
+
     - pattern: "^(did:nda:.+)$"
       url: ${uniresolver_web_driver_url_did_nda:http://driver-did-nda:8080/1.0/identifiers/$1}
       testIdentifiers:
