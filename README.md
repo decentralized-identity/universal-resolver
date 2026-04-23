@@ -105,6 +105,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:hedera:testnet:zHirM7oP62rzBmw4oSbWZTSeTLzb9zrDTfQa1cdMBWCPp_0.0.7280148
 	curl -X GET http://localhost:8080/1.0/identifiers/did:nda:0x8c05abb015f5778ddeb0d0fa236fb8950f7bb637
 	curl -X GET http://localhost:8080/1.0/identifiers/did:nfd:nfdomains.algo
+	curl -X GET http://localhost:8080/1.0/identifiers/did:soul:541e2553-5b46-4ef3-a8c6-4b4597af831b
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -206,6 +207,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-nfd](https://github.com/TxnLab/nfd-did)                                          | 0.1.0          | [1.0](https://github.com/TxnLab/nfd-did/blob/main/docs/DID_NFD_METHOD_SPEC.md)                                | [txnlab/did-nfd-resolver](https://hub.docker.com/repository/docker/txnlab/did-nfd-resolver)                                                                                  | NFDomains DID Method                                                                |
 
 | [did-art](https://github.com/ArtracID/ArtracID-DID-ART-Method) | 1.0.0 | [spec](https://github.com/ArtracID/ArtracID-DID-ART-Method) | [worthyopponent30/did-art-resolver](https://hub.docker.com/r/worthyopponent30/did-art-resolver) | DID:ART for digital artwork |
+| [did-soul](https://github.com/Soulverse-Ecosystem/uni-resolver-driver-did-soul) | 0.1.0 | missing | [soulverse/uni-resolver-driver-did-soul:latest](https://hub.docker.com/r/soulverse/uni-resolver-driver-did-soul) | Soulverse DID method using IPFS for DID document storage |
 
 
 ## More Information
