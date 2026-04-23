@@ -107,11 +107,11 @@ public class HttpDriver implements Driver {
 		} else {
 
 			if (! uriString.toString().endsWith("/")) uriString.append("/");
-			Map<String, Object> optionsForDriver = optionsForDriver(resolutionOptions);
-			if (this.getSupportsOptions() && ! optionsForDriver.isEmpty()) {
+			Map<String, Object> optionsForHttp;
+			if (this.getSupportsOptions() && ! (optionsForHttp = HttpBindingClientUtil.optionsForHttp(resolutionOptions)).isEmpty()) {
 				uriString.append(URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
 				uriString.append("?");
-				uriString.append(driverHttpQueryStringForOptions(optionsForDriver));
+				uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));
 			} else {
 				uriString.append(matchedString);
 			}
@@ -242,11 +242,11 @@ public class HttpDriver implements Driver {
 		} else {
 
 			if (! uriString.toString().endsWith("/")) uriString.append("/");
-			Map<String, Object> optionsForDriver = optionsForDriver(dereferenceOptions);
-			if (this.getSupportsOptions() && ! optionsForDriver.isEmpty()) {
+			Map<String, Object> optionsForHttp = HttpBindingClientUtil.optionsForHttp(dereferenceOptions);
+			if (this.getSupportsOptions() && ! optionsForHttp.isEmpty()) {
 				uriString.append(URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
 				uriString.append("?");
-				uriString.append(driverHttpQueryStringForOptions(optionsForDriver));
+				uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));
 			} else {
 				uriString.append(matchedString);
 			}
@@ -433,40 +433,6 @@ public class HttpDriver implements Driver {
 	/*
 	 * Helper methods
 	 */
-
-	private static Map<String, Object> optionsForDriver(Map<String, Object> options) {
-
-		return options
-				.entrySet()
-				.stream()
-				.filter(x -> ! "accept".equals(x.getKey()))
-				.filter(x -> ! x.getKey().startsWith("_"))
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-	}
-
-	private static String driverHttpQueryStringForOptions(Map<String, Object> options) {
-
-		boolean containsOnlyStrings = options.values().stream().allMatch(value -> value instanceof String);
-
-		String driverHttpQueryString;
-		if (containsOnlyStrings) {
-			StringBuilder queryString = new StringBuilder();
-			for (Map.Entry<String, Object> option : options.entrySet()) {
-				queryString.append(URLEncoder.encode(option.getKey(), StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode((String) option.getValue(), StandardCharsets.UTF_8)).append("&");
-			}
-			if (queryString.lastIndexOf("&") == queryString.length() - 1) queryString.deleteCharAt(queryString.length() - 1);
-            driverHttpQueryString = queryString.toString();
-		} else {
-            try {
-				driverHttpQueryString = URLEncoder.encode(objectMapper.writeValueAsString(options), StandardCharsets.UTF_8);
-            } catch (JsonProcessingException ex) {
-                throw new IllegalArgumentException("Cannot serialize options " + options + ": " + ex.getMessage(), ex);
-            }
-        }
-
-		if (log.isDebugEnabled()) log.debug("driverHttpQueryStringForOptions: " + driverHttpQueryString);
-		return driverHttpQueryString;
-	}
 
 	/*
 	 * Getters and setters

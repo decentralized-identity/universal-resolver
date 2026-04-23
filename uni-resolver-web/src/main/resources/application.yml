@@ -445,3 +445,9 @@ uniresolver:
       testIdentifiers:
         - did:nfd:nfdomains.algo
         - did:nfd:algorand.algo
+    
+    - pattern: "^(did:webplus:.+)$"
+      url: ${uniresolver_web_driver_url_did_webplus:http://driver-did-webplus:80/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
+        - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug
