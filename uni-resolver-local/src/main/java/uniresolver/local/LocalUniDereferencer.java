@@ -206,11 +206,14 @@ public class LocalUniDereferencer implements UniDereferencer {
             return null;
         }
 
+        LocalUniResolver localUniResolver = (LocalUniResolver) this.getUniResolver();
         DereferenceResult driverDereferenceResult = null;
         Driver usedDriver = null;
+        String selectedEntryId = localUniResolver.authorizedEntryIdOption(dereferenceOptions);
 
-        for (Driver driver : ((LocalUniResolver) this.getUniResolver()).getDrivers()) {
+        for (Driver driver : localUniResolver.getDrivers()) {
 
+            if (! LocalUniResolver.shouldAttemptDriver(driver, selectedEntryId)) continue;
             if (driver instanceof HttpDriver httpDriver && ! httpDriver.getSupportsDereference()) continue;
 
             if (log.isDebugEnabled()) log.debug("Attempting to dereference " + didUrl + " with driver " + driver.getClass().getSimpleName());
@@ -229,6 +232,7 @@ public class LocalUniDereferencer implements UniDereferencer {
 
             driverDereferenceResult.getDereferencingMetadata().put("pattern", ((HttpDriver) usedDriver).getPattern().pattern());
             driverDereferenceResult.getDereferencingMetadata().put("driverUrl", ((HttpDriver) usedDriver).getResolveUri());
+            if (((HttpDriver) usedDriver).getId() != null) driverDereferenceResult.getDereferencingMetadata().put("entryId", ((HttpDriver) usedDriver).getId());
 
             if (log.isDebugEnabled()) log.debug("Resolved " + didUrl + " with driver " + usedDriver.getClass().getSimpleName() + " and pattern " + ((HttpDriver) usedDriver).getPattern().pattern());
         } else {
@@ -292,4 +296,5 @@ public class LocalUniDereferencer implements UniDereferencer {
     public void setExtensions(List<DereferencerExtension> extensions) {
         this.extensions = extensions;
     }
+
 }

@@ -15,10 +15,14 @@ import uniresolver.local.extensions.util.ExecutionStateUtil;
 import uniresolver.result.ResolveResult;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.*;
 
 public class LocalUniResolver implements UniResolver {
 
+	public static final String ENTRY_ID_OPTION = "_entryId";
+	public static final String ENTRY_PROBE_TOKEN_OPTION = "_entryProbeToken";
 	public static final List<ResolverExtension> DEFAULT_EXTENSIONS = List.of(
 	);
 
@@ -26,6 +30,7 @@ public class LocalUniResolver implements UniResolver {
 
 	private List<Driver> drivers = new ArrayList<>();
 	private List<ResolverExtension> extensions = new ArrayList<>(DEFAULT_EXTENSIONS);
+	private String entryProbeToken;
 
 	public LocalUniResolver() {
 
@@ -143,8 +148,10 @@ public class LocalUniResolver implements UniResolver {
 
 		ResolveResult driverResolveResult = null;
 		Driver usedDriver = null;
+		String selectedEntryId = this.authorizedEntryIdOption(resolutionOptions);
 
 		for (Driver driver : this.getDrivers()) {
+			if (! shouldAttemptDriver(driver, selectedEntryId)) continue;
 
 			if (log.isDebugEnabled()) log.debug("Attempting to resolve " + did + " with driver " + driver.getClass().getSimpleName());
 
@@ -162,6 +169,7 @@ public class LocalUniResolver implements UniResolver {
 
 			driverResolveResult.getDidResolutionMetadata().put("pattern", ((HttpDriver) usedDriver).getPattern().pattern());
 			driverResolveResult.getDidResolutionMetadata().put("driverUrl", ((HttpDriver) usedDriver).getResolveUri());
+			if (((HttpDriver) usedDriver).getId() != null) driverResolveResult.getDidResolutionMetadata().put("entryId", ((HttpDriver) usedDriver).getId());
 
 			if (log.isDebugEnabled()) log.debug("Resolved " + did + " with driver " + usedDriver.getClass().getSimpleName() + " and pattern " + ((HttpDriver) usedDriver).getPattern().pattern());
 		} else {
@@ -216,6 +224,7 @@ public class LocalUniResolver implements UniResolver {
 		int i = 0;
 
 		for (Driver driver : this.getDrivers()) {
+			if (isDisabled(driver)) continue;
 
 			if (log.isDebugEnabled()) log.debug("Loading properties for driver " + driver.getClass().getSimpleName());
 
@@ -255,6 +264,7 @@ public class LocalUniResolver implements UniResolver {
 		Map<String, List<String>> testIdentifiers = new LinkedHashMap<>();
 
 		for (Driver driver : this.getDrivers()) {
+			if (isDisabled(driver)) continue;
 
 			if (log.isDebugEnabled()) log.debug("Loading test identifiers for driver " + driver.getClass().getSimpleName());
 
@@ -288,6 +298,7 @@ public class LocalUniResolver implements UniResolver {
 		int i = 0;
 
 		for (Driver driver : this.getDrivers()) {
+			if (isDisabled(driver)) continue;
 
 			if (log.isDebugEnabled()) log.debug("Loading traits for driver " + driver.getClass().getSimpleName());
 
@@ -332,5 +343,55 @@ public class LocalUniResolver implements UniResolver {
 
 	public void setExtensions(List<ResolverExtension> extensions) {
 		this.extensions = extensions;
+	}
+
+	public String authorizedEntryIdOption(Map<String, Object> resolutionOptions) {
+		if (! this.entryProbeAuthorized(resolutionOptions)) return null;
+		return entryIdOption(resolutionOptions);
+	}
+
+	public String getEntryProbeToken() {
+		return this.entryProbeToken;
+	}
+
+	public void setEntryProbeToken(String entryProbeToken) {
+		this.entryProbeToken = entryProbeToken;
+	}
+
+	private boolean entryProbeAuthorized(Map<String, Object> resolutionOptions) {
+		if (resolutionOptions == null) return false;
+		if (this.entryProbeToken == null || this.entryProbeToken.isBlank()) return false;
+
+		Object providedToken = resolutionOptions.get(ENTRY_PROBE_TOKEN_OPTION);
+		if (providedToken == null) return false;
+
+		return MessageDigest.isEqual(
+				this.entryProbeToken.getBytes(StandardCharsets.UTF_8),
+				providedToken.toString().getBytes(StandardCharsets.UTF_8));
+	}
+
+	private static String entryIdOption(Map<String, Object> resolutionOptions) {
+		if (resolutionOptions == null) return null;
+		Object entryId = resolutionOptions.get(ENTRY_ID_OPTION);
+		if (entryId == null) return null;
+
+		String entryIdString = entryId.toString().trim();
+		return entryIdString.isEmpty() ? null : entryIdString;
+	}
+
+	public static boolean shouldAttemptDriver(Driver driver, String selectedEntryId) {
+		if (selectedEntryId != null) {
+			return selectedEntryId.equals(entryId(driver));
+		}
+
+		return ! isDisabled(driver);
+	}
+
+	public static boolean isDisabled(Driver driver) {
+		return driver instanceof HttpDriver httpDriver && httpDriver.getDisabled();
+	}
+
+	private static String entryId(Driver driver) {
+		return driver instanceof HttpDriver httpDriver ? httpDriver.getId() : null;
 	}
 }

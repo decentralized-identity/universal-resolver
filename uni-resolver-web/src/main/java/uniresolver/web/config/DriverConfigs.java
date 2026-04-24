@@ -1,16 +1,67 @@
 package uniresolver.web.config;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 @Configuration
 @ConfigurationProperties("uniresolver")
 public class DriverConfigs {
 
+	private List<String> disabledEntries = new ArrayList<>();
+	private String entryProbeToken;
 	private List<DriverConfig> drivers;
+
+	@PostConstruct
+	public void validate() {
+		this.disabledEntries = this.disabledEntries == null ? new ArrayList<>() : this.disabledEntries.stream()
+				.filter(Objects::nonNull)
+				.map(String::trim)
+				.filter(value -> ! value.isEmpty())
+				.toList();
+
+		if (this.drivers == null) return;
+
+		Set<String> driverIds = new LinkedHashSet<>();
+		for (int i = 0; i < this.drivers.size(); i++) {
+			DriverConfig driverConfig = this.drivers.get(i);
+			if (driverConfig == null) {
+				throw new IllegalArgumentException("Missing driver configuration at index " + i + ".");
+			}
+
+			String id = driverConfig.getId();
+			if (id == null || id.isBlank()) {
+				throw new IllegalArgumentException("Missing 'id' entry in driver configuration at index " + i + ".");
+			}
+
+			if (! driverIds.add(id)) {
+				throw new IllegalArgumentException("Duplicate 'id' entry in driver configuration: " + id);
+			}
+		}
+	}
+
+	public List<String> getDisabledEntries() {
+		return disabledEntries;
+	}
+
+	public void setDisabledEntries(List<String> disabledEntries) {
+		this.disabledEntries = disabledEntries;
+	}
+
+	public String getEntryProbeToken() {
+		return entryProbeToken;
+	}
+
+	public void setEntryProbeToken(String entryProbeToken) {
+		this.entryProbeToken = entryProbeToken;
+	}
 
 	public List<DriverConfig> getDrivers() {
 		return drivers;
@@ -22,6 +73,7 @@ public class DriverConfigs {
 
 	public static class DriverConfig {
 
+		private String id;
 		private String pattern;
 		private String url;
 		private String propertiesEndpoint;
@@ -31,6 +83,14 @@ public class DriverConfigs {
 		private String acceptHeaderValueDereference;
 		private List<String> testIdentifiers;
 		private Map<String, Object> traits;
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
 
 		public String getPattern() {
 			return pattern;
@@ -107,6 +167,8 @@ public class DriverConfigs {
 		@Override
 		public String toString() {
 			return "DriverConfig{" +
+					"id='" + id + '\'' +
+					", " +
 					"pattern='" + pattern + '\'' +
 					", url='" + url + '\'' +
 					", propertiesEndpoint='" + propertiesEndpoint + '\'' +

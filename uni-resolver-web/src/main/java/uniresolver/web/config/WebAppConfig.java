@@ -14,8 +14,10 @@ import uniresolver.web.servlet.*;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Configuration
 public class WebAppConfig {
@@ -101,9 +103,12 @@ public class WebAppConfig {
 	public void configureLocalUniresolver(DriverConfigs driverConfigs, LocalUniResolver uniResolver) {
 
 		List<Driver> drivers = new ArrayList<>();
+		Set<String> disabledEntries = new LinkedHashSet<>(driverConfigs.getDisabledEntries());
+		uniResolver.setEntryProbeToken(driverConfigs.getEntryProbeToken());
 
 		for (DriverConfigs.DriverConfig driverConfig : driverConfigs.getDrivers()) {
 
+			String id = driverConfig.getId();
 			String pattern = driverConfig.getPattern();
 			String url = driverConfig.getUrl();
 			String propertiesEndpoint = driverConfig.getPropertiesEndpoint();
@@ -120,6 +125,8 @@ public class WebAppConfig {
 			// construct HTTP driver
 
 			HttpDriver driver = new HttpDriver();
+			driver.setId(id);
+			driver.setDisabled(disabledEntries.contains(id));
 			driver.setPattern(pattern);
 
 			if (url.contains("$1") || url.contains("$2")) {
@@ -141,7 +148,7 @@ public class WebAppConfig {
 			// done
 
 			drivers.add(driver);
-			if (log.isInfoEnabled()) log.info("Added driver for pattern '" + driverConfig.getPattern() + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + ")");
+			if (log.isInfoEnabled()) log.info("Added driver entry '" + id + "' for pattern '" + driverConfig.getPattern() + "' at " + driver.getResolveUri() + " (" + driver.getPropertiesUri() + "), disabled=" + driver.getDisabled());
 		}
 
 		uniResolver.setDrivers(drivers);

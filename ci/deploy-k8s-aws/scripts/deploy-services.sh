@@ -170,10 +170,16 @@ EOF
         done
     fi
 
-    # Skip environment variables for uni-resolver-web (uses defaults from application.yml)
-    if [ "$service_name" = "uni-resolver-web" ]; then
-        echo "  Skipping environment variables for uni-resolver-web (uses container defaults)"
-    else
+    # uni-resolver-web needs ConfigMap injection for disabled entry settings.
+	if [ "$service_name" = "uni-resolver-web" ]; then
+		echo "        envFrom:" >> "deployment-${service_name}.yaml"
+		echo "        - configMapRef:" >> "deployment-${service_name}.yaml"
+		echo "            name: app-config" >> "deployment-${service_name}.yaml"
+		echo "            optional: true" >> "deployment-${service_name}.yaml"
+		echo "        - secretRef:" >> "deployment-${service_name}.yaml"
+		echo "            name: app-secret" >> "deployment-${service_name}.yaml"
+		echo "            optional: true" >> "deployment-${service_name}.yaml"
+	else
         # Add environment variables from ConfigMap
         if [ "$env_file" != "null" ] || [ "$env_vars" != "null" ]; then
             echo "        envFrom:" >> "deployment-${service_name}.yaml"
