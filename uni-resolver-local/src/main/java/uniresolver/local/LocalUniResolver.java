@@ -145,6 +145,7 @@ public class LocalUniResolver implements UniResolver {
 		Driver usedDriver = null;
 
 		for (Driver driver : this.getDrivers()) {
+			if (! shouldAttemptDriver(driver)) continue;
 
 			if (log.isDebugEnabled()) log.debug("Attempting to resolve " + did + " with driver " + driver.getClass().getSimpleName());
 
@@ -216,6 +217,7 @@ public class LocalUniResolver implements UniResolver {
 		int i = 0;
 
 		for (Driver driver : this.getDrivers()) {
+			if (isDisabled(driver)) continue;
 
 			if (log.isDebugEnabled()) log.debug("Loading properties for driver " + driver.getClass().getSimpleName());
 
@@ -255,6 +257,7 @@ public class LocalUniResolver implements UniResolver {
 		Map<String, List<String>> testIdentifiers = new LinkedHashMap<>();
 
 		for (Driver driver : this.getDrivers()) {
+			if (isDisabled(driver)) continue;
 
 			if (log.isDebugEnabled()) log.debug("Loading test identifiers for driver " + driver.getClass().getSimpleName());
 
@@ -288,6 +291,7 @@ public class LocalUniResolver implements UniResolver {
 		int i = 0;
 
 		for (Driver driver : this.getDrivers()) {
+			if (isDisabled(driver)) continue;
 
 			if (log.isDebugEnabled()) log.debug("Loading traits for driver " + driver.getClass().getSimpleName());
 
@@ -333,4 +337,13 @@ public class LocalUniResolver implements UniResolver {
 	public void setExtensions(List<ResolverExtension> extensions) {
 		this.extensions = extensions;
 	}
+
+	public static boolean shouldAttemptDriver(Driver driver) {
+		return ! isDisabled(driver);
+	}
+
+	public static boolean isDisabled(Driver driver) {
+		return driver instanceof HttpDriver httpDriver && httpDriver.getDisabled();
+	}
+
 }

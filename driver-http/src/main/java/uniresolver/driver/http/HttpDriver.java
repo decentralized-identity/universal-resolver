@@ -41,9 +41,11 @@ public class HttpDriver implements Driver {
 	private static final int HTTP_CLIENT_TIMEOUT = 60;
 
 	private HttpClient httpClient;
+	private String id;
 	private Pattern pattern = null;
 	private URI resolveUri = null;
 	private URI propertiesUri = null;
+	private boolean disabled = false;
 	private boolean supportsOptions = false;
 	private boolean supportsDereference = false;
 	private String acceptHeaderValue = null;
@@ -446,6 +448,14 @@ public class HttpDriver implements Driver {
 		this.httpClient = httpClient;
 	}
 
+	public String getId() {
+		return this.id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public Pattern getPattern() {
 		return this.pattern;
 	}
@@ -480,6 +490,14 @@ public class HttpDriver implements Driver {
 
 	public void setPropertiesUri(String propertiesUri) {
 		this.propertiesUri = URI.create(propertiesUri);
+	}
+
+	public boolean getDisabled() {
+		return this.disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
 	}
 
 	public boolean getSupportsOptions() {

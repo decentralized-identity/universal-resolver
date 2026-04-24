@@ -2,6 +2,11 @@ name: AWS Kubernetes deployment
 
 on:
   workflow_dispatch:
+    inputs:
+      disabled-entries:
+        description: 'Comma-separated list of resolver entry ids to disable'
+        required: false
+        default: ''
 
 jobs:
   deploy:
@@ -34,6 +39,7 @@ jobs:
         github-server-url: ${{ github.server_url }}
         github-repository: ${{ github.repository }}
         github-run-id: ${{ github.run_id }}
+        disabled-entries: ${{ inputs.disabled-entries }}
 
     - name: Slack notification
       if: failure()
