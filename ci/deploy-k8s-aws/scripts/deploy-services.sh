@@ -176,9 +176,6 @@ EOF
 		echo "        - configMapRef:" >> "deployment-${service_name}.yaml"
 		echo "            name: app-config" >> "deployment-${service_name}.yaml"
 		echo "            optional: true" >> "deployment-${service_name}.yaml"
-		echo "        - secretRef:" >> "deployment-${service_name}.yaml"
-		echo "            name: app-secret" >> "deployment-${service_name}.yaml"
-		echo "            optional: true" >> "deployment-${service_name}.yaml"
 	else
         # Add environment variables from ConfigMap
         if [ "$env_file" != "null" ] || [ "$env_vars" != "null" ]; then

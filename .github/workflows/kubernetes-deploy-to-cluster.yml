@@ -40,7 +40,6 @@ jobs:
         github-repository: ${{ github.repository }}
         github-run-id: ${{ github.run_id }}
         disabled-entries: ${{ inputs.disabled-entries }}
-        entry-probe-token: ${{ secrets.UNIRESOLVER_ENTRY_PROBE_TOKEN }}
 
     - name: Slack notification
       if: failure()

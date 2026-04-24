@@ -65,16 +65,8 @@ if [ -s "$TEMP_ENV_FILE" ]; then
     echo "✓ ConfigMap 'app-config' created/updated"
     echo "  Total environment variables: $(grep -c "=" "$TEMP_ENV_FILE" 2>/dev/null || echo 0)"
 else
-    echo "Warning: No $ENV_FILE file found, skipping ConfigMap creation"
+    echo "Warning: No $ENV_FILE file found and no runtime environment variables were provided, skipping ConfigMap creation"
     echo "Deployments will use default environment variables from their Docker images"
 fi
-
-kubectl create secret generic app-secret \
-    --from-literal=UNIRESOLVER_ENTRY_PROBE_TOKEN="$UNIRESOLVER_ENTRY_PROBE_TOKEN" \
-    --namespace="$NAMESPACE" \
-    --dry-run=client -o yaml > secret.yaml
-
-kubectl apply -f secret.yaml
-echo "✓ Secret 'app-secret' created/updated"
 
 rm -f "$TEMP_ENV_FILE"

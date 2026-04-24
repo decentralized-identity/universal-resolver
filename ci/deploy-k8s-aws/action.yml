@@ -48,10 +48,6 @@ inputs:
     description: 'Comma-separated list of resolver entry ids to disable at runtime'
     required: false
     default: ''
-  entry-probe-token:
-    description: 'Shared token for protected per-entry health checks'
-    required: false
-    default: ''
 
 runs:
   using: 'docker'
@@ -68,4 +64,3 @@ runs:
     GITHUB_REPOSITORY: ${{ inputs.github-repository }}
     GITHUB_RUN_ID: ${{ inputs.github-run-id }}
     UNIRESOLVER_DISABLED_ENTRIES: ${{ inputs.disabled-entries }}
-    UNIRESOLVER_ENTRY_PROBE_TOKEN: ${{ inputs.entry-probe-token }}

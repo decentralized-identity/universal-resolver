@@ -17,7 +17,6 @@ class WebAppConfigDisabledEntriesTest {
 	void configuresEntryIdsAndDisabledFlagsOnDrivers() {
 		DriverConfigs driverConfigs = new DriverConfigs();
 		driverConfigs.setDisabledEntries(List.of("entry-b"));
-		driverConfigs.setEntryProbeToken("probe-token");
 		driverConfigs.setDrivers(List.of(
 				driverConfig("entry-a", "^(did:example:.+)$", "http://example.com/a/"),
 				driverConfig("entry-b", "^(did:web:.+)$", "http://example.com/b/")
@@ -40,7 +39,6 @@ class WebAppConfigDisabledEntriesTest {
 				.containsExactly("entry-a", "entry-b");
 		assertThat(resolver.getDrivers()).extracting(driver -> ((HttpDriver) driver).getDisabled())
 				.containsExactly(false, true);
-		assertThat(resolver.getEntryProbeToken()).isEqualTo("probe-token");
 	}
 
 	private static DriverConfig driverConfig(String id, String pattern, String url) {

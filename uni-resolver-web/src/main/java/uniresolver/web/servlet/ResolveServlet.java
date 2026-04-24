@@ -13,7 +13,6 @@ import uniresolver.DereferencingException;
 import uniresolver.ResolutionException;
 import uniresolver.driver.util.HttpBindingServerUtil;
 import uniresolver.driver.util.MediaTypeUtil;
-import uniresolver.local.LocalUniResolver;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
 import uniresolver.result.Result;
@@ -29,7 +28,6 @@ public class ResolveServlet extends WebUniResolver {
 	protected static final Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
-	private static final String ENTRY_PROBE_TOKEN_HEADER = "X-Uniresolver-Entry-Probe-Token";
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -90,7 +88,6 @@ public class ResolveServlet extends WebUniResolver {
 			options.keySet().forEach(httpXConfigHeaderMap::remove);
 			options.putAll(httpXConfigHeaderMap);
 		}
-		applyEntryProbeHeader(request, options);
 
 		String httpAcceptHeader = request.getHeader("Accept");
 		if (log.isInfoEnabled()) log.info("Incoming Accept: header string: " + httpAcceptHeader);
@@ -182,7 +179,6 @@ public class ResolveServlet extends WebUniResolver {
 			options.keySet().forEach(httpXConfigHeaderMap::remove);
 			options.putAll(httpXConfigHeaderMap);
 		}
-		applyEntryProbeHeader(request, options);
 
 		String httpAcceptHeader = request.getHeader("Accept");
 		if (log.isInfoEnabled()) log.info("Incoming Accept: header string: " + httpAcceptHeader);
@@ -337,12 +333,4 @@ public class ResolveServlet extends WebUniResolver {
 				"Not acceptable media types " + httpAcceptMediaTypes);
 	}
 
-	private static void applyEntryProbeHeader(HttpServletRequest request, Map<String, Object> options) {
-		options.remove(LocalUniResolver.ENTRY_PROBE_TOKEN_OPTION);
-
-		String entryProbeToken = request.getHeader(ENTRY_PROBE_TOKEN_HEADER);
-		if (entryProbeToken != null && ! entryProbeToken.isBlank()) {
-			options.put(LocalUniResolver.ENTRY_PROBE_TOKEN_OPTION, entryProbeToken);
-		}
-	}
 }

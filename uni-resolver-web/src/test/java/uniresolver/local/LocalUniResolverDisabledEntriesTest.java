@@ -22,12 +22,12 @@ class LocalUniResolverDisabledEntriesTest {
 
 		ResolveResult resolveResult = resolver.resolve("did:example:123", Map.of("accept", ResolveResult.MEDIA_TYPE));
 
-		assertThat(resolveResult.getDidResolutionMetadata()).containsEntry("entryId", "entry-active");
+		assertThat(resolveResult.getDidResolutionMetadata()).doesNotContainKey("entryId");
 		assertThat(resolveResult.getDidDocumentMetadata()).containsEntry("marker", "active");
 	}
 
 	@Test
-	void entryIdOverrideIsIgnoredWithoutProbeToken() throws Exception {
+	void entryIdOptionDoesNotSelectDisabledEntry() throws Exception {
 		LocalUniResolver resolver = new LocalUniResolver(List.of(
 				StubHttpDriver.resolving("entry-disabled", "^(did:example:.+)$", true, List.of("did:example:disabled"), "disabled"),
 				StubHttpDriver.resolving("entry-active", "^(did:example:.+)$", false, List.of("did:example:active"), "active")
@@ -35,27 +35,10 @@ class LocalUniResolverDisabledEntriesTest {
 
 		ResolveResult resolveResult = resolver.resolve("did:example:123", Map.of(
 				"accept", ResolveResult.MEDIA_TYPE,
-				LocalUniResolver.ENTRY_ID_OPTION, "entry-disabled"));
+				"_entryId", "entry-disabled"));
 
-		assertThat(resolveResult.getDidResolutionMetadata()).containsEntry("entryId", "entry-active");
+		assertThat(resolveResult.getDidResolutionMetadata()).doesNotContainKey("entryId");
 		assertThat(resolveResult.getDidDocumentMetadata()).containsEntry("marker", "active");
-	}
-
-	@Test
-	void entryIdOverrideCanProbeDisabledEntryWithToken() throws Exception {
-		LocalUniResolver resolver = new LocalUniResolver(List.of(
-				StubHttpDriver.resolving("entry-disabled", "^(did:example:.+)$", true, List.of("did:example:disabled"), "disabled"),
-				StubHttpDriver.resolving("entry-active", "^(did:example:.+)$", false, List.of("did:example:active"), "active")
-		));
-		resolver.setEntryProbeToken("secret-token");
-
-		ResolveResult resolveResult = resolver.resolve("did:example:123", Map.of(
-				"accept", ResolveResult.MEDIA_TYPE,
-				LocalUniResolver.ENTRY_ID_OPTION, "entry-disabled",
-				LocalUniResolver.ENTRY_PROBE_TOKEN_OPTION, "secret-token"));
-
-		assertThat(resolveResult.getDidResolutionMetadata()).containsEntry("entryId", "entry-disabled");
-		assertThat(resolveResult.getDidDocumentMetadata()).containsEntry("marker", "disabled");
 	}
 
 	@Test

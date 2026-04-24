@@ -18,7 +18,6 @@ class DriverConfigsBindingTest {
 		this.contextRunner
 				.withPropertyValues(
 						"uniresolver.disabled-entries[0]=entry-b",
-						"uniresolver.entry-probe-token=probe-token",
 						"uniresolver.drivers[0].id=entry-a",
 						"uniresolver.drivers[0].pattern=^(did:example:.+)$",
 						"uniresolver.drivers[0].url=http://example.com/a/",
@@ -30,7 +29,6 @@ class DriverConfigsBindingTest {
 
 					DriverConfigs driverConfigs = context.getBean(DriverConfigs.class);
 					assertThat(driverConfigs.getDisabledEntries()).containsExactly("entry-b");
-					assertThat(driverConfigs.getEntryProbeToken()).isEqualTo("probe-token");
 					assertThat(driverConfigs.getDrivers()).extracting(DriverConfigs.DriverConfig::getId)
 							.containsExactly("entry-a", "entry-b");
 				});
@@ -39,12 +37,9 @@ class DriverConfigsBindingTest {
 	@Test
 	void bindsDisabledEntriesFromEnvironmentPlaceholder() {
 		this.contextRunner
-				.withSystemProperties(
-						"UNIRESOLVER_DISABLED_ENTRIES=entry-a,entry-b",
-						"UNIRESOLVER_ENTRY_PROBE_TOKEN=probe-token")
+				.withSystemProperties("UNIRESOLVER_DISABLED_ENTRIES=entry-a,entry-b")
 				.withPropertyValues(
 						"uniresolver.disabled-entries=${UNIRESOLVER_DISABLED_ENTRIES:}",
-						"uniresolver.entry-probe-token=${UNIRESOLVER_ENTRY_PROBE_TOKEN:}",
 						"uniresolver.drivers[0].id=entry-a",
 						"uniresolver.drivers[0].pattern=^(did:example:.+)$",
 						"uniresolver.drivers[0].url=http://example.com/a/",
@@ -56,7 +51,6 @@ class DriverConfigsBindingTest {
 
 					DriverConfigs driverConfigs = context.getBean(DriverConfigs.class);
 					assertThat(driverConfigs.getDisabledEntries()).containsExactly("entry-a", "entry-b");
-					assertThat(driverConfigs.getEntryProbeToken()).isEqualTo("probe-token");
 				});
 	}
 

@@ -16,7 +16,6 @@ import java.util.Set;
 public class DriverConfigs {
 
 	private List<String> disabledEntries = new ArrayList<>();
-	private String entryProbeToken;
 	private List<DriverConfig> drivers;
 
 	@PostConstruct
@@ -53,14 +52,6 @@ public class DriverConfigs {
 
 	public void setDisabledEntries(List<String> disabledEntries) {
 		this.disabledEntries = disabledEntries;
-	}
-
-	public String getEntryProbeToken() {
-		return entryProbeToken;
-	}
-
-	public void setEntryProbeToken(String entryProbeToken) {
-		this.entryProbeToken = entryProbeToken;
 	}
 
 	public List<DriverConfig> getDrivers() {

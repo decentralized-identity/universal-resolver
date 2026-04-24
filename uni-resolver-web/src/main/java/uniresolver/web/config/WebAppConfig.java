@@ -104,7 +104,6 @@ public class WebAppConfig {
 
 		List<Driver> drivers = new ArrayList<>();
 		Set<String> disabledEntries = new LinkedHashSet<>(driverConfigs.getDisabledEntries());
-		uniResolver.setEntryProbeToken(driverConfigs.getEntryProbeToken());
 
 		for (DriverConfigs.DriverConfig driverConfig : driverConfigs.getDrivers()) {
 

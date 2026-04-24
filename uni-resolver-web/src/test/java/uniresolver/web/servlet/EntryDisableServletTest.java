@@ -53,14 +53,13 @@ class EntryDisableServletTest {
 	}
 
 	@Test
-	void resolveEndpointIgnoresPublicEntryProbeTokenOption() throws Exception {
+	void resolveEndpointDoesNotForceDisabledEntriesOrExposeEntryIdMetadata() throws Exception {
 		ResolveServlet servlet = new ResolveServlet();
-		servlet.setUniResolver(protectedResolver());
+		servlet.setUniResolver(resolveResolver());
 
 		MockHttpServletRequest request = resolveRequest();
-		request.setQueryString("_entryId=entry-disabled&_entryProbeToken=secret-token");
+		request.setQueryString("_entryId=entry-disabled");
 		request.addParameter("_entryId", "entry-disabled");
-		request.addParameter("_entryProbeToken", "secret-token");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 
 		servlet.doGet(request, response);
@@ -71,29 +70,7 @@ class EntryDisableServletTest {
 
 		assertThat(response.getStatus()).isEqualTo(200);
 		assertThat(didDocumentMetadata).containsEntry("marker", "active");
-		assertThat(didResolutionMetadata).containsEntry("entryId", "entry-active");
-	}
-
-	@Test
-	void resolveEndpointAllowsEntryProbeOnlyWithHeaderToken() throws Exception {
-		ResolveServlet servlet = new ResolveServlet();
-		servlet.setUniResolver(protectedResolver());
-
-		MockHttpServletRequest request = resolveRequest();
-		request.setQueryString("_entryId=entry-disabled");
-		request.addParameter("_entryId", "entry-disabled");
-		request.addHeader("X-Uniresolver-Entry-Probe-Token", "secret-token");
-		MockHttpServletResponse response = new MockHttpServletResponse();
-
-		servlet.doGet(request, response);
-
-		Map<String, Object> result = OBJECT_MAPPER.readValue(response.getContentAsString(), new TypeReference<>() {});
-		Map<String, Object> didDocumentMetadata = (Map<String, Object>) result.get("didDocumentMetadata");
-		Map<String, Object> didResolutionMetadata = (Map<String, Object>) result.get("didResolutionMetadata");
-
-		assertThat(response.getStatus()).isEqualTo(200);
-		assertThat(didDocumentMetadata).containsEntry("marker", "disabled");
-		assertThat(didResolutionMetadata).containsEntry("entryId", "entry-disabled");
+		assertThat(didResolutionMetadata).doesNotContainKey("entryId");
 	}
 
 	private static MockHttpServletRequest resolveRequest() {
@@ -112,12 +89,10 @@ class EntryDisableServletTest {
 		));
 	}
 
-	private static LocalUniResolver protectedResolver() {
-		LocalUniResolver resolver = new LocalUniResolver(List.of(
+	private static LocalUniResolver resolveResolver() {
+		return new LocalUniResolver(List.of(
 				StubHttpDriver.resolving("entry-disabled", "^(did:example:.+)$", true, List.of("did:example:hidden"), "disabled"),
 				StubHttpDriver.resolving("entry-active", "^(did:example:.+)$", false, List.of("did:example:shown"), "active")
 		));
-		resolver.setEntryProbeToken("secret-token");
-		return resolver;
 	}
 }
