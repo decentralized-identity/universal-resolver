@@ -499,6 +499,14 @@ uniresolver:
         - did:hedera:testnet:23g2MabDNq3KyB7oeH9yYZsJTRVeQ24DqX8o6scB98e3_0.0.5217215
         - did:hedera:testnet:ChQreHtT3MgjuVchee9kimLxsWXxjQRzeTuCjcXvkh7j_0.0.7232365
 
+    - id: did-bluchain
+      pattern: "^(did:bluchain:.+)$"
+      url: ${uniresolver_web_driver_url_did_bluchain:http://driver-did-bluchain:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:bluchain:issuer:9scF2JkUWfgcXhCdnn4QtBDkLFk5y4q5RD7316y8jEjR
+        - did:bluchain:badge:5aoCyvG4c4A15hZxSbzoAYhnWBH2Hfqzhrh1d3w5KYHo
+        - did:bluchain:certificate:8x9ufHvHg41Xvmu1F8aZdvoxn9CwHiRSqTGjpqzr6fEk
+
     - id: did-nda
       pattern: "^(did:nda:.+)$"
       url: ${uniresolver_web_driver_url_did_nda:http://driver-did-nda:8080/1.0/identifiers/$1}
@@ -510,10 +518,17 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_art:http://driver-did-art:8081/1.0/identifiers/$1}
       testIdentifiers:
         - "did:art:hkust:0x471feeca903f59d2c196c710b9ac8de3d6fa985be65447fc54365c8557d6a955"
-        
+
     - id: did-nfd
       pattern: "^(did:nfd:.+)$"
       url: ${uniresolver_web_driver_url_did_nfd:http://driver-did-nfd:8080/1.0/identifiers/$1}
       testIdentifiers:
         - did:nfd:nfdomains.algo
         - did:nfd:algorand.algo
+
+    - id: did-webplus
+      pattern: "^(did:webplus:.+)$"
+      url: ${uniresolver_web_driver_url_did_webplus:http://driver-did-webplus:80/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
+        - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug

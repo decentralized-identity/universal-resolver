@@ -80,6 +80,8 @@ services:
       uniresolver_web_driver_url_did_empe:
       uniresolver_web_driver_url_did_hedera:
       uniresolver_web_driver_url_did_nfd:
+      uniresolver_web_driver_url_did_bluchain:
+      uniresolver_web_driver_url_did_webplus:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -450,3 +452,22 @@ services:
     environment:
       ALGOD_URL: ${uniresolver_driver_did_nfd_algod_url}
       ALGOD_TOKEN: ${uniresolver_driver_did_nfd_algod_token}
+
+  driver-did-bluchain:
+    image: bluchain/did-driver-bluchain:v1.0.0
+    environment:
+      BASE_URL: ${uniresolver_driver_did_bluchain_BASE_URL}
+      PORT: 8080
+    ports:
+      - "8168:8080"
+      
+  driver-did-webplus:
+    image: ghcr.io/ledgerdomain/did-webplus-urd:v0.1.2
+    environment:
+      DID_WEBPLUS_URD_DATABASE_URL: ${uniresolver_driver_did_webplus_DID_WEBPLUS_URD_DATABASE_URL}
+      DID_WEBPLUS_URD_LISTEN_PORT: ${uniresolver_driver_did_webplus_DID_WEBPLUS_URD_LISTEN_PORT}
+      DID_WEBPLUS_URD_LOG_FORMAT: ${uniresolver_driver_did_webplus_DID_WEBPLUS_URD_LOG_FORMAT}
+      RUST_BACKTRACE: ${uniresolver_driver_did_webplus_RUST_BACKTRACE}
+      RUST_LOG: ${uniresolver_driver_did_webplus_RUST_LOG}
+    ports:
+      - "8168:80"
