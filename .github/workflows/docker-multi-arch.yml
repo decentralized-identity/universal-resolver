@@ -73,7 +73,7 @@ jobs:
           version: latest
 
       - name: Docker Build and Cache
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ${{ inputs.PATH_TO_DOCKERFILE }}
@@ -137,7 +137,7 @@ jobs:
           password: ${{ env.DOCKER_PASSWORD }}
 
       - name: Docker Push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ${{ inputs.PATH_TO_DOCKERFILE }}
