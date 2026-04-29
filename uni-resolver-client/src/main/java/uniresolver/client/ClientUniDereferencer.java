@@ -18,7 +18,9 @@ import uniresolver.result.DereferenceResult;
 import uniresolver.util.HttpBindingClientUtil;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ClientUniDereferencer implements UniDereferencer {
@@ -34,6 +36,8 @@ public class ClientUniDereferencer implements UniDereferencer {
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
 	private Map<String, String> httpHeaders = DEFAULT_HTTP_HEADERS;
 	private URI dereferenceUri = DEFAULT_DEREFERENCE_URI;
+	private boolean supportsOptions = false;
+	private String acceptHeaderValueDereference = null;
 
 	public ClientUniDereferencer() {
 
@@ -52,22 +56,30 @@ public class ClientUniDereferencer implements UniDereferencer {
 	@Override
 	public DereferenceResult dereference(String didUrlString, Map<String, Object> dereferenceOptions) throws DereferencingException, ResolutionException {
 
-		if (log.isDebugEnabled()) log.debug("dereference(" + didUrlString + ")  with options: " + dereferenceOptions);
+		if (log.isDebugEnabled()) log.debug("dereference(" + didUrlString + ") with options: " + dereferenceOptions);
 
 		if (didUrlString == null) throw new NullPointerException();
 		if (dereferenceOptions == null) dereferenceOptions = new HashMap<>();
 
 		// set HTTP URI
 
-		String uriString = this.getDereferenceUri().toString();
+		StringBuilder uriString = new StringBuilder(this.getDereferenceUri().toString());
 
-		if (! uriString.endsWith("/")) uriString += "/";
-		uriString += didUrlString;
+		if (! uriString.toString().endsWith("/")) uriString.append("/");
+		Map<String, Object> optionsForHttp;
+		if (this.getSupportsOptions() && ! (optionsForHttp = HttpBindingClientUtil.optionsForHttp(dereferenceOptions)).isEmpty()) {
+			uriString.append(URLEncoder.encode(didUrlString, StandardCharsets.UTF_8));
+			uriString.append("?");
+			uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));
+		} else {
+			uriString.append(didUrlString);
+		}
 
 		// set Accept header
 
 		String accept = (String) dereferenceOptions.get("accept");
-		if (accept == null) throw new DereferencingException("No 'accept' provided in 'dereferenceOptions' for dereference().");
+		if (this.getAcceptHeaderValueDereference() != null) accept = this.getAcceptHeaderValueDereference();
+		if (accept == null) throw new ResolutionException("No 'accept' provided in 'dereferenceOptions' for dereference(), or in driver configuration.");
 
 		List<String> acceptMediaTypes = Arrays.asList(DereferenceResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
@@ -76,7 +88,7 @@ public class ClientUniDereferencer implements UniDereferencer {
 
 		// prepare HTTP request
 
-		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		HttpGet httpGet = new HttpGet(URI.create(uriString.toString()));
 		httpGet.addHeader("Accept", acceptMediaTypesString);
 		if (this.getHttpHeaders() != null) this.getHttpHeaders().forEach(httpGet::addHeader);
 
@@ -176,5 +188,21 @@ public class ClientUniDereferencer implements UniDereferencer {
 
 	public void setDereferenceUri(String dereferenceUri) {
 		this.dereferenceUri = URI.create(dereferenceUri);
+	}
+
+	public boolean getSupportsOptions() {
+		return supportsOptions;
+	}
+
+	public void setSupportsOptions(boolean supportsOptions) {
+		this.supportsOptions = supportsOptions;
+	}
+
+	public String getAcceptHeaderValueDereference() {
+		return acceptHeaderValueDereference;
+	}
+
+	public void setAcceptHeaderValueDereference(String acceptHeaderValueDereference) {
+		this.acceptHeaderValueDereference = acceptHeaderValueDereference;
 	}
 }

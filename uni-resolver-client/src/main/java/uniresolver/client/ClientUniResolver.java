@@ -18,7 +18,9 @@ import uniresolver.util.HttpBindingClientUtil;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ClientUniResolver implements UniResolver {
@@ -42,6 +44,8 @@ public class ClientUniResolver implements UniResolver {
 	private URI methodsUri = DEFAULT_METHODS_URI;
 	private URI testIdentifiersUri = DEFAULT_TEST_IDENTIFIERS_URI;
 	private URI traitsUri = DEFAULT_TRAITS_URI;
+	private boolean supportsOptions = false;
+	private String acceptHeaderValue = null;
 
 	public ClientUniResolver() {
 
@@ -64,22 +68,30 @@ public class ClientUniResolver implements UniResolver {
 	@Override
 	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 
-		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
+		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ") with options: " + resolutionOptions);
 
 		if (didString == null) throw new NullPointerException();
 		if (resolutionOptions == null) resolutionOptions = new HashMap<>();
 
 		// set HTTP URI
 
-		String uriString = this.getResolveUri().toString();
+		StringBuilder uriString = new StringBuilder(this.getResolveUri().toString());
 
-		if (! uriString.endsWith("/")) uriString += "/";
-		uriString += didString;
+		if (! uriString.toString().endsWith("/")) uriString.append("/");
+		Map<String, Object> optionsForHttp;
+		if (this.getSupportsOptions() && ! (optionsForHttp = HttpBindingClientUtil.optionsForHttp(resolutionOptions)).isEmpty()) {
+			uriString.append(URLEncoder.encode(didString, StandardCharsets.UTF_8));
+			uriString.append("?");
+			uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));
+		} else {
+			uriString.append(didString);
+		}
 
 		// set Accept header
 
 		String accept = (String) resolutionOptions.get("accept");
-		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolve().");
+		if (this.getAcceptHeaderValue() != null) accept = this.getAcceptHeaderValue();
+		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolve(), or in driver configuration.");
 
         List<String> acceptMediaTypes = accept.isBlank() ? Collections.singletonList(ResolveResult.MEDIA_TYPE) : Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
@@ -88,7 +100,7 @@ public class ClientUniResolver implements UniResolver {
 
 		// prepare HTTP request
 
-		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		HttpGet httpGet = new HttpGet(URI.create(uriString.toString()));
 		httpGet.addHeader("Accept", acceptMediaTypesString);
 		if (this.getHttpHeaders() != null) this.getHttpHeaders().forEach(httpGet::addHeader);
 
@@ -424,5 +436,21 @@ public class ClientUniResolver implements UniResolver {
 
 	public void setTraitsUri(URI traitsUri) {
 		this.traitsUri = traitsUri;
+	}
+
+	public boolean getSupportsOptions() {
+		return supportsOptions;
+	}
+
+	public void setSupportsOptions(boolean supportsOptions) {
+		this.supportsOptions = supportsOptions;
+	}
+
+	public String getAcceptHeaderValue() {
+		return acceptHeaderValue;
+	}
+
+	public void setAcceptHeaderValue(String acceptHeaderValue) {
+		this.acceptHeaderValue = acceptHeaderValue;
 	}
 }
