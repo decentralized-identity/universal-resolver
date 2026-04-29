@@ -80,6 +80,8 @@ services:
       uniresolver_web_driver_url_did_empe:
       uniresolver_web_driver_url_did_hedera:
       uniresolver_web_driver_url_did_nfd:
+      uniresolver_web_driver_url_did_soul: 
+
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
 
@@ -453,6 +455,10 @@ services:
       ALGOD_URL: ${uniresolver_driver_did_nfd_algod_url}
       ALGOD_TOKEN: ${uniresolver_driver_did_nfd_algod_token}
 
+  driver-did-soul:
+    image: soulverse/uni-resolver-driver-did-soul:latest
+    ports: 
+      - "8168:8080"
   driver-did-bluchain:
     image: bluchain/did-driver-bluchain:v1.0.0
     environment:
