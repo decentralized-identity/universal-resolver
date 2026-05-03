@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      - name: Install DIDLint policy dependencies
+        run: python3 -m pip install -r ci/did-lint-check/requirements.txt
+
+      - name: Test DIDLint entry disable policy
+        run: python3 -m unittest discover -s ci/did-lint-check -p '*_test.py'
+
       - name: Did Lint check
         run: ./ci/did-lint-check/run.sh
 
