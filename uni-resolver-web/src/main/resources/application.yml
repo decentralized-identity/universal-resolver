@@ -451,3 +451,14 @@ uniresolver:
       testIdentifiers:
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug
+
+    - pattern: "^(did:cari:.+)$"
+      url: ${uniresolver_web_driver_url_did_cari:https://api.cari.global/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:cari:issuer:00000000-0000-0000-0000-000000000001
+        - did:cari:user:00000000-0000-0000-0000-000000000002
+      traits:
+        deactivatable: false
+        enumerable: false
+        historyAvailable: false
+        humanReadable: false
