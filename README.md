@@ -107,6 +107,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:nfd:nfdomains.algo
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bluchain:issuer:9scF2JkUWfgcXhCdnn4QtBDkLFk5y4q5RD7316y8jEjR
 	curl -X GET http://localhost:8080/1.0/identifiers/did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
+	curl -X GET http://localhost:8080/1.0/identifiers/did:omn:opendid:mainnet:b3BlbmRpZC1ta2xlZQ
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -209,6 +210,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-bluchain](https://gitlab.com/blucloud-public/did-driver-bluchain)                                        | 1.0.0          | [1.0.0](https://gitlab.com/blucloud-public/did-driver-bluchain/-/blob/master/README.md)                               | [bluchain/did-driver-bluchain](https://hub.docker.com/repository/docker/bluchain/did-driver-bluchain)                                                              | Bluchain DID                                                                        |
 | [did-webplus](https://github.com/LedgerDomain/did-webplus)                                                          | 0.1.1          | [0.4](https://ledgerdomain.github.io/did-webplus-spec/)                                         | [did-webplus-urd](ghcr.io/ledgerdomain/did-webplus-urd)                                                                    | webplus DID                                                                             |
 | [did-art](https://github.com/ArtracID/ArtracID-DID-ART-Method) | 1.0.0 | [spec](https://github.com/ArtracID/ArtracID-DID-ART-Method) | [worthyopponent30/did-art-resolver](https://hub.docker.com/r/worthyopponent30/did-art-resolver) | DID:ART for digital artwork |
+| [did-omn](https://github.com/OmniOneID/did-omn-resolver-driver-server) | 1.0.0 | [spec](https://github.com/OmniOneID/did_method/blob/master/did_method.md) | [ghcr.io/omnioneid/driver-did-omn](https://github.com/orgs/OmniOneID/packages/container/package/driver-did-omn) | OmniOne Open DID DID Method |
 
 
 ## More Information
