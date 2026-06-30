@@ -247,6 +247,7 @@ uniresolver:
         - did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15
     - pattern: "^(did:cheqd:.+)$"
       url: ${uniresolver_web_driver_url_did_cheqd:http://cheqd-did-driver:8080/1.0/identifiers/$1}
+      acceptHeaderValue: application/ld+json;profile="https://w3id.org/did-resolution"
       supportsDereference: true
       acceptHeaderValueDereference: application/ld+json;profile="https://w3id.org/did-resolution"
       testIdentifiers:
