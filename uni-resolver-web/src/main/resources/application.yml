@@ -452,3 +452,8 @@ uniresolver:
       testIdentifiers:
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug
+
+    - pattern: "^(did:uuid:.+)$"
+      url: ${uniresolver_web_driver_url_did_uuid:http://driver-did-uuid:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:uuid:00000000-0001-8200-8002-341632100000
