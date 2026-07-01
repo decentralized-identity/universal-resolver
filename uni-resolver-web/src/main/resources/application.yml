@@ -249,7 +249,7 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_cheqd:http://cheqd-did-driver:8080/1.0/identifiers/$1}
       acceptHeaderValue: application/ld+json;profile="https://w3id.org/did-resolution"
       supportsDereference: true
-      acceptHeaderValueDereference: application/ld+json;profile="https://w3id.org/did-resolution"
+      acceptHeaderValueDereference: application/ld+json;profile="https://w3id.org/did-url-dereferencing"
       testIdentifiers:
         - did:cheqd:mainnet:Ps1ysXP2Ae6GBfxNhNQNKN
         - did:cheqd:testnet:55dbc8bf-fba3-4117-855c-1e0dc1d3bb47
@@ -452,3 +452,8 @@ uniresolver:
       testIdentifiers:
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug
+
+    - pattern: "^(did:uuid:.+)$"
+      url: ${uniresolver_web_driver_url_did_uuid:http://driver-did-uuid:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:uuid:00000000-0001-8200-8002-341632100000

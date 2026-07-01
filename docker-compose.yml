@@ -82,6 +82,7 @@ services:
       uniresolver_web_driver_url_did_nfd:
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
+      uniresolver_web_driver_url_did_uuid:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -471,3 +472,8 @@ services:
       RUST_LOG: ${uniresolver_driver_did_webplus_RUST_LOG}
     ports:
       - "8168:80"
+
+  driver-did-uuid:
+    image: ghcr.io/worldresolvable/uni-resolver-driver-did-uuid:0.1.0
+    ports:
+      - "8181:8080"
