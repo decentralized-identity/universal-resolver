@@ -130,7 +130,7 @@ jobs:
             type=sha,prefix=${{ steps.get_version.outputs.version }}-,enable=${{ inputs.IS_RELEASE }}
 
       - name: Login to Docker Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ inputs.GLOBAL_REPO_NAME }}
           username: ${{ env.DOCKER_USERNAME }}
