@@ -39,6 +39,7 @@ The action is composed of modular bash scripts that handle different aspects of 
     namespace: 'uni-resolver'
     rpc-url-testnet: ${{ secrets.RPC_URL_TESTNET }}
     rpc-cert-testnet: ${{ secrets.RPC_CERT_TESTNET }}
+    disabled-entries: 'did-example,did-example-alt'
 ```
 
 ## Inputs
@@ -51,6 +52,7 @@ The action is composed of modular bash scripts that handle different aspects of 
 | `namespace` | Kubernetes namespace | No | `uni-resolver` |
 | `rpc-url-testnet` | RPC URL for driver-did-btcr | No | - |
 | `rpc-cert-testnet` | RPC certificate for driver-did-btcr | No | - |
+| `disabled-entries` | Comma-separated `application.yml` driver entry ids to disable in `uni-resolver-web` at runtime | No | - |
 
 ## How It Works
 
@@ -79,6 +81,11 @@ Verify that all deployments are healthy:
 - Check ready replicas match desired replicas
 - Display pod status and recent events
 - Exit with error if any deployment is unhealthy
+
+### Runtime Disabled Entries
+`uni-resolver-web` reads `UNIRESOLVER_DISABLED_ENTRIES` from the generated `app-config` ConfigMap. The value is a comma-separated list of driver entry ids from `uni-resolver-web/src/main/resources/application.yml`.
+
+Disabled entries are skipped by the resolver and excluded from `/1.0/methods` and `/1.0/testIdentifiers`. If another enabled entry also matches the same DID method, that enabled entry remains available. The deployment action always writes `UNIRESOLVER_DISABLED_ENTRIES`, including an empty value, so later deployments can clear a stale disabled set.
 
 ## Benefits Over Previous Approach
 

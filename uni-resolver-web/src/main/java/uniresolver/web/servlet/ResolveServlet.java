@@ -332,4 +332,5 @@ public class ResolveServlet extends WebUniResolver {
 				HttpServletResponse.SC_NOT_ACCEPTABLE,
 				"Not acceptable media types " + httpAcceptMediaTypes);
 	}
+
 }

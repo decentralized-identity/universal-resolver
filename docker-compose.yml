@@ -14,6 +14,7 @@ services:
       # don't define the variables and let uni-resolver-web container use its default
       # set in application.yml.
       # See https://docs.docker.com/compose/compose-file/05-services/#environment
+      UNIRESOLVER_DISABLED_ENTRIES:
       uniresolver_web_driver_url_did_btcr:
       uniresolver_web_driver_url_did_sov:
       uniresolver_web_driver_url_did_indy:

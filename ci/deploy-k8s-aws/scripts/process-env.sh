@@ -31,21 +31,42 @@ fi
 
 echo "Processing environment variables from $ENV_FILE..."
 
+TEMP_ENV_FILE=$(mktemp)
+cp /dev/null "$TEMP_ENV_FILE"
+
+append_or_replace_env_var() {
+    local key="$1"
+    local value="$2"
+    local always="${3:-false}"
+    if [ -z "$value" ] && [ "$always" != "true" ]; then
+        return
+    fi
+
+    sed -i "/^${key}=.*/d" "$TEMP_ENV_FILE"
+    printf '%s=%s\n' "$key" "$value" >> "$TEMP_ENV_FILE"
+}
+
 # Check if .env file exists
 if [ -f "$ENV_FILE" ]; then
-    # Create a ConfigMap from .env file
-    # Using --dry-run=client to generate YAML without applying it first
+    cp "$ENV_FILE" "$TEMP_ENV_FILE"
+fi
+
+append_or_replace_env_var "UNIRESOLVER_DISABLED_ENTRIES" "$UNIRESOLVER_DISABLED_ENTRIES" true
+
+if [ -s "$TEMP_ENV_FILE" ]; then
     kubectl create configmap app-config \
-        --from-env-file="$ENV_FILE" \
+        --from-env-file="$TEMP_ENV_FILE" \
         --namespace="$NAMESPACE" \
         --dry-run=client -o yaml > configmap.yaml
 
     # Apply the ConfigMap to the cluster
     kubectl apply -f configmap.yaml
 
-    echo "✓ ConfigMap 'app-config' created/updated from $ENV_FILE"
-    echo "  Total environment variables: $(grep -c "=" "$ENV_FILE" 2>/dev/null || echo 0)"
+    echo "✓ ConfigMap 'app-config' created/updated"
+    echo "  Total environment variables: $(grep -c "=" "$TEMP_ENV_FILE" 2>/dev/null || echo 0)"
 else
-    echo "Warning: No $ENV_FILE file found, skipping ConfigMap creation"
+    echo "Warning: No $ENV_FILE file found and no runtime environment variables were provided, skipping ConfigMap creation"
     echo "Deployments will use default environment variables from their Docker images"
 fi
+
+rm -f "$TEMP_ENV_FILE"

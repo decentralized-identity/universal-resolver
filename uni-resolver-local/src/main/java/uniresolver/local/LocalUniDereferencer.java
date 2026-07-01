@@ -206,11 +206,13 @@ public class LocalUniDereferencer implements UniDereferencer {
             return null;
         }
 
+        LocalUniResolver localUniResolver = (LocalUniResolver) this.getUniResolver();
         DereferenceResult driverDereferenceResult = null;
         Driver usedDriver = null;
 
-        for (Driver driver : ((LocalUniResolver) this.getUniResolver()).getDrivers()) {
+        for (Driver driver : localUniResolver.getDrivers()) {
 
+            if (! LocalUniResolver.shouldAttemptDriver(driver)) continue;
             if (driver instanceof HttpDriver httpDriver && ! httpDriver.getSupportsDereference()) continue;
 
             if (log.isDebugEnabled()) log.debug("Attempting to dereference " + didUrl + " with driver " + driver.getClass().getSimpleName());
@@ -292,4 +294,5 @@ public class LocalUniDereferencer implements UniDereferencer {
     public void setExtensions(List<DereferencerExtension> extensions) {
         this.extensions = extensions;
     }
+
 }

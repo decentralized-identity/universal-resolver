@@ -44,6 +44,10 @@ inputs:
     description: 'GitHub run ID (automatically set by GitHub Actions)'
     required: false
     default: ''
+  disabled-entries:
+    description: 'Comma-separated list of resolver entry ids to disable at runtime'
+    required: false
+    default: ''
 
 runs:
   using: 'docker'
@@ -59,3 +63,4 @@ runs:
     GITHUB_SERVER_URL: ${{ inputs.github-server-url }}
     GITHUB_REPOSITORY: ${{ inputs.github-repository }}
     GITHUB_RUN_ID: ${{ inputs.github-run-id }}
+    UNIRESOLVER_DISABLED_ENTRIES: ${{ inputs.disabled-entries }}
