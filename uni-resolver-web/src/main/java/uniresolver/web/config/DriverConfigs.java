@@ -23,6 +23,7 @@ public class DriverConfigs {
 	public static class DriverConfig {
 
 		private String pattern;
+		private String driverClass;
 		private String url;
 		private String propertiesEndpoint;
 		private String supportsOptions;
@@ -42,6 +43,14 @@ public class DriverConfigs {
 
 		public String getUrl() {
 			return url;
+		}
+
+		public String getDriverClass() {
+			return driverClass;
+		}
+
+		public void setDriverClass(String driverClass) {
+			this.driverClass = driverClass;
 		}
 
 		public void setUrl(String value) {
@@ -108,6 +117,7 @@ public class DriverConfigs {
 		public String toString() {
 			return "DriverConfig{" +
 					"pattern='" + pattern + '\'' +
+					", driverClass='" + driverClass + '\'' +
 					", url='" + url + '\'' +
 					", propertiesEndpoint='" + propertiesEndpoint + '\'' +
 					", supportsOptions='" + supportsOptions + '\'' +
