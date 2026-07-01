@@ -452,3 +452,10 @@ uniresolver:
       testIdentifiers:
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug
+    - pattern: "^(did:proof:z[A-Za-z0-9]{20,})$"
+      driverClass: uniresolver.driver.did.proof.DidProofDriver
+      testIdentifiers:
+        - did:proof:z6MkfrQC9BjKJzKVh6eNkJQZmUZ6a4Qz8EJGwE7VzKdKjNQ
+      traits:
+        deactivatable: false
+        enumerable: false

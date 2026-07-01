@@ -33,6 +33,7 @@ public class LocalUniResolverConfigurator {
             for (Map<String, Object> jsonDriver : jsonDrivers) {
 
                 String pattern = jsonDriver.containsKey("pattern") ? (String) jsonDriver.get("pattern") : null;
+                String driverClass = jsonDriver.containsKey("driverClass") ? (String) jsonDriver.get("driverClass") : null;
                 String url = jsonDriver.containsKey("url") ? (String) jsonDriver.get("url") : null;
                 String propertiesEndpoint = jsonDriver.containsKey("propertiesEndpoint") ? (String) jsonDriver.get("propertiesEndpoint") : null;
                 String supportsOptions = jsonDriver.containsKey("supportsOptions") ? (String) jsonDriver.get("supportsOptions") : null;
@@ -42,8 +43,15 @@ public class LocalUniResolverConfigurator {
                 List<String> testIdentifiers = jsonDriver.containsKey("testIdentifiers") ? (List<String>) jsonDriver.get("testIdentifiers") : null;
                 Map<String, Object> traits = jsonDriver.containsKey("traits") ? (Map<String, Object>) jsonDriver.get("traits") : null;
 
-                if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
-                if (url == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
+                if (pattern == null && driverClass == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
+                if (driverClass == null && url == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
+
+                if (driverClass != null) {
+                    Driver driver = instantiateDriverClass(driverClass);
+                    drivers.add(driver);
+                    if (log.isInfoEnabled()) log.info("Added local driver class '" + driverClass + "'");
+                    continue;
+                }
 
                 // construct HTTP driver
 
@@ -76,5 +84,14 @@ public class LocalUniResolverConfigurator {
         // done
 
         localUniResolver.setDrivers(drivers);
+    }
+
+    private static Driver instantiateDriverClass(String driverClass) {
+        try {
+            Class<? extends Driver> clazz = Class.forName(driverClass).asSubclass(Driver.class);
+            return clazz.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Unable to instantiate driver class '" + driverClass + "'", e);
+        }
     }
 }
