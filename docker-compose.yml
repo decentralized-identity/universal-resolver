@@ -201,6 +201,12 @@ services:
     image: identitydotcom/driver-did-sol:3.3.0
     ports:
       - "8118:8080"
+  driver-did-aip:
+    image: ghcr.io/dr-wilson-empty/driver-did-aip:0.1.1
+    ports:
+      - "8169:8080"
+    environment:
+      SOLANA_RPC_URL: https://api.devnet.solana.com
   driver-did-lit:
     image: ibct/driver-did-lit:0.1.1
     environment:
