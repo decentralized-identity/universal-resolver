@@ -249,7 +249,7 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_cheqd:http://cheqd-did-driver:8080/1.0/identifiers/$1}
       acceptHeaderValue: application/ld+json;profile="https://w3id.org/did-resolution"
       supportsDereference: true
-      acceptHeaderValueDereference: application/ld+json;profile="https://w3id.org/did-resolution"
+      acceptHeaderValueDereference: application/ld+json;profile="https://w3id.org/did-url-dereferencing"
       testIdentifiers:
         - did:cheqd:mainnet:Ps1ysXP2Ae6GBfxNhNQNKN
         - did:cheqd:testnet:55dbc8bf-fba3-4117-855c-1e0dc1d3bb47
@@ -283,7 +283,7 @@ uniresolver:
     - pattern: "^(did:iscc:.+)$"
       url: ${uniresolver_web_driver_url_did_iscc:http://driver-did-iscc:8080/}
       testIdentifiers:
-        - did:iscc:miagwptv4j2z57ci
+        - did:iscc:meigkv5n6ntvf4ab
     - pattern: "^(did:ev:.+)$"
       url: ${uniresolver_web_driver_url_did_ev:http://driver-did-ev:8000/1.0/identifiers/$1}
       testIdentifiers:
