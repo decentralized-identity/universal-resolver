@@ -452,3 +452,14 @@ uniresolver:
       testIdentifiers:
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug
+
+    - pattern: "^(did:ixo:.+)$"
+      url: ${uniresolver_web_driver_url_did_ixo:http://driver-did-ixo:8080/1.0/identifiers/$1}
+      acceptHeaderValue: application/did+ld+json
+      testIdentifiers:
+        - did:ixo:ixo1rl9vhhxg0t7ywlh953gtthphg889v7d3e2gx7k
+        - did:ixo:entity:00046b59059562e773694ea495bc1b23
+      traits:
+        deactivatable: true
+        updateable: true
+        humanReadable: false
