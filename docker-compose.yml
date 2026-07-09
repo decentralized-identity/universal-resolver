@@ -1,4 +1,4 @@
-version: "3.6"
+# version: "3.6"
 
 networks:
   default:
@@ -82,6 +82,7 @@ services:
       uniresolver_web_driver_url_did_nfd:
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
+      uniresolver_web_driver_url_did_neuralkey: 
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -375,7 +376,7 @@ services:
     ports:
       - "8154:8080"
   driver-did-quarkid:
-    image:  quarkid/api-proxy:latest
+    image: quarkid/api-proxy:latest
     ports:
       - 8155:8080
     environment:
@@ -431,13 +432,13 @@ services:
   driver-did-hedera:
     image: ghcr.io/hiero-ledger/uni-resolver-driver-did-hedera:v0.1.7-8ae3a53
     ports:
-        - "8165:8080"
+      - "8165:8080"
 
   driver-did-nda:
     image: ghcr.io/pilacorp/driver-did-nda:1.0.0
     ports:
       - "8166:8080"
-  
+
   driver-did-art:
     image: worthyopponent30/did-art-resolver:v1.0.0
     ports:
@@ -460,7 +461,7 @@ services:
       PORT: 8080
     ports:
       - "8168:8080"
-      
+
   driver-did-webplus:
     image: ghcr.io/ledgerdomain/did-webplus-urd:v0.1.2
     environment:
@@ -471,3 +472,8 @@ services:
       RUST_LOG: ${uniresolver_driver_did_webplus_RUST_LOG}
     ports:
       - "8168:80"
+
+  driver-did-neuralkey:
+    image: heanmengfong/neuralkey-did-driver:1.0.0
+    ports:
+      - "8169:8080"
