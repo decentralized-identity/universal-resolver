@@ -147,6 +147,12 @@ services:
     image: sphereon/uni-resolver-driver-did-factom:latest
     ports:
       - "8097:8080"
+  driver-did-finger:
+    image: youngseokaaa/uni-resolver-driver-did-finger:latest
+    environment:
+      DRIVER_BACKEND_URL: ${uniresolver_driver_did_finger_backend_url}
+    ports:
+      - "8169:8080"
   driver-did-key:
     image: universalresolver/driver-did-key:latest
     ports:
