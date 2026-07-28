@@ -82,6 +82,7 @@ services:
       uniresolver_web_driver_url_did_nfd:
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
+      uniresolver_web_driver_url_did_cid:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -471,3 +472,10 @@ services:
       RUST_LOG: ${uniresolver_driver_did_webplus_RUST_LOG}
     ports:
       - "8168:80"
+
+  driver-did-cid:
+    image: ghcr.io/archetech/uni-resolver-driver-did-cid:0.1.0
+    environment:
+      ARCHON_GATEKEEPER_URL: ${uniresolver_driver_did_cid_gatekeeper_url}
+    ports:
+      - "4250:4250"
