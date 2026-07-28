@@ -82,6 +82,7 @@ services:
       uniresolver_web_driver_url_did_nfd:
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
+      uniresolver_web_driver_url_did_finger:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -148,7 +149,7 @@ services:
     ports:
       - "8097:8080"
   driver-did-finger:
-    image: youngseokaaa/uni-resolver-driver-did-finger:latest
+    image: youngseokaaa/uni-resolver-driver-did-finger:1.0.0
     environment:
       DRIVER_BACKEND_URL: ${uniresolver_driver_did_finger_backend_url}
     ports:
