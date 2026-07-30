@@ -450,3 +450,9 @@ uniresolver:
       testIdentifiers:
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug
+
+    - pattern: "^(did:moltrust:.+)$"
+      url: ${uniresolver_web_driver_url_did_moltrust:http://driver-did-moltrust:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:moltrust:d34ed796a4dc4698
+        - did:moltrust:ambassador0001

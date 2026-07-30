@@ -471,3 +471,8 @@ services:
       RUST_LOG: ${uniresolver_driver_did_webplus_RUST_LOG}
     ports:
       - "8168:80"
+
+  driver-did-moltrust:
+    image: moltrust/driver-did-moltrust:1.0.0
+    ports:
+      - "8169:8080"
