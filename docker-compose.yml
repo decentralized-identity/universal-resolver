@@ -82,6 +82,7 @@ services:
       uniresolver_web_driver_url_did_nfd:
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
+      uniresolver_web_driver_url_did_cari:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -471,3 +472,10 @@ services:
       RUST_LOG: ${uniresolver_driver_did_webplus_RUST_LOG}
     ports:
       - "8168:80"
+
+  driver-did-cari:
+    image: ghcr.io/carihq/uni-resolver-driver-did-cari:1.0.0
+    environment:
+      DATABASE_URL: ${driver_did_cari_DATABASE_URL}
+    ports:
+      - "8169:8080"
