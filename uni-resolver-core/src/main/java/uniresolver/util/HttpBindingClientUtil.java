@@ -285,6 +285,8 @@ public class HttpBindingClientUtil {
         String determinedContentType;
         if (contentType == null) {
             determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
+        } else if (ResolveResult.MEDIA_TYPE.equals(contentType)) {
+            determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
         } else {
             determinedContentType = switch (contentType) {
                 case "application/did+ld+json",
@@ -305,6 +307,8 @@ public class HttpBindingClientUtil {
         String contentType = dereferenceResult.getContentType();
         String determinedContentType;
         if (contentType == null) {
+            determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
+        } else if (DereferenceResult.MEDIA_TYPE.equals(contentType)) {
             determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
         } else {
             determinedContentType = contentType;
