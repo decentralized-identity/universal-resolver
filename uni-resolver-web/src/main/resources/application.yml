@@ -170,6 +170,10 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_sol:http://driver-did-sol:8080/}
       testIdentifiers:
         - did:sol:devnet:2eK2DKs6vdzTEoj842Gfcs6DdtffPpw1iF6JbzQL4TuK
+    - pattern: "^(did:aip:.+)$"
+      url: ${uniresolver_web_driver_url_did_aip:http://driver-did-aip:8080/}
+      testIdentifiers:
+        - did:aip:7ftm6zMiVBzCvPiSJKX26nzg9SHKUxTk1qWLEVBy5N6u:resolver
     - pattern: "^(did:lit:(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$"
       url: ${uniresolver_web_driver_url_did_lit:http://driver-did-lit:8080/}
       testIdentifiers:
