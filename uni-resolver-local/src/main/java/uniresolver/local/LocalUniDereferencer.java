@@ -5,10 +5,7 @@ import foundation.identity.did.parser.ParserException;
 import foundation.identity.did.representations.Representations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uniresolver.DereferencingException;
-import uniresolver.ResolutionException;
-import uniresolver.UniDereferencer;
-import uniresolver.UniResolver;
+import uniresolver.*;
 import uniresolver.driver.Driver;
 import uniresolver.driver.http.HttpDriver;
 import uniresolver.local.configuration.LocalUniResolverConfigurator;
@@ -25,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LocalUniDereferencer implements UniDereferencer {
+public class LocalUniDereferencer implements UniDereferencer, ExecutionStateUniDereferencer {
 
     public static final List<DereferencerExtension> DEFAULT_EXTENSIONS = List.of(
             new DIDDocumentExtension()

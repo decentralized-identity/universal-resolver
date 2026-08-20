@@ -4,6 +4,7 @@ import foundation.identity.did.DID;
 import foundation.identity.did.parser.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uniresolver.ExecutionStateUniResolver;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
 import uniresolver.local.extensions.ExtensionStatus;
@@ -13,7 +14,7 @@ import uniresolver.result.ResolveResult;
 
 import java.util.*;
 
-public class LocalWrappingUniResolver implements UniResolver {
+public class LocalWrappingUniResolver implements UniResolver, ExecutionStateUniResolver {
 
 	public static final List<ResolverExtension> DEFAULT_EXTENSIONS = List.of(
 	);
