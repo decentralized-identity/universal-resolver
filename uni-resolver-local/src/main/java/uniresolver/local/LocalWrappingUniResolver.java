@@ -6,45 +6,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
 import uniresolver.UniResolver;
-import uniresolver.driver.Driver;
-import uniresolver.driver.http.HttpDriver;
-import uniresolver.local.configuration.LocalUniResolverConfigurator;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.local.extensions.ResolverExtension;
 import uniresolver.local.extensions.util.ExecutionStateUtil;
 import uniresolver.result.ResolveResult;
 
-import java.io.IOException;
 import java.util.*;
 
-public class LocalUniResolver implements UniResolver {
+public class LocalWrappingUniResolver implements UniResolver {
 
 	public static final List<ResolverExtension> DEFAULT_EXTENSIONS = List.of(
 	);
 
-	private static final Logger log = LoggerFactory.getLogger(LocalUniResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(LocalWrappingUniResolver.class);
 
-	private List<Driver> drivers = new ArrayList<>();
+	private UniResolver uniResolver;
 	private List<ResolverExtension> extensions = new ArrayList<>(DEFAULT_EXTENSIONS);
 
-	public LocalUniResolver() {
+	public LocalWrappingUniResolver() {
 
 	}
 
-	public LocalUniResolver(List<Driver> drivers) {
-		this.drivers = drivers;
-	}
-
-	/*
-	 * Factory methods
-	 */
-
-	public static LocalUniResolver fromConfigFile(String filePath) throws IOException {
-
-		LocalUniResolver localUniResolver = new LocalUniResolver();
-		LocalUniResolverConfigurator.configureLocalUniResolver(filePath, localUniResolver);
-
-		return localUniResolver;
+	public LocalWrappingUniResolver(UniResolver uniResolver) {
+		this.uniResolver = uniResolver;
 	}
 
 	/*
@@ -61,7 +45,7 @@ public class LocalUniResolver implements UniResolver {
 		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ") with options: " + resolutionOptions);
 
 		if (didString == null) throw new NullPointerException();
-		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
+		if (this.getUniResolver() == null) throw new ResolutionException("No Universal Resolver configured.");
 
 		// start time
 
@@ -95,14 +79,14 @@ public class LocalUniResolver implements UniResolver {
 
 		this.executeExtensions(ResolverExtension.BeforeResolveResolverExtension.class, extensionStatus, e -> e.beforeResolve(did, resolutionOptions, resolveResult, executionState, this), resolutionOptions, resolveResult, executionState);
 
-		// [resolve] with drivers
+		// [resolve]
 
 		if (! extensionStatus.skipResolve()) {
 
 			if (log.isInfoEnabled()) log.info("Resolving DID: " + did);
 
 			long driverStart = System.currentTimeMillis();
-			ResolveResult driverResolveResult = this.resolveWithDrivers(did, resolutionOptions);
+			ResolveResult driverResolveResult = this.resolveWithUniResolver(did, resolutionOptions);
 			long driverStop = System.currentTimeMillis();
 			resolveResult.getDidResolutionMetadata().put("driverDuration", driverStop - driverStart);
 
@@ -139,38 +123,17 @@ public class LocalUniResolver implements UniResolver {
 		return resolveResult;
 	}
 
-	public ResolveResult resolveWithDrivers(DID did, Map<String, Object> resolutionOptions) throws ResolutionException {
+	public ResolveResult resolveWithUniResolver(DID did, Map<String, Object> resolutionOptions) throws ResolutionException {
 
-		ResolveResult driverResolveResult = null;
+		ResolveResult uniResolverResolveResult;
 
-		Driver usedDriver = null;
+		UniResolver uniResolver = this.getUniResolver();
+		if (log.isInfoEnabled()) log.info("Executing resolve " + did + " with Universal Resolver " + uniResolver.getClass().getSimpleName());
 
-		for (Driver driver : this.getDrivers()) {
+		uniResolverResolveResult = uniResolver.resolve(did.getDidString(), resolutionOptions);
+		if (uniResolverResolveResult == null) return null;
 
-			if (log.isDebugEnabled()) log.debug("Attempting to resolve " + did + " with driver " + driver.getClass().getSimpleName());
-
-			driverResolveResult = driver.resolve(did, resolutionOptions);
-
-			if (driverResolveResult != null) {
-				usedDriver = driver;
-				break;
-			}
-		}
-
-		if (driverResolveResult == null) return null;
-
-		if (usedDriver instanceof HttpDriver) {
-
-			driverResolveResult.getDidResolutionMetadata().put("pattern", ((HttpDriver) usedDriver).getPattern().pattern());
-			driverResolveResult.getDidResolutionMetadata().put("driverUrl", ((HttpDriver) usedDriver).getResolveUri());
-
-			if (log.isDebugEnabled()) log.debug("Resolved " + did + " with driver " + usedDriver.getClass().getSimpleName() + " and pattern " + ((HttpDriver) usedDriver).getPattern().pattern());
-		} else {
-
-			if (log.isDebugEnabled()) log.debug("Resolved " + did + " with driver " + usedDriver.getClass().getSimpleName());
-		}
-
-		return driverResolveResult;
+		return uniResolverResolveResult;
 	}
 
 	private <E extends ResolverExtension> void executeExtensions(Class<E> extensionClass, ExtensionStatus extensionStatus, ResolverExtension.ExtensionFunction<E> extensionFunction, Map<String, Object> resolutionOptions, ResolveResult resolveResult, Map<String, Object> executionState) throws ResolutionException {
@@ -209,122 +172,39 @@ public class LocalUniResolver implements UniResolver {
 
 	@Override
 	public Map<String, Map<String, Object>> properties() throws ResolutionException {
-
-		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
-
-		Map<String, Map<String, Object>> properties = new LinkedHashMap<>();
-
-		int i = 0;
-
-		for (Driver driver : this.getDrivers()) {
-
-			if (log.isDebugEnabled()) log.debug("Loading properties for driver " + driver.getClass().getSimpleName());
-
-			String driverKey = (driver instanceof HttpDriver httpDriver) ? httpDriver.getPattern().toString() : "driver-" + i;
-			Map<String, Object> driverProperties = driver.properties();
-			if (driverProperties == null) driverProperties = Collections.emptyMap();
-
-			properties.put(driverKey, driverProperties);
-
-			i++;
-		}
-
-		// done
-
-		if (log.isDebugEnabled()) log.debug("Loaded properties: " + properties);
-		return properties;
+		if (this.getUniResolver() == null) throw new ResolutionException("No Universal Registrar configured.");
+		return this.getUniResolver().properties();
 	}
 
 	@Override
 	public Set<String> methods() throws ResolutionException {
-
-		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
-
-		Set<String> methods = this.testIdentifiers().keySet();
-
-		// done
-
-		if (log.isDebugEnabled()) log.debug("Loaded methods: " + methods);
-		return methods;
+		if (this.getUniResolver() == null) throw new ResolutionException("No Universal Registrar configured.");
+		return this.getUniResolver().methods();
 	}
+
 
 	@Override
 	public Map<String, List<String>> testIdentifiers() throws ResolutionException {
-
-		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
-
-		Map<String, List<String>> testIdentifiers = new LinkedHashMap<>();
-
-		for (Driver driver : this.getDrivers()) {
-
-			if (log.isDebugEnabled()) log.debug("Loading test identifiers for driver " + driver.getClass().getSimpleName());
-
-			List<String> driverTestIdentifiers = driver.testIdentifiers();
-			if (driverTestIdentifiers == null) driverTestIdentifiers = Collections.emptyList();
-
-			for (String driverTestIdentifier : driverTestIdentifiers) {
-
-				String driverTestIdentifierMethod = driverTestIdentifier.substring("did:".length());
-				driverTestIdentifierMethod = driverTestIdentifierMethod.substring(0, driverTestIdentifierMethod.indexOf(':'));
-
-                List<String> methodTestIdentifiers = testIdentifiers.computeIfAbsent(driverTestIdentifierMethod, k -> new ArrayList<>());
-
-                methodTestIdentifiers.add(driverTestIdentifier);
-			}
-		}
-
-		// done
-
-		if (log.isDebugEnabled()) log.debug("Loaded test identifiers: " + testIdentifiers);
-		return testIdentifiers;
+		if (this.getUniResolver() == null) throw new ResolutionException("No Universal Registrar configured.");
+		return this.getUniResolver().testIdentifiers();
 	}
 
 	@Override
 	public Map<String, Map<String, Object>> traits() throws ResolutionException {
-
-		if (this.getDrivers() == null) throw new ResolutionException("No drivers configured.");
-
-		Map<String, Map<String, Object>> traits = new LinkedHashMap<>();
-
-		int i = 0;
-
-		for (Driver driver : this.getDrivers()) {
-
-			if (log.isDebugEnabled()) log.debug("Loading traits for driver " + driver.getClass().getSimpleName());
-
-			String driverKey = (driver instanceof HttpDriver httpDriver) ? httpDriver.getPattern().toString() : "driver-" + i;
-			Map<String, Object> driverTraits = driver.traits();
-			if (driverTraits == null) driverTraits = Collections.emptyMap();
-
-			traits.put(driverKey, driverTraits);
-
-			i++;
-		}
-
-		// done
-
-		if (log.isDebugEnabled()) log.debug("Loaded traits: " + traits);
-		return traits;
+		if (this.getUniResolver() == null) throw new ResolutionException("No Universal Registrar configured.");
+		return this.getUniResolver().traits();
 	}
 
 	/*
 	 * Getters and setters
 	 */
 
-	public List<Driver> getDrivers() {
-		return this.drivers;
+	public UniResolver getUniResolver() {
+		return uniResolver;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T extends Driver> T getDriver(Class<T> driverClass) {
-		for (Driver driver : this.getDrivers()) {
-			if (driverClass.isAssignableFrom(driver.getClass())) return (T) driver;
-		}
-		return null;
-	}
-
-	public void setDrivers(List<Driver> drivers) {
-		this.drivers = drivers;
+	public void setUniResolver(UniResolver uniResolver) {
+		this.uniResolver = uniResolver;
 	}
 
 	public List<ResolverExtension> getExtensions() {
