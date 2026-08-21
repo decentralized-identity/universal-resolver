@@ -1,0 +1,23 @@
+{
+  "drivers": [
+    {
+      "pattern": "^(did:proof:z[A-Za-z0-9]{20,})$",
+      "driverClass": "uniresolver.driver.did.proof.DidProofDriver",
+      "testIdentifiers": [
+        "did:proof:z6MkfrQC9BjKJzKVh6eNkJQZmUZ6a4Qz8EJGwE7VzKdKjNQ"
+      ],
+      "traits": {
+        "deactivatable": false,
+        "enumerable": false
+      }
+    },
+    {
+      "pattern": "^(did:example:.+)$",
+      "url": "http://example-driver:8080/",
+      "propertiesEndpoint": "true",
+      "testIdentifiers": [
+        "did:example:123456789"
+      ]
+    }
+  ]
+}
