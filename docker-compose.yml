@@ -82,6 +82,7 @@ services:
       uniresolver_web_driver_url_did_nfd:
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
+      uniresolver_web_driver_url_did_omn:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -471,3 +472,21 @@ services:
       RUST_LOG: ${uniresolver_driver_did_webplus_RUST_LOG}
     ports:
       - "8168:80"
+
+  driver-did-omn:
+    image: ghcr.io/omnioneid/driver-did-omn:1.0.0
+    environment:
+      uniresolver_driver_did_omn_opendid_testnet_network_url: ${uniresolver_driver_did_omn_opendid_testnet_network_url}
+      uniresolver_driver_did_omn_opendid_testnet_contract_address: ${uniresolver_driver_did_omn_opendid_testnet_contract_address}
+      uniresolver_driver_did_omn_opendid_testnet_chain_id: ${uniresolver_driver_did_omn_opendid_testnet_chain_id}
+      uniresolver_driver_did_omn_opendid_testnet_gas_limit: ${uniresolver_driver_did_omn_opendid_testnet_gas_limit}
+      uniresolver_driver_did_omn_opendid_testnet_gas_price: ${uniresolver_driver_did_omn_opendid_testnet_gas_price}
+      uniresolver_driver_did_omn_opendid_testnet_connection_timeout: ${uniresolver_driver_did_omn_opendid_testnet_connection_timeout}
+      uniresolver_driver_did_omn_opendid_mainnet_network_url: ${uniresolver_driver_did_omn_opendid_mainnet_network_url}
+      uniresolver_driver_did_omn_opendid_mainnet_contract_address: ${uniresolver_driver_did_omn_opendid_mainnet_contract_address}
+      uniresolver_driver_did_omn_opendid_mainnet_chain_id: ${uniresolver_driver_did_omn_opendid_mainnet_chain_id}
+      uniresolver_driver_did_omn_opendid_mainnet_gas_limit: ${uniresolver_driver_did_omn_opendid_mainnet_gas_limit}
+      uniresolver_driver_did_omn_opendid_mainnet_gas_price: ${uniresolver_driver_did_omn_opendid_mainnet_gas_price}
+      uniresolver_driver_did_omn_opendid_mainnet_connection_timeout: ${uniresolver_driver_did_omn_opendid_mainnet_connection_timeout}
+    ports:
+      - "8169:8080"
