@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DIDDocument;
 import foundation.identity.did.representations.production.RepresentationProducer;
-import org.apache.http.entity.ContentType;
+import org.apache.hc.core5.http.ContentType;
 
 import java.io.IOException;
 import java.io.Reader;

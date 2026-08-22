@@ -7,7 +7,7 @@ import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.consumption.RepresentationConsumer;
 import foundation.identity.did.representations.production.RepresentationProducerDID;
 import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
-import org.apache.http.entity.ContentType;
+import org.apache.hc.core5.http.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.DereferencingException;
