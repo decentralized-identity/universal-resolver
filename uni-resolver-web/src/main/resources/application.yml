@@ -450,3 +450,9 @@ uniresolver:
       testIdentifiers:
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug
+    
+    - pattern: "^(did:neuralkey:.+)$"
+      url: "${uniresolver_web_driver_url_did_neuralkey:http://driver-did-neuralkey:8080/1.0/identifiers/$1}"
+      testIdentifiers:
+        - "did:neuralkey:z6MkwAkLNUmKBRha3s2NzRWFFsDSXJ2QF44w9AT4CmSBuU41"
+        - "did:neuralkey:did-neuralsh.serveblog.net"
