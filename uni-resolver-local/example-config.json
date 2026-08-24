@@ -1,0 +1,25 @@
+{
+  "drivers": [
+    {
+      "pattern": "^(did:oan:[A-Za-z0-9]{4}:[1-9A-HJ-NP-Za-km-z]{32})$",
+      "driverClass": "uniresolver.driver.did.oan.DidOanDriver",
+      "testIdentifiers": [
+        "did:oan:AGFI:7YpQm9Kx2VnRb6Ts3WfHa4Cd5Ej8LgNz"
+      ],
+      "traits": {
+        "deactivatable": true,
+        "enumerable": false,
+        "historyAvailable": false,
+        "humanReadable": false
+      }
+    },
+    {
+      "pattern": "^(did:example:.+)$",
+      "url": "http://example-driver:8080/",
+      "propertiesEndpoint": "true",
+      "testIdentifiers": [
+        "did:example:123456789"
+      ]
+    }
+  ]
+}

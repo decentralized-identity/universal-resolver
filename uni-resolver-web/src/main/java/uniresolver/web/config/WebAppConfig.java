@@ -105,6 +105,7 @@ public class WebAppConfig {
 		for (DriverConfigs.DriverConfig driverConfig : driverConfigs.getDrivers()) {
 
 			String pattern = driverConfig.getPattern();
+			String driverClass = driverConfig.getDriverClass();
 			String url = driverConfig.getUrl();
 			String propertiesEndpoint = driverConfig.getPropertiesEndpoint();
 			String supportsOptions = driverConfig.getSupportsOptions();
@@ -114,7 +115,15 @@ public class WebAppConfig {
 			List<String> testIdentifiers = driverConfig.getTestIdentifiers();
 			Map<String, Object> traits = driverConfig.getTraits();
 
-			if (pattern == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
+			if (pattern == null && driverClass == null) throw new IllegalArgumentException("Missing 'pattern' entry in driver configuration.");
+
+			if (driverClass != null) {
+				Driver driver = this.instantiateDriverClass(driverClass);
+				drivers.add(driver);
+				if (log.isInfoEnabled()) log.info("Added local driver class '" + driverClass + "'");
+				continue;
+			}
+
 			if (url == null) throw new IllegalArgumentException("Missing 'url' entry in driver configuration.");
 
 			// construct HTTP driver
@@ -145,6 +154,19 @@ public class WebAppConfig {
 		}
 
 		uniResolver.setDrivers(drivers);
+	}
+
+	private Driver instantiateDriverClass(String driverClass) {
+		try {
+			Class<?> clazz = Class.forName(driverClass);
+			Object instance = clazz.getDeclaredConstructor().newInstance();
+			if (!(instance instanceof Driver)) {
+				throw new IllegalArgumentException("Driver class '" + driverClass + "' does not implement the Driver interface");
+			}
+			return (Driver) instance;
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Unable to instantiate driver class '" + driverClass + "'", e);
+		}
 	}
 
 	@PostConstruct
