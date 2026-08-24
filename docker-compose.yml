@@ -460,7 +460,7 @@ services:
       PORT: 8080
     ports:
       - "8168:8080"
-      
+
   driver-did-webplus:
     image: ghcr.io/ledgerdomain/did-webplus-urd:v0.1.2
     environment:
@@ -471,3 +471,11 @@ services:
       RUST_LOG: ${uniresolver_driver_did_webplus_RUST_LOG}
     ports:
       - "8168:80"
+
+  # Single driver image serves both did:pki and did:sns, routing by method prefix.
+  driver-attestto:
+    image: attestto/attestto-did-resolver:0.1.0
+    ports:
+      - "8170:8080"
+    environment:
+      SOLANA_RPC_URL: ${uniresolver_driver_did_sns_solanaRpcUrl}
