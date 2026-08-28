@@ -456,3 +456,9 @@ uniresolver:
       testIdentifiers:
         - did:cid:bagaaieraxdxq4fm2kjh6yqjxjor3t2idczkmxd4v7in4u353fa6m6sms2pnq
         - did:cid:bagaaierajzwcicueqdkbgk75lgekdmvtbo5zv3spq2p4f7d7ow42urlwi32a
+
+    - pattern: "^(did:xny:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      url: ${uniresolver_web_driver_url_did_xny:http://driver-did-xny:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:xny:0d186d7c-165a-e0dc-f500-01f610cf3c08
+        - did:xny:e44c542d-ae34-ff1a-ccad-6202fa680ebd
