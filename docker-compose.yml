@@ -83,6 +83,8 @@ services:
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
       uniresolver_web_driver_url_did_cid:
+      uniresolver_web_driver_url_did_definitiveid:
+
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -475,3 +477,9 @@ services:
       ARCHON_GATEKEEPER_URL: ${uniresolver_driver_did_cid_gatekeeper_url}
     ports:
       - "4250:4250"
+
+  driver-did-definitiveid:
+    image: davidgbvargroup/uni-resolver-driver-did-definitiveid:0.1.0
+    ports:
+      - "8169:8080"
+
