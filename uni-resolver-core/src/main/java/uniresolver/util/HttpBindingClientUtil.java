@@ -7,7 +7,7 @@ import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.consumption.RepresentationConsumer;
 import foundation.identity.did.representations.production.RepresentationProducerDID;
 import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
-import org.apache.http.entity.ContentType;
+import org.apache.hc.core5.http.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.DereferencingException;
@@ -285,6 +285,8 @@ public class HttpBindingClientUtil {
         String determinedContentType;
         if (contentType == null) {
             determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
+        } else if (ResolveResult.MEDIA_TYPE.equals(contentType)) {
+            determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
         } else {
             determinedContentType = switch (contentType) {
                 case "application/did+ld+json",
@@ -305,6 +307,8 @@ public class HttpBindingClientUtil {
         String contentType = dereferenceResult.getContentType();
         String determinedContentType;
         if (contentType == null) {
+            determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
+        } else if (DereferenceResult.MEDIA_TYPE.equals(contentType)) {
             determinedContentType = Representations.DEFAULT_MEDIA_TYPE;
         } else {
             determinedContentType = contentType;

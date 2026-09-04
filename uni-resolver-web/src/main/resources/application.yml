@@ -210,7 +210,7 @@ uniresolver:
       testIdentifiers:
         - did:orb:hl:uEiBuxTFn4L_Hn8KsOWo8e9kqWP38MThBaToB_5yV3c5QTg:uoQ-BeEJpcGZzOi8vYmFma3JlaWRveXV5d3B5Zjd5NnA0Zmxiem5pNmh4d2prbGQ2N3ltanlpZnV0dWFwN3RzazUzdHNxank:EiD_igS1OSEftg5BGfisJGOS1rgcx5AkQhX0h1B4dHTUYA
     - pattern: "^(did:oyd:.+)$"
-      url: ${uniresolver_web_driver_url_did_oyd:https://oydid-resolver.data-container.net/1.0/identifiers/$1}
+      url: ${uniresolver_web_driver_url_did_oyd:https://resolver.ownyourdata.eu/1.0/identifiers/$1}
       testIdentifiers:
         - did:oyd:zQmaBZTghndXTgxNwfbdpVLWdFf6faYE4oeuN2zzXdQt1kh
         - did:oyd:zQmNauTUUdkpi5TcrTZ2524SKM8dJAzuuw4xfW13iHrtY1W%40did2.data-container.net
@@ -451,9 +451,17 @@ uniresolver:
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug
 
+    - pattern: "^(did:cid:.+)$"
+      url: ${uniresolver_web_driver_url_did_cid:http://driver-did-cid:4250/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:cid:bagaaieraxdxq4fm2kjh6yqjxjor3t2idczkmxd4v7in4u353fa6m6sms2pnq
+        - did:cid:bagaaierajzwcicueqdkbgk75lgekdmvtbo5zv3spq2p4f7d7ow42urlwi32a
+
     - pattern: "^(did:definitiveid:.+)$"
       url: ${uniresolver_web_driver_url_did_definitiveid:http://driver-did-definitiveid:8080/1.0/identifiers/$1}
       testIdentifiers:
         - did:definitiveid:bV9echGYLPYWPYgGNwRbHo
         - did:definitiveid:x9Kmtiaq1i5qt5QsaWKvCU
         - did:definitiveid:zZCKYq5d7LkuUT5357WhmS
+
+

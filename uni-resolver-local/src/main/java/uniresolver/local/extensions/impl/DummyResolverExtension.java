@@ -4,7 +4,7 @@ import foundation.identity.did.DID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
-import uniresolver.local.LocalUniResolver;
+import uniresolver.UniResolver;
 import uniresolver.local.extensions.ExtensionStatus;
 import uniresolver.local.extensions.ResolverExtension;
 import uniresolver.local.extensions.ResolverExtension.AbstractResolverExtension;
@@ -17,7 +17,7 @@ public class DummyResolverExtension extends AbstractResolverExtension implements
 	private static final Logger log = LoggerFactory.getLogger(DummyResolverExtension.class);
 
 	@Override
-	public ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, Map<String, Object> executionState, LocalUniResolver localUniResolver) throws ResolutionException {
+	public ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, Map<String, Object> executionState, UniResolver uniResolver) throws ResolutionException {
 
 		if (log.isDebugEnabled()) log.debug("Dummy extension called!");
 		return ExtensionStatus.DEFAULT;

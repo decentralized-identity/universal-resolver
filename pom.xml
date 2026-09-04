@@ -4,7 +4,7 @@
 	<groupId>decentralized-identity</groupId>
 	<artifactId>uni-resolver</artifactId>
 	<packaging>pom</packaging>
-	<version>1.6-SNAPSHOT</version>
+	<version>1.9-SNAPSHOT</version>
 	<name>uni-resolver</name>
 	<description>A Universal Resolver for decentralized identity.</description>
 	<url>https://uniresolver.io/</url>
@@ -75,12 +75,12 @@
 
 		<!-- Plugin Versions -->
 
-		<maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+		<maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
 		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
 		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
 		<maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
 		<maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
-		<maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
 		<maven-install-plugin.version>3.1.4</maven-install-plugin.version>
 		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
 		<maven-release-plugin.version>3.3.1</maven-release-plugin.version>
@@ -89,36 +89,36 @@
 		<!-- Testing Versions -->
 
 		<junit.version>4.13.2</junit.version>
-		<junit-jupiter.version>6.0.3</junit-jupiter.version>
+		<junit-jupiter.version>6.1.3</junit-jupiter.version>
 		<junit-platform.version>6.0.3</junit-platform.version>
-		<junit-platform-commons.version>6.0.3</junit-platform-commons.version>
+		<junit-platform-commons.version>6.1.3</junit-platform-commons.version>
 		<mockito-core.version>5.23.0</mockito-core.version>
 
 		<!-- Systems Versions -->
 
 		<jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
-		<slf4j.version>2.0.17</slf4j.version>
+		<slf4j.version>2.0.18</slf4j.version>
 
 		<!-- Spring Versions -->
 
-		<springframework.version>7.0.6</springframework.version>
-		<fasterxml.jackson.version>2.21.2</fasterxml.jackson.version>
-		<fasterxml.jackson.annotations.version>2.21</fasterxml.jackson.annotations.version>
+		<springframework.version>7.0.8</springframework.version>
+		<fasterxml.jackson.version>2.22.1</fasterxml.jackson.version>
+		<fasterxml.jackson.annotations.version>2.22</fasterxml.jackson.annotations.version>
 
 		<!-- OpenAPI Versions -->
 
-		<openapi-generator.version>7.21.0</openapi-generator.version>
+		<openapi-generator.version>7.24.0</openapi-generator.version>
 		<jakarta-annotation.version>3.0.0</jakarta-annotation.version>
 		<jakarta-validation.version>3.1.1</jakarta-validation.version>
 
 		<!-- DIF Versions -->
 
-		<did-common-java.version>1.26.0</did-common-java.version>
+		<did-common-java.version>1.27.0</did-common-java.version>
 
 		<!-- Other Versions -->
 
-		<httpcore.version>4.4.16</httpcore.version>
-		<httpclient.version>4.5.14</httpclient.version>
+		<httpcore5.version>5.4.3</httpcore5.version>
+		<httpclient5.version>5.6.4</httpclient5.version>
 	</properties>
 
 	<build>
@@ -429,14 +429,14 @@
 			<!-- Other Dependencies -->
 
 			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpcore</artifactId>
-				<version>${httpcore.version}</version>
+				<groupId>org.apache.httpcomponents.core5</groupId>
+				<artifactId>httpcore5</artifactId>
+				<version>${httpcore5.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>${httpclient.version}</version>
+				<groupId>org.apache.httpcomponents.client5</groupId>
+				<artifactId>httpclient5</artifactId>
+				<version>${httpclient5.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
