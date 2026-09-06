@@ -43,6 +43,7 @@ services:
       uniresolver_web_driver_url_did_vaa:
       uniresolver_web_driver_url_did_unisot:
       uniresolver_web_driver_url_did_sol:
+      uniresolver_web_driver_url_did_aip:
       uniresolver_web_driver_url_did_lit:
       uniresolver_web_driver_url_did_ebsi:
       uniresolver_web_driver_url_did_emtrust:
@@ -202,6 +203,12 @@ services:
     image: identitydotcom/driver-did-sol:3.3.0
     ports:
       - "8118:8080"
+  driver-did-aip:
+    image: ghcr.io/wienerlabs/driver-did-aip:0.2.1
+    ports:
+      - "8169:8080"
+    environment:
+      RPC_5042002: ${uniresolver_driver_did_aip_rpcUrlArcTestnet}
   driver-did-lit:
     image: ibct/driver-did-lit:0.1.1
     environment:
