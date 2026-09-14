@@ -16,6 +16,7 @@ services:
       # See https://docs.docker.com/compose/compose-file/05-services/#environment
       uniresolver_web_driver_url_did_btcr:
       uniresolver_web_driver_url_did_sov:
+      uniresolver_web_driver_url_did_mst: http://driver-did-mst:8080/
       uniresolver_web_driver_url_did_indy:
       uniresolver_web_driver_url_did_v1_nym:
       uniresolver_web_driver_url_did_v1_test_nym:
@@ -182,6 +183,16 @@ services:
     image: ghcr.io/gataca-io/universal-resolver-driver/universal-resolver-driver:3.0.0
     ports:
       - "8113:8080"
+
+  driver-did-mst:
+    image: navinjoshimongoosetech/driver-did-mst:latest
+    ports:
+      - "8086:8080"
+    environment:
+      - MST_RPC_URL=${uniresolver_driver_did_mst_rpc_url}
+      - MST_REGISTRY_ADDRESS=${uniresolver_driver_did_mst_registry_address}
+      - MST_CHAIN_ID=${uniresolver_driver_did_mst_chain_id}
+  
   driver-did-icon:
     image: amuyu/driver-did-icon:0.1.3
     environment:
