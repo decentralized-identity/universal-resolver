@@ -456,3 +456,14 @@ uniresolver:
       testIdentifiers:
         - did:cid:bagaaieraxdxq4fm2kjh6yqjxjor3t2idczkmxd4v7in4u353fa6m6sms2pnq
         - did:cid:bagaaierajzwcicueqdkbgk75lgekdmvtbo5zv3spq2p4f7d7ow42urlwi32a
+
+    - pattern: "^(did:stellar:.+)$"
+      url: ${uniresolver_web_driver_url_did_stellar:http://driver-did-stellar:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:stellar:testnet:32dhec37woze2mkfpnorosw5ma
+        - did:stellar:mainnet:6wr5l6d33bwa32olkiwret35yu
+      traits:
+        deactivatable: true
+        enumerable: false
+        historyAvailable: false
+        humanReadable: false
