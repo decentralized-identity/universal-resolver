@@ -84,6 +84,11 @@ services:
       uniresolver_web_driver_url_did_webplus:
       uniresolver_web_driver_url_did_cid:
 
+  driver-did-trail:
+    image: ghcr.io/trailprotocol/did-trail-universal-resolver-driver:latest
+    ports:
+      - "8086:8080"
+
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
     environment:
