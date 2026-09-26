@@ -62,25 +62,26 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 		// parse request
 
 		String identifier;
-		Map<String, Object> options = new LinkedHashMap<>();
+		Map<String, Object> options;
 		boolean isResolve;
 
 		if (path.startsWith("did%3A")) {
 			identifier = URLDecoder.decode(path, StandardCharsets.UTF_8);
-			if (queryString != null) {
-				if (queryString.contains("=")) {
-					for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
-						String parameterName = e.nextElement();
-						String parameterValue = request.getParameter(parameterName);
-						options.put(parameterName, parameterValue);
-					}
-				} else {
-					options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
+			if (queryString != null && queryString.contains("=")) {
+				options = new LinkedHashMap<>();
+				for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
+					String parameterName = e.nextElement();
+					String parameterValue = request.getParameter(parameterName);
+					options.put(parameterName, parameterValue);
 				}
+			} else if (queryString != null) {
+				options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
+			} else {
+				options = Collections.emptyMap();
 			}
 		} else {
-			identifier = path;
-			if (queryString != null) identifier += "?" + queryString;
+			identifier = path + (queryString != null ? "?" + queryString : "");
+			options = Collections.emptyMap();
 		}
 		isResolve = (! identifier.contains("/")) && (! identifier.contains("?")) && (! identifier.contains("#"));
 
