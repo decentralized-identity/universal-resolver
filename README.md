@@ -108,6 +108,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:bluchain:issuer:9scF2JkUWfgcXhCdnn4QtBDkLFk5y4q5RD7316y8jEjR
 	curl -X GET http://localhost:8080/1.0/identifiers/did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
 	curl -X GET http://localhost:8080/1.0/identifiers/did:cid:bagaaieraxdxq4fm2kjh6yqjxjor3t2idczkmxd4v7in4u353fa6m6sms2pnq
+	curl -X GET http://localhost:8080/1.0/identifiers/did:xny:0d186d7c-165a-e0dc-f500-01f610cf3c08
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -211,6 +212,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-webplus](https://github.com/LedgerDomain/did-webplus)                                                          | 0.1.1          | [0.4](https://ledgerdomain.github.io/did-webplus-spec/)                                         | [did-webplus-urd](ghcr.io/ledgerdomain/did-webplus-urd)                                                                    | webplus DID                                                                             |
 | [did-art](https://github.com/ArtracID/ArtracID-DID-ART-Method) | 1.0.0 | [spec](https://github.com/ArtracID/ArtracID-DID-ART-Method) | [worthyopponent30/did-art-resolver](https://hub.docker.com/r/worthyopponent30/did-art-resolver) | DID:ART for digital artwork |
 | [did-cid](https://github.com/archetech/uni-resolver-driver-did-cid) | 0.1.0 | [0.1.0](https://github.com/archetech/archon/blob/main/docs/scheme.md) | [ghcr.io/archetech/uni-resolver-driver-did-cid](https://github.com/archetech/uni-resolver-driver-did-cid/pkgs/container/uni-resolver-driver-did-cid) | Archon Protocol (content-addressed DID) |
+| [did-xny](https://github.com/humanbased-ai/xny-did) | 1.0.1 | [1.0.1](https://github.com/humanbased-ai/xny-did/blob/v1.0.1/docs/xny-did-method.md) | [ghcr.io/humanbased-ai/xny-did-resolver](https://github.com/humanbased-ai/xny-did/pkgs/container/xny-did-resolver) | Xny DID, anchored on Base |
 
 
 ## More Information
