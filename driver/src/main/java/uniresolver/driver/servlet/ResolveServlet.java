@@ -54,6 +54,11 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 			return;
 		}
 
+		String queryString = request.getQueryString();
+
+		if (log.isDebugEnabled()) log.debug("Incoming path: " + path);
+		if (log.isDebugEnabled()) log.debug("Incoming query String: " + queryString);
+
 		// parse request
 
 		String identifier;
@@ -62,22 +67,20 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		if (path.startsWith("did%3A")) {
 			identifier = URLDecoder.decode(path, StandardCharsets.UTF_8);
-			if (request.getQueryString() != null) {
-				if (request.getQueryString().contains("=")) {
+			if (queryString != null) {
+				if (queryString.contains("=")) {
 					for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
 						String parameterName = e.nextElement();
 						String parameterValue = request.getParameter(parameterName);
 						options.put(parameterName, parameterValue);
 					}
 				} else {
-					options = objectMapper.readValue(URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8), LinkedHashMap.class);
+					options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
 				}
-			} else if (request.getQueryString() != null) {
-				options.putAll(objectMapper.readValue(request.getQueryString(), Map.class));
 			}
 		} else {
 			identifier = path;
-			if (request.getQueryString() != null) identifier += "?" + request.getQueryString();
+			if (queryString != null) identifier += "?" + queryString;
 		}
 		isResolve = (! identifier.contains("/")) && (! identifier.contains("?")) && (! identifier.contains("#"));
 
