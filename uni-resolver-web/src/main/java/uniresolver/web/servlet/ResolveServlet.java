@@ -54,7 +54,7 @@ public class ResolveServlet extends WebUniResolver {
 		String queryString = request.getQueryString();
 
 		if (log.isDebugEnabled()) log.debug("Incoming path: " + path);
-		if (log.isDebugEnabled()) log.debug("Incoming query String: " + queryString);
+		if (log.isDebugEnabled()) log.debug("Incoming query string: " + queryString);
 
 		// parse request
 
