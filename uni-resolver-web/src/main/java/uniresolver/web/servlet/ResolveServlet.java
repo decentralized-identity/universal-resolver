@@ -74,11 +74,11 @@ public class ResolveServlet extends WebUniResolver {
 			} else if (queryString != null) {
 				options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
 			} else {
-				options = Collections.emptyMap();
+				options = new LinkedHashMap<>();
 			}
 		} else {
 			identifier = path + (queryString != null ? "?" + queryString : "");
-			options = Collections.emptyMap();
+			options = new LinkedHashMap<>();
 		}
 		isResolve = (! identifier.contains("/")) && (! identifier.contains("?")) && (! identifier.contains("#"));
 
