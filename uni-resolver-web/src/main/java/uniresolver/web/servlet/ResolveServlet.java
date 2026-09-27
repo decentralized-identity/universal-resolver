@@ -1,5 +1,7 @@
 package uniresolver.web.servlet;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.production.RepresentationProducer;
@@ -72,7 +74,12 @@ public class ResolveServlet extends WebUniResolver {
 					options.put(parameterName, parameterValue);
 				}
 			} else if (queryString != null) {
-				options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
+				try {
+					options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
+				} catch (JsonProcessingException ex) {
+					ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Cannot parse query string: " + ex.getMessage());
+					return;
+				}
 			} else {
 				options = new LinkedHashMap<>();
 			}

@@ -1,5 +1,6 @@
 package uniresolver.driver.servlet;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DID;
 import foundation.identity.did.DIDURL;
@@ -75,7 +76,12 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 					options.put(parameterName, parameterValue);
 				}
 			} else if (queryString != null) {
-				options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
+				try {
+					options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
+				} catch (JsonProcessingException ex) {
+					ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Cannot parse query string: " + ex.getMessage());
+					return;
+				}
 			} else {
 				options = new LinkedHashMap<>();
 			}
