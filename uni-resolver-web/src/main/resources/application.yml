@@ -128,6 +128,13 @@ uniresolver:
       testIdentifiers:
         - did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764
         - did:factom:testnet:c2d5aa15943c93db313f140e7ed87ec9891d02acbde748932db583aa3080af08
+    - pattern: "^(did:finger:.+)$"
+      url: ${uniresolver_web_driver_url_did_finger:http://driver-did-finger:8080/1.0/identifiers/}
+      propagateHeaders:
+        - Accept
+      testIdentifiers:
+        - did:finger:NTU1NGUwN2QtNjEyOC00ODA0LWExNWYtOTlhNGQ1NTc5NDc5
+        - did:finger:MWY0YzgyMjQtMzNkYy00ZjY5LTg3NDgtZWQ3NWM3Mzc4ZjJm
     - pattern: "^(did:io:.+)$"
       url: ${uniresolver_web_driver_url_did_io:http://uni-resolver-driver-did-io:8080/}
       testIdentifiers:
