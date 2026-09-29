@@ -148,6 +148,10 @@ services:
     image: sphereon/uni-resolver-driver-did-factom:latest
     ports:
       - "8097:8080"
+  driver-did-solidus:
+    image: ghcr.io/solidusnetwork/uni-resolver-driver-did-solidus:0.1.0
+    ports:
+      - "8100:8080"
   driver-did-key:
     image: universalresolver/driver-did-key:latest
     ports:
