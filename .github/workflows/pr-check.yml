@@ -45,6 +45,7 @@ jobs:
       run: ${{ steps.scope.outputs.run }}
       pr-number: ${{ steps.scope.outputs.pr-number }}
       head-sha: ${{ steps.scope.outputs.head-sha }}
+      base-sha: ${{ steps.scope.outputs.base-sha }}
       changed-files: ${{ steps.scope.outputs.changed-files }}
     steps:
       - name: Determine scope
@@ -66,6 +67,7 @@ jobs:
             core.info(`Checking PR #${pr.number} "${pr.title}" at ${pr.head.sha}`);
             core.setOutput('pr-number', String(pr.number));
             core.setOutput('head-sha', pr.head.sha);
+            core.setOutput('base-sha', pr.base.sha);
 
             const files = await github.paginate(github.rest.pulls.listFiles, {
               owner, repo, pull_number: pr.number, per_page: 100,
@@ -105,6 +107,16 @@ jobs:
             /README.md
           sparse-checkout-cone-mode: false
 
+      # Services added by the PR need a driver entry in application.yml
+      - name: Checkout base docker-compose.yml
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.scope.outputs.base-sha }}
+          path: .pr-check/base
+          persist-credentials: false
+          sparse-checkout: /docker-compose.yml
+          sparse-checkout-cone-mode: false
+
       - name: List changed files
         env:
           CHANGED_FILES: ${{ needs.scope.outputs.changed-files }}
@@ -118,6 +130,7 @@ jobs:
         with:
           path: .
           changed-files: .pr-check/changed-files.txt
+          base-compose: .pr-check/base/docker-compose.yml
 
       - name: Save report for PR comment
         if: steps.check.outputs.report != ''

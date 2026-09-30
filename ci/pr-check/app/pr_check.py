@@ -224,8 +224,10 @@ def check_application_yml(report: Report, config: Any) -> list[dict]:
                 report.error(name, f"{label}: `{key}` must be a scalar value, found `{type(value).__name__}`")
 
         test_identifiers = driver.get("testIdentifiers")
-        if test_identifiers is not None and (
-                not isinstance(test_identifiers, list) or not all(isinstance(t, str) for t in test_identifiers)):
+        if not test_identifiers:
+            report.error(name, f"{label}: at least one entry in `testIdentifiers` is required")
+            test_identifiers = None
+        elif not isinstance(test_identifiers, list) or not all(isinstance(t, str) for t in test_identifiers):
             report.error(name, f"{label}: `testIdentifiers` must be a list of strings")
             test_identifiers = None
         if "traits" in driver and driver["traits"] is not None and not isinstance(driver["traits"], dict):
@@ -501,17 +503,15 @@ def driver_url_host(driver: dict) -> str | None:
     return host.group(1) if host else None
 
 
-def check_cross_references(report: Report, drivers: list[dict], compose: dict | None) -> None:
+def check_cross_references(report: Report, drivers: list[dict], compose: dict | None,
+                           base_services: set[str] | None) -> None:
+    """base_services: services of docker-compose.yml on the base branch, None if unknown."""
     services = compose.get("services", {}) if compose else {}
     if not services:
         return
 
     referenced = set()
-    methods = set()
     for driver in drivers:
-        method = re.search(r"did:([a-z0-9]+)", driver.get("pattern") or "")
-        if method:
-            methods.add(method.group(1))
         host = driver_url_host(driver)
         referenced.add(host)
         if (SPRING_PLACEHOLDER.match(driver["url"].strip()) and host and "." not in host
@@ -525,18 +525,24 @@ def check_cross_references(report: Report, drivers: list[dict], compose: dict | 
             referenced.update(depends_on if isinstance(depends_on, (list, dict)) else [])
             referenced.update(str(link).split(":")[0] for link in service.get("links") or [])
 
-    if not drivers:
+    # A service added by the pull request is a new driver: the driver's `url` in application.yml is the only
+    # link between the DID identifier prefix and the service. Existing services are not checked, maintainers
+    # may point a driver to another URL than its service (e.g. a hosted driver).
+    if not drivers or base_services is None:
         return
-    for name in sorted(set(services) - referenced - NON_DRIVER_SERVICES):
-        # A driver entry may point to another URL than the service (e.g. a hosted driver),
-        # so a driver for a DID method named in the service or image name is sufficient
-        service = services[name] if isinstance(services[name], dict) else {}
-        image = str(service.get("image") or "").split("@")[0].rsplit(":", 1)[0].rsplit("/", 1)[-1]
-        if methods & set(re.split(r"[-_.]", f"{name}-{image}".lower())):
-            continue
-        report.error(APPLICATION_YML, f"No driver entry for service `{name}` from `{DOCKER_COMPOSE}`. "
-                                      f"Add an entry to `uniresolver.drivers` for its DID method, e.g. with a `url` "
-                                      f"pointing to `http://{name}:<port>/`, otherwise the Universal Resolver never calls the driver")
+    for name in sorted(set(services) - base_services - referenced - NON_DRIVER_SERVICES):
+        report.error(APPLICATION_YML, f"No driver entry for the new service `{name}` from `{DOCKER_COMPOSE}`. "
+                                      f"Add an entry to `uniresolver.drivers` with a `url` pointing to "
+                                      f"`http://{name}:<port>/`, otherwise the Universal Resolver never calls the driver")
+
+
+def load_base_services(path: Path) -> set[str] | None:
+    """Service names of the base branch's docker-compose.yml, None if not available."""
+    try:
+        compose = yaml.safe_load(path.read_text(encoding="utf-8"))
+        return set(compose["services"])
+    except (OSError, yaml.YAMLError, KeyError, TypeError):
+        return None
 
 
 def set_outputs(report: Report, markdown: str) -> None:
@@ -562,13 +568,31 @@ def github_api(path: str) -> Any:
         return json.load(response)
 
 
+def download_file(repository: str, sha: str, name: str) -> bytes | None:
+    """Content of a file at a commit, None if it doesn't exist. PR commits (also from forks) are served by the base repository."""
+    url = f"https://raw.githubusercontent.com/{repository}/{sha}/{urllib.parse.quote(name)}"
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": USER_AGENT}),
+                                    timeout=REGISTRY_TIMEOUT) as response:
+            return response.read()
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
+
+
 def download_pr_files(repository: str, pr_number: int, target: Path) -> tuple[str, list[str]]:
-    """Download the checked files of a pull request's head commit into target.
+    """Download the checked files of a pull request's head commit into target/head and
+    the base branch's docker-compose.yml into target/base.
 
     Returns a description of the PR and the list of files it changes.
     """
     pr = github_api(f"repos/{repository}/pulls/{pr_number}")
     sha = pr["head"]["sha"]
+    base_compose = download_file(repository, pr["base"]["sha"], DOCKER_COMPOSE)
+    if base_compose is not None:
+        (target / "base").mkdir()
+        (target / "base" / DOCKER_COMPOSE).write_bytes(base_compose)
     changed_files = []
     page = 1
     while True:
@@ -579,18 +603,11 @@ def download_pr_files(repository: str, pr_number: int, target: Path) -> tuple[st
             break
         page += 1
     for name in FILES:
-        # PR commits (also from forks) are served by the base repository
-        url = f"https://raw.githubusercontent.com/{repository}/{sha}/{urllib.parse.quote(name)}"
-        try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": USER_AGENT}),
-                                        timeout=REGISTRY_TIMEOUT) as response:
-                content = response.read()
-        except urllib.error.HTTPError as e:
-            if e.code == 404:
-                continue  # reported as "File not found"
-            raise
-        (target / name).parent.mkdir(parents=True, exist_ok=True)
-        (target / name).write_bytes(content)
+        content = download_file(repository, sha, name)
+        if content is None:
+            continue  # reported as "File not found"
+        (target / "head" / name).parent.mkdir(parents=True, exist_ok=True)
+        (target / "head" / name).write_bytes(content)
     return f"PR [#{pr['number']}]({pr['html_url']}) \"{pr['title']}\" at commit `{sha[:8]}`", changed_files
 
 
@@ -604,6 +621,9 @@ def main() -> int:
                         help=f"GitHub repository of the pull request (default: {DEFAULT_REPOSITORY})")
     parser.add_argument("--changed-files", metavar="FILE",
                         help="File listing the files changed by the pull request, one per line (with --path)")
+    parser.add_argument("--base-compose", metavar="FILE",
+                        help="docker-compose.yml of the base branch, to require driver entries for new services "
+                             "(with --path; --pr downloads it)")
     parser.add_argument("--report", help="Optional file to write the Markdown report to")
     args = parser.parse_args()
 
@@ -611,18 +631,20 @@ def main() -> int:
         changed_files = None
         if args.changed_files:
             changed_files = [line.strip() for line in Path(args.changed_files).read_text(encoding="utf-8").splitlines() if line.strip()]
-        return run_checks(Path(args.path).resolve(), args.report, changed_files)
+        base_services = load_base_services(Path(args.base_compose)) if args.base_compose else None
+        return run_checks(Path(args.path).resolve(), args.report, changed_files, base_services)
     with tempfile.TemporaryDirectory(prefix="pr-check-") as directory:
         try:
             subject, changed_files = download_pr_files(args.repository, args.pr, Path(directory))
         except (urllib.error.URLError, OSError, KeyError, ValueError) as e:
             print(f"Could not download PR #{args.pr} from {args.repository}: {e}", file=sys.stderr)
             return 2
-        return run_checks(Path(directory), args.report, changed_files, subject)
+        base_services = load_base_services(Path(directory) / "base" / DOCKER_COMPOSE)
+        return run_checks(Path(directory) / "head", args.report, changed_files, base_services, subject)
 
 
 def run_checks(root: Path, report_file: str | None, changed_files: list[str] | None = None,
-               subject: str | None = None) -> int:
+               base_services: set[str] | None = None, subject: str | None = None) -> int:
     report = Report(subject, with_changed_files=changed_files is not None)
     if changed_files is not None:
         check_changed_files(report, changed_files)
@@ -631,7 +653,7 @@ def run_checks(root: Path, report_file: str | None, changed_files: list[str] | N
     env_keys = check_dot_env(report, read_text(report, root, DOT_ENV))
     compose = check_docker_compose(report, root, load_yaml(report, DOCKER_COMPOSE, read_text(report, root, DOCKER_COMPOSE)), env_keys)
     check_readme(report, read_text(report, root, README))
-    check_cross_references(report, drivers, compose)
+    check_cross_references(report, drivers, compose, base_services)
 
     markdown = report.markdown()
     print(markdown)
