@@ -16,8 +16,33 @@ registries (Docker Hub, GitHub Container Registry, Quay, ...) without credential
 
 ## Run locally with Docker
 
+Build the image the action uses:
+
     docker build -t pr-check ci/pr-check
+
+Check a pull request, the files are downloaded from GitHub (no checkout needed):
+
+    docker run --rm pr-check --pr 578
+
+Check the files of your local working copy:
+
     docker run --rm -v "$PWD":/repo pr-check --path /repo
+
+Write the report to a file with `--report`. The path is inside the container, so mount a folder for it:
+
+    docker run --rm -v "$PWD":/out pr-check --pr 578 --report /out/report.md
+
+Options:
+
+| Option | Description |
+|--------|-------------|
+| `--path DIR` | Repository root containing the files to check (default: `.`) |
+| `--pr NUMBER` | Download the files of this pull request's head commit from GitHub and check them (instead of `--path`) |
+| `--repository OWNER/NAME` | GitHub repository of the pull request (default: `decentralized-identity/universal-resolver`) |
+| `--report FILE` | Also write the Markdown report to this file |
+
+The exit code is `0` whether the check passed or failed (see the report heading), and `2` if the pull request
+could not be downloaded.
 
 ## Run locally with Python
 
@@ -25,15 +50,13 @@ Needs Python 3 with the dependencies from `app/requirements.txt` and `docker com
 (skipped with a warning if not available).
 
     pip install -r ci/pr-check/app/requirements.txt
-    python ci/pr-check/app/pr_check.py --path . --report report.md
+    python ci/pr-check/app/pr_check.py --pr 578
 
 ## Use action in GitHub workflow
 
     - name: Run PR check
       id: check
       uses: $/ci/pr-check
-      with:
-        path: .
 
 Outputs: `result` (`success`/`failure`), `errors`, `warnings` and `report` (Markdown). The action always exits
 successfully so the report can be published; fail the job based on the `result` output.

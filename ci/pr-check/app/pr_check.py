@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check the Universal Resolver configuration files of a pull request.
 
-Checked files (relative to --path):
+Checked files (relative to --path, or downloaded from GitHub with --pr):
   - uni-resolver-web/src/main/resources/application.yml
   - docker-compose.yml
   - .env
@@ -21,6 +21,7 @@ import re
 import socket
 import subprocess
 import sys
+import tempfile
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -71,11 +72,13 @@ MANIFEST_ACCEPT = ", ".join([
     "application/vnd.docker.distribution.manifest.v2+json",
 ])
 USER_AGENT = "universal-resolver-pr-check"
+DEFAULT_REPOSITORY = "decentralized-identity/universal-resolver"
 
 
 class Report:
-    def __init__(self):
-        self.results = {name: {"errors": [], "warnings": []} for name in FILES}
+    def __init__(self, subject: str | None = None):
+        self.subject = subject
+        self.results: dict[str, dict[str, list[str]]] = {name: {"errors": [], "warnings": []} for name in FILES}
 
     def error(self, file: str, message: str) -> None:
         self.results[file]["errors"].append(message)
@@ -99,6 +102,8 @@ class Report:
             lines.append(f"### ✅ PR check passed with {self.warning_count} warning(s)")
         else:
             lines.append("### ✅ PR check passed")
+        if self.subject:
+            lines += ["", self.subject]
         lines += ["", "| File | Status |", "|------|--------|"]
         for name, result in self.results.items():
             if result["errors"]:
@@ -496,14 +501,54 @@ def set_outputs(report: Report, markdown: str) -> None:
             f.write(markdown)
 
 
+def download_pr_files(repository: str, pr_number: int, target: Path) -> str:
+    """Download the checked files of a pull request's head commit into target. Returns a description of the PR."""
+    request = urllib.request.Request(
+        f"https://api.github.com/repos/{repository}/pulls/{pr_number}",
+        headers={"User-Agent": USER_AGENT, "Accept": "application/vnd.github+json"})
+    with urllib.request.urlopen(request, timeout=REGISTRY_TIMEOUT) as response:
+        pr = json.load(response)
+    sha = pr["head"]["sha"]
+    for name in FILES:
+        # PR commits (also from forks) are served by the base repository
+        url = f"https://raw.githubusercontent.com/{repository}/{sha}/{urllib.parse.quote(name)}"
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": USER_AGENT}),
+                                        timeout=REGISTRY_TIMEOUT) as response:
+                content = response.read()
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                continue  # reported as "File not found"
+            raise
+        (target / name).parent.mkdir(parents=True, exist_ok=True)
+        (target / name).write_bytes(content)
+    return f"PR [#{pr['number']}]({pr['html_url']}) \"{pr['title']}\" at commit `{sha[:8]}`"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--path", default=".", help="Repository root containing the files to check")
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--path", default=".", help="Repository root containing the files to check (default: .)")
+    source.add_argument("--pr", type=int, metavar="NUMBER",
+                        help="Download the files of this pull request from GitHub and check them")
+    parser.add_argument("--repository", default=DEFAULT_REPOSITORY,
+                        help=f"GitHub repository of the pull request (default: {DEFAULT_REPOSITORY})")
     parser.add_argument("--report", help="Optional file to write the Markdown report to")
     args = parser.parse_args()
-    root = Path(args.path).resolve()
 
-    report = Report()
+    if args.pr is None:
+        return run_checks(Path(args.path).resolve(), args.report)
+    with tempfile.TemporaryDirectory(prefix="pr-check-") as directory:
+        try:
+            subject = download_pr_files(args.repository, args.pr, Path(directory))
+        except (urllib.error.URLError, OSError, KeyError, ValueError) as e:
+            print(f"Could not download PR #{args.pr} from {args.repository}: {e}", file=sys.stderr)
+            return 2
+        return run_checks(Path(directory), args.report, subject)
+
+
+def run_checks(root: Path, report_file: str | None, subject: str | None = None) -> int:
+    report = Report(subject)
     config = load_yaml(report, APPLICATION_YML, read_text(report, root, APPLICATION_YML))
     drivers = check_application_yml(report, config)
     env_keys = check_dot_env(report, read_text(report, root, DOT_ENV))
@@ -513,8 +558,8 @@ def main() -> int:
 
     markdown = report.markdown()
     print(markdown)
-    if args.report:
-        Path(args.report).write_text(markdown, encoding="utf-8")
+    if report_file:
+        Path(report_file).write_text(markdown, encoding="utf-8")
     set_outputs(report, markdown)
     # Exit code stays 0 so the workflow can publish the report; use the `result` output to fail.
     return 0
