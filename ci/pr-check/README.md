@@ -9,8 +9,9 @@ registries (Docker Hub, GitHub Container Registry, Quay, ...) without credential
 
 | File | Errors (fail the check) | Warnings |
 |------|-------------------------|----------|
-| `uni-resolver-web/src/main/resources/application.yml` | Invalid YAML, duplicate keys, tab indentation, missing `uniresolver.drivers`, driver without `pattern`/`url`, wrong value types, duplicate patterns | Unknown driver keys (typos), pattern not compilable, test identifiers not matching the pattern |
-| `docker-compose.yml` | Invalid YAML, duplicate keys, errors from `docker compose config`, services without `image`/`build`, images that do not exist or need a login to pull | Warnings from `docker compose config` (except the obsolete `version` attribute), `${VAR}` not defined in `.env`, driver hosts without a service, images that could not be verified (registry timeout, rate limit, server error) |
+| Changed files (with `--pr` or `--changed-files`) | Any changed file other than the 4 files below: a driver pull request may only edit these, the driver code belongs in its own repository | |
+| `uni-resolver-web/src/main/resources/application.yml` | Invalid YAML, duplicate keys, tab indentation, missing `uniresolver.drivers`, driver without `pattern`/`url`, wrong value types, duplicate patterns, services in `docker-compose.yml` without a driver entry (neither a `url` pointing to the service nor a driver for a DID method named in the service or image name, e.g. `driver-did-moncon` ↔ `did:moncon`), except `uni-resolver-web` and services other services depend on | Unknown driver keys (typos), pattern not compilable, test identifiers not matching the pattern |
+| `docker-compose.yml` | Invalid YAML, duplicate keys, errors from `docker compose config`, services without `image`/`build`, images that do not exist or need a login to pull | Warnings from `docker compose config` (except the obsolete `version` attribute and unset variables), `${VAR}` not defined in `.env`, driver hosts without a service, images that could not be verified (registry timeout, rate limit, server error) |
 | `.env` | Lines not in `KEY=value` format, unterminated quotes | Duplicate keys, leading whitespace |
 | `README.md` | Missing `## Drivers` section or driver table, table rows with wrong column count | |
 
@@ -38,6 +39,7 @@ Options:
 |--------|-------------|
 | `--path DIR` | Repository root containing the files to check (default: `.`) |
 | `--pr NUMBER` | Download the files of this pull request's head commit from GitHub and check them (instead of `--path`) |
+| `--changed-files FILE` | File listing the files changed by the pull request, one per line (with `--path`; `--pr` gets them from GitHub) |
 | `--repository OWNER/NAME` | GitHub repository of the pull request (default: `decentralized-identity/universal-resolver`) |
 | `--report FILE` | Also write the Markdown report to this file |
 
@@ -57,6 +59,9 @@ Needs Python 3 with the dependencies from `app/requirements.txt` and `docker com
     - name: Run PR check
       id: check
       uses: $/ci/pr-check
+      with:
+        path: .
+        changed-files: .pr-check/changed-files.txt  # optional
 
 Outputs: `result` (`success`/`failure`), `errors`, `warnings` and `report` (Markdown). The action always exits
 successfully so the report can be published; fail the job based on the `result` output.

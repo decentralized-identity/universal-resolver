@@ -5,6 +5,10 @@ inputs:
     description: 'Repository root containing the files to check, relative to the workspace'
     required: false
     default: '.'
+  changed-files:
+    description: 'File listing the files changed by the pull request, one per line, relative to the workspace (optional). Changes to other than the checked files are reported as errors.'
+    required: false
+    default: ''
 outputs:
   result:
     description: '`success` or `failure`'
@@ -20,3 +24,5 @@ runs:
   args:
     - --path
     - ${{ inputs.path }}
+    - --changed-files
+    - ${{ inputs.changed-files }}

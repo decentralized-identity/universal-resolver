@@ -1,6 +1,7 @@
 name: Pull Request check
 
-# Checks the files contributors usually edit when adding a driver, and that all images are public.
+# Checks the files contributors usually edit when adding a driver, that all images are public,
+# and that driver pull requests don't change any other files.
 #
 # This workflow runs with a read-only token (also for pull requests from forks) and
 # uploads the report as an artifact. The comment on the pull request is posted by
@@ -44,6 +45,7 @@ jobs:
       run: ${{ steps.scope.outputs.run }}
       pr-number: ${{ steps.scope.outputs.pr-number }}
       head-sha: ${{ steps.scope.outputs.head-sha }}
+      changed-files: ${{ steps.scope.outputs.changed-files }}
     steps:
       - name: Determine scope
         id: scope
@@ -65,20 +67,18 @@ jobs:
             core.setOutput('pr-number', String(pr.number));
             core.setOutput('head-sha', pr.head.sha);
 
-            // Manual runs always check; for PR events only run if the PR touches nothing but the checked files.
-            // PRs that also change other files are most likely active development.
-            if (context.eventName === 'workflow_dispatch') {
-              core.setOutput('run', 'true');
-              return;
-            }
             const files = await github.paginate(github.rest.pulls.listFiles, {
               owner, repo, pull_number: pr.number, per_page: 100,
             });
-            const otherFiles = files
-              .flatMap((f) => [f.filename, f.previous_filename])
-              .filter((name) => name && !checkedFiles.includes(name));
-            if (otherFiles.length > 0) {
-              core.notice(`Skipping PR check, the PR also changes other files: ${otherFiles.join(', ')}`);
+            const changedFiles = files.flatMap((f) => [f.filename, f.previous_filename]).filter(Boolean);
+            core.setOutput('changed-files', JSON.stringify(changedFiles));
+
+            // Manual runs always check. Driver PRs may only edit the checked files, the check reports any other file.
+            // Maintainer PRs that also change other files are active development and are skipped.
+            const otherFiles = changedFiles.filter((name) => !checkedFiles.includes(name));
+            const maintainer = ['OWNER', 'MEMBER', 'COLLABORATOR'].includes(pr.author_association);
+            if (context.eventName !== 'workflow_dispatch' && otherFiles.length > 0 && maintainer) {
+              core.notice(`Skipping PR check, maintainer PR also changes other files: ${otherFiles.join(', ')}`);
               core.setOutput('run', 'false');
             } else {
               core.setOutput('run', 'true');
@@ -105,11 +105,19 @@ jobs:
             /README.md
           sparse-checkout-cone-mode: false
 
+      - name: List changed files
+        env:
+          CHANGED_FILES: ${{ needs.scope.outputs.changed-files }}
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/.pr-check"
+          jq -r '.[]' <<< "$CHANGED_FILES" > "$GITHUB_WORKSPACE/.pr-check/changed-files.txt"
+
       - name: Run PR check
         id: check
-        uses: $/ci/pr-file-check
+        uses: $/ci/pr-check
         with:
           path: .
+          changed-files: .pr-check/changed-files.txt
 
       - name: Save report for PR comment
         if: steps.check.outputs.report != ''

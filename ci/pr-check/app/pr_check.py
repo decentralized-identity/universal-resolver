@@ -37,6 +37,10 @@ DOCKER_COMPOSE = "docker-compose.yml"
 DOT_ENV = ".env"
 README = "README.md"
 FILES = [APPLICATION_YML, DOCKER_COMPOSE, DOT_ENV, README]
+# Report section for the list of files changed by the pull request
+CHANGED_FILES = "Changed files"
+# Services in docker-compose.yml that are not drivers
+NON_DRIVER_SERVICES = {"uni-resolver-web"}
 
 # Keys bound by uniresolver.web.config.DriverConfigs.DriverConfig.
 # Spring ignores unknown keys silently, so a typo simply disables the setting.
@@ -62,6 +66,8 @@ COMPOSE_LOG_LINE = re.compile(r'level=(\w+)\s+msg="(.*)"$')
 # docker compose warnings that are not reported
 IGNORED_COMPOSE_WARNINGS = [
     re.compile(r"the attribute `version` is obsolete"),
+    # Reported by the own check "Variable ... is not defined in .env"
+    re.compile(r"variable is not set\. Defaulting to a blank string"),
 ]
 
 REGISTRY_TIMEOUT = 20
@@ -76,9 +82,10 @@ DEFAULT_REPOSITORY = "decentralized-identity/universal-resolver"
 
 
 class Report:
-    def __init__(self, subject: str | None = None):
+    def __init__(self, subject: str | None = None, with_changed_files: bool = False):
         self.subject = subject
-        self.results: dict[str, dict[str, list[str]]] = {name: {"errors": [], "warnings": []} for name in FILES}
+        sections = ([CHANGED_FILES] if with_changed_files else []) + FILES
+        self.results: dict[str, dict[str, list[str]]] = {name: {"errors": [], "warnings": []} for name in sections}
 
     def error(self, file: str, message: str) -> None:
         self.results[file]["errors"].append(message)
@@ -112,14 +119,18 @@ class Report:
                 status = f"⚠️ {len(result['warnings'])} warning(s)"
             else:
                 status = "✅ OK"
-            lines.append(f"| `{name}` | {status} |")
+            lines.append(f"| {self.title(name)} | {status} |")
         for name, result in self.results.items():
             if not (result["errors"] or result["warnings"]):
                 continue
-            lines += ["", f"#### `{name}`", ""]
+            lines += ["", f"#### {self.title(name)}", ""]
             lines += [f"- ❌ {msg}" for msg in result["errors"]]
             lines += [f"- ⚠️ {msg}" for msg in result["warnings"]]
         return "\n".join(lines) + "\n"
+
+    @staticmethod
+    def title(name: str) -> str:
+        return name if name == CHANGED_FILES else f"`{name}`"
 
 
 class UniqueKeyLoader(yaml.SafeLoader):
@@ -472,18 +483,60 @@ def check_readme(report: Report, text: str | None) -> None:
             report.error(name, f"Line {number}: table row has {len(cells(line))} columns, expected {columns}")
 
 
+def check_changed_files(report: Report, changed_files: list[str]) -> None:
+    """Driver pull requests may only edit the checked files."""
+    for name in sorted(set(changed_files)):
+        if name not in FILES:
+            report.error(CHANGED_FILES, f"`{name}` must not be changed, only the 4 files above may be edited "
+                                        "(the driver code belongs in its own repository and is referenced by its image)")
+
+
+def driver_url_host(driver: dict) -> str | None:
+    """Host of the driver URL, using the default value of a ${variable:default} placeholder."""
+    url = driver["url"].strip()
+    placeholder = SPRING_PLACEHOLDER.match(url)
+    if placeholder:
+        url = placeholder.group(2) or ""
+    host = re.match(r"^https?://([^:/]+)", url)
+    return host.group(1) if host else None
+
+
 def check_cross_references(report: Report, drivers: list[dict], compose: dict | None) -> None:
     services = compose.get("services", {}) if compose else {}
+    if not services:
+        return
 
+    referenced = set()
+    methods = set()
     for driver in drivers:
-        label = f"`{driver.get('pattern')}`"
-        placeholder = SPRING_PLACEHOLDER.match(driver["url"].strip())
-        if not placeholder or not services:
+        method = re.search(r"did:([a-z0-9]+)", driver.get("pattern") or "")
+        if method:
+            methods.add(method.group(1))
+        host = driver_url_host(driver)
+        referenced.add(host)
+        if (SPRING_PLACEHOLDER.match(driver["url"].strip()) and host and "." not in host
+                and host != "localhost" and host not in services):
+            report.warning(DOCKER_COMPOSE, f"Service `{host}` referenced by driver `{driver.get('pattern')}` in `{APPLICATION_YML}` is not defined")
+
+    # Services other services depend on (e.g. a database of a driver) don't need an own driver entry
+    for service in services.values():
+        if isinstance(service, dict):
+            depends_on = service.get("depends_on") or []
+            referenced.update(depends_on if isinstance(depends_on, (list, dict)) else [])
+            referenced.update(str(link).split(":")[0] for link in service.get("links") or [])
+
+    if not drivers:
+        return
+    for name in sorted(set(services) - referenced - NON_DRIVER_SERVICES):
+        # A driver entry may point to another URL than the service (e.g. a hosted driver),
+        # so a driver for a DID method named in the service or image name is sufficient
+        service = services[name] if isinstance(services[name], dict) else {}
+        image = str(service.get("image") or "").split("@")[0].rsplit(":", 1)[0].rsplit("/", 1)[-1]
+        if methods & set(re.split(r"[-_.]", f"{name}-{image}".lower())):
             continue
-        default = placeholder.group(2) or ""
-        host = re.match(r"^https?://([^:/]+)", default)
-        if host and "." not in host.group(1) and host.group(1) not in ("localhost",) and host.group(1) not in services:
-            report.warning(DOCKER_COMPOSE, f"Service `{host.group(1)}` referenced by driver {label} in `{APPLICATION_YML}` is not defined")
+        report.error(APPLICATION_YML, f"No driver entry for service `{name}` from `{DOCKER_COMPOSE}`. "
+                                      f"Add an entry to `uniresolver.drivers` for its DID method, e.g. with a `url` "
+                                      f"pointing to `http://{name}:<port>/`, otherwise the Universal Resolver never calls the driver")
 
 
 def set_outputs(report: Report, markdown: str) -> None:
@@ -501,14 +554,30 @@ def set_outputs(report: Report, markdown: str) -> None:
             f.write(markdown)
 
 
-def download_pr_files(repository: str, pr_number: int, target: Path) -> str:
-    """Download the checked files of a pull request's head commit into target. Returns a description of the PR."""
+def github_api(path: str) -> Any:
     request = urllib.request.Request(
-        f"https://api.github.com/repos/{repository}/pulls/{pr_number}",
+        f"https://api.github.com/{path}",
         headers={"User-Agent": USER_AGENT, "Accept": "application/vnd.github+json"})
     with urllib.request.urlopen(request, timeout=REGISTRY_TIMEOUT) as response:
-        pr = json.load(response)
+        return json.load(response)
+
+
+def download_pr_files(repository: str, pr_number: int, target: Path) -> tuple[str, list[str]]:
+    """Download the checked files of a pull request's head commit into target.
+
+    Returns a description of the PR and the list of files it changes.
+    """
+    pr = github_api(f"repos/{repository}/pulls/{pr_number}")
     sha = pr["head"]["sha"]
+    changed_files = []
+    page = 1
+    while True:
+        files = github_api(f"repos/{repository}/pulls/{pr_number}/files?per_page=100&page={page}")
+        for file in files:
+            changed_files += [file["filename"]] + ([file["previous_filename"]] if file.get("previous_filename") else [])
+        if len(files) < 100:
+            break
+        page += 1
     for name in FILES:
         # PR commits (also from forks) are served by the base repository
         url = f"https://raw.githubusercontent.com/{repository}/{sha}/{urllib.parse.quote(name)}"
@@ -522,7 +591,7 @@ def download_pr_files(repository: str, pr_number: int, target: Path) -> str:
             raise
         (target / name).parent.mkdir(parents=True, exist_ok=True)
         (target / name).write_bytes(content)
-    return f"PR [#{pr['number']}]({pr['html_url']}) \"{pr['title']}\" at commit `{sha[:8]}`"
+    return f"PR [#{pr['number']}]({pr['html_url']}) \"{pr['title']}\" at commit `{sha[:8]}`", changed_files
 
 
 def main() -> int:
@@ -533,22 +602,30 @@ def main() -> int:
                         help="Download the files of this pull request from GitHub and check them")
     parser.add_argument("--repository", default=DEFAULT_REPOSITORY,
                         help=f"GitHub repository of the pull request (default: {DEFAULT_REPOSITORY})")
+    parser.add_argument("--changed-files", metavar="FILE",
+                        help="File listing the files changed by the pull request, one per line (with --path)")
     parser.add_argument("--report", help="Optional file to write the Markdown report to")
     args = parser.parse_args()
 
     if args.pr is None:
-        return run_checks(Path(args.path).resolve(), args.report)
+        changed_files = None
+        if args.changed_files:
+            changed_files = [line.strip() for line in Path(args.changed_files).read_text(encoding="utf-8").splitlines() if line.strip()]
+        return run_checks(Path(args.path).resolve(), args.report, changed_files)
     with tempfile.TemporaryDirectory(prefix="pr-check-") as directory:
         try:
-            subject = download_pr_files(args.repository, args.pr, Path(directory))
+            subject, changed_files = download_pr_files(args.repository, args.pr, Path(directory))
         except (urllib.error.URLError, OSError, KeyError, ValueError) as e:
             print(f"Could not download PR #{args.pr} from {args.repository}: {e}", file=sys.stderr)
             return 2
-        return run_checks(Path(directory), args.report, subject)
+        return run_checks(Path(directory), args.report, changed_files, subject)
 
 
-def run_checks(root: Path, report_file: str | None, subject: str | None = None) -> int:
-    report = Report(subject)
+def run_checks(root: Path, report_file: str | None, changed_files: list[str] | None = None,
+               subject: str | None = None) -> int:
+    report = Report(subject, with_changed_files=changed_files is not None)
+    if changed_files is not None:
+        check_changed_files(report, changed_files)
     config = load_yaml(report, APPLICATION_YML, read_text(report, root, APPLICATION_YML))
     drivers = check_application_yml(report, config)
     env_keys = check_dot_env(report, read_text(report, root, DOT_ENV))
