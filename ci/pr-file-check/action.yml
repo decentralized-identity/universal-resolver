@@ -1,0 +1,22 @@
+name: 'uni-resolver-pr-file-check'
+description: 'Check Universal Resolver config files (application.yml, docker-compose.yml, .env, README.md) for malformed content'
+inputs:
+  path:
+    description: 'Repository root containing the files to check, relative to the workspace'
+    required: false
+    default: '.'
+outputs:
+  result:
+    description: '`success` or `failure`'
+  errors:
+    description: 'Number of errors found'
+  warnings:
+    description: 'Number of warnings found'
+  report:
+    description: 'Markdown report of the check'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - --path
+    - ${{ inputs.path }}

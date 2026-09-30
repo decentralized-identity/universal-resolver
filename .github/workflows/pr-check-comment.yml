@@ -1,0 +1,86 @@
+name: Pull Request check comment
+
+# Posts the report of pr-check.yml as a comment on the pull request.
+#
+# Kept separate so the check itself never runs with write permissions on untrusted
+# pull request content. The artifact is treated as untrusted data: the PR number is only
+# accepted if that PR's head commit is the one the check ran on.
+# Note: workflow_run only triggers for this file on the default branch.
+on: # zizmor: ignore[dangerous-triggers] only reads the artifact as data, never checks out or runs PR code
+  workflow_run:
+    workflows: [Pull Request check]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  comment:
+    name: Comment on PR
+    if: >-
+      github.event.workflow_run.conclusion == 'success'
+      || github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      pull-requests: write
+    steps:
+      - name: Download report
+        id: download
+        uses: actions/download-artifact@v8
+        continue-on-error: true # no artifact: PR out of scope or check not run for a PR
+        with:
+          name: pr-file-check-report
+          path: ${{ runner.temp }}/pr-file-check
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      - name: Create or update comment
+        if: steps.download.outcome == 'success'
+        uses: actions/github-script@v9
+        env:
+          REPORT_DIR: ${{ runner.temp }}/pr-file-check
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        with:
+          script: |
+            const fs = require('node:fs');
+            const path = require('node:path');
+            const { owner, repo } = context.repo;
+            const run = context.payload.workflow_run;
+
+            const meta = JSON.parse(fs.readFileSync(path.join(process.env.REPORT_DIR, 'pr.json'), 'utf8'));
+            const report = fs.readFileSync(path.join(process.env.REPORT_DIR, 'report.md'), 'utf8').trim();
+            if (!Number.isInteger(meta.pr_number) || meta.pr_number < 1 || !/^[0-9a-f]{40}$/.test(meta.head_sha)) {
+              core.setFailed('Invalid report metadata');
+              return;
+            }
+
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: meta.pr_number });
+            // For PR events the artifact comes from untrusted code paths: only comment on the PR that was checked
+            if (run.event === 'pull_request' && (run.head_sha !== meta.head_sha || pr.head.sha !== meta.head_sha)) {
+              core.notice(`PR #${pr.number} head (${pr.head.sha}) does not match the checked commit (${run.head_sha}), skipping comment`);
+              return;
+            }
+
+            const marker = '<!-- uni-resolver-pr-file-check -->';
+            const body = [
+              marker,
+              report.slice(0, 60000),
+              '',
+              `<sub>Checked commit ${meta.head_sha} · [workflow run](${process.env.RUN_URL})</sub>`,
+            ].join('\n');
+
+            // Update the previous report instead of adding a new comment on every push
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number: pr.number, per_page: 100,
+            });
+            const existing = comments.find(
+              (c) => c.user?.login === 'github-actions[bot]' && c.body?.startsWith(marker),
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+              core.info(`Updated comment ${existing.html_url}`);
+            } else {
+              const { data } = await github.rest.issues.createComment({ owner, repo, issue_number: pr.number, body });
+              core.info(`Created comment ${data.html_url}`);
+            }
