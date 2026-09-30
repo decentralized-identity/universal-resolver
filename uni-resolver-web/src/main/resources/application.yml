@@ -223,11 +223,6 @@ uniresolver:
       testIdentifiers:
         - did:dock:5CxUdCGtopZEJhdv6kfLBZ22PMZX7UK8mdcHbTVw2nw6MVZH
         - did:dock:5CDsD8HZa6TeSfgmMcxAkbSXYWeob4jFQmtU6sxr4XWTZzUA
-    - pattern: "^(did:mydata:.+)$"
-      url: ${uniresolver_web_driver_url_did_mydata:http://mydata-did-driver:8080/1.0/identifiers/$1}
-      testIdentifiers:
-        - did:mydata:z6MktaWPDXK7qwt9YgcGVuCFAXBvrEP3WPtxJQg37jnULXWL
-        - did:mydata:z6MkjgVfx2YE7SUBZBej65E7UHSjAyMLukPvdPjPytpTy1ZM
     - pattern: "^(did:dns:.+)$"
       url: ${uniresolver_web_driver_url_did_dns:http://driver-did-dns:8080/}
       propertiesEndpoint: "true"
