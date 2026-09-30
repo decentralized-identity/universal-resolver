@@ -211,6 +211,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-webplus](https://github.com/LedgerDomain/did-webplus)                                                          | 0.1.1          | [0.4](https://ledgerdomain.github.io/did-webplus-spec/)                                         | [did-webplus-urd](ghcr.io/ledgerdomain/did-webplus-urd)                                                                    | webplus DID                                                                             |
 | [did-art](https://github.com/ArtracID/ArtracID-DID-ART-Method) | 1.0.0 | [spec](https://github.com/ArtracID/ArtracID-DID-ART-Method) | [worthyopponent30/did-art-resolver](https://hub.docker.com/r/worthyopponent30/did-art-resolver) | DID:ART for digital artwork |
 | [did-cid](https://github.com/archetech/uni-resolver-driver-did-cid) | 0.1.0 | [0.1.0](https://github.com/archetech/archon/blob/main/docs/scheme.md) | [ghcr.io/archetech/uni-resolver-driver-did-cid](https://github.com/archetech/uni-resolver-driver-did-cid/pkgs/container/uni-resolver-driver-did-cid) | Archon Protocol (content-addressed DID) |
+| [did-definitiveid](https://github.com/davidgbvargroup/uni-resolver-driver-did-definitiveid) 					| 0.1.0 		 | [0.1.0](https://github.com/davidgbvargroup/did-definitiveid-method-spec/blob/main/spec.md) 						  | [davidgbvargroup/uni-resolver-driver-did-definitiveid](https://hub.docker.com/r/davidgbvargroup/uni-resolver-driver-did-definitiveid) 							   | DefinitiveID DID |
 
 
 ## More Information

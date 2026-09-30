@@ -456,3 +456,12 @@ uniresolver:
       testIdentifiers:
         - did:cid:bagaaieraxdxq4fm2kjh6yqjxjor3t2idczkmxd4v7in4u353fa6m6sms2pnq
         - did:cid:bagaaierajzwcicueqdkbgk75lgekdmvtbo5zv3spq2p4f7d7ow42urlwi32a
+
+    - pattern: "^(did:definitiveid:.+)$"
+      url: ${uniresolver_web_driver_url_did_definitiveid:http://driver-did-definitiveid:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:definitiveid:bV9echGYLPYWPYgGNwRbHo
+        - did:definitiveid:x9Kmtiaq1i5qt5QsaWKvCU
+        - did:definitiveid:zZCKYq5d7LkuUT5357WhmS
+
+
