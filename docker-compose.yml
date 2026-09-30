@@ -150,10 +150,6 @@ services:
     image: veresone/uni-resolver-did-v1-driver:latest
     ports:
       - "8100:8080"
-  driver-did-mpg:
-    image: mpgshankr/driver-did-mpg:latest
-    ports:
-      - "8103:8080"
   uni-resolver-driver-did-io:
     image: iotex/uni-resolver-driver-did-io:latest
     ports:
