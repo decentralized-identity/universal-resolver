@@ -7,4 +7,4 @@ exec env -i \
   HOME=/tmp \
   GITHUB_OUTPUT="$GITHUB_OUTPUT" \
   GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
-  python /pr-check/pr_check.py "$@"
+  node /pr-check/src/main.ts "$@"

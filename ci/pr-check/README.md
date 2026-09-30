@@ -44,16 +44,33 @@ Options:
 | `--repository OWNER/NAME` | GitHub repository of the pull request (default: `decentralized-identity/universal-resolver`) |
 | `--report FILE` | Also write the Markdown report to this file |
 
-The exit code is `0` whether the check passed or failed (see the report heading), and `2` if the pull request
-could not be downloaded.
+The exit code is `0` whether the check passed or failed (see the report heading), `1` for invalid options and `2`
+if the pull request could not be downloaded.
 
-## Run locally with Python
+## Run locally with Node.js
 
-Needs Python 3 with the dependencies from `app/requirements.txt` and `docker compose` for the compose validation
-(skipped with a warning if not available).
+Needs Node.js 24 (runs the TypeScript sources directly, no build step) and `docker-compose` on the `PATH` for the
+compose validation (skipped with a warning if not available).
 
-    pip install -r ci/pr-check/app/requirements.txt
-    python ci/pr-check/app/pr_check.py --pr 578
+    cd ci/pr-check
+    npm ci
+    node src/main.ts --pr 578
+
+## Development
+
+    npm test            # unit tests (node:test)
+    npm run typecheck   # tsc, type checking only
+
+| Path | Content |
+|------|---------|
+| `src/main.ts` | Entry point: parses the arguments, loads the input, runs the checks, writes the report |
+| `src/cli.ts` | Command line options |
+| `src/config.ts` | Checked files and defaults |
+| `src/input/` | Where the checked files come from: a local directory or a pull request on GitHub |
+| `src/checks/` | One module per check, `index.ts` runs them all |
+| `src/report/` | Findings per file and the Markdown rendering |
+| `src/lib/` | YAML parsing, `docker compose config`, container registry and GitHub clients, GitHub Actions outputs |
+| `test/` | Unit tests per module |
 
 ## Use action in GitHub workflow
 
