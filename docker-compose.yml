@@ -112,12 +112,6 @@ services:
     image: universalresolver/driver-did-stack:latest
     ports:
       - "8084:8080"
-  driver-dns:
-    image: universalresolver/driver-dns:latest
-    environment:
-      uniresolver_driver_dns_dnsServers: ${uniresolver_driver_dns_dnsServers}
-    ports:
-      - "8087:8080"
   jolocom-did-driver:
     image: jolocomgmbh/jolocom-did-driver:latest
     ports:
