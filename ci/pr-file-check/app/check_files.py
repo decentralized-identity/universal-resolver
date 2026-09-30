@@ -7,17 +7,25 @@ Checked files (relative to --path):
   - .env
   - README.md
 
-The files are only parsed, never executed. The result is written as a Markdown
+The files are only parsed, never executed. Images referenced in docker-compose.yml
+are resolved against their registries anonymously to make sure they can be pulled
+without a login. The result is written as a Markdown
 report and exposed as GitHub Action outputs (`result`, `errors`, `warnings`,
 `report`) when running inside GitHub Actions.
 """
 
 import argparse
+import json
 import os
 import re
+import socket
 import subprocess
 import sys
+import urllib.error
+import urllib.parse
+import urllib.request
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import yaml
@@ -49,6 +57,19 @@ SPRING_PLACEHOLDER = re.compile(r"^\$\{([A-Za-z0-9_.\-]+)(?::(.*))?\}$")
 COMPOSE_VARIABLE = re.compile(r"(?<!\$)\$\{([A-Za-z_][A-Za-z0-9_]*)")
 DOTENV_LINE = re.compile(r"^(?:export\s+)?([A-Za-z_][A-Za-z0-9_.\-]*)\s*=(.*)$")
 COMPOSE_LOG_LINE = re.compile(r'level=(\w+)\s+msg="(.*)"$')
+# docker compose warnings that are not reported
+IGNORED_COMPOSE_WARNINGS = [
+    re.compile(r"the attribute `version` is obsolete"),
+]
+
+REGISTRY_TIMEOUT = 20
+MANIFEST_ACCEPT = ", ".join([
+    "application/vnd.oci.image.index.v1+json",
+    "application/vnd.oci.image.manifest.v1+json",
+    "application/vnd.docker.distribution.manifest.list.v2+json",
+    "application/vnd.docker.distribution.manifest.v2+json",
+])
+USER_AGENT = "universal-resolver-pr-file-check"
 
 
 class Report:
@@ -213,20 +234,21 @@ def check_application_yml(report, config):
 
 
 def run_compose_config(report, root):
+    """Validate with `docker compose config` and return the resolved config, or None."""
     name = DOCKER_COMPOSE
     command = ["docker-compose", "--project-directory", str(root), "-f", str(root / DOCKER_COMPOSE)]
     if (root / DOT_ENV).is_file():
         command += ["--env-file", str(root / DOT_ENV)]
-    command += ["config", "--quiet"]
+    command += ["config", "--format", "json"]
     try:
         result = subprocess.run(command, capture_output=True, text=True, timeout=120,
                                 env={"PATH": os.environ.get("PATH", ""), "HOME": "/tmp"})
     except FileNotFoundError:
         report.warning(name, "`docker-compose` binary not found, skipped compose validation")
-        return
+        return None
     except subprocess.TimeoutExpired:
         report.error(name, "`docker compose config` timed out")
-        return
+        return None
 
     for line in (result.stderr or "").splitlines():
         line = line.strip()
@@ -236,11 +258,18 @@ def run_compose_config(report, root):
         level, message = (match.group(1), match.group(2)) if match else ("error", line)
         message = message.replace(str(root) + "/", "")
         if level in ("warning", "warn", "info", "debug"):
-            report.warning(name, f"docker compose: {message}")
+            if not any(ignored.search(message) for ignored in IGNORED_COMPOSE_WARNINGS):
+                report.warning(name, f"docker compose: {message}")
         else:
             report.error(name, f"docker compose: {message}")
-    if result.returncode != 0 and not report.results[name]["errors"]:
-        report.error(name, f"`docker compose config` failed with exit code {result.returncode}")
+    if result.returncode != 0:
+        if not report.results[name]["errors"]:
+            report.error(name, f"`docker compose config` failed with exit code {result.returncode}")
+        return None
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return None
 
 
 def check_docker_compose(report, root, compose, env_keys):
@@ -250,7 +279,7 @@ def check_docker_compose(report, root, compose, env_keys):
     if not isinstance(compose, dict) or not isinstance(compose.get("services"), dict) or not compose["services"]:
         report.error(name, "`services` must be a non-empty mapping")
         return None
-    run_compose_config(report, root)
+    resolved = run_compose_config(report, root)
 
     for service_name, service in compose["services"].items():
         if not isinstance(service, dict):
@@ -258,11 +287,113 @@ def check_docker_compose(report, root, compose, env_keys):
         elif not service.get("image") and not service.get("build"):
             report.error(name, f"Service `{service_name}` has neither `image` nor `build`")
 
+    # Prefer the image names resolved by docker compose (variables interpolated)
+    services = (resolved or {}).get("services") or compose["services"]
+    images = {}
+    for service_name, service in services.items():
+        image = service.get("image") if isinstance(service, dict) else None
+        if isinstance(image, str) and image.strip() and "$" not in image:
+            images.setdefault(image.strip(), []).append(service_name)
+    check_images(report, images)
+
     if env_keys is not None:
         text = (root / DOCKER_COMPOSE).read_text(encoding="utf-8")
         for variable in sorted(set(COMPOSE_VARIABLE.findall(text)) - env_keys):
             report.warning(name, f"Variable `${{{variable}}}` is not defined in `{DOT_ENV}`")
     return compose
+
+
+def parse_image_reference(image):
+    """Split an image reference into (registry host, repository, tag or digest)."""
+    name, digest = image.split("@", 1) if "@" in image else (image, None)
+    tag = None
+    last = name.rsplit("/", 1)[-1]
+    if ":" in last:
+        name, tag = name.rsplit(":", 1)
+    first, _, rest = name.partition("/")
+    if rest and ("." in first or ":" in first or first == "localhost"):
+        registry, repository = first, rest
+    else:
+        registry, repository = "docker.io", name
+    if registry in ("docker.io", "index.docker.io"):
+        registry = "registry-1.docker.io"
+        if "/" not in repository:
+            repository = f"library/{repository}"
+    return registry, repository, digest or tag or "latest"
+
+
+def parse_auth_challenge(header):
+    scheme, _, params = (header or "").partition(" ")
+    return scheme.lower(), dict(re.findall(r'(\w+)="([^"]*)"', params))
+
+
+def registry_request(url, method="HEAD", token=None, accept=MANIFEST_ACCEPT):
+    headers = {"User-Agent": USER_AGENT, "Accept": accept}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    request = urllib.request.Request(url, method=method, headers=headers)
+    try:
+        with urllib.request.urlopen(request, timeout=REGISTRY_TIMEOUT) as response:
+            return response.status, response.headers, response.read() if method == "GET" else b""
+    except urllib.error.HTTPError as e:
+        return e.code, e.headers, b""
+
+
+def check_image(image):
+    """Resolve the image manifest without credentials. Returns (level, message) or None if pullable."""
+    try:
+        registry, repository, reference = parse_image_reference(image)
+        manifest_url = f"https://{registry}/v2/{repository}/manifests/{reference}"
+        status, headers, _ = registry_request(manifest_url)
+        if status == 405:  # registries without HEAD support
+            status, headers, _ = registry_request(manifest_url, method="GET")
+
+        if status == 401:
+            scheme, challenge = parse_auth_challenge(headers.get("WWW-Authenticate"))
+            if scheme != "bearer" or "realm" not in challenge:
+                return "error", f"requires a login at `{registry}`"
+            query = {"scope": f"repository:{repository}:pull"}
+            if "service" in challenge:
+                query["service"] = challenge["service"]
+            token_status, _, body = registry_request(
+                f"{challenge['realm']}?{urllib.parse.urlencode(query)}", method="GET", accept="application/json")
+            if token_status != 200:
+                return "error", f"does not exist or requires a login at `{registry}`"
+            data = json.loads(body or b"{}")
+            token = data.get("token") or data.get("access_token")
+            status, _, _ = registry_request(manifest_url, token=token)
+
+        if status == 200:
+            return None
+        if status in (401, 403):
+            return "error", "does not exist or requires a login"
+        if status == 404:
+            return "error", f"not found (tag or digest `{reference}` does not exist)"
+        if status == 429 or status >= 500:
+            return "warning", f"could not be verified, `{registry}` returned HTTP {status}"
+        return "error", f"could not be resolved, `{registry}` returned HTTP {status}"
+    except (urllib.error.URLError, TimeoutError, OSError, ValueError) as e:
+        reason = getattr(e, "reason", e)
+        if isinstance(reason, socket.gaierror):
+            return "error", f"registry host `{registry}` not found"
+        # Timeouts and connection problems may be temporary
+        return "warning", f"could not be verified ({reason})"
+
+
+def check_images(report, images):
+    """images: {image reference: [service names]}"""
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        results = dict(zip(images, executor.map(check_image, images)))
+    for image, result in sorted(results.items()):
+        if result is None:
+            continue
+        level, message = result
+        services = ", ".join(f"`{s}`" for s in images[image])
+        text = f"Image `{image}` (service {services}) {message}"
+        if level == "error":
+            report.error(DOCKER_COMPOSE, text)
+        else:
+            report.warning(DOCKER_COMPOSE, text)
 
 
 def check_dot_env(report, text):
@@ -331,21 +462,13 @@ def check_readme(report, text):
     for number, line in table[2:]:
         if len(cells(line)) != columns:
             report.error(name, f"Line {number}: table row has {len(cells(line))} columns, expected {columns}")
-    return "\n".join(line for _, line in table[2:]).lower()
 
 
-def check_cross_references(report, drivers, compose, readme_table):
+def check_cross_references(report, drivers, compose):
     services = compose.get("services", {}) if compose else {}
 
     for driver in drivers:
-        pattern = driver.get("pattern")
-        method = re.search(r"did:([a-z0-9]+)", pattern or "")
-        label = f"`{pattern}`"
-
-        if readme_table is not None and method:
-            if not re.search(rf"did[-:]{re.escape(method.group(1))}\b", readme_table):
-                report.warning(README, f"No entry for DID method `did:{method.group(1)}` in the driver table (driver {label} in `{APPLICATION_YML}`)")
-
+        label = f"`{driver.get('pattern')}`"
         placeholder = SPRING_PLACEHOLDER.match(driver["url"].strip())
         if not placeholder or not services:
             continue
@@ -382,8 +505,8 @@ def main():
     drivers = check_application_yml(report, config)
     env_keys = check_dot_env(report, read_text(report, root, DOT_ENV))
     compose = check_docker_compose(report, root, load_yaml(report, DOCKER_COMPOSE, read_text(report, root, DOCKER_COMPOSE)), env_keys)
-    readme_table = check_readme(report, read_text(report, root, README))
-    check_cross_references(report, drivers, compose, readme_table)
+    check_readme(report, read_text(report, root, README))
+    check_cross_references(report, drivers, compose)
 
     markdown = report.markdown()
     print(markdown)

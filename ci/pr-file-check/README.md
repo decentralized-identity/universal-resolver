@@ -4,14 +4,15 @@ Checks the files contributors usually edit when adding a driver for malformed co
 [Pull Request check](../../.github/workflows/pr-check.yml) workflow, which posts the report as a PR comment
 via [pr-check-comment.yml](../../.github/workflows/pr-check-comment.yml).
 
-The files are only parsed, never executed.
+The files are only parsed, never executed. Images referenced in `docker-compose.yml` are resolved against their
+registries (Docker Hub, GitHub Container Registry, Quay, ...) without credentials to make sure everyone can pull them.
 
 | File | Errors (fail the check) | Warnings |
 |------|-------------------------|----------|
 | `uni-resolver-web/src/main/resources/application.yml` | Invalid YAML, duplicate keys, tab indentation, missing `uniresolver.drivers`, driver without `pattern`/`url`, wrong value types, duplicate patterns | Unknown driver keys (typos), pattern not compilable, test identifiers not matching the pattern |
-| `docker-compose.yml` | Invalid YAML, duplicate keys, errors from `docker compose config`, services without `image`/`build` | Warnings from `docker compose config`, `${VAR}` not defined in `.env`, driver hosts without a service |
+| `docker-compose.yml` | Invalid YAML, duplicate keys, errors from `docker compose config`, services without `image`/`build`, images that do not exist or need a login to pull | Warnings from `docker compose config` (except the obsolete `version` attribute), `${VAR}` not defined in `.env`, driver hosts without a service, images that could not be verified (registry timeout, rate limit, server error) |
 | `.env` | Lines not in `KEY=value` format, unterminated quotes | Duplicate keys, leading whitespace |
-| `README.md` | Missing `## Drivers` section or driver table, table rows with wrong column count | DID methods from `application.yml` without an entry in the driver table |
+| `README.md` | Missing `## Drivers` section or driver table, table rows with wrong column count | |
 
 ## Run locally with Docker
 
