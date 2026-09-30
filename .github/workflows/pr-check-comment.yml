@@ -30,8 +30,8 @@ jobs:
         uses: actions/download-artifact@v8
         continue-on-error: true # no artifact: PR out of scope or check not run for a PR
         with:
-          name: pr-file-check-report
-          path: ${{ runner.temp }}/pr-file-check
+          name: pr-check-report
+          path: ${{ runner.temp }}/pr-check
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ github.token }}
 
@@ -39,7 +39,7 @@ jobs:
         if: steps.download.outcome == 'success'
         uses: actions/github-script@v9
         env:
-          REPORT_DIR: ${{ runner.temp }}/pr-file-check
+          REPORT_DIR: ${{ runner.temp }}/pr-check
           RUN_URL: ${{ github.event.workflow_run.html_url }}
         with:
           script: |
@@ -62,7 +62,7 @@ jobs:
               return;
             }
 
-            const marker = '<!-- uni-resolver-pr-file-check -->';
+            const marker = '<!-- uni-resolver-pr-check -->';
             const body = [
               marker,
               report.slice(0, 60000),

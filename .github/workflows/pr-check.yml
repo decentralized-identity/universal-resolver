@@ -1,6 +1,6 @@
 name: Pull Request check
 
-# Checks the files contributors usually edit when adding a driver.
+# Checks the files contributors usually edit when adding a driver, and that all images are public.
 #
 # This workflow runs with a read-only token (also for pull requests from forks) and
 # uploads the report as an artifact. The comment on the pull request is posted by
@@ -78,14 +78,14 @@ jobs:
               .flatMap((f) => [f.filename, f.previous_filename])
               .filter((name) => name && !checkedFiles.includes(name));
             if (otherFiles.length > 0) {
-              core.notice(`Skipping file check, the PR also changes other files: ${otherFiles.join(', ')}`);
+              core.notice(`Skipping PR check, the PR also changes other files: ${otherFiles.join(', ')}`);
               core.setOutput('run', 'false');
             } else {
               core.setOutput('run', 'true');
             }
 
-  file-check:
-    name: File check
+  pr-check:
+    name: PR check
     needs: scope
     if: needs.scope.outputs.run == 'true'
     runs-on: ubuntu-latest
@@ -105,7 +105,7 @@ jobs:
             /README.md
           sparse-checkout-cone-mode: false
 
-      - name: Check files
+      - name: Run PR check
         id: check
         uses: $/ci/pr-file-check
         with:
@@ -118,17 +118,17 @@ jobs:
           HEAD_SHA: ${{ needs.scope.outputs.head-sha }}
           REPORT: ${{ steps.check.outputs.report }}
         run: |
-          mkdir -p "$RUNNER_TEMP/pr-file-check"
-          printf '%s\n' "$REPORT" > "$RUNNER_TEMP/pr-file-check/report.md"
+          mkdir -p "$RUNNER_TEMP/pr-check"
+          printf '%s\n' "$REPORT" > "$RUNNER_TEMP/pr-check/report.md"
           jq -n --arg pr "$PR_NUMBER" --arg sha "$HEAD_SHA" \
-            '{pr_number: ($pr | tonumber), head_sha: $sha}' > "$RUNNER_TEMP/pr-file-check/pr.json"
+            '{pr_number: ($pr | tonumber), head_sha: $sha}' > "$RUNNER_TEMP/pr-check/pr.json"
 
       - name: Upload report
         if: steps.check.outputs.report != ''
         uses: actions/upload-artifact@v7
         with:
-          name: pr-file-check-report
-          path: ${{ runner.temp }}/pr-file-check/
+          name: pr-check-report
+          path: ${{ runner.temp }}/pr-check/
           retention-days: 5
           if-no-files-found: error
 
@@ -137,5 +137,5 @@ jobs:
         env:
           ERRORS: ${{ steps.check.outputs.errors }}
         run: |
-          echo "::error::File check found ${ERRORS:-unknown} error(s), see the job summary"
+          echo "::error::PR check found ${ERRORS:-unknown} error(s), see the job summary"
           exit 1

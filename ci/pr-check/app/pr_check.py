@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the Universal Resolver configuration files for malformed content.
+"""Check the Universal Resolver configuration files of a pull request.
 
 Checked files (relative to --path):
   - uni-resolver-web/src/main/resources/application.yml
@@ -27,6 +27,7 @@ import urllib.request
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -69,35 +70,35 @@ MANIFEST_ACCEPT = ", ".join([
     "application/vnd.docker.distribution.manifest.list.v2+json",
     "application/vnd.docker.distribution.manifest.v2+json",
 ])
-USER_AGENT = "universal-resolver-pr-file-check"
+USER_AGENT = "universal-resolver-pr-check"
 
 
 class Report:
     def __init__(self):
         self.results = {name: {"errors": [], "warnings": []} for name in FILES}
 
-    def error(self, file, message):
+    def error(self, file: str, message: str) -> None:
         self.results[file]["errors"].append(message)
 
-    def warning(self, file, message):
+    def warning(self, file: str, message: str) -> None:
         self.results[file]["warnings"].append(message)
 
     @property
-    def error_count(self):
+    def error_count(self) -> int:
         return sum(len(r["errors"]) for r in self.results.values())
 
     @property
-    def warning_count(self):
+    def warning_count(self) -> int:
         return sum(len(r["warnings"]) for r in self.results.values())
 
-    def markdown(self):
+    def markdown(self) -> str:
         lines = []
         if self.error_count:
-            lines.append(f"### ❌ File check failed: {self.error_count} error(s), {self.warning_count} warning(s)")
+            lines.append(f"### ❌ PR check failed: {self.error_count} error(s), {self.warning_count} warning(s)")
         elif self.warning_count:
-            lines.append(f"### ✅ File check passed with {self.warning_count} warning(s)")
+            lines.append(f"### ✅ PR check passed with {self.warning_count} warning(s)")
         else:
-            lines.append("### ✅ File check passed")
+            lines.append("### ✅ PR check passed")
         lines += ["", "| File | Status |", "|------|--------|"]
         for name, result in self.results.items():
             if result["errors"]:
@@ -138,14 +139,14 @@ class UniqueKeyLoader(yaml.SafeLoader):
         return super().construct_mapping(node, deep=deep)
 
 
-def describe_yaml_error(e):
+def describe_yaml_error(e: yaml.YAMLError) -> str:
     mark = getattr(e, "problem_mark", None)
     problem = getattr(e, "problem", None) or str(e)
     location = f"line {mark.line + 1}, column {mark.column + 1}: " if mark else ""
     return f"Invalid YAML at {location}{problem}"
 
 
-def read_text(report, root, name):
+def read_text(report: Report, root: Path, name: str) -> str | None:
     path = root / name
     if not path.is_file():
         report.error(name, "File not found")
@@ -157,7 +158,7 @@ def read_text(report, root, name):
         return None
 
 
-def load_yaml(report, name, text):
+def load_yaml(report: Report, name: str, text: str | None) -> Any:
     if text is None:
         return None
     if "\t" in text:
@@ -172,7 +173,7 @@ def load_yaml(report, name, text):
         return None
 
 
-def check_application_yml(report, config):
+def check_application_yml(report: Report, config: Any) -> list[dict]:
     name = APPLICATION_YML
     if config is None:
         return []
@@ -184,7 +185,7 @@ def check_application_yml(report, config):
         report.error(name, "`uniresolver.drivers` must be a non-empty list")
         return []
 
-    seen_patterns = {}
+    seen_patterns: dict[str, int] = {}
     valid_drivers = []
     for index, driver in enumerate(drivers):
         if not isinstance(driver, dict):
@@ -196,7 +197,8 @@ def check_application_yml(report, config):
             label += f" (`{pattern}`)"
 
         for key in ("pattern", "url"):
-            if not isinstance(driver.get(key), str) or not driver.get(key).strip():
+            value = driver.get(key)
+            if not isinstance(value, str) or not value.strip():
                 report.error(name, f"{label}: required key `{key}` is missing or empty")
         for key in sorted(set(driver) - DRIVER_KEYS):
             report.warning(name, f"{label}: unknown key `{key}` is ignored (typo? allowed: {', '.join(sorted(DRIVER_KEYS))})")
@@ -233,7 +235,7 @@ def check_application_yml(report, config):
     return valid_drivers
 
 
-def run_compose_config(report, root):
+def run_compose_config(report: Report, root: Path) -> dict | None:
     """Validate with `docker compose config` and return the resolved config, or None."""
     name = DOCKER_COMPOSE
     command = ["docker-compose", "--project-directory", str(root), "-f", str(root / DOCKER_COMPOSE)]
@@ -272,7 +274,7 @@ def run_compose_config(report, root):
         return None
 
 
-def check_docker_compose(report, root, compose, env_keys):
+def check_docker_compose(report: Report, root: Path, compose: Any, env_keys: set[str] | None) -> dict | None:
     name = DOCKER_COMPOSE
     if compose is None:
         return None
@@ -289,7 +291,7 @@ def check_docker_compose(report, root, compose, env_keys):
 
     # Prefer the image names resolved by docker compose (variables interpolated)
     services = (resolved or {}).get("services") or compose["services"]
-    images = {}
+    images: dict[str, list[str]] = {}
     for service_name, service in services.items():
         image = service.get("image") if isinstance(service, dict) else None
         if isinstance(image, str) and image.strip() and "$" not in image:
@@ -303,7 +305,7 @@ def check_docker_compose(report, root, compose, env_keys):
     return compose
 
 
-def parse_image_reference(image):
+def parse_image_reference(image: str) -> tuple[str, str, str]:
     """Split an image reference into (registry host, repository, tag or digest)."""
     name, digest = image.split("@", 1) if "@" in image else (image, None)
     tag = None
@@ -322,12 +324,13 @@ def parse_image_reference(image):
     return registry, repository, digest or tag or "latest"
 
 
-def parse_auth_challenge(header):
+def parse_auth_challenge(header: str | None) -> tuple[str, dict[str, str]]:
     scheme, _, params = (header or "").partition(" ")
     return scheme.lower(), dict(re.findall(r'(\w+)="([^"]*)"', params))
 
 
-def registry_request(url, method="HEAD", token=None, accept=MANIFEST_ACCEPT):
+def registry_request(url: str, method: str = "HEAD", token: str | None = None,
+                     accept: str = MANIFEST_ACCEPT) -> tuple[int, Any, bytes]:
     headers = {"User-Agent": USER_AGENT, "Accept": accept}
     if token:
         headers["Authorization"] = f"Bearer {token}"
@@ -339,10 +342,10 @@ def registry_request(url, method="HEAD", token=None, accept=MANIFEST_ACCEPT):
         return e.code, e.headers, b""
 
 
-def check_image(image):
+def check_image(image: str) -> tuple[str, str] | None:
     """Resolve the image manifest without credentials. Returns (level, message) or None if pullable."""
+    registry, repository, reference = parse_image_reference(image)
     try:
-        registry, repository, reference = parse_image_reference(image)
         manifest_url = f"https://{registry}/v2/{repository}/manifests/{reference}"
         status, headers, _ = registry_request(manifest_url)
         if status == 405:  # registries without HEAD support
@@ -380,7 +383,7 @@ def check_image(image):
         return "warning", f"could not be verified ({reason})"
 
 
-def check_images(report, images):
+def check_images(report: Report, images: dict[str, list[str]]) -> None:
     """images: {image reference: [service names]}"""
     with ThreadPoolExecutor(max_workers=8) as executor:
         results = dict(zip(images, executor.map(check_image, images)))
@@ -396,11 +399,11 @@ def check_images(report, images):
             report.warning(DOCKER_COMPOSE, text)
 
 
-def check_dot_env(report, text):
+def check_dot_env(report: Report, text: str | None) -> set[str] | None:
     name = DOT_ENV
     if text is None:
         return None
-    keys = {}
+    keys: dict[str, int] = {}
     for number, raw in enumerate(text.splitlines(), 1):
         line = raw.strip()
         if not line or line.startswith("#"):
@@ -420,7 +423,7 @@ def check_dot_env(report, text):
     return set(keys)
 
 
-def check_readme(report, text):
+def check_readme(report: Report, text: str | None) -> None:
     name = README
     if text is None:
         return None
@@ -447,7 +450,7 @@ def check_readme(report, text):
         report.error(name, "Driver table in section `## Drivers` not found or empty")
         return None
 
-    def cells(line):
+    def cells(line: str) -> list[str]:
         # Split on unescaped pipes; the leading pipe is required, the trailing one optional (like GitHub)
         line = line.strip()
         if line.endswith("|") and not line.endswith("\\|"):
@@ -464,7 +467,7 @@ def check_readme(report, text):
             report.error(name, f"Line {number}: table row has {len(cells(line))} columns, expected {columns}")
 
 
-def check_cross_references(report, drivers, compose):
+def check_cross_references(report: Report, drivers: list[dict], compose: dict | None) -> None:
     services = compose.get("services", {}) if compose else {}
 
     for driver in drivers:
@@ -478,7 +481,7 @@ def check_cross_references(report, drivers, compose):
             report.warning(DOCKER_COMPOSE, f"Service `{host.group(1)}` referenced by driver {label} in `{APPLICATION_YML}` is not defined")
 
 
-def set_outputs(report, markdown):
+def set_outputs(report: Report, markdown: str) -> None:
     output_file = os.environ.get("GITHUB_OUTPUT")
     if output_file:
         delimiter = f"EOF_{uuid.uuid4().hex}"
@@ -493,7 +496,7 @@ def set_outputs(report, markdown):
             f.write(markdown)
 
 
-def main():
+def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--path", default=".", help="Repository root containing the files to check")
     parser.add_argument("--report", help="Optional file to write the Markdown report to")

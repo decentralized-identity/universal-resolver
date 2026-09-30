@@ -1,6 +1,6 @@
-# pr-file-check
+# pr-check
 
-Checks the files contributors usually edit when adding a driver for malformed content. It is used by the
+Checks the files contributors usually edit when adding a driver for malformed content and non-public images. It is used by the
 [Pull Request check](../../.github/workflows/pr-check.yml) workflow, which posts the report as a PR comment
 via [pr-check-comment.yml](../../.github/workflows/pr-check-comment.yml).
 
@@ -16,22 +16,22 @@ registries (Docker Hub, GitHub Container Registry, Quay, ...) without credential
 
 ## Run locally with Docker
 
-    docker build -t pr-file-check ci/pr-file-check
-    docker run --rm -v "$PWD":/repo pr-file-check --path /repo
+    docker build -t pr-check ci/pr-check
+    docker run --rm -v "$PWD":/repo pr-check --path /repo
 
 ## Run locally with Python
 
 Needs Python 3 with the dependencies from `app/requirements.txt` and `docker compose` for the compose validation
 (skipped with a warning if not available).
 
-    pip install -r ci/pr-file-check/app/requirements.txt
-    python ci/pr-file-check/app/check_files.py --path . --report report.md
+    pip install -r ci/pr-check/app/requirements.txt
+    python ci/pr-check/app/pr_check.py --path . --report report.md
 
 ## Use action in GitHub workflow
 
-    - name: Check files
+    - name: Run PR check
       id: check
-      uses: $/ci/pr-file-check
+      uses: $/ci/pr-check
       with:
         path: .
 

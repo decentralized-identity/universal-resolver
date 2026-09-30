@@ -1,5 +1,5 @@
-name: 'uni-resolver-pr-file-check'
-description: 'Check Universal Resolver config files (application.yml, docker-compose.yml, .env, README.md) for malformed content'
+name: 'uni-resolver-pr-check'
+description: 'Check the Universal Resolver config files (application.yml, docker-compose.yml, .env, README.md) of a pull request for malformed content and non-public images'
 inputs:
   path:
     description: 'Repository root containing the files to check, relative to the workspace'
