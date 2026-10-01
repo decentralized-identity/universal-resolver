@@ -8,6 +8,8 @@ export interface Finding {
 /** Findings of one part of the check, e.g. one file. */
 export class Section {
   readonly findings: Finding[] = [];
+  /** Informational notes shown below the findings; they don't affect the result. */
+  readonly notes: string[] = [];
   readonly name: string;
   /** Render the name as code, e.g. a file path. */
   readonly code: boolean;
@@ -23,6 +25,10 @@ export class Section {
 
   warning(message: string): void {
     this.findings.push({ level: 'warning', message });
+  }
+
+  info(message: string): void {
+    if (!this.notes.includes(message)) this.notes.push(message);
   }
 
   get errors(): Finding[] {
