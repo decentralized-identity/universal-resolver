@@ -1,0 +1,56 @@
+name: 'uni-resolver-pr-test'
+description: 'Start the drivers changed by a Universal Resolver pull request with uni-resolver-web and resolve their test identifiers'
+inputs:
+  path:
+    description: 'Directory with application.yml, docker-compose.yml and .env of the pull request (at their repository paths)'
+    required: true
+  base-path:
+    description: 'Directory with the same files on the base branch, to find what the pull request changes'
+    required: true
+  startup-wait:
+    description: 'Seconds the containers get to start'
+    required: false
+    default: '60'
+  timeout:
+    description: 'Timeout per test identifier in seconds'
+    required: false
+    default: '120'
+outputs:
+  result:
+    description: '`success` or `failure`'
+    value: ${{ steps.test.outputs.result }}
+  failed:
+    description: 'Number of failed test identifiers'
+    value: ${{ steps.test.outputs.failed }}
+  report:
+    description: 'Markdown report of the test'
+    value: ${{ steps.test.outputs.report }}
+runs:
+  # Runs directly on the runner: the test starts containers with docker compose and calls the resolver on a
+  # published port, which isn't reachable from inside a Docker container action
+  using: 'composite'
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version: 24
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+
+    - name: Run PR test
+      id: test
+      shell: bash
+      env:
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_BASE_PATH: ${{ inputs.base-path }}
+        INPUT_STARTUP_WAIT: ${{ inputs.startup-wait }}
+        INPUT_TIMEOUT: ${{ inputs.timeout }}
+      run: |
+        node "$GITHUB_ACTION_PATH/src/main.ts" \
+          --path "$INPUT_PATH" \
+          --base-path "$INPUT_BASE_PATH" \
+          --startup-wait "$INPUT_STARTUP_WAIT" \
+          --timeout "$INPUT_TIMEOUT"

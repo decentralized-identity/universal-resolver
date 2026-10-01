@@ -1,0 +1,26 @@
+{
+  "name": "uni-resolver-pr-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Starts the drivers changed by a Universal Resolver pull request and resolves their test identifiers",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "bin": {
+    "pr-test": "src/main.ts"
+  },
+  "scripts": {
+    "start": "node src/main.ts",
+    "test": "node --test",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.0",
+    "typescript": "^7.0.2"
+  }
+}
