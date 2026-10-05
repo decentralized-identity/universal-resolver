@@ -86,6 +86,7 @@ services:
       uniresolver_web_driver_url_did_cid:
       uniresolver_web_driver_url_did_omn:
       uniresolver_web_driver_url_did_uuid:
+      uniresolver_web_driver_url_did_ixo:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -505,5 +506,12 @@ services:
 
   driver-did-uuid:
     image: ghcr.io/worldresolvable/uni-resolver-driver-did-uuid:0.1.0
+    ports:
+      - "8181:8080"
+
+  driver-did-ixo:
+    image: ghcr.io/ixofoundation/ixo-did-resolver:v0.1.5
+    environment:
+      RPC_ENDPOINT: ${uniresolver_driver_did_ixo_rpc_endpoint}
     ports:
       - "8181:8080"
