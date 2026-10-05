@@ -85,6 +85,7 @@ services:
       uniresolver_web_driver_url_did_webplus:
       uniresolver_web_driver_url_did_cid:
       uniresolver_web_driver_url_did_omn:
+      uniresolver_web_driver_url_did_uuid:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -501,3 +502,8 @@ services:
       uniresolver_driver_did_omn_opendid_mainnet_connection_timeout: ${uniresolver_driver_did_omn_opendid_mainnet_connection_timeout}
     ports:
       - "8169:8080"
+
+  driver-did-uuid:
+    image: ghcr.io/worldresolvable/uni-resolver-driver-did-uuid:0.1.0
+    ports:
+      - "8181:8080"

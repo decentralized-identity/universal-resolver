@@ -214,6 +214,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-art](https://github.com/ArtracID/ArtracID-DID-ART-Method) | 1.0.0 | [spec](https://github.com/ArtracID/ArtracID-DID-ART-Method) | [worthyopponent30/did-art-resolver](https://hub.docker.com/r/worthyopponent30/did-art-resolver) | DID:ART for digital artwork |
 | [did-cid](https://github.com/archetech/uni-resolver-driver-did-cid) | 0.1.0 | [0.1.0](https://github.com/archetech/archon/blob/main/docs/scheme.md) | [ghcr.io/archetech/uni-resolver-driver-did-cid](https://github.com/archetech/uni-resolver-driver-did-cid/pkgs/container/uni-resolver-driver-did-cid) | Archon Protocol (content-addressed DID) |
 | [did-omn](https://github.com/OmniOneID/did-omn-resolver-driver-server) | 1.0.0 | [spec](https://github.com/OmniOneID/did_method/blob/master/did_method.md) | [ghcr.io/omnioneid/driver-did-omn](https://github.com/orgs/OmniOneID/packages/container/package/driver-did-omn) | OmniOne Open DID DID Method |
+| [did-uuid](https://github.com/WorldResolvable/ruuid-tools/tree/main/uni-resolver-driver) | 0.1.0 | [draft](https://worldresolvable.github.io/ruuid-draft/did-uuid-method/) | [ghcr.io/worldresolvable/uni-resolver-driver-did-uuid](https://github.com/orgs/WorldResolvable/packages/container/package/uni-resolver-driver-did-uuid) | Resolvable UUID (did:uuid), anchored via reverse-DNS |
 
 
 ## More Information
