@@ -170,6 +170,11 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_sol:http://driver-did-sol:8080/}
       testIdentifiers:
         - did:sol:devnet:2eK2DKs6vdzTEoj842Gfcs6DdtffPpw1iF6JbzQL4TuK
+    - pattern: "^(did:aip:.+)$"
+      url: ${uniresolver_web_driver_url_did_aip:http://driver-did-aip:8080/}
+      testIdentifiers:
+        - did:aip:eip155:5042002:0x8004a818bfb912233c491871b3d84c89a494bd9e:892271
+        - did:aip:eip155:5042002:0x8004a818bfb912233c491871b3d84c89a494bd9e:892272
     - pattern: "^(did:lit:(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$"
       url: ${uniresolver_web_driver_url_did_lit:http://driver-did-lit:8080/}
       testIdentifiers:
