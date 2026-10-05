@@ -170,6 +170,11 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_sol:http://driver-did-sol:8080/}
       testIdentifiers:
         - did:sol:devnet:2eK2DKs6vdzTEoj842Gfcs6DdtffPpw1iF6JbzQL4TuK
+    - pattern: "^(did:aip:.+)$"
+      url: ${uniresolver_web_driver_url_did_aip:http://driver-did-aip:8080/}
+      testIdentifiers:
+        - did:aip:eip155:5042002:0x8004a818bfb912233c491871b3d84c89a494bd9e:892271
+        - did:aip:eip155:5042002:0x8004a818bfb912233c491871b3d84c89a494bd9e:892272
     - pattern: "^(did:lit:(?:[1-9A-HJ-NP-Za-km-z]{21,22}))$"
       url: ${uniresolver_web_driver_url_did_lit:http://driver-did-lit:8080/}
       testIdentifiers:
@@ -210,7 +215,7 @@ uniresolver:
       testIdentifiers:
         - did:orb:hl:uEiBuxTFn4L_Hn8KsOWo8e9kqWP38MThBaToB_5yV3c5QTg:uoQ-BeEJpcGZzOi8vYmFma3JlaWRveXV5d3B5Zjd5NnA0Zmxiem5pNmh4d2prbGQ2N3ltanlpZnV0dWFwN3RzazUzdHNxank:EiD_igS1OSEftg5BGfisJGOS1rgcx5AkQhX0h1B4dHTUYA
     - pattern: "^(did:oyd:.+)$"
-      url: ${uniresolver_web_driver_url_did_oyd:https://oydid-resolver.data-container.net/1.0/identifiers/$1}
+      url: ${uniresolver_web_driver_url_did_oyd:https://resolver.ownyourdata.eu/1.0/identifiers/$1}
       testIdentifiers:
         - did:oyd:zQmaBZTghndXTgxNwfbdpVLWdFf6faYE4oeuN2zzXdQt1kh
         - did:oyd:zQmNauTUUdkpi5TcrTZ2524SKM8dJAzuuw4xfW13iHrtY1W%40did2.data-container.net
@@ -358,7 +363,7 @@ uniresolver:
       url: ${uniresolver_web_driver_url_did_webvh:http://driver-did-webvh:8080/}
       testIdentifiers:
         - did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
-        - did:webvh:QmVJ5nUYb9iugnUz4yDfbe8UFbhmnsvS2EAzSpSfPScRAn:opsecid.github.io
+        - did:webvh:Qmb3KLhAKJ9wZx1gTPzcPfCxviRkiEJ4RGdHNviaedGu3i:opsecid.github.io
     - pattern: "^(did:quarkid:.+)$"
       url: ${uniresolver_web_driver_url_did_quarkid:http://driver-did-quarkid:8080/}
       testIdentifiers:
@@ -452,6 +457,17 @@ uniresolver:
       testIdentifiers:
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiANVlMledNFUBJNiZPuvfgzxvJlGGDBIpDFpM4DXW6Bow
         - did:webplus:ledgerdomain.github.io:did-webplus-spec:uFiDBw4xANa8sR_Fd8-pv-X9A5XIJNS3tC_bRNB3HUYiKug
+
+    - pattern: "^(did:cid:.+)$"
+      url: ${uniresolver_web_driver_url_did_cid:http://driver-did-cid:4250/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:cid:bagaaieraxdxq4fm2kjh6yqjxjor3t2idczkmxd4v7in4u353fa6m6sms2pnq
+        - did:cid:bagaaierajzwcicueqdkbgk75lgekdmvtbo5zv3spq2p4f7d7ow42urlwi32a
+
+    - pattern: "^(did:omn:.+)$"
+      url: ${uniresolver_web_driver_url_did_omn:http://driver-did-omn:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:omn:opendid:mainnet:b3BlbmRpZC1ta2xlZQ
 
     - pattern: "^(did:uuid:.+)$"
       url: ${uniresolver_web_driver_url_did_uuid:http://driver-did-uuid:8080/1.0/identifiers/$1}
