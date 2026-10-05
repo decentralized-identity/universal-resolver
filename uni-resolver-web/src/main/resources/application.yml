@@ -461,3 +461,8 @@ uniresolver:
       testIdentifiers:
         - did:cid:bagaaieraxdxq4fm2kjh6yqjxjor3t2idczkmxd4v7in4u353fa6m6sms2pnq
         - did:cid:bagaaierajzwcicueqdkbgk75lgekdmvtbo5zv3spq2p4f7d7ow42urlwi32a
+
+    - pattern: "^(did:omn:.+)$"
+      url: ${uniresolver_web_driver_url_did_omn:http://driver-did-omn:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:omn:opendid:mainnet:b3BlbmRpZC1ta2xlZQ
