@@ -2,6 +2,13 @@ import { isRecord } from '../lib/yaml.ts';
 
 export type ResolveResult = { ok: true } | { ok: false; reason: string };
 
+/** A resolve request: the evaluated result and, if the resolver answered, the raw response for debugging. */
+export interface ResolveResponse {
+  result: ResolveResult;
+  status?: number;
+  body?: string;
+}
+
 /**
  * Evaluates a resolve response. The DID document isn't validated against the spec: a response with a DID
  * document that has an `id` is a success.
@@ -33,17 +40,20 @@ export class ResolverClient {
     this.baseUrl = baseUrl.replace(/\/$/, '');
   }
 
-  async resolve(did: string, timeoutMs: number): Promise<ResolveResult> {
+  async resolve(did: string, timeoutMs: number): Promise<ResolveResponse> {
     try {
       const response = await fetch(`${this.baseUrl}/1.0/identifiers/${did}`, {
         headers: { Accept: 'application/did-resolution' },
         signal: AbortSignal.timeout(timeoutMs),
       });
-      return evaluateResponse(response.status, await response.text());
+      const body = await response.text();
+      return { result: evaluateResponse(response.status, body), status: response.status, body };
     } catch (e) {
-      if ((e as Error).name === 'TimeoutError') return { ok: false, reason: `no response within ${timeoutMs / 1000} s` };
+      if ((e as Error).name === 'TimeoutError') {
+        return { result: { ok: false, reason: `no response within ${timeoutMs / 1000} s` } };
+      }
       const cause = (e as { cause?: { code?: string } }).cause;
-      return { ok: false, reason: `request failed (${cause?.code ?? (e as Error).message})` };
+      return { result: { ok: false, reason: `request failed (${cause?.code ?? (e as Error).message})` } };
     }
   }
 

@@ -16,6 +16,7 @@ import { type PlannedDriver, planTests } from './plan/plan.ts';
 import type { LogExcerpt } from './report/report.ts';
 import { TestReport } from './report/report.ts';
 import { ResolverClient } from './resolver/client.ts';
+import { responseLog } from './resolver/response-log.ts';
 
 export interface RunOptions {
   startupWaitS: number;
@@ -124,8 +125,10 @@ async function runInProject(
     for (const did of driver.testIdentifiers) {
       options.log(`Resolving ${did}`);
       const since = new Date(Date.now() - 200);
-      const result = await resolver.resolve(did, options.resolveTimeoutS * 1000);
+      const response = await resolver.resolve(did, options.resolveTimeoutS * 1000);
       const durationMs = Date.now() - since.getTime();
+      options.log(responseLog(did, response, durationMs));
+      const { result } = response;
       const logs: LogExcerpt[] = [];
       if (!result.ok) {
         await sleep(500); // let the containers flush their logs
