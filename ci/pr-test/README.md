@@ -44,6 +44,11 @@ starts the test containers on your Docker daemon, so it needs the Docker socket:
 
     docker run --rm -v /var/run/docker.sock:/var/run/docker.sock pr-test --pr 578
 
+Drivers only need to provide `linux/amd64` images, the platform of the GitHub runners. On other machines, e.g. a
+Mac with Apple silicon, an image without a variant for the machine's platform runs as `linux/amd64` through
+emulation (Docker Desktop does this automatically when the platform is requested); images with a native variant run
+natively. The test logs which images run emulated.
+
 Write the report to a file with `--report`; the path is inside the container, so mount a folder for it:
 
     docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD":/out pr-test --pr 578 --report /out/report.md
@@ -96,7 +101,7 @@ action always exits successfully so the report can be published; fail the job ba
 | `src/cli.ts`, `src/config.ts` | Command line options; files, timeouts and limits |
 | `src/input/` | Where the files come from: local directories or a pull request on GitHub |
 | `src/plan/` | Which drivers changed and what to start |
-| `src/docker/` | docker compose project, test override, safety check, running in a container |
+| `src/docker/` | docker compose project, test override, safety check, platform fallback, running in a container |
 | `src/resolver/` | Client for `uni-resolver-web` and the success criterion |
 | `src/logs/` | Reducing a request's log to the relevant lines |
 | `src/report/` | Test results and the Markdown rendering |

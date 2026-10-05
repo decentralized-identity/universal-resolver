@@ -6,6 +6,7 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import { APPLICATION_YML, RELEVANT_LOG_LINES, RESOLVER_PORT, RESOLVER_SERVICE } from './config.ts';
 import { ComposeProject, resolvedServices } from './docker/compose.ts';
 import { composeOverride } from './docker/override.ts';
+import { platformOverrides } from './docker/platform.ts';
 import { unsafeSettings, withDependencies } from './docker/safety.ts';
 import { SelfContainer } from './docker/self-container.ts';
 import type { TestInput } from './input/input.ts';
@@ -55,11 +56,21 @@ export async function runTest(input: TestInput, options: RunOptions): Promise<Te
     return report;
   }
 
+  const platforms = await platformOverrides(headServices, services);
+  for (const [service, platform] of platforms) {
+    options.log(`The image of ${service} is not available for this machine's platform, using ${platform} (emulated)`);
+  }
+
   const name = `pr-test-${randomBytes(4).toString('hex')}`;
   const project = await ComposeProject.create({
     name,
     directory: input.head,
-    override: composeOverride({ applicationYml, network: name, services: services.filter((s) => s !== RESOLVER_SERVICE) }),
+    override: composeOverride({
+      applicationYml,
+      network: name,
+      services: services.filter((s) => s !== RESOLVER_SERVICE),
+      platforms,
+    }),
   });
   const self = SelfContainer.detect();
   try {

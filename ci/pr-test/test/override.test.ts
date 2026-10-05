@@ -24,3 +24,17 @@ describe('composeOverride', () => {
     assert.match(override, /"driver-did-x":\n    ports: !reset \[\]/);
   });
 });
+
+describe('composeOverride with platforms', () => {
+  it('requests the platform only for the given services', () => {
+    const override = composeOverride({
+      applicationYml: '',
+      network: 'n',
+      services: ['driver-a', 'driver-b'],
+      platforms: new Map([['driver-a', 'linux/amd64']]),
+    });
+    assert.match(override, /"driver-a":\n    ports: !reset \[\]\n    platform: "linux\/amd64"\n/);
+    assert.match(override, /"driver-b":\n    ports: !reset \[\]\n$/);
+    assert.doesNotMatch(override, /"uni-resolver-web":[\s\S]*platform:[\s\S]*"driver-a"/);
+  });
+});
