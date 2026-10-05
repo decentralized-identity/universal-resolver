@@ -6,7 +6,8 @@ report as a PR comment via [pr-test-comment.yml](../../.github/workflows/pr-test
 
 ## What is tested
 
-The pull request's files are compared with its base branch:
+The pull request's files are compared with the commit it branched from (the merge base, as in GitHub's
+"Files changed"), so changes on the base branch since then don't count:
 
 | Change | Tested |
 |--------|--------|
@@ -19,7 +20,7 @@ Only `uni-resolver-web` and the services of the tested drivers (with their `depe
 
 ## How it runs
 
-1. Pull and start the containers, then wait 60 s. A driver counts as started if its container is running, even if
+1. Pull and start the containers, then wait 10 s. A driver counts as started if its container is running, even if
    the application inside logs errors. The complete startup log of each driver is added to the report.
 2. Resolve each test identifier with `uni-resolver-web` (timeout 120 s). A response with a DID document that has an
    `id` is a success; the DID document isn't validated against the spec.
@@ -56,7 +57,7 @@ Options:
 | `--path DIR` | Directory with `application.yml`, `docker-compose.yml` and `.env` of the pull request, at their repository paths (instead of `--pr`) |
 | `--base-path DIR` | Directory with the same files on the base branch (with `--path`) |
 | `--report FILE` | Also write the Markdown report to this file |
-| `--startup-wait SECONDS` | Time the containers get to start (default: 60) |
+| `--startup-wait SECONDS` | Time the containers get to start (default: 10) |
 | `--timeout SECONDS` | Timeout per test identifier (default: 120) |
 
 The progress and the complete startup logs are written to stderr, the report to stdout. The exit code is `0` when

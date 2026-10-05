@@ -9,18 +9,18 @@ describe('parseOptions', () => {
       pr: 580,
       repository: 'decentralized-identity/universal-resolver',
       report: undefined,
-      startupWaitS: 60,
+      startupWaitS: 10,
       resolveTimeoutS: 120,
     });
   });
 
   it('parses local directories as passed by the GitHub Action', () => {
-    assert.deepEqual(parseOptions(['--path', 'head', '--base-path', 'base', '--report', '', '--startup-wait', '10']), {
+    assert.deepEqual(parseOptions(['--path', 'head', '--base-path', 'base', '--report', '', '--startup-wait', '30']), {
       source: 'local',
       path: 'head',
       basePath: 'base',
       report: undefined,
-      startupWaitS: 10,
+      startupWaitS: 30,
       resolveTimeoutS: 120,
     });
   });

@@ -5,7 +5,11 @@ export interface PullRequest {
   title: string;
   htmlUrl: string;
   headSha: string;
-  baseSha: string;
+  /**
+   * The commit the pull request branched from (merge base), not the current tip of the base branch: what the
+   * pull request changes, as in GitHub's "Files changed". Changes on the base branch since then aren't counted.
+   */
+  mergeBaseSha: string;
 }
 
 /** Minimal unauthenticated GitHub client for public repositories. */
@@ -17,20 +21,21 @@ export class GitHubClient {
   }
 
   async pullRequest(number: number): Promise<PullRequest> {
-    const url = `https://api.github.com/repos/${this.repository}/pulls/${number}`;
-    const response = await fetch(url, {
-      headers: { 'User-Agent': USER_AGENT, Accept: 'application/vnd.github+json' },
-      signal: AbortSignal.timeout(HTTP_TIMEOUT_MS),
-    });
-    if (!response.ok) throw new Error(`GET ${url} returned HTTP ${response.status}`);
-    const pr = (await response.json()) as {
+    const pr = (await this.api(`pulls/${number}`)) as {
       number: number;
       title: string;
       html_url: string;
       head: { sha: string };
       base: { sha: string };
     };
-    return { number: pr.number, title: pr.title, htmlUrl: pr.html_url, headSha: pr.head.sha, baseSha: pr.base.sha };
+    const comparison = (await this.api(`compare/${pr.base.sha}...${pr.head.sha}`)) as { merge_base_commit: { sha: string } };
+    return {
+      number: pr.number,
+      title: pr.title,
+      htmlUrl: pr.html_url,
+      headSha: pr.head.sha,
+      mergeBaseSha: comparison.merge_base_commit.sha,
+    };
   }
 
   /** Content of a file at a commit, undefined if it doesn't exist. Also serves commits of pull requests from forks. */
@@ -40,5 +45,15 @@ export class GitHubClient {
     if (response.status === 404) return undefined;
     if (!response.ok) throw new Error(`GET ${url} returned HTTP ${response.status}`);
     return Buffer.from(await response.arrayBuffer());
+  }
+
+  private async api(path: string): Promise<unknown> {
+    const url = `https://api.github.com/repos/${this.repository}/${path}`;
+    const response = await fetch(url, {
+      headers: { 'User-Agent': USER_AGENT, Accept: 'application/vnd.github+json' },
+      signal: AbortSignal.timeout(HTTP_TIMEOUT_MS),
+    });
+    if (!response.ok) throw new Error(`GET ${url} returned HTTP ${response.status}`);
+    return response.json();
   }
 }
