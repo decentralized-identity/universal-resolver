@@ -218,6 +218,9 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-uuid](https://github.com/WorldResolvable/ruuid-tools/tree/main/uni-resolver-driver) | 0.1.0 | [draft](https://worldresolvable.github.io/ruuid-draft/did-uuid-method/) | [ghcr.io/worldresolvable/uni-resolver-driver-did-uuid](https://github.com/orgs/WorldResolvable/packages/container/package/uni-resolver-driver-did-uuid) | Resolvable UUID (did:uuid), anchored via reverse-DNS |
 | [did-ixo](https://github.com/ixofoundation/ixo-did-resolver) | 0.1.5 | [1.0](https://ixofoundation.github.io/ns/did/v1/) | [ghcr.io/ixofoundation/ixo-did-resolver](https://github.com/ixofoundation/ixo-did-resolver/pkgs/container/ixo-did-resolver) | IXO Impact Hub network |
 
+| Method | Driver Version | Spec | Docker Image | Maintainer |
+| :--- | :--- | :--- | :--- | :--- |
+| `neuralkey` | `1.0.0` | [Spec Link](https://neuralkey.neuralsh.com/neuralkey-spec-page) | [heanmengfong/neuralkey-did-driver](https://hub.docker.com/r/heanmengfong/neuralkey-did-driver) | [Sereyvuth Kim/PRESTIGE ALLIANCE CO., LTD](https://neuralkey.neuralsh.com/) |
 
 ## More Information
 
