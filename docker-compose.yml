@@ -1,4 +1,4 @@
-# version: "3.6"
+version: "3.6"
 
 networks:
   default:
@@ -43,6 +43,7 @@ services:
       uniresolver_web_driver_url_did_vaa:
       uniresolver_web_driver_url_did_unisot:
       uniresolver_web_driver_url_did_sol:
+      uniresolver_web_driver_url_did_aip:
       uniresolver_web_driver_url_did_lit:
       uniresolver_web_driver_url_did_ebsi:
       uniresolver_web_driver_url_did_emtrust:
@@ -82,7 +83,11 @@ services:
       uniresolver_web_driver_url_did_nfd:
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
-      uniresolver_web_driver_url_did_neuralkey: 
+      uniresolver_web_driver_url_did_cid:
+      uniresolver_web_driver_url_did_omn:
+      uniresolver_web_driver_url_did_uuid:
+      uniresolver_web_driver_url_did_ixo:
+      uniresolver_web_driver_url_did_neuralkey:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -202,6 +207,12 @@ services:
     image: identitydotcom/driver-did-sol:3.3.0
     ports:
       - "8118:8080"
+  driver-did-aip:
+    image: ghcr.io/wienerlabs/driver-did-aip:0.2.4
+    ports:
+      - "8169:8080"
+    environment:
+      RPC_5042002: ${uniresolver_driver_did_aip_rpcUrlArcTestnet}
   driver-did-lit:
     image: ibct/driver-did-lit:0.1.1
     environment:
@@ -235,10 +246,6 @@ services:
     ports:
       - "8122:8121"
     command: start
-  driver-did-oyd:
-    image: oydeu/oydid-resolver:v0.4.5
-    ports:
-      - "8124:3000"
   driver-did-moncon:
     image: camicasii/didresolver-g
     ports:
@@ -432,13 +439,13 @@ services:
   driver-did-hedera:
     image: ghcr.io/hiero-ledger/uni-resolver-driver-did-hedera:v0.1.7-8ae3a53
     ports:
-      - "8165:8080"
+        - "8165:8080"
 
   driver-did-nda:
     image: ghcr.io/pilacorp/driver-did-nda:1.0.0
     ports:
       - "8166:8080"
-
+  
   driver-did-art:
     image: worthyopponent30/did-art-resolver:v1.0.0
     ports:
@@ -461,7 +468,7 @@ services:
       PORT: 8080
     ports:
       - "8168:8080"
-
+      
   driver-did-webplus:
     image: ghcr.io/ledgerdomain/did-webplus-urd:v0.1.2
     environment:
@@ -472,6 +479,43 @@ services:
       RUST_LOG: ${uniresolver_driver_did_webplus_RUST_LOG}
     ports:
       - "8168:80"
+
+  driver-did-cid:
+    image: ghcr.io/archetech/uni-resolver-driver-did-cid:0.1.0
+    environment:
+      ARCHON_GATEKEEPER_URL: ${uniresolver_driver_did_cid_gatekeeper_url}
+    ports:
+      - "4250:4250"
+
+  driver-did-omn:
+    image: ghcr.io/omnioneid/driver-did-omn:1.0.0
+    environment:
+      uniresolver_driver_did_omn_opendid_testnet_network_url: ${uniresolver_driver_did_omn_opendid_testnet_network_url}
+      uniresolver_driver_did_omn_opendid_testnet_contract_address: ${uniresolver_driver_did_omn_opendid_testnet_contract_address}
+      uniresolver_driver_did_omn_opendid_testnet_chain_id: ${uniresolver_driver_did_omn_opendid_testnet_chain_id}
+      uniresolver_driver_did_omn_opendid_testnet_gas_limit: ${uniresolver_driver_did_omn_opendid_testnet_gas_limit}
+      uniresolver_driver_did_omn_opendid_testnet_gas_price: ${uniresolver_driver_did_omn_opendid_testnet_gas_price}
+      uniresolver_driver_did_omn_opendid_testnet_connection_timeout: ${uniresolver_driver_did_omn_opendid_testnet_connection_timeout}
+      uniresolver_driver_did_omn_opendid_mainnet_network_url: ${uniresolver_driver_did_omn_opendid_mainnet_network_url}
+      uniresolver_driver_did_omn_opendid_mainnet_contract_address: ${uniresolver_driver_did_omn_opendid_mainnet_contract_address}
+      uniresolver_driver_did_omn_opendid_mainnet_chain_id: ${uniresolver_driver_did_omn_opendid_mainnet_chain_id}
+      uniresolver_driver_did_omn_opendid_mainnet_gas_limit: ${uniresolver_driver_did_omn_opendid_mainnet_gas_limit}
+      uniresolver_driver_did_omn_opendid_mainnet_gas_price: ${uniresolver_driver_did_omn_opendid_mainnet_gas_price}
+      uniresolver_driver_did_omn_opendid_mainnet_connection_timeout: ${uniresolver_driver_did_omn_opendid_mainnet_connection_timeout}
+    ports:
+      - "8169:8080"
+
+  driver-did-uuid:
+    image: ghcr.io/worldresolvable/uni-resolver-driver-did-uuid:0.1.0
+    ports:
+      - "8181:8080"
+
+  driver-did-ixo:
+    image: ghcr.io/ixofoundation/ixo-did-resolver:v0.1.5
+    environment:
+      RPC_ENDPOINT: ${uniresolver_driver_did_ixo_rpc_endpoint}
+    ports:
+      - "8181:8080"
 
   driver-did-neuralkey:
     image: heanmengfong/neuralkey-did-driver:1.0.0
