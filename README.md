@@ -110,6 +110,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:cid:bagaaieraxdxq4fm2kjh6yqjxjor3t2idczkmxd4v7in4u353fa6m6sms2pnq
 	curl -X GET http://localhost:8080/1.0/identifiers/did:omn:opendid:mainnet:b3BlbmRpZC1ta2xlZQ
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ixo:ixo1rl9vhhxg0t7ywlh953gtthphg889v7d3e2gx7k
+	curl -X GET http://localhost:8080/1.0/identifiers/did:stellar:testnet:32dhec37woze2mkfpnorosw5ma
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -217,9 +218,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-omn](https://github.com/OmniOneID/did-omn-resolver-driver-server) | 1.0.0 | [spec](https://github.com/OmniOneID/did_method/blob/master/did_method.md) | [ghcr.io/omnioneid/driver-did-omn](https://github.com/orgs/OmniOneID/packages/container/package/driver-did-omn) | OmniOne Open DID DID Method |
 | [did-uuid](https://github.com/WorldResolvable/ruuid-tools/tree/main/uni-resolver-driver) | 0.1.0 | [draft](https://worldresolvable.github.io/ruuid-draft/did-uuid-method/) | [ghcr.io/worldresolvable/uni-resolver-driver-did-uuid](https://github.com/orgs/WorldResolvable/packages/container/package/uni-resolver-driver-did-uuid) | Resolvable UUID (did:uuid), anchored via reverse-DNS |
 | [did-ixo](https://github.com/ixofoundation/ixo-did-resolver) | 0.1.5 | [1.0](https://ixofoundation.github.io/ns/did/v1/) | [ghcr.io/ixofoundation/ixo-did-resolver](https://github.com/ixofoundation/ixo-did-resolver/pkgs/container/ixo-did-resolver) | IXO Impact Hub network |
-
-| Method | Driver Version | Spec | Docker Image | Maintainer |
-| :--- | :--- | :--- | :--- | :--- |
+| [did-stellar](https://github.com/ACTA-Team/did-stellar)                                                             | 0.1.0          | [0.1](https://github.com/ACTA-Team/contracts-acta/blob/main/docs/did-spec/did-stellar-v0.1.md)                    | [ghcr.io/acta-team/driver-did-stellar](https://github.com/orgs/ACTA-Team/packages/container/package/driver-did-stellar)                                            | Stellar / Soroban DID Method                                                        |
 | `neuralkey` | `1.0.0` | [Spec Link](https://neuralkey.neuralsh.com/neuralkey-spec-page) | [heanmengfong/neuralkey-did-driver](https://hub.docker.com/r/heanmengfong/neuralkey-did-driver) | [Sereyvuth Kim/PRESTIGE ALLIANCE CO., LTD](https://neuralkey.neuralsh.com/) |
 
 ## More Information
