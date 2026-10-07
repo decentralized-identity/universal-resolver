@@ -88,6 +88,8 @@ services:
       uniresolver_web_driver_url_did_omn:
       uniresolver_web_driver_url_did_uuid:
       uniresolver_web_driver_url_did_ixo:
+      uniresolver_web_driver_url_did_neuralkey:
+      uniresolver_web_driver_url_did_stellar:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -389,7 +391,7 @@ services:
     ports:
       - "8154:8080"
   driver-did-quarkid:
-    image:  quarkid/api-proxy:latest
+    image: quarkid/api-proxy:latest
     ports:
       - 8155:8080
     environment:
@@ -522,3 +524,13 @@ services:
       RPC_ENDPOINT: ${uniresolver_driver_did_ixo_rpc_endpoint}
     ports:
       - "8181:8080"
+
+  driver-did-neuralkey:
+    image: heanmengfong/neuralkey-did-driver:1.0.0
+    ports:
+      - "8169:8080"
+
+  driver-did-stellar:
+    image: ghcr.io/acta-team/driver-did-stellar:0.1.0
+    ports:
+      - "8169:8080"
