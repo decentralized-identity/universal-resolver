@@ -91,7 +91,7 @@ services:
       uniresolver_web_driver_url_did_neuralkey:
       uniresolver_web_driver_url_did_stellar:
       uniresolver_web_driver_url_did_definitiveid:
-
+      uniresolver_web_driver_url_did_xny:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -542,3 +542,8 @@ services:
     ports:
       - "8169:8080"
 
+
+  driver-did-xny:
+    image: ghcr.io/humanbased-ai/xny-did-resolver:1.0.1
+    ports:
+      - "8181:8080"

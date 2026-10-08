@@ -111,6 +111,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:omn:opendid:mainnet:b3BlbmRpZC1ta2xlZQ
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ixo:ixo1rl9vhhxg0t7ywlh953gtthphg889v7d3e2gx7k
 	curl -X GET http://localhost:8080/1.0/identifiers/did:stellar:testnet:32dhec37woze2mkfpnorosw5ma
+	curl -X GET http://localhost:8080/1.0/identifiers/did:xny:0d186d7c-165a-e0dc-f500-01f610cf3c08
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -222,6 +223,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-stellar](https://github.com/ACTA-Team/did-stellar)                                                             | 0.1.0          | [0.1](https://github.com/ACTA-Team/contracts-acta/blob/main/docs/did-spec/did-stellar-v0.1.md)                    | [ghcr.io/acta-team/driver-did-stellar](https://github.com/orgs/ACTA-Team/packages/container/package/driver-did-stellar)                                            | Stellar / Soroban DID Method                                                        |
 | `neuralkey` | `1.0.0` | [Spec Link](https://neuralkey.neuralsh.com/neuralkey-spec-page) | [heanmengfong/neuralkey-did-driver](https://hub.docker.com/r/heanmengfong/neuralkey-did-driver) | [Sereyvuth Kim/PRESTIGE ALLIANCE CO., LTD](https://neuralkey.neuralsh.com/) |
 | [did-definitiveid](https://github.com/davidgbvargroup/uni-resolver-driver-did-definitiveid) 					| 0.1.0 		 | [0.1.0](https://github.com/davidgbvargroup/did-definitiveid-method-spec/blob/main/spec.md) 						  | [davidgbvargroup/uni-resolver-driver-did-definitiveid](https://hub.docker.com/r/davidgbvargroup/uni-resolver-driver-did-definitiveid) 							   | DefinitiveID DID |
+| [did-xny](https://github.com/humanbased-ai/xny-did) | 1.0.1 | [1.0.1](https://github.com/humanbased-ai/xny-did/blob/v1.0.1/docs/xny-did-method.md) | [ghcr.io/humanbased-ai/xny-did-resolver](https://github.com/humanbased-ai/xny-did/pkgs/container/xny-did-resolver) | Xny DID, anchored on Base |
 
 
 ## More Information
