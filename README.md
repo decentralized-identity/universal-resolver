@@ -212,7 +212,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 
 | Method | Driver Version | Spec | Docker Image | Maintainer |
 | :--- | :--- | :--- | :--- | :--- |
-| `neuralkey` | `1.0.0` | [Spec Link](https://neuralkey.neuralsh.com/neuralkey-spec-page) | [heanmengfong/neuralkey-did-driver](https://hub.docker.com/r/heanmengfong/neuralkey-did-driver) | [Sereyvuth Kim/PRESTIGE ALLIANCE CO., LTD](https://neuralkey.neuralsh.com/) |
+| [did-neuralkey](https://github.com/Neuralkey/Neuralkey-Universal-Resolver-Driver) | 1.0.0 | [Spec Link](https://neuralkey.neuralsh.com/neuralkey-spec-page) | [heanmengfong/neuralkey-did-driver](https://hub.docker.com/r/heanmengfong/neuralkey-did-driver) | [Sereyvuth Kim/PRESTIGE ALLIANCE CO., LTD](https://neuralkey.neuralsh.com/) |
 
 ## More Information
 
