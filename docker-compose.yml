@@ -81,14 +81,18 @@ services:
       uniresolver_web_driver_url_did_empe:
       uniresolver_web_driver_url_did_hedera:
       uniresolver_web_driver_url_did_nfd:
+      uniresolver_web_driver_url_did_soul:
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
+      uniresolver_web_driver_url_did_finger:
       uniresolver_web_driver_url_did_cid:
       uniresolver_web_driver_url_did_omn:
       uniresolver_web_driver_url_did_uuid:
       uniresolver_web_driver_url_did_ixo:
       uniresolver_web_driver_url_did_neuralkey:
       uniresolver_web_driver_url_did_stellar:
+      uniresolver_web_driver_url_did_definitiveid:
+      uniresolver_web_driver_url_did_xny:
       uniresolver_web_driver_url_did_moltrust:
 
   driver-did-btcr:
@@ -112,7 +116,7 @@ services:
     ports:
       - "8082:8080"
   uni-resolver-driver-did-uport:
-    image: uport/uni-resolver-driver-did-uport:5.0.3
+    image: uport/uni-resolver-driver-did-uport:7.1.1
     ports:
       - "8083:8081"
   driver-did-stack:
@@ -155,6 +159,12 @@ services:
     image: sphereon/uni-resolver-driver-did-factom:latest
     ports:
       - "8097:8080"
+  driver-did-finger:
+    image: youngseokaaa/uni-resolver-driver-did-finger:1.0.0
+    environment:
+      DRIVER_BACKEND_URL: ${uniresolver_driver_did_finger_backend_url}
+    ports:
+      - "8169:8080"
   driver-did-key:
     image: universalresolver/driver-did-key:latest
     ports:
@@ -463,6 +473,11 @@ services:
       ALGOD_URL: ${uniresolver_driver_did_nfd_algod_url}
       ALGOD_TOKEN: ${uniresolver_driver_did_nfd_algod_token}
 
+  driver-did-soul:
+    image: soulverse/uni-resolver-driver-did-soul:latest
+    ports:
+      - "8168:8080"
+
   driver-did-bluchain:
     image: bluchain/did-driver-bluchain:v1.0.0
     environment:
@@ -528,6 +543,16 @@ services:
     image: ghcr.io/acta-team/driver-did-stellar:0.1.0
     ports:
       - "8169:8080"
+
+  driver-did-definitiveid:
+    image: davidgbvargroup/uni-resolver-driver-did-definitiveid:0.1.0
+    ports:
+      - "8169:8080"
+
+  driver-did-xny:
+    image: ghcr.io/humanbased-ai/xny-did-resolver:1.0.1
+    ports:
+      - "8181:8080"
 
   driver-did-moltrust:
     # Pinned by digest: this is the build running at uresolver.moltrust.ch, and a
