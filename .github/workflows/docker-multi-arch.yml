@@ -57,7 +57,7 @@ jobs:
           persist-credentials: false
 
       - name: Import Secrets
-        uses: hashicorp/vault-action@v3
+        uses: hashicorp/vault-action@v4
         with:
           url: ${{ secrets.VAULT_ADDR }}
           token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
@@ -98,7 +98,7 @@ jobs:
           fetch-depth: 0
 
       - name: Import Secrets
-        uses: hashicorp/vault-action@v3
+        uses: hashicorp/vault-action@v4
         with:
           url: ${{ secrets.VAULT_ADDR }}
           token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
