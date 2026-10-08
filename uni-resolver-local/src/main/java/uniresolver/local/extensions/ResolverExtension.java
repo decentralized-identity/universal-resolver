@@ -2,7 +2,7 @@ package uniresolver.local.extensions;
 
 import foundation.identity.did.DID;
 import uniresolver.ResolutionException;
-import uniresolver.local.LocalUniResolver;
+import uniresolver.UniResolver;
 import uniresolver.result.ResolveResult;
 
 import java.lang.annotation.ElementType;
@@ -27,14 +27,14 @@ public interface ResolverExtension {
 
 	@ExtensionStage("beforeResolve")
 	interface BeforeResolveResolverExtension extends ResolverExtension {
-		default ExtensionStatus beforeResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, Map<String, Object> executionState, LocalUniResolver localUniResolver) throws ResolutionException {
+		default ExtensionStatus beforeResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, Map<String, Object> executionState, UniResolver uniResolver) throws ResolutionException {
 			return null;
 		}
 	}
 
 	@ExtensionStage("afterResolve")
 	interface AfterResolveResolverExtension extends ResolverExtension {
-		default ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, Map<String, Object> executionState, LocalUniResolver localUniResolver) throws ResolutionException {
+		default ExtensionStatus afterResolve(DID did, Map<String, Object> resolutionOptions, ResolveResult resolveResult, Map<String, Object> executionState, UniResolver uniResolver) throws ResolutionException {
 			return null;
 		}
 	}
