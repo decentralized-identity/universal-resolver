@@ -43,6 +43,7 @@ services:
       uniresolver_web_driver_url_did_vaa:
       uniresolver_web_driver_url_did_unisot:
       uniresolver_web_driver_url_did_sol:
+      uniresolver_web_driver_url_did_aip:
       uniresolver_web_driver_url_did_lit:
       uniresolver_web_driver_url_did_ebsi:
       uniresolver_web_driver_url_did_emtrust:
@@ -82,7 +83,13 @@ services:
       uniresolver_web_driver_url_did_nfd:
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
+      uniresolver_web_driver_url_did_finger:
       uniresolver_web_driver_url_did_cid:
+      uniresolver_web_driver_url_did_omn:
+      uniresolver_web_driver_url_did_uuid:
+      uniresolver_web_driver_url_did_ixo:
+      uniresolver_web_driver_url_did_neuralkey:
+      uniresolver_web_driver_url_did_stellar:
       uniresolver_web_driver_url_did_definitiveid:
 
 
@@ -150,6 +157,12 @@ services:
     image: sphereon/uni-resolver-driver-did-factom:latest
     ports:
       - "8097:8080"
+  driver-did-finger:
+    image: youngseokaaa/uni-resolver-driver-did-finger:1.0.0
+    environment:
+      DRIVER_BACKEND_URL: ${uniresolver_driver_did_finger_backend_url}
+    ports:
+      - "8169:8080"
   driver-did-key:
     image: universalresolver/driver-did-key:latest
     ports:
@@ -204,6 +217,12 @@ services:
     image: identitydotcom/driver-did-sol:3.3.0
     ports:
       - "8118:8080"
+  driver-did-aip:
+    image: ghcr.io/wienerlabs/driver-did-aip:0.2.4
+    ports:
+      - "8169:8080"
+    environment:
+      RPC_5042002: ${uniresolver_driver_did_aip_rpcUrlArcTestnet}
   driver-did-lit:
     image: ibct/driver-did-lit:0.1.1
     environment:
@@ -374,7 +393,7 @@ services:
     ports:
       - "8154:8080"
   driver-did-quarkid:
-    image:  quarkid/api-proxy:latest
+    image: quarkid/api-proxy:latest
     ports:
       - 8155:8080
     environment:
@@ -477,6 +496,46 @@ services:
       ARCHON_GATEKEEPER_URL: ${uniresolver_driver_did_cid_gatekeeper_url}
     ports:
       - "4250:4250"
+
+  driver-did-omn:
+    image: ghcr.io/omnioneid/driver-did-omn:1.0.0
+    environment:
+      uniresolver_driver_did_omn_opendid_testnet_network_url: ${uniresolver_driver_did_omn_opendid_testnet_network_url}
+      uniresolver_driver_did_omn_opendid_testnet_contract_address: ${uniresolver_driver_did_omn_opendid_testnet_contract_address}
+      uniresolver_driver_did_omn_opendid_testnet_chain_id: ${uniresolver_driver_did_omn_opendid_testnet_chain_id}
+      uniresolver_driver_did_omn_opendid_testnet_gas_limit: ${uniresolver_driver_did_omn_opendid_testnet_gas_limit}
+      uniresolver_driver_did_omn_opendid_testnet_gas_price: ${uniresolver_driver_did_omn_opendid_testnet_gas_price}
+      uniresolver_driver_did_omn_opendid_testnet_connection_timeout: ${uniresolver_driver_did_omn_opendid_testnet_connection_timeout}
+      uniresolver_driver_did_omn_opendid_mainnet_network_url: ${uniresolver_driver_did_omn_opendid_mainnet_network_url}
+      uniresolver_driver_did_omn_opendid_mainnet_contract_address: ${uniresolver_driver_did_omn_opendid_mainnet_contract_address}
+      uniresolver_driver_did_omn_opendid_mainnet_chain_id: ${uniresolver_driver_did_omn_opendid_mainnet_chain_id}
+      uniresolver_driver_did_omn_opendid_mainnet_gas_limit: ${uniresolver_driver_did_omn_opendid_mainnet_gas_limit}
+      uniresolver_driver_did_omn_opendid_mainnet_gas_price: ${uniresolver_driver_did_omn_opendid_mainnet_gas_price}
+      uniresolver_driver_did_omn_opendid_mainnet_connection_timeout: ${uniresolver_driver_did_omn_opendid_mainnet_connection_timeout}
+    ports:
+      - "8169:8080"
+
+  driver-did-uuid:
+    image: ghcr.io/worldresolvable/uni-resolver-driver-did-uuid:0.1.0
+    ports:
+      - "8181:8080"
+
+  driver-did-ixo:
+    image: ghcr.io/ixofoundation/ixo-did-resolver:v0.1.5
+    environment:
+      RPC_ENDPOINT: ${uniresolver_driver_did_ixo_rpc_endpoint}
+    ports:
+      - "8181:8080"
+
+  driver-did-neuralkey:
+    image: heanmengfong/neuralkey-did-driver:1.0.0
+    ports:
+      - "8169:8080"
+
+  driver-did-stellar:
+    image: ghcr.io/acta-team/driver-did-stellar:0.1.0
+    ports:
+      - "8169:8080"
 
   driver-did-definitiveid:
     image: davidgbvargroup/uni-resolver-driver-did-definitiveid:0.1.0
