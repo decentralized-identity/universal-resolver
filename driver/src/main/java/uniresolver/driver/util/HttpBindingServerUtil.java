@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.production.RepresentationProducerDID;
 import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
-import org.apache.http.HttpStatus;
-import org.apache.http.entity.ContentType;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -43,6 +43,8 @@ public class HttpBindingServerUtil {
         if (ResolutionException.ERROR_NOT_FOUND.equals(result.getErrorType()))
             return HttpStatus.SC_NOT_FOUND;
         else if (ResolutionException.ERROR_INVALID_DID.equals(result.getErrorType()) || DereferencingException.ERROR_INVALID_DID_URL.equals(result.getErrorType()))
+            return HttpStatus.SC_BAD_REQUEST;
+        else if (ResolutionException.ERROR_INVALID_OPTIONS.equals(result.getErrorType()))
             return HttpStatus.SC_BAD_REQUEST;
         else if (ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED.equals(result.getErrorType()) || DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED.equals(result.getErrorType()))
             return HttpStatus.SC_NOT_ACCEPTABLE;

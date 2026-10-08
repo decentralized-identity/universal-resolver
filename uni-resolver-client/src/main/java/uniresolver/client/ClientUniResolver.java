@@ -1,14 +1,14 @@
 package uniresolver.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
@@ -18,7 +18,9 @@ import uniresolver.util.HttpBindingClientUtil;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ClientUniResolver implements UniResolver {
@@ -42,6 +44,8 @@ public class ClientUniResolver implements UniResolver {
 	private URI methodsUri = DEFAULT_METHODS_URI;
 	private URI testIdentifiersUri = DEFAULT_TEST_IDENTIFIERS_URI;
 	private URI traitsUri = DEFAULT_TRAITS_URI;
+	private boolean supportsOptions = false;
+	private String acceptHeaderValue = null;
 
 	public ClientUniResolver() {
 
@@ -64,22 +68,30 @@ public class ClientUniResolver implements UniResolver {
 	@Override
 	public ResolveResult resolve(String didString, Map<String, Object> resolutionOptions) throws ResolutionException {
 
-		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ")  with options: " + resolutionOptions);
+		if (log.isDebugEnabled()) log.debug("resolve(" + didString + ") with options: " + resolutionOptions);
 
 		if (didString == null) throw new NullPointerException();
 		if (resolutionOptions == null) resolutionOptions = new HashMap<>();
 
 		// set HTTP URI
 
-		String uriString = this.getResolveUri().toString();
+		StringBuilder uriString = new StringBuilder(this.getResolveUri().toString());
 
-		if (! uriString.endsWith("/")) uriString += "/";
-		uriString += didString;
+		if (! uriString.toString().endsWith("/")) uriString.append("/");
+		Map<String, Object> optionsForHttp;
+		if (this.getSupportsOptions() && ! (optionsForHttp = HttpBindingClientUtil.optionsForHttp(resolutionOptions)).isEmpty()) {
+			uriString.append(URLEncoder.encode(didString, StandardCharsets.UTF_8));
+			uriString.append("?");
+			uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));
+		} else {
+			uriString.append(didString);
+		}
 
 		// set Accept header
 
 		String accept = (String) resolutionOptions.get("accept");
-		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolve().");
+		if (this.getAcceptHeaderValue() != null) accept = this.getAcceptHeaderValue();
+		if (accept == null) throw new ResolutionException("No 'accept' provided in 'resolutionOptions' for resolve(), or in driver configuration.");
 
         List<String> acceptMediaTypes = accept.isBlank() ? Collections.singletonList(ResolveResult.MEDIA_TYPE) : Arrays.asList(ResolveResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
@@ -88,7 +100,7 @@ public class ClientUniResolver implements UniResolver {
 
 		// prepare HTTP request
 
-		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		HttpGet httpGet = new HttpGet(URI.create(uriString.toString()));
 		httpGet.addHeader("Accept", acceptMediaTypesString);
 		if (this.getHttpHeaders() != null) this.getHttpHeaders().forEach(httpGet::addHeader);
 
@@ -103,12 +115,12 @@ public class ClientUniResolver implements UniResolver {
 			// execute HTTP request
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-			int httpStatusCode = httpResponse.getStatusLine().getStatusCode();
-			String httpStatusMessage = httpResponse.getStatusLine().getReasonPhrase();
-			ContentType httpContentType = ContentType.get(httpResponse.getEntity());
-			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
+			int httpCode = httpResponse.getCode();
+			String httpReasonPhrase = httpResponse.getReasonPhrase();
+			ContentType httpContentType = ContentType.parse(httpResponse.getEntity().getContentType());
+			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : StandardCharsets.ISO_8859_1;
 
-			if (log.isDebugEnabled()) log.debug("Response HTTP status from " + uriString + ": " + httpStatusCode + " " + httpStatusMessage);
+			if (log.isDebugEnabled()) log.debug("Response HTTP status from " + uriString + ": " + httpCode + " " + httpReasonPhrase);
 			if (log.isDebugEnabled()) log.debug("Response HTTP content type from " + uriString + ": " + httpContentType + " / " + httpCharset);
 
 			// read result
@@ -123,16 +135,16 @@ public class ClientUniResolver implements UniResolver {
 				resolveResult = HttpBindingClientUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
-			if (httpStatusCode == 404 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_NOT_FOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode == 404 && resolveResult == null) {
+				throw new ResolutionException(ResolutionException.ERROR_NOT_FOUND, httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode == 406 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode == 406 && resolveResult == null) {
+				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode != 200 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_INTERNAL_ERROR, "Cannot retrieve RESOLVE result for " + didString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode != 200 && resolveResult == null) {
+				throw new ResolutionException(ResolutionException.ERROR_INTERNAL_ERROR, "Cannot retrieve RESOLVE result for " + didString + ": " + httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
 			if (resolveResult != null && resolveResult.isErrorResult()) {
@@ -176,12 +188,12 @@ public class ClientUniResolver implements UniResolver {
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+			int httpCode = httpResponse.getCode();
+			String httpReasonPhrase = httpResponse.getReasonPhrase();
 
-			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + httpCode + " " + httpReasonPhrase);
 
-			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
+			if (httpCode == 404) return null;
 
 			HttpEntity httpEntity = httpResponse.getEntity();
 			String httpBody = EntityUtils.toString(httpEntity);
@@ -189,14 +201,14 @@ public class ClientUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+			if (httpCode > 200) {
 
 				if (log.isWarnEnabled()) log.warn("Cannot retrieve PROPERTIES from " + uriString + ": " + httpBody);
 				throw new ResolutionException(httpBody);
 			}
 
 			properties = (Map<String, Map<String, Object>>) objectMapper.readValue(httpBody, LinkedHashMap.class);
-		} catch (IOException ex) {
+		} catch (IOException | ParseException ex) {
 
 			throw new ResolutionException("Cannot retrieve PROPERTIES from " + uriString + ": " + ex.getMessage(), ex);
 		}
@@ -226,12 +238,12 @@ public class ClientUniResolver implements UniResolver {
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+			int httpCode = httpResponse.getCode();
+			String httpReasonPhrase = httpResponse.getReasonPhrase();
 
-			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + httpCode + " " + httpReasonPhrase);
 
-			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
+			if (httpCode == 404) return null;
 
 			HttpEntity httpEntity = httpResponse.getEntity();
 			String httpBody = EntityUtils.toString(httpEntity);
@@ -239,14 +251,14 @@ public class ClientUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+			if (httpCode > 200) {
 
 				if (log.isWarnEnabled()) log.warn("Cannot retrieve METHODS from " + uriString + ": " + httpBody);
 				throw new ResolutionException(httpBody);
 			}
 
 			methods = (Set<String>) objectMapper.readValue(httpBody, LinkedHashSet.class);
-		} catch (IOException ex) {
+		} catch (IOException | ParseException ex) {
 
 			throw new ResolutionException("Cannot retrieve METHODS from " + uriString + ": " + ex.getMessage(), ex);
 		}
@@ -276,12 +288,12 @@ public class ClientUniResolver implements UniResolver {
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+			int httpCode = httpResponse.getCode();
+			String httpReasonPhrase = httpResponse.getReasonPhrase();
 
-			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + httpCode + " " + httpReasonPhrase);
 
-			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
+			if (httpCode == 404) return null;
 
 			HttpEntity httpEntity = httpResponse.getEntity();
 			String httpBody = EntityUtils.toString(httpEntity);
@@ -289,14 +301,14 @@ public class ClientUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+			if (httpCode > 200) {
 
 				if (log.isWarnEnabled()) log.warn("Cannot retrieve TEST IDENTIFIERS from " + uriString + ": " + httpBody);
 				throw new ResolutionException(httpBody);
 			}
 
 			testIdentifiers = (Map<String, List<String>>) objectMapper.readValue(httpBody, LinkedHashMap.class);
-		} catch (IOException ex) {
+		} catch (IOException | ParseException ex) {
 
 			throw new ResolutionException("Cannot retrieve TEST IDENTIFIERS from " + uriString + ": " + ex.getMessage(), ex);
 		}
@@ -326,12 +338,12 @@ public class ClientUniResolver implements UniResolver {
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+			int httpCode = httpResponse.getCode();
+			String httpReasonPhrase = httpResponse.getReasonPhrase();
 
-			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + httpCode + " " + httpReasonPhrase);
 
-			if (httpResponse.getStatusLine().getStatusCode() == 404) return null;
+			if (httpCode == 404) return null;
 
 			HttpEntity httpEntity = httpResponse.getEntity();
 			String httpBody = EntityUtils.toString(httpEntity);
@@ -339,14 +351,14 @@ public class ClientUniResolver implements UniResolver {
 
 			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+			if (httpCode > 200) {
 
 				if (log.isWarnEnabled()) log.warn("Cannot retrieve TRAITS from " + uriString + ": " + httpBody);
 				throw new ResolutionException(httpBody);
 			}
 
 			traits = (Map<String, Map<String, Object>>) objectMapper.readValue(httpBody, LinkedHashMap.class);
-		} catch (IOException ex) {
+		} catch (IOException | ParseException ex) {
 
 			throw new ResolutionException("Cannot retrieve TRAITS from " + uriString + ": " + ex.getMessage(), ex);
 		}
@@ -424,5 +436,21 @@ public class ClientUniResolver implements UniResolver {
 
 	public void setTraitsUri(URI traitsUri) {
 		this.traitsUri = traitsUri;
+	}
+
+	public boolean getSupportsOptions() {
+		return supportsOptions;
+	}
+
+	public void setSupportsOptions(boolean supportsOptions) {
+		this.supportsOptions = supportsOptions;
+	}
+
+	public String getAcceptHeaderValue() {
+		return acceptHeaderValue;
+	}
+
+	public void setAcceptHeaderValue(String acceptHeaderValue) {
+		this.acceptHeaderValue = acceptHeaderValue;
 	}
 }

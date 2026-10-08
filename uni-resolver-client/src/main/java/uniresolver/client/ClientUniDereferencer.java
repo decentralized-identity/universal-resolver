@@ -1,14 +1,13 @@
 package uniresolver.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.DereferencingException;
@@ -18,7 +17,9 @@ import uniresolver.result.DereferenceResult;
 import uniresolver.util.HttpBindingClientUtil;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ClientUniDereferencer implements UniDereferencer {
@@ -34,6 +35,8 @@ public class ClientUniDereferencer implements UniDereferencer {
 	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
 	private Map<String, String> httpHeaders = DEFAULT_HTTP_HEADERS;
 	private URI dereferenceUri = DEFAULT_DEREFERENCE_URI;
+	private boolean supportsOptions = false;
+	private String acceptHeaderValueDereference = null;
 
 	public ClientUniDereferencer() {
 
@@ -52,22 +55,30 @@ public class ClientUniDereferencer implements UniDereferencer {
 	@Override
 	public DereferenceResult dereference(String didUrlString, Map<String, Object> dereferenceOptions) throws DereferencingException, ResolutionException {
 
-		if (log.isDebugEnabled()) log.debug("dereference(" + didUrlString + ")  with options: " + dereferenceOptions);
+		if (log.isDebugEnabled()) log.debug("dereference(" + didUrlString + ") with options: " + dereferenceOptions);
 
 		if (didUrlString == null) throw new NullPointerException();
 		if (dereferenceOptions == null) dereferenceOptions = new HashMap<>();
 
 		// set HTTP URI
 
-		String uriString = this.getDereferenceUri().toString();
+		StringBuilder uriString = new StringBuilder(this.getDereferenceUri().toString());
 
-		if (! uriString.endsWith("/")) uriString += "/";
-		uriString += didUrlString;
+		if (! uriString.toString().endsWith("/")) uriString.append("/");
+		Map<String, Object> optionsForHttp;
+		if (this.getSupportsOptions() && ! (optionsForHttp = HttpBindingClientUtil.optionsForHttp(dereferenceOptions)).isEmpty()) {
+			uriString.append(URLEncoder.encode(didUrlString, StandardCharsets.UTF_8));
+			uriString.append("?");
+			uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));
+		} else {
+			uriString.append(didUrlString);
+		}
 
 		// set Accept header
 
 		String accept = (String) dereferenceOptions.get("accept");
-		if (accept == null) throw new DereferencingException("No 'accept' provided in 'dereferenceOptions' for dereference().");
+		if (this.getAcceptHeaderValueDereference() != null) accept = this.getAcceptHeaderValueDereference();
+		if (accept == null) throw new ResolutionException("No 'accept' provided in 'dereferenceOptions' for dereference(), or in driver configuration.");
 
 		List<String> acceptMediaTypes = Arrays.asList(DereferenceResult.MEDIA_TYPE, accept);
 		String acceptMediaTypesString = String.join(",", acceptMediaTypes);
@@ -76,7 +87,7 @@ public class ClientUniDereferencer implements UniDereferencer {
 
 		// prepare HTTP request
 
-		HttpGet httpGet = new HttpGet(URI.create(uriString));
+		HttpGet httpGet = new HttpGet(URI.create(uriString.toString()));
 		httpGet.addHeader("Accept", acceptMediaTypesString);
 		if (this.getHttpHeaders() != null) this.getHttpHeaders().forEach(httpGet::addHeader);
 
@@ -91,12 +102,12 @@ public class ClientUniDereferencer implements UniDereferencer {
 			// execute HTTP request
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-			int httpStatusCode = httpResponse.getStatusLine().getStatusCode();
-			String httpStatusMessage = httpResponse.getStatusLine().getReasonPhrase();
-			ContentType httpContentType = ContentType.get(httpResponse.getEntity());
-			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
+			int httpCode = httpResponse.getCode();
+			String httpReasonPhrase = httpResponse.getReasonPhrase();
+			ContentType httpContentType = ContentType.parse(httpResponse.getEntity().getContentType());
+			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : StandardCharsets.ISO_8859_1;
 
-			if (log.isDebugEnabled()) log.debug("Response HTTP status from " + uriString + ": " + httpStatusCode + " " + httpStatusMessage);
+			if (log.isDebugEnabled()) log.debug("Response HTTP status from " + uriString + ": " + httpCode + " " + httpReasonPhrase);
 			if (log.isDebugEnabled()) log.debug("Response HTTP content type from " + uriString + ": " + httpContentType + " / " + httpCharset);
 
 			// read result
@@ -111,16 +122,16 @@ public class ClientUniDereferencer implements UniDereferencer {
 				dereferenceResult = HttpBindingClientUtil.fromHttpBodyDereferenceResult(httpBodyString);
 			}
 
-			if (httpStatusCode == 404 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode == 404 && dereferenceResult == null) {
+				throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode == 406 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode == 406 && dereferenceResult == null) {
+				throw new DereferencingException(DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode != 200 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_INTERNAL_ERROR, "Cannot retrieve DEREFERENCE result for " + didUrlString + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode != 200 && dereferenceResult == null) {
+				throw new DereferencingException(DereferencingException.ERROR_INTERNAL_ERROR, "Cannot retrieve DEREFERENCE result for " + didUrlString + ": " + httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
 			if (dereferenceResult != null && dereferenceResult.isErrorResult()) {
@@ -176,5 +187,21 @@ public class ClientUniDereferencer implements UniDereferencer {
 
 	public void setDereferenceUri(String dereferenceUri) {
 		this.dereferenceUri = URI.create(dereferenceUri);
+	}
+
+	public boolean getSupportsOptions() {
+		return supportsOptions;
+	}
+
+	public void setSupportsOptions(boolean supportsOptions) {
+		this.supportsOptions = supportsOptions;
+	}
+
+	public String getAcceptHeaderValueDereference() {
+		return acceptHeaderValueDereference;
+	}
+
+	public void setAcceptHeaderValueDereference(String acceptHeaderValueDereference) {
+		this.acceptHeaderValueDereference = acceptHeaderValueDereference;
 	}
 }

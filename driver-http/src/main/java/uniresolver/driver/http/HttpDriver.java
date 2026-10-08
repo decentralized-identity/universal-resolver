@@ -4,15 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DID;
 import foundation.identity.did.DIDURL;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
+
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.DereferencingException;
@@ -57,9 +59,8 @@ public class HttpDriver implements Driver {
 
 	private static HttpClient buildDefaultHttpClient() {
 		RequestConfig requestConfig = RequestConfig.custom()
-				.setConnectTimeout(HTTP_CLIENT_TIMEOUT * 1000)
-				.setConnectionRequestTimeout(HTTP_CLIENT_TIMEOUT * 1000)
-				.setSocketTimeout(HTTP_CLIENT_TIMEOUT * 1000)
+				.setConnectTimeout(Timeout.ofSeconds(HTTP_CLIENT_TIMEOUT))
+				.setConnectionRequestTimeout(Timeout.ofSeconds(HTTP_CLIENT_TIMEOUT))
 				.build();
 		return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 	}
@@ -107,11 +108,11 @@ public class HttpDriver implements Driver {
 		} else {
 
 			if (! uriString.toString().endsWith("/")) uriString.append("/");
-			Map<String, Object> optionsForDriver = optionsForDriver(resolutionOptions);
-			if (this.getSupportsOptions() && ! optionsForDriver.isEmpty()) {
+			Map<String, Object> optionsForHttp;
+			if (this.getSupportsOptions() && ! (optionsForHttp = HttpBindingClientUtil.optionsForHttp(resolutionOptions)).isEmpty()) {
 				uriString.append(URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
 				uriString.append("?");
-				uriString.append(driverHttpQueryStringForOptions(optionsForDriver));
+				uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));
 			} else {
 				uriString.append(matchedString);
 			}
@@ -144,12 +145,12 @@ public class HttpDriver implements Driver {
 			// execute HTTP request
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-			int httpStatusCode = httpResponse.getStatusLine().getStatusCode();
-			String httpStatusMessage = httpResponse.getStatusLine().getReasonPhrase();
-			ContentType httpContentType = ContentType.get(httpResponse.getEntity());
-			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
+			int httpCode = httpResponse.getCode();
+			String httpReasonPhrase = httpResponse.getReasonPhrase();
+			ContentType httpContentType = ContentType.parse(httpResponse.getEntity().getContentType());
+			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : StandardCharsets.ISO_8859_1;
 
-			if (log.isDebugEnabled()) log.debug("Driver response HTTP status from " + uriString + ": " + httpStatusCode + " " + httpStatusMessage);
+			if (log.isDebugEnabled()) log.debug("Driver response HTTP status from " + uriString + ": " + httpCode + " " + httpReasonPhrase);
 			if (log.isDebugEnabled()) log.debug("Driver response HTTP content type from " + uriString + ": " + httpContentType + " / " + httpCharset);
 
 			// read result
@@ -164,16 +165,16 @@ public class HttpDriver implements Driver {
 				resolveResult = HttpBindingClientUtil.fromHttpBodyResolveResult(httpBodyString);
 			}
 
-			if (httpStatusCode == 404 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_NOT_FOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode == 404 && resolveResult == null) {
+				throw new ResolutionException(ResolutionException.ERROR_NOT_FOUND, httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode == 406 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode == 406 && resolveResult == null) {
+				throw new ResolutionException(ResolutionException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode != 200 && resolveResult == null) {
-				throw new ResolutionException(ResolutionException.ERROR_INTERNAL_ERROR, "Driver cannot retrieve RESOLVE result for " + did + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode != 200 && resolveResult == null) {
+				throw new ResolutionException(ResolutionException.ERROR_INTERNAL_ERROR, "Driver cannot retrieve RESOLVE result for " + did + ": " + httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
 			if (resolveResult != null && resolveResult.isErrorResult()) {
@@ -242,11 +243,11 @@ public class HttpDriver implements Driver {
 		} else {
 
 			if (! uriString.toString().endsWith("/")) uriString.append("/");
-			Map<String, Object> optionsForDriver = optionsForDriver(dereferenceOptions);
-			if (this.getSupportsOptions() && ! optionsForDriver.isEmpty()) {
+			Map<String, Object> optionsForHttp = HttpBindingClientUtil.optionsForHttp(dereferenceOptions);
+			if (this.getSupportsOptions() && ! optionsForHttp.isEmpty()) {
 				uriString.append(URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
 				uriString.append("?");
-				uriString.append(driverHttpQueryStringForOptions(optionsForDriver));
+				uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));
 			} else {
 				uriString.append(matchedString);
 			}
@@ -279,12 +280,12 @@ public class HttpDriver implements Driver {
 			// execute HTTP request
 
 			HttpEntity httpEntity = httpResponse.getEntity();
-			int httpStatusCode = httpResponse.getStatusLine().getStatusCode();
-			String httpStatusMessage = httpResponse.getStatusLine().getReasonPhrase();
-			ContentType httpContentType = ContentType.get(httpResponse.getEntity());
-			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : HTTP.DEF_CONTENT_CHARSET;
+			int httpCode = httpResponse.getCode();
+			String httpReasonPhrase = httpResponse.getReasonPhrase();
+			ContentType httpContentType = ContentType.parse(httpResponse.getEntity().getContentType());
+			Charset httpCharset = (httpContentType != null && httpContentType.getCharset() != null) ? httpContentType.getCharset() : StandardCharsets.ISO_8859_1;
 
-			if (log.isDebugEnabled()) log.debug("Driver response HTTP status from " + uriString + ": " + httpStatusCode + " " + httpStatusMessage);
+			if (log.isDebugEnabled()) log.debug("Driver response HTTP status from " + uriString + ": " + httpCode + " " + httpReasonPhrase);
 			if (log.isDebugEnabled()) log.debug("Driver response HTTP content type from " + uriString + ": " + httpContentType + " / " + httpCharset);
 
 			// read result
@@ -299,16 +300,16 @@ public class HttpDriver implements Driver {
 				dereferenceResult = HttpBindingClientUtil.fromHttpBodyDereferenceResult(httpBodyString);
 			}
 
-			if (httpStatusCode == 404 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode == 404 && dereferenceResult == null) {
+				throw new DereferencingException(DereferencingException.ERROR_NOT_FOUND, httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode == 406 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode == 406 && dereferenceResult == null) {
+				throw new DereferencingException(DereferencingException.ERROR_REPRESENTATION_NOT_SUPPORTED, httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
-			if (httpStatusCode != 200 && dereferenceResult == null) {
-				throw new DereferencingException(DereferencingException.ERROR_INTERNAL_ERROR, "Driver cannot retrieve DEREFERENCE result for " + didUrl + ": " + httpStatusCode + " " + httpStatusMessage + " (" + httpBodyString + ")");
+			if (httpCode != 200 && dereferenceResult == null) {
+				throw new DereferencingException(DereferencingException.ERROR_INTERNAL_ERROR, "Driver cannot retrieve DEREFERENCE result for " + didUrl + ": " + httpCode + " " + httpReasonPhrase + " (" + httpBodyString + ")");
 			}
 
 			if (dereferenceResult != null && dereferenceResult.isErrorResult()) {
@@ -388,12 +389,12 @@ public class HttpDriver implements Driver {
 
 		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
 
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			String statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+			int httpCode = httpResponse.getCode();
+			String httpReasonPhrase = httpResponse.getReasonPhrase();
 
-			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + statusCode + " " + statusMessage);
+			if (log.isDebugEnabled()) log.debug("Response status from " + uriString + ": " + httpCode + " " + httpReasonPhrase);
 
-			if (statusCode == 404) return null;
+			if (httpCode == 404) return null;
 
 			HttpEntity httpEntity = httpResponse.getEntity();
 			String httpBody = EntityUtils.toString(httpEntity);
@@ -401,14 +402,14 @@ public class HttpDriver implements Driver {
 
 			if (log.isDebugEnabled()) log.debug("Response body from " + uriString + ": " + httpBody);
 
-			if (httpResponse.getStatusLine().getStatusCode() > 200) {
+			if (httpCode > 200) {
 
 				if (log.isWarnEnabled()) log.warn("Cannot retrieve DRIVER PROPERTIES from " + uriString + ": " + httpBody);
 				throw new ResolutionException(httpBody);
 			}
 
 			properties = (Map<String, Object>) objectMapper.readValue(httpBody, LinkedHashMap.class);
-		} catch (IOException ex) {
+		} catch (IOException | ParseException ex) {
 
 			throw new ResolutionException("Cannot retrieve DRIVER PROPERTIES from " + uriString + ": " + ex.getMessage(), ex);
 		}
@@ -433,40 +434,6 @@ public class HttpDriver implements Driver {
 	/*
 	 * Helper methods
 	 */
-
-	private static Map<String, Object> optionsForDriver(Map<String, Object> options) {
-
-		return options
-				.entrySet()
-				.stream()
-				.filter(x -> ! "accept".equals(x.getKey()))
-				.filter(x -> ! x.getKey().startsWith("_"))
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-	}
-
-	private static String driverHttpQueryStringForOptions(Map<String, Object> options) {
-
-		boolean containsOnlyStrings = options.values().stream().allMatch(value -> value instanceof String);
-
-		String driverHttpQueryString;
-		if (containsOnlyStrings) {
-			StringBuilder queryString = new StringBuilder();
-			for (Map.Entry<String, Object> option : options.entrySet()) {
-				queryString.append(URLEncoder.encode(option.getKey(), StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode((String) option.getValue(), StandardCharsets.UTF_8)).append("&");
-			}
-			if (queryString.lastIndexOf("&") == queryString.length() - 1) queryString.deleteCharAt(queryString.length() - 1);
-            driverHttpQueryString = queryString.toString();
-		} else {
-            try {
-				driverHttpQueryString = URLEncoder.encode(objectMapper.writeValueAsString(options), StandardCharsets.UTF_8);
-            } catch (JsonProcessingException ex) {
-                throw new IllegalArgumentException("Cannot serialize options " + options + ": " + ex.getMessage(), ex);
-            }
-        }
-
-		if (log.isDebugEnabled()) log.debug("driverHttpQueryStringForOptions: " + driverHttpQueryString);
-		return driverHttpQueryString;
-	}
 
 	/*
 	 * Getters and setters
