@@ -221,6 +221,8 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-ixo](https://github.com/ixofoundation/ixo-did-resolver) | 0.1.5 | [1.0](https://ixofoundation.github.io/ns/did/v1/) | [ghcr.io/ixofoundation/ixo-did-resolver](https://github.com/ixofoundation/ixo-did-resolver/pkgs/container/ixo-did-resolver) | IXO Impact Hub network |
 | [did-stellar](https://github.com/ACTA-Team/did-stellar)                                                             | 0.1.0          | [0.1](https://github.com/ACTA-Team/contracts-acta/blob/main/docs/did-spec/did-stellar-v0.1.md)                    | [ghcr.io/acta-team/driver-did-stellar](https://github.com/orgs/ACTA-Team/packages/container/package/driver-did-stellar)                                            | Stellar / Soroban DID Method                                                        |
 | `neuralkey` | `1.0.0` | [Spec Link](https://neuralkey.neuralsh.com/neuralkey-spec-page) | [heanmengfong/neuralkey-did-driver](https://hub.docker.com/r/heanmengfong/neuralkey-did-driver) | [Sereyvuth Kim/PRESTIGE ALLIANCE CO., LTD](https://neuralkey.neuralsh.com/) |
+| [did-definitiveid](https://github.com/davidgbvargroup/uni-resolver-driver-did-definitiveid) 					| 0.1.0 		 | [0.1.0](https://github.com/davidgbvargroup/did-definitiveid-method-spec/blob/main/spec.md) 						  | [davidgbvargroup/uni-resolver-driver-did-definitiveid](https://hub.docker.com/r/davidgbvargroup/uni-resolver-driver-did-definitiveid) 							   | DefinitiveID DID |
+
 
 ## More Information
 

@@ -506,3 +506,12 @@ uniresolver:
         enumerable: false
         historyAvailable: false
         humanReadable: false
+
+    - pattern: "^(did:definitiveid:.+)$"
+      url: ${uniresolver_web_driver_url_did_definitiveid:http://driver-did-definitiveid:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:definitiveid:bV9echGYLPYWPYgGNwRbHo
+        - did:definitiveid:x9Kmtiaq1i5qt5QsaWKvCU
+        - did:definitiveid:zZCKYq5d7LkuUT5357WhmS
+
+
