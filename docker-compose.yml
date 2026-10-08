@@ -93,6 +93,7 @@ services:
       uniresolver_web_driver_url_did_definitiveid:
       uniresolver_web_driver_url_did_xny:
       uniresolver_web_driver_url_did_moltrust:
+      uniresolver_web_driver_url_did_neuralkey:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -450,7 +451,7 @@ services:
   driver-did-hedera:
     image: ghcr.io/hiero-ledger/uni-resolver-driver-did-hedera:v0.1.7-8ae3a53
     ports:
-        - "8165:8080"
+      - "8165:8080"
 
   driver-did-nda:
     image: ghcr.io/pilacorp/driver-did-nda:1.0.0
@@ -554,3 +555,8 @@ services:
     image: moltrust/driver-did-moltrust@sha256:e06a5cb265f37e79c7ac16f0a887e48f4173b44734b4d3295f49bd735264c4ce
     ports:
       - "8170:8080"
+
+  driver-did-neuralkey:
+    image: heanmengfong/neuralkey-did-driver:1.0.0
+    ports:
+      - "8169:8080"
