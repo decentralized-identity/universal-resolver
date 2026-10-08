@@ -1,5 +1,7 @@
 package uniresolver.web.servlet;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.production.RepresentationProducer;
@@ -51,29 +53,39 @@ public class ResolveServlet extends WebUniResolver {
 			return;
 		}
 
+		String queryString = request.getQueryString();
+
+		if (log.isDebugEnabled()) log.debug("Incoming path: " + path);
+		if (log.isDebugEnabled()) log.debug("Incoming query string: " + queryString);
+
 		// parse request
 
 		String identifier;
-		Map<String, Object> options = new LinkedHashMap<>();
+		Map<String, Object> options;
 		boolean isResolve;
 
 		if (path.startsWith("did%3A")) {
 			identifier = URLDecoder.decode(path, StandardCharsets.UTF_8);
-			if (request.getQueryString() != null) {
-				if (request.getQueryString().contains("=")) {
-					for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
-						String parameterName = e.nextElement();
-						String parameterValue = request.getParameter(parameterName);
-						options.put(parameterName, parameterValue);
-					}
-				} else {
-					options = objectMapper.readValue(URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8), LinkedHashMap.class);
+			if (queryString != null && queryString.contains("=")) {
+				options = new LinkedHashMap<>();
+				for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
+					String parameterName = e.nextElement();
+					String parameterValue = request.getParameter(parameterName);
+					options.put(parameterName, parameterValue);
 				}
-				if (log.isDebugEnabled()) log.debug("Options from query: " + options);
+			} else if (queryString != null) {
+				try {
+					options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
+				} catch (JsonProcessingException ex) {
+					ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Cannot parse query string: " + ex.getMessage());
+					return;
+				}
+			} else {
+				options = new LinkedHashMap<>();
 			}
 		} else {
-			identifier = path;
-			if (request.getQueryString() != null) identifier += "?" + request.getQueryString();
+			identifier = path + (queryString != null ? "?" + queryString : "");
+			options = new LinkedHashMap<>();
 		}
 		isResolve = (! identifier.contains("/")) && (! identifier.contains("?")) && (! identifier.contains("#"));
 
