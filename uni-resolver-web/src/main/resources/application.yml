@@ -466,7 +466,7 @@ uniresolver:
          - did:soul:QmaE6tPuojwURBPbPWc2D87fxzK6ZQQzJ3eREp6kEBSWBn
          - did:soul:QmZ1V5ScPXguf62q4S8P2L4kZgjVsCGAkXanYrGyqVPpKW
 
-    
+
     - pattern: "^(did:webplus:.+)$"
       url: ${uniresolver_web_driver_url_did_webplus:http://driver-did-webplus:80/1.0/identifiers/$1}
       testIdentifiers:
@@ -524,10 +524,13 @@ uniresolver:
         - did:definitiveid:x9Kmtiaq1i5qt5QsaWKvCU
         - did:definitiveid:zZCKYq5d7LkuUT5357WhmS
 
-
-
     - pattern: "^(did:xny:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
       url: ${uniresolver_web_driver_url_did_xny:http://driver-did-xny:8080/1.0/identifiers/$1}
       testIdentifiers:
         - did:xny:0d186d7c-165a-e0dc-f500-01f610cf3c08
         - did:xny:e44c542d-ae34-ff1a-ccad-6202fa680ebd
+
+    - pattern: "^(did:moltrust:.+)$"
+      url: ${uniresolver_web_driver_url_did_moltrust:http://driver-did-moltrust:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:moltrust:d34ed796a4dc4698

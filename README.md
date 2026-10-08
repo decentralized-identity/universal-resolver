@@ -226,7 +226,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-definitiveid](https://github.com/davidgbvargroup/uni-resolver-driver-did-definitiveid) 					| 0.1.0 		 | [0.1.0](https://github.com/davidgbvargroup/did-definitiveid-method-spec/blob/main/spec.md) 						  | [davidgbvargroup/uni-resolver-driver-did-definitiveid](https://hub.docker.com/r/davidgbvargroup/uni-resolver-driver-did-definitiveid) 							   | DefinitiveID DID |
 | [did-xny](https://github.com/humanbased-ai/xny-did) | 1.0.1 | [1.0.1](https://github.com/humanbased-ai/xny-did/blob/v1.0.1/docs/xny-did-method.md) | [ghcr.io/humanbased-ai/xny-did-resolver](https://github.com/humanbased-ai/xny-did/pkgs/container/xny-did-resolver) | Xny DID, anchored on Base |
 | [did-soul](https://github.com/Soulverse-Ecosystem/uni-resolver-driver-did-soul) | 0.1.0 | missing | [soulverse/uni-resolver-driver-did-soul:latest](https://hub.docker.com/r/soulverse/uni-resolver-driver-did-soul) | Soulverse DID method using IPFS for DID document storage |
-
+| [did-moltrust](https://github.com/MoltyCel/uni-resolver-driver-did-moltrust) | 1.2.1 | [0.1](https://moltrust.ch/did-method-spec.html) | [moltrust/driver-did-moltrust](https://hub.docker.com/r/moltrust/driver-did-moltrust) | MolTrust AI Agent Identity |
 
 ## More Information
 

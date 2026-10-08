@@ -81,8 +81,7 @@ services:
       uniresolver_web_driver_url_did_empe:
       uniresolver_web_driver_url_did_hedera:
       uniresolver_web_driver_url_did_nfd:
-      uniresolver_web_driver_url_did_soul: 
-
+      uniresolver_web_driver_url_did_soul:
       uniresolver_web_driver_url_did_bluchain:
       uniresolver_web_driver_url_did_webplus:
       uniresolver_web_driver_url_did_finger:
@@ -94,6 +93,7 @@ services:
       uniresolver_web_driver_url_did_stellar:
       uniresolver_web_driver_url_did_definitiveid:
       uniresolver_web_driver_url_did_xny:
+      uniresolver_web_driver_url_did_moltrust:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -475,8 +475,9 @@ services:
 
   driver-did-soul:
     image: soulverse/uni-resolver-driver-did-soul:latest
-    ports: 
+    ports:
       - "8168:8080"
+
   driver-did-bluchain:
     image: bluchain/did-driver-bluchain:v1.0.0
     environment:
@@ -548,8 +549,14 @@ services:
     ports:
       - "8169:8080"
 
-
   driver-did-xny:
     image: ghcr.io/humanbased-ai/xny-did-resolver:1.0.1
     ports:
       - "8181:8080"
+
+  driver-did-moltrust:
+    # Pinned by digest: this is the build running at uresolver.moltrust.ch, and a
+    # tag can be moved under a consumer while a digest cannot.
+    image: moltrust/driver-did-moltrust@sha256:e06a5cb265f37e79c7ac16f0a887e48f4173b44734b4d3295f49bd735264c4ce
+    ports:
+      - "8170:8080"
