@@ -69,7 +69,6 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
         with:
-          install: true
           version: latest
 
       - name: Docker Build and Cache
@@ -112,7 +111,6 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
         with:
-          install: true
           version: latest
 
       - name: Get version
