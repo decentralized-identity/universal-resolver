@@ -526,6 +526,9 @@ services:
 
   driver-did-stellar:
     image: ghcr.io/acta-team/driver-did-stellar:0.1.0
+    ports:
+      - "8169:8080"
+
   driver-did-moltrust:
     # Pinned by digest: this is the build running at uresolver.moltrust.ch, and a
     # tag can be moved under a consumer while a digest cannot.
