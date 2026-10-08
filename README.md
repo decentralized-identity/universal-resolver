@@ -112,6 +112,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:ixo:ixo1rl9vhhxg0t7ywlh953gtthphg889v7d3e2gx7k
 	curl -X GET http://localhost:8080/1.0/identifiers/did:stellar:testnet:32dhec37woze2mkfpnorosw5ma
 	curl -X GET http://localhost:8080/1.0/identifiers/did:xny:0d186d7c-165a-e0dc-f500-01f610cf3c08
+	curl -X GET http://localhost:8080/1.0/identifiers/did:soul:541e2553-5b46-4ef3-a8c6-4b4597af831b
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -224,6 +225,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | `neuralkey` | `1.0.0` | [Spec Link](https://neuralkey.neuralsh.com/neuralkey-spec-page) | [heanmengfong/neuralkey-did-driver](https://hub.docker.com/r/heanmengfong/neuralkey-did-driver) | [Sereyvuth Kim/PRESTIGE ALLIANCE CO., LTD](https://neuralkey.neuralsh.com/) |
 | [did-definitiveid](https://github.com/davidgbvargroup/uni-resolver-driver-did-definitiveid) 					| 0.1.0 		 | [0.1.0](https://github.com/davidgbvargroup/did-definitiveid-method-spec/blob/main/spec.md) 						  | [davidgbvargroup/uni-resolver-driver-did-definitiveid](https://hub.docker.com/r/davidgbvargroup/uni-resolver-driver-did-definitiveid) 							   | DefinitiveID DID |
 | [did-xny](https://github.com/humanbased-ai/xny-did) | 1.0.1 | [1.0.1](https://github.com/humanbased-ai/xny-did/blob/v1.0.1/docs/xny-did-method.md) | [ghcr.io/humanbased-ai/xny-did-resolver](https://github.com/humanbased-ai/xny-did/pkgs/container/xny-did-resolver) | Xny DID, anchored on Base |
+| [did-soul](https://github.com/Soulverse-Ecosystem/uni-resolver-driver-did-soul) | 0.1.0 | missing | [soulverse/uni-resolver-driver-did-soul:latest](https://hub.docker.com/r/soulverse/uni-resolver-driver-did-soul) | Soulverse DID method using IPFS for DID document storage |
 
 
 ## More Information

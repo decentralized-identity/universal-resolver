@@ -457,6 +457,15 @@ uniresolver:
       testIdentifiers:
         - did:nfd:nfdomains.algo
         - did:nfd:algorand.algo
+
+    - pattern: "^(did:soul:.+)$"
+      url: ${uniresolver_web_driver_url_did_soul:http://driver-did-soul:8080/1.0/identifiers/$1}
+      propertiesEndpoint: "true"
+      testIdentifiers:
+         - did:soul:QmeKbb939PNWbaNADTtCH1SLmYxTdvqRA4qQBcjr26PTim
+         - did:soul:QmaE6tPuojwURBPbPWc2D87fxzK6ZQQzJ3eREp6kEBSWBn
+         - did:soul:QmZ1V5ScPXguf62q4S8P2L4kZgjVsCGAkXanYrGyqVPpKW
+
     
     - pattern: "^(did:webplus:.+)$"
       url: ${uniresolver_web_driver_url_did_webplus:http://driver-did-webplus:80/1.0/identifiers/$1}
