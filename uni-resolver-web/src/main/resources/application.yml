@@ -500,12 +500,6 @@ uniresolver:
         updateable: true
         humanReadable: false
 
-
-    - pattern: "^(did:neuralkey:.+)$"
-      url: "${uniresolver_web_driver_url_did_neuralkey:http://driver-did-neuralkey:8080/1.0/identifiers/$1}"
-      testIdentifiers:
-        - "did:neuralkey:z6MkwAkLNUmKBRha3s2NzRWFFsDSXJ2QF44w9AT4CmSBuU41"
-        - "did:neuralkey:did-neuralsh.serveblog.net"
     - pattern: "^(did:stellar:.+)$"
       url: ${uniresolver_web_driver_url_did_stellar:http://driver-did-stellar:8080/1.0/identifiers/$1}
       testIdentifiers:
