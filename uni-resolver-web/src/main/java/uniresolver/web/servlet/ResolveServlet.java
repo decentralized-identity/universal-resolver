@@ -26,7 +26,7 @@ import java.util.*;
 
 public class ResolveServlet extends WebUniResolver {
 
-	protected static final Logger log = LoggerFactory.getLogger(ResolveServlet.class);
+	private static final Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
 	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
