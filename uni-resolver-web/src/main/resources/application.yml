@@ -15,6 +15,14 @@ spring:
 
 uniresolver:
   drivers:
+    - pattern: "^(did:trail:.+)$"
+      url: ${uniresolver_web_driver_url_did_trail:http://driver-did-trail:8080/}
+      testIdentifiers:
+        - did:trail:self:zEFoeeXsQtCAK9itr35Hf8W2HF5tAPTrKUKK1nC3RnUx4
+      traits:
+        deactivatable: false
+        enumerable: false
+        historyAvailable: false
     - pattern: "^(did:btcr:.+)$"
       url: ${uniresolver_web_driver_url_did_btcr:http://driver-did-btcr:8080/}
       propertiesEndpoint: "true"
