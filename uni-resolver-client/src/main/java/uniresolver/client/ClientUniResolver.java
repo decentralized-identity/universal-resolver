@@ -1,14 +1,20 @@
 package uniresolver.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.ResolutionException;
@@ -29,7 +35,6 @@ public class ClientUniResolver implements UniResolver {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClients.createDefault();
 	public static final Map<String, String> DEFAULT_HTTP_HEADERS = Collections.emptyMap();
 	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers");
 	public static final URI DEFAULT_PROPERTIES_URI = URI.create("http://localhost:8080/1.0/properties");
@@ -37,18 +42,28 @@ public class ClientUniResolver implements UniResolver {
 	public static final URI DEFAULT_TEST_IDENTIFIERS_URI = URI.create("http://localhost:8080/1.0/testIdentifiers");
 	public static final URI DEFAULT_TRAITS_URI = URI.create("http://localhost:8080/1.0/traits");
 
-	private HttpClient httpClient = DEFAULT_HTTP_CLIENT;
-	private Map<String, String> httpHeaders = DEFAULT_HTTP_HEADERS;
+	private static final int HTTP_CLIENT_TIMEOUT = 60;
+
+	private HttpClient httpClient = buildDefaultHttpClient();
 	private URI resolveUri = DEFAULT_RESOLVE_URI;
 	private URI propertiesUri = DEFAULT_PROPERTIES_URI;
 	private URI methodsUri = DEFAULT_METHODS_URI;
 	private URI testIdentifiersUri = DEFAULT_TEST_IDENTIFIERS_URI;
 	private URI traitsUri = DEFAULT_TRAITS_URI;
+	private Map<String, String> httpHeaders = DEFAULT_HTTP_HEADERS;
 	private boolean supportsOptions = false;
+	private boolean supportsPost = false;
 	private String acceptHeaderValue = null;
 
 	public ClientUniResolver() {
+	}
 
+	private static HttpClient buildDefaultHttpClient() {
+		RequestConfig requestConfig = RequestConfig.custom()
+				.setConnectTimeout(Timeout.ofSeconds(HTTP_CLIENT_TIMEOUT))
+				.setConnectionRequestTimeout(Timeout.ofSeconds(HTTP_CLIENT_TIMEOUT))
+				.build();
+		return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 	}
 
 	public static ClientUniResolver create(URI baseUri) {
@@ -76,10 +91,10 @@ public class ClientUniResolver implements UniResolver {
 		// set HTTP URI
 
 		StringBuilder uriString = new StringBuilder(this.getResolveUri().toString());
+		Map<String, Object> optionsForHttp = HttpBindingClientUtil.optionsForHttp(resolutionOptions);
 
 		if (! uriString.toString().endsWith("/")) uriString.append("/");
-		Map<String, Object> optionsForHttp;
-		if (this.getSupportsOptions() && ! (optionsForHttp = HttpBindingClientUtil.optionsForHttp(resolutionOptions)).isEmpty()) {
+		if (this.getSupportsOptions() && ! this.getSupportsPost() && ! optionsForHttp.isEmpty()) {
 			uriString.append(URLEncoder.encode(didString, StandardCharsets.UTF_8));
 			uriString.append("?");
 			uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));
@@ -100,9 +115,22 @@ public class ClientUniResolver implements UniResolver {
 
 		// prepare HTTP request
 
-		HttpGet httpGet = new HttpGet(URI.create(uriString.toString()));
-		httpGet.addHeader("Accept", acceptMediaTypesString);
-		if (this.getHttpHeaders() != null) this.getHttpHeaders().forEach(httpGet::addHeader);
+		HttpUriRequest httpUriRequest;
+
+		if (this.getSupportsOptions() && this.getSupportsPost() && ! optionsForHttp.isEmpty()) {
+			httpUriRequest = new HttpPost(uriString.toString());
+			if (! optionsForHttp.isEmpty()) {
+				try {
+					httpUriRequest.setEntity(new StringEntity(objectMapper.writeValueAsString(optionsForHttp), ContentType.APPLICATION_JSON));
+				} catch (JsonProcessingException ex) {
+					throw new ResolutionException("Driver cannot serialize options " + optionsForHttp + " for " + uriString + ": " + ex.getMessage(), ex);
+				}
+			}
+		} else {
+			httpUriRequest = new HttpGet(URI.create(uriString.toString()));
+		}
+		httpUriRequest.addHeader("Accept", acceptMediaTypesString);
+		if (this.getHttpHeaders() != null) this.getHttpHeaders().forEach(httpUriRequest::addHeader);
 
 		// execute HTTP request and read response
 
@@ -110,7 +138,7 @@ public class ClientUniResolver implements UniResolver {
 
 		if (log.isDebugEnabled()) log.debug("Request for DID " + didString + " to " + uriString + " with Accept: header " + acceptMediaTypesString);
 
-		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
+		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpUriRequest)) {
 
 			// execute HTTP request
 
@@ -382,14 +410,6 @@ public class ClientUniResolver implements UniResolver {
 		this.httpClient = httpClient;
 	}
 
-	public Map<String, String> getHttpHeaders() {
-		return this.httpHeaders;
-	}
-
-	public void setHttpHeaders(Map<String, String> httpHeaders) {
-		this.httpHeaders = httpHeaders;
-	}
-
 	public URI getResolveUri() {
 		return this.resolveUri;
 	}
@@ -438,12 +458,28 @@ public class ClientUniResolver implements UniResolver {
 		this.traitsUri = traitsUri;
 	}
 
+	public Map<String, String> getHttpHeaders() {
+		return this.httpHeaders;
+	}
+
+	public void setHttpHeaders(Map<String, String> httpHeaders) {
+		this.httpHeaders = httpHeaders;
+	}
+
 	public boolean getSupportsOptions() {
 		return supportsOptions;
 	}
 
 	public void setSupportsOptions(boolean supportsOptions) {
 		this.supportsOptions = supportsOptions;
+	}
+
+	public boolean getSupportsPost() {
+		return supportsPost;
+	}
+
+	public void setSupportsPost(boolean supportsPost) {
+		this.supportsPost = supportsPost;
 	}
 
 	public String getAcceptHeaderValue() {

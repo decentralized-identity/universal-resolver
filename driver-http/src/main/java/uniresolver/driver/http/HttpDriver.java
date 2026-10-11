@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DID;
 import foundation.identity.did.DIDURL;
-
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -14,6 +15,7 @@ import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +34,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class HttpDriver implements Driver {
 
@@ -40,13 +41,17 @@ public class HttpDriver implements Driver {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
+	public static final Map<String, String> DEFAULT_HTTP_HEADERS = Collections.emptyMap();
+
 	private static final int HTTP_CLIENT_TIMEOUT = 60;
 
-	private HttpClient httpClient;
+	private HttpClient httpClient = buildDefaultHttpClient();
 	private Pattern pattern = null;
 	private URI resolveUri = null;
 	private URI propertiesUri = null;
+	private Map<String, String> httpHeaders = DEFAULT_HTTP_HEADERS;
 	private boolean supportsOptions = false;
+	private boolean supportsPost = false;
 	private boolean supportsDereference = false;
 	private String acceptHeaderValue = null;
 	private String acceptHeaderValueDereference = null;
@@ -54,7 +59,6 @@ public class HttpDriver implements Driver {
 	private Map<String, Object> traits = Collections.emptyMap();
 
 	public HttpDriver() {
-		this.httpClient = buildDefaultHttpClient();
 	}
 
 	private static HttpClient buildDefaultHttpClient() {
@@ -98,6 +102,7 @@ public class HttpDriver implements Driver {
 		// set HTTP URI
 
 		StringBuilder uriString = new StringBuilder(this.getResolveUri().toString());
+		Map<String, Object> optionsForHttp = HttpBindingClientUtil.optionsForHttp(resolutionOptions);
 
 		if (uriString.toString().contains("$1")) {
 
@@ -108,8 +113,7 @@ public class HttpDriver implements Driver {
 		} else {
 
 			if (! uriString.toString().endsWith("/")) uriString.append("/");
-			Map<String, Object> optionsForHttp;
-			if (this.getSupportsOptions() && ! (optionsForHttp = HttpBindingClientUtil.optionsForHttp(resolutionOptions)).isEmpty()) {
+			if (this.getSupportsOptions() && ! this.getSupportsPost() && ! optionsForHttp.isEmpty()) {
 				uriString.append(URLEncoder.encode(matchedString.toString(), StandardCharsets.UTF_8));
 				uriString.append("?");
 				uriString.append(HttpBindingClientUtil.httpQueryStringForOptions(optionsForHttp));
@@ -131,8 +135,22 @@ public class HttpDriver implements Driver {
 
 		// prepare HTTP request
 
-		HttpGet httpGet = new HttpGet(URI.create(uriString.toString()));
-		httpGet.addHeader("Accept", acceptMediaTypesString);
+		HttpUriRequest httpUriRequest;
+
+		if (this.getSupportsOptions() && this.getSupportsPost() && ! optionsForHttp.isEmpty()) {
+			httpUriRequest = new HttpPost(uriString.toString());
+			if (! optionsForHttp.isEmpty()) {
+                try {
+                    httpUriRequest.setEntity(new StringEntity(objectMapper.writeValueAsString(optionsForHttp), ContentType.APPLICATION_JSON));
+                } catch (JsonProcessingException ex) {
+					throw new ResolutionException("Driver cannot serialize options " + optionsForHttp + " for " + uriString + ": " + ex.getMessage(), ex);
+                }
+            }
+		} else {
+			httpUriRequest = new HttpGet(URI.create(uriString.toString()));
+		}
+		httpUriRequest.addHeader("Accept", acceptMediaTypesString);
+		if (this.getHttpHeaders() != null) this.getHttpHeaders().forEach(httpUriRequest::addHeader);
 
 		// execute HTTP request and read response
 
@@ -140,7 +158,7 @@ public class HttpDriver implements Driver {
 
 		if (log.isDebugEnabled()) log.debug("Driver request for DID " + did + " to " + uriString + " with Accept: header " + acceptMediaTypesString);
 
-		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpGet)) {
+		try (CloseableHttpResponse httpResponse = (CloseableHttpResponse) this.getHttpClient().execute(httpUriRequest)) {
 
 			// execute HTTP request
 
@@ -483,12 +501,28 @@ public class HttpDriver implements Driver {
 		this.propertiesUri = URI.create(propertiesUri);
 	}
 
+	public Map<String, String> getHttpHeaders() {
+		return this.httpHeaders;
+	}
+
+	public void setHttpHeaders(Map<String, String> httpHeaders) {
+		this.httpHeaders = httpHeaders;
+	}
+
 	public boolean getSupportsOptions() {
 		return this.supportsOptions;
 	}
 
 	public void setSupportsOptions(boolean supportsOptions) {
 		this.supportsOptions = supportsOptions;
+	}
+
+	public boolean getSupportsPost() {
+		return supportsPost;
+	}
+
+	public void setSupportsPost(boolean supportsPost) {
+		this.supportsPost = supportsPost;
 	}
 
 	public boolean getSupportsDereference() {

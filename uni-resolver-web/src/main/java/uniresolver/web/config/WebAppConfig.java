@@ -107,7 +107,9 @@ public class WebAppConfig {
 			String pattern = driverConfig.getPattern();
 			String url = driverConfig.getUrl();
 			String propertiesEndpoint = driverConfig.getPropertiesEndpoint();
+			Map<String, String> httpHeaders = driverConfig.getHttpHeaders();
 			String supportsOptions = driverConfig.getSupportsOptions();
+			String supportsPost = driverConfig.getSupportsPost();
 			String supportsDereference = driverConfig.getSupportsDereference();
 			String acceptHeaderValue = driverConfig.getAcceptHeaderValue();
 			String acceptHeaderValueDereference = driverConfig.getAcceptHeaderValueDereference();
@@ -131,7 +133,9 @@ public class WebAppConfig {
 				if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(normalizeUri((url + this.servletMappings.getProperties()), false));
 			}
 
+			if (httpHeaders != null) driver.setHttpHeaders(httpHeaders);
 			if (supportsOptions != null) driver.setSupportsOptions(Boolean.parseBoolean(supportsOptions));
+			if (supportsPost != null) driver.setSupportsPost(Boolean.parseBoolean(supportsPost));
 			if (supportsDereference != null) driver.setSupportsDereference(Boolean.parseBoolean(supportsDereference));
 			if (acceptHeaderValue != null) driver.setAcceptHeaderValue(acceptHeaderValue);
 			if (acceptHeaderValueDereference != null) driver.setAcceptHeaderValueDereference(acceptHeaderValueDereference);

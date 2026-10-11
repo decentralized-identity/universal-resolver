@@ -35,7 +35,9 @@ public class LocalUniResolverConfigurator {
                 String pattern = jsonDriver.containsKey("pattern") ? (String) jsonDriver.get("pattern") : null;
                 String url = jsonDriver.containsKey("url") ? (String) jsonDriver.get("url") : null;
                 String propertiesEndpoint = jsonDriver.containsKey("propertiesEndpoint") ? (String) jsonDriver.get("propertiesEndpoint") : null;
+                Map<String, String> httpHeaders = jsonDriver.containsKey("httpHeaders") ? (Map<String, String>) jsonDriver.get("httpHeaders") : null;
                 String supportsOptions = jsonDriver.containsKey("supportsOptions") ? (String) jsonDriver.get("supportsOptions") : null;
+                String supportsPost = jsonDriver.containsKey("supportsPost") ? (String) jsonDriver.get("supportsPost") : null;
                 String supportsDereference = jsonDriver.containsKey("supportsDereference") ? (String) jsonDriver.get("supportsDereference") : null;
                 String acceptHeaderValue = jsonDriver.containsKey("acceptHeaderValue") ? (String) jsonDriver.get("acceptHeaderValue") : null;
                 String acceptHeaderValueDereference = jsonDriver.containsKey("acceptHeaderValueDereference") ? (String) jsonDriver.get("acceptHeaderValueDereference") : null;
@@ -59,7 +61,9 @@ public class LocalUniResolverConfigurator {
                     if ("true".equals(propertiesEndpoint)) driver.setPropertiesUri(url + "1.0/properties");
                 }
 
+                if (httpHeaders != null) driver.setHttpHeaders(httpHeaders);
                 if (supportsOptions != null) driver.setSupportsOptions(Boolean.parseBoolean(supportsOptions));
+                if (supportsPost != null) driver.setSupportsPost(Boolean.parseBoolean(supportsPost));
                 if (supportsDereference != null) driver.setSupportsDereference(Boolean.parseBoolean(supportsDereference));
                 if (acceptHeaderValue != null) driver.setAcceptHeaderValue(acceptHeaderValue);
                 if (acceptHeaderValueDereference != null) driver.setAcceptHeaderValueDereference(acceptHeaderValueDereference);

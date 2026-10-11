@@ -1,7 +1,6 @@
 package uniresolver;
 
 import uniresolver.result.DereferenceResult;
-import uniresolver.result.ResolveResult;
 
 import java.util.Map;
 
