@@ -1,7 +1,7 @@
 package uniresolver.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -33,7 +33,7 @@ public class ClientUniResolver implements UniResolver {
 
 	private static final Logger log = LoggerFactory.getLogger(ClientUniResolver.class);
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	public static final Map<String, String> DEFAULT_HTTP_HEADERS = Collections.emptyMap();
 	public static final URI DEFAULT_RESOLVE_URI = URI.create("http://localhost:8080/1.0/identifiers");
@@ -121,7 +121,7 @@ public class ClientUniResolver implements UniResolver {
 			httpUriRequest = new HttpPost(uriString.toString());
 			if (! optionsForHttp.isEmpty()) {
 				try {
-					httpUriRequest.setEntity(new StringEntity(objectMapper.writeValueAsString(optionsForHttp), ContentType.APPLICATION_JSON));
+					httpUriRequest.setEntity(new StringEntity(jsonMapper.writeValueAsString(optionsForHttp), ContentType.APPLICATION_JSON));
 				} catch (JsonProcessingException ex) {
 					throw new ResolutionException("Driver cannot serialize options " + optionsForHttp + " for " + uriString + ": " + ex.getMessage(), ex);
 				}
@@ -235,7 +235,7 @@ public class ClientUniResolver implements UniResolver {
 				throw new ResolutionException(httpBody);
 			}
 
-			properties = (Map<String, Map<String, Object>>) objectMapper.readValue(httpBody, LinkedHashMap.class);
+			properties = (Map<String, Map<String, Object>>) jsonMapper.readValue(httpBody, LinkedHashMap.class);
 		} catch (IOException | ParseException ex) {
 
 			throw new ResolutionException("Cannot retrieve PROPERTIES from " + uriString + ": " + ex.getMessage(), ex);
@@ -285,7 +285,7 @@ public class ClientUniResolver implements UniResolver {
 				throw new ResolutionException(httpBody);
 			}
 
-			methods = (Set<String>) objectMapper.readValue(httpBody, LinkedHashSet.class);
+			methods = (Set<String>) jsonMapper.readValue(httpBody, LinkedHashSet.class);
 		} catch (IOException | ParseException ex) {
 
 			throw new ResolutionException("Cannot retrieve METHODS from " + uriString + ": " + ex.getMessage(), ex);
@@ -335,7 +335,7 @@ public class ClientUniResolver implements UniResolver {
 				throw new ResolutionException(httpBody);
 			}
 
-			testIdentifiers = (Map<String, List<String>>) objectMapper.readValue(httpBody, LinkedHashMap.class);
+			testIdentifiers = (Map<String, List<String>>) jsonMapper.readValue(httpBody, LinkedHashMap.class);
 		} catch (IOException | ParseException ex) {
 
 			throw new ResolutionException("Cannot retrieve TEST IDENTIFIERS from " + uriString + ": " + ex.getMessage(), ex);
@@ -385,7 +385,7 @@ public class ClientUniResolver implements UniResolver {
 				throw new ResolutionException(httpBody);
 			}
 
-			traits = (Map<String, Map<String, Object>>) objectMapper.readValue(httpBody, LinkedHashMap.class);
+			traits = (Map<String, Map<String, Object>>) jsonMapper.readValue(httpBody, LinkedHashMap.class);
 		} catch (IOException | ParseException ex) {
 
 			throw new ResolutionException("Cannot retrieve TRAITS from " + uriString + ": " + ex.getMessage(), ex);

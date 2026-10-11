@@ -1,6 +1,6 @@
 package uniresolver.examples.w3ctestsuite;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import foundation.identity.did.DID;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
@@ -9,7 +9,7 @@ import java.util.*;
 
 public class TestSuiteUtil {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
     static String makeIdentifierTestSuiteReport(String didMethod, List<String> dids, Map<String, String> didParameters) throws Exception {
 
@@ -20,7 +20,7 @@ public class TestSuiteUtil {
         json.put("dids", dids);
         json.put("didParameters", didParameters);
 
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+        return jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
     }
 
     static String makeDidResolutionTestSuiteReport(Map<String, List<Integer>> expectedOutcomes, List<String> function, List<String> didString, String didMethod, List<Map<String, Object>> resolutionOptions, List<ResolveResult> resolveResults) throws Exception {
@@ -50,7 +50,7 @@ public class TestSuiteUtil {
         json.put("expectedOutcomes", expectedOutcomes);
         json.put("executions", executions);
 
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+        return jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
     }
 
     static String makeDidUrlDereferencingTestSuiteReport(Map<String, List<Integer>> expectedOutcomes, List<String> function, List<String> didUrlString, String didMethod, Map<String, Object> dereferenceOptions, List<DereferenceResult> dereferenceResults) throws Exception {
@@ -80,6 +80,6 @@ public class TestSuiteUtil {
         json.put("expectedOutcomes", expectedOutcomes);
         json.put("executions", executions);
 
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+        return jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
     }
 }

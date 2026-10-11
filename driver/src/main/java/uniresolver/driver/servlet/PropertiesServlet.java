@@ -1,6 +1,6 @@
 package uniresolver.driver.servlet;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ public class PropertiesServlet extends HttpServlet implements Servlet {
 
 	private static final Logger log = LoggerFactory.getLogger(PropertiesServlet.class);
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	public PropertiesServlet() {
 		super();
@@ -39,7 +39,7 @@ public class PropertiesServlet extends HttpServlet implements Servlet {
 
 		try {
 			properties = InitServlet.getDriver() == null ? null : InitServlet.getDriver().properties();
-			propertiesString = properties == null ? null : objectMapper.writeValueAsString(properties);
+			propertiesString = properties == null ? null : jsonMapper.writeValueAsString(properties);
 		} catch (Exception ex) {
 			if (log.isWarnEnabled()) log.warn("Properties problem: " + ex.getMessage(), ex);
 			ServletUtil.sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Properties problem: " + ex.getMessage());

@@ -1,7 +1,7 @@
 package uniresolver.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -32,7 +32,7 @@ public class ClientUniDereferencer implements UniDereferencer {
 
 	private static final Logger log = LoggerFactory.getLogger(ClientUniDereferencer.class);
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	public static final Map<String, String> DEFAULT_HTTP_HEADERS = Collections.emptyMap();
 	public static final URI DEFAULT_DEREFERENCE_URI = URI.create("http://localhost:8080/1.0/identifiers");
@@ -108,7 +108,7 @@ public class ClientUniDereferencer implements UniDereferencer {
 			httpUriRequest = new HttpPost(uriString.toString());
 			if (! optionsForHttp.isEmpty()) {
 				try {
-					httpUriRequest.setEntity(new StringEntity(objectMapper.writeValueAsString(optionsForHttp), ContentType.APPLICATION_JSON));
+					httpUriRequest.setEntity(new StringEntity(jsonMapper.writeValueAsString(optionsForHttp), ContentType.APPLICATION_JSON));
 				} catch (JsonProcessingException ex) {
 					throw new ResolutionException("Driver cannot serialize options " + optionsForHttp + " for " + uriString + ": " + ex.getMessage(), ex);
 				}

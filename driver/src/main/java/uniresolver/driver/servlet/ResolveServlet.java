@@ -1,7 +1,7 @@
 package uniresolver.driver.servlet;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import foundation.identity.did.DID;
 import foundation.identity.did.DIDURL;
 import foundation.identity.did.representations.Representations;
@@ -31,7 +31,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 	private static final Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -77,7 +77,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 				}
 			} else if (queryString != null) {
 				try {
-					options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
+					options = jsonMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
 				} catch (JsonProcessingException ex) {
 					ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Cannot parse query string: " + ex.getMessage());
 					return;
@@ -97,7 +97,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		String httpXConfigHeader = request.getHeader("X-Config");
 		if (log.isInfoEnabled()) log.info("Incoming X-Config: header string: " + httpXConfigHeader);
-		Map<String, Object> httpXConfigHeaderMap = httpXConfigHeader == null ? null : (Map<String, Object>) objectMapper.readValue(httpXConfigHeader, Map.class);
+		Map<String, Object> httpXConfigHeaderMap = httpXConfigHeader == null ? null : (Map<String, Object>) jsonMapper.readValue(httpXConfigHeader, Map.class);
 		if (httpXConfigHeaderMap != null) {
 			options.keySet().forEach(httpXConfigHeaderMap::remove);
 			options.putAll(httpXConfigHeaderMap);

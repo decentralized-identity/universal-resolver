@@ -1,7 +1,7 @@
 package uniresolver.driver.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import foundation.identity.did.DID;
 import foundation.identity.did.DIDURL;
 import org.apache.hc.client5.http.classic.HttpClient;
@@ -39,7 +39,7 @@ public class HttpDriver implements Driver {
 
 	private static final Logger log = LoggerFactory.getLogger(HttpDriver.class);
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	public static final Map<String, String> DEFAULT_HTTP_HEADERS = Collections.emptyMap();
 
@@ -141,7 +141,7 @@ public class HttpDriver implements Driver {
 			httpUriRequest = new HttpPost(uriString.toString());
 			if (! optionsForHttp.isEmpty()) {
                 try {
-                    httpUriRequest.setEntity(new StringEntity(objectMapper.writeValueAsString(optionsForHttp), ContentType.APPLICATION_JSON));
+                    httpUriRequest.setEntity(new StringEntity(jsonMapper.writeValueAsString(optionsForHttp), ContentType.APPLICATION_JSON));
                 } catch (JsonProcessingException ex) {
 					throw new ResolutionException("Driver cannot serialize options " + optionsForHttp + " for " + uriString + ": " + ex.getMessage(), ex);
                 }
@@ -426,7 +426,7 @@ public class HttpDriver implements Driver {
 				throw new ResolutionException(httpBody);
 			}
 
-			properties = (Map<String, Object>) objectMapper.readValue(httpBody, LinkedHashMap.class);
+			properties = (Map<String, Object>) jsonMapper.readValue(httpBody, LinkedHashMap.class);
 		} catch (IOException | ParseException ex) {
 
 			throw new ResolutionException("Cannot retrieve DRIVER PROPERTIES from " + uriString + ": " + ex.getMessage(), ex);

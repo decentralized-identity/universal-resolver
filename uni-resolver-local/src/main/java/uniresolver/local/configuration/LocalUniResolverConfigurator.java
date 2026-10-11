@@ -1,6 +1,6 @@
 package uniresolver.local.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.driver.Driver;
@@ -19,7 +19,7 @@ public class LocalUniResolverConfigurator {
 
     private static final Logger log = LoggerFactory.getLogger(LocalUniResolverConfigurator.class);
 
-    private final static ObjectMapper objectMapper = new ObjectMapper();
+    private final static JsonMapper jsonMapper = JsonMapper.builder().build();
 
     public static void configureLocalUniResolver(String filePath, LocalUniResolver localUniResolver) throws IOException {
 
@@ -27,7 +27,7 @@ public class LocalUniResolverConfigurator {
 
         try (Reader reader = new FileReader(filePath)) {
 
-            Map<String, Object> jsonRoot = objectMapper.readValue(reader, Map.class);
+            Map<String, Object> jsonRoot = jsonMapper.readValue(reader, Map.class);
             List<Map<String, Object>> jsonDrivers = (List<Map<String, Object>>) jsonRoot.get("drivers");
 
             for (Map<String, Object> jsonDriver : jsonDrivers) {
