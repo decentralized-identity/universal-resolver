@@ -1,7 +1,7 @@
 package uniresolver.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import foundation.identity.did.DIDDocument;
 import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.consumption.RepresentationConsumer;
@@ -33,7 +33,7 @@ public class HttpBindingClientUtil {
 
     private static final Logger log = LoggerFactory.getLogger(HttpBindingClientUtil.class);
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
     /*
      * HTTP body
@@ -47,7 +47,7 @@ public class HttpBindingClientUtil {
         // prepare result
 
         ResolveResult resolveResult = ResolveResult.build();
-        Map<String, Object> json = objectMapper.readValue(httpBody, LinkedHashMap.class);
+        Map<String, Object> json = jsonMapper.readValue(httpBody, LinkedHashMap.class);
 
         if (json.get("didResolutionMetadata") instanceof Map) resolveResult.getDidResolutionMetadata().putAll((Map<String, Object>) json.get("didResolutionMetadata"));
         if (json.get("didDocumentMetadata") instanceof Map) resolveResult.getDidDocumentMetadata().putAll((Map<String, Object>) json.get("didDocumentMetadata"));
@@ -58,7 +58,7 @@ public class HttpBindingClientUtil {
         Object didDocumentObject = json.get("didDocument");
         if (didDocumentObject == null) didDocumentObject = json.get("didDocumentStream");
         if (didDocumentObject instanceof Map) {
-            didDocumentBytes = objectMapper.writeValueAsBytes(didDocumentObject);
+            didDocumentBytes = jsonMapper.writeValueAsBytes(didDocumentObject);
         } else if (didDocumentObject instanceof String) {
             if (((String) didDocumentObject).isEmpty()) {
                 didDocumentBytes = new byte[0];
@@ -98,7 +98,7 @@ public class HttpBindingClientUtil {
         // prepare result
 
         DereferenceResult dereferenceResult = DereferenceResult.build();
-        Map<String, Object> json = objectMapper.readValue(httpBody, LinkedHashMap.class);
+        Map<String, Object> json = jsonMapper.readValue(httpBody, LinkedHashMap.class);
 
         if (json.get("dereferencingMetadata") instanceof Map) dereferenceResult.getDereferencingMetadata().putAll((Map<String, Object>) json.get("dereferencingMetadata"));
         if (json.get("contentMetadata") instanceof Map) dereferenceResult.getContentMetadata().putAll((Map<String, Object>) json.get("contentMetadata"));
@@ -109,7 +109,7 @@ public class HttpBindingClientUtil {
         Object contentObject = json.get("content");
         if (contentObject == null) contentObject = json.get("contentStream");
         if (contentObject instanceof Map) {
-            content = objectMapper.writeValueAsBytes(contentObject);
+            content = jsonMapper.writeValueAsBytes(contentObject);
         } else if (contentObject instanceof String) {
             if (((String) contentObject).isEmpty()) {
                 content = new byte[0];
@@ -218,7 +218,7 @@ public class HttpBindingClientUtil {
             httpQueryString = queryString.toString();
         } else {
             try {
-                httpQueryString = URLEncoder.encode(objectMapper.writeValueAsString(options), StandardCharsets.UTF_8);
+                httpQueryString = URLEncoder.encode(jsonMapper.writeValueAsString(options), StandardCharsets.UTF_8);
             } catch (JsonProcessingException ex) {
                 throw new IllegalArgumentException("Cannot serialize options " + options + ": " + ex.getMessage(), ex);
             }
@@ -255,7 +255,7 @@ public class HttpBindingClientUtil {
     public static boolean isResolveResultHttpContent(String httpContentString) {
         boolean isResolveResultHttpContent;
         try {
-            Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
+            Map<String, Object> json = jsonMapper.readValue(httpContentString, Map.class);
             isResolveResultHttpContent = json.containsKey("didResolutionMetadata") || json.containsKey("didDocumentMetadata") || json.containsKey("didDocument") || json.containsKey("didDocumentStream");
         } catch (JsonProcessingException ex) {
             isResolveResultHttpContent = false;
@@ -267,7 +267,7 @@ public class HttpBindingClientUtil {
     public static boolean isDereferenceResultHttpContent(String httpContentString) {
         boolean isDereferenceResultHttpContent;
         try {
-            Map<String, Object> json = objectMapper.readValue(httpContentString, Map.class);
+            Map<String, Object> json = jsonMapper.readValue(httpContentString, Map.class);
             isDereferenceResultHttpContent = json.containsKey("dereferencingMetadata") || json.containsKey("contentMetadata") || json.containsKey("content") || json.containsKey("contentStream");
         } catch (JsonProcessingException ex) {
             isDereferenceResultHttpContent = false;

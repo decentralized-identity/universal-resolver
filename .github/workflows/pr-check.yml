@@ -1,0 +1,8 @@
+name: Pull Request check
+on:
+  workflow_dispatch:
+
+jobs:
+  file-check:
+    name: File check
+    runs-on: ubuntu-latest

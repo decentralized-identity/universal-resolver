@@ -2,7 +2,7 @@ package uniresolver.result;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import foundation.identity.did.DIDDocument;
 import foundation.identity.did.representations.production.RepresentationProducer;
 import org.apache.hc.core5.http.ContentType;
@@ -22,7 +22,7 @@ public class ResolveResult implements Result {
     public static final String LEGACY_MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-resolution\"";
     public static final ContentType LEGACY_CONTENT_TYPE = ContentType.parse(LEGACY_MEDIA_TYPE);
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
     @JsonProperty("didResolutionMetadata")
     private Map<String, Object> didResolutionMetadata;
@@ -77,22 +77,22 @@ public class ResolveResult implements Result {
      */
 
     public static ResolveResult fromJson(String json) throws IOException {
-        return objectMapper.readValue(json, ResolveResult.class);
+        return jsonMapper.readValue(json, ResolveResult.class);
     }
 
     public static ResolveResult fromJson(Reader reader) throws IOException {
-        return objectMapper.readValue(reader, ResolveResult.class);
+        return jsonMapper.readValue(reader, ResolveResult.class);
     }
 
     @Override
     public Map<String, Object> toMap() {
-        return objectMapper.convertValue(this, LinkedHashMap.class);
+        return jsonMapper.convertValue(this, LinkedHashMap.class);
     }
 
     @Override
     public String toJson() {
         try {
-            return objectMapper.writeValueAsString(this);
+            return jsonMapper.writeValueAsString(this);
         } catch (JsonProcessingException ex) {
             throw new RuntimeException("Cannot write JSON: " + ex.getMessage(), ex);
         }

@@ -57,7 +57,7 @@ jobs:
           persist-credentials: false
 
       - name: Import Secrets
-        uses: hashicorp/vault-action@v3
+        uses: hashicorp/vault-action@v4
         with:
           url: ${{ secrets.VAULT_ADDR }}
           token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
@@ -67,13 +67,12 @@ jobs:
             ci/data/gh-workflows/maven-danubetech-nexus password | MAVEN_PASSWORD
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
-          install: true
           version: latest
 
       - name: Docker Build and Cache
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ${{ inputs.PATH_TO_DOCKERFILE }}
@@ -98,7 +97,7 @@ jobs:
           fetch-depth: 0
 
       - name: Import Secrets
-        uses: hashicorp/vault-action@v3
+        uses: hashicorp/vault-action@v4
         with:
           url: ${{ secrets.VAULT_ADDR }}
           token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}
@@ -110,9 +109,8 @@ jobs:
             ci/data/gh-workflows/maven-danubetech-nexus password | MAVEN_PASSWORD
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
-          install: true
           version: latest
 
       - name: Get version
@@ -122,7 +120,7 @@ jobs:
 
       - name: Docker Metadata
         id: metadata
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ${{ inputs.GLOBAL_REPO_NAME }}/${{ inputs.GLOBAL_IMAGE_NAME }}
           tags: |
@@ -130,14 +128,14 @@ jobs:
             type=sha,prefix=${{ steps.get_version.outputs.version }}-,enable=${{ inputs.IS_RELEASE }}
 
       - name: Login to Docker Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ inputs.GLOBAL_REPO_NAME }}
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
 
       - name: Docker Push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ${{ inputs.PATH_TO_DOCKERFILE }}

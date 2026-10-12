@@ -1,6 +1,6 @@
 package uniresolver.web.servlet;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ public class PropertiesServlet extends WebUniResolver {
 
 	protected static final Logger log = LoggerFactory.getLogger(PropertiesServlet.class);
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -35,7 +35,7 @@ public class PropertiesServlet extends WebUniResolver {
 		try {
 
 			properties = this.properties();
-			propertiesString = properties == null ? null : objectMapper.writeValueAsString(properties);
+			propertiesString = properties == null ? null : jsonMapper.writeValueAsString(properties);
 		} catch (Exception ex) {
 
 			if (log.isWarnEnabled()) log.warn("Resolver reported: " + ex.getMessage(), ex);

@@ -1,7 +1,7 @@
 package uniresolver.driver.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.production.RepresentationProducerDID;
 import foundation.identity.did.representations.production.RepresentationProducerDIDCBOR;
@@ -31,7 +31,7 @@ public class HttpBindingServerUtil {
 
     private static final Logger log = LoggerFactory.getLogger(HttpBindingServerUtil.class);
 
-    private static final ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.USE_DEFAULTS);
+    private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
     /*
      * HTTP status code
@@ -84,7 +84,7 @@ public class HttpBindingServerUtil {
         if (content == null || content.length == 0) {
             json.put(functionContentProperty, null);
         } else if (isContentJson(result)) {
-            json.put(functionContentProperty, objectMapper.readValue(new ByteArrayInputStream(content), LinkedHashMap.class));
+            json.put(functionContentProperty, jsonMapper.readValue(new ByteArrayInputStream(content), LinkedHashMap.class));
         } else if (isContentText(result)) {
             json.put(functionContentProperty, new String(content, StandardCharsets.UTF_8));
         } else {
@@ -93,7 +93,7 @@ public class HttpBindingServerUtil {
         json.put(functionMetadataProperty, result.getFunctionMetadata());
         json.put(functionContentMetadataProperty, result.getFunctionContentMetadata());
 
-        String jsonString = objectMapper.writeValueAsString(json);
+        String jsonString = jsonMapper.writeValueAsString(json);
         if (log.isDebugEnabled()) log.debug("HTTP body for result: " + jsonString);
         return jsonString;
     }
