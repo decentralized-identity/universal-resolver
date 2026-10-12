@@ -113,6 +113,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:stellar:testnet:32dhec37woze2mkfpnorosw5ma
 	curl -X GET http://localhost:8080/1.0/identifiers/did:xny:0d186d7c-165a-e0dc-f500-01f610cf3c08
 	curl -X GET http://localhost:8080/1.0/identifiers/did:soul:541e2553-5b46-4ef3-a8c6-4b4597af831b
+	curl -X GET http://localhost:8080/1.0/identifiers/did:finger:NTU1NGUwN2QtNjEyOC00ODA0LWExNWYtOTlhNGQ1NTc5NDc5
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
