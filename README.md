@@ -113,6 +113,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:stellar:testnet:32dhec37woze2mkfpnorosw5ma
 	curl -X GET http://localhost:8080/1.0/identifiers/did:xny:0d186d7c-165a-e0dc-f500-01f610cf3c08
 	curl -X GET http://localhost:8080/1.0/identifiers/did:soul:541e2553-5b46-4ef3-a8c6-4b4597af831b
+	curl -X GET http://localhost:8080/1.0/identifiers/did:cimd:shlee1223.github.io:did-cimd-examples:client.json
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -227,6 +228,7 @@ Are you developing a DID method and Universal Resolver driver? Click [Driver Dev
 | [did-soul](https://github.com/Soulverse-Ecosystem/uni-resolver-driver-did-soul) | 0.1.0 | missing | [soulverse/uni-resolver-driver-did-soul:latest](https://hub.docker.com/r/soulverse/uni-resolver-driver-did-soul) | Soulverse DID method using IPFS for DID document storage |
 | [did-moltrust](https://github.com/MoltyCel/uni-resolver-driver-did-moltrust) | 1.2.1 | [0.1](https://moltrust.ch/did-method-spec.html) | [moltrust/driver-did-moltrust](https://hub.docker.com/r/moltrust/driver-did-moltrust) | MolTrust AI Agent Identity |
 | [did-neuralkey](https://github.com/Neuralkey/Neuralkey-Universal-Resolver-Driver) | 1.0.0 | [Spec Link](https://neuralkey.neuralsh.com/neuralkey-spec-page) | [heanmengfong/neuralkey-did-driver](https://hub.docker.com/r/heanmengfong/neuralkey-did-driver) | [Sereyvuth Kim/PRESTIGE ALLIANCE CO., LTD](https://neuralkey.neuralsh.com/) |
+| [did-cimd](https://github.com/shlee1223/uni-resolver-driver-did-cimd) | 0.1.0 | [0.2](https://github.com/shlee1223/did-method-cimd/blob/main/did-method-cimd.md) | [ghcr.io/shlee1223/uni-resolver-driver-did-cimd](https://github.com/shlee1223/uni-resolver-driver-did-cimd/pkgs/container/uni-resolver-driver-did-cimd) | OAuth Client ID Metadata Document resolved over HTTPS as the DID document source |
 
 ## More Information
 
