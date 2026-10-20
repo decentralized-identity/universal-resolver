@@ -488,7 +488,7 @@ services:
       - "8168:8080"
       
   driver-did-webplus:
-    image: ghcr.io/ledgerdomain/did-webplus-urd:v0.1.2
+    image: ghcr.io/ledgerdomain/did-webplus-urd:v0.7.0
     environment:
       DID_WEBPLUS_URD_DATABASE_URL: ${uniresolver_driver_did_webplus_DID_WEBPLUS_URD_DATABASE_URL}
       DID_WEBPLUS_URD_LISTEN_PORT: ${uniresolver_driver_did_webplus_DID_WEBPLUS_URD_LISTEN_PORT}
@@ -499,7 +499,7 @@ services:
       - "8168:80"
 
   driver-did-cid:
-    image: ghcr.io/archetech/uni-resolver-driver-did-cid:0.1.0
+    image: ghcr.io/archetech/uni-resolver-driver-did-cid:0.2.1
     environment:
       ARCHON_GATEKEEPER_URL: ${uniresolver_driver_did_cid_gatekeeper_url}
     ports:
