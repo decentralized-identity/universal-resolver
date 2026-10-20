@@ -530,6 +530,17 @@ uniresolver:
         - did:moltrust:d34ed796a4dc4698
 
 
+    - pattern: "^(did:cimd:.+)$"
+      url: ${uniresolver_web_driver_url_did_cimd:http://driver-did-cimd:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:cimd:shlee1223.github.io:did-cimd-examples:client.json
+        - did:cimd:shlee1223.github.io:did-cimd-examples:client-inline.json
+      traits:
+        deactivatable: true
+        enumerable: false
+        historyAvailable: false
+        humanReadable: true
+
     - pattern: "^(did:neuralkey:.+)$"
       url: "${uniresolver_web_driver_url_did_neuralkey:http://driver-did-neuralkey:8080/1.0/identifiers/$1}"
       testIdentifiers:

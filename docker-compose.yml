@@ -94,6 +94,7 @@ services:
       uniresolver_web_driver_url_did_xny:
       uniresolver_web_driver_url_did_moltrust:
       uniresolver_web_driver_url_did_neuralkey:
+      uniresolver_web_driver_url_did_cimd:
 
   driver-did-btcr:
     image: universalresolver/driver-did-btcr:latest
@@ -560,3 +561,8 @@ services:
     image: heanmengfong/neuralkey-did-driver:1.0.0
     ports:
       - "8169:8080"
+
+  driver-did-cimd:
+    image: ghcr.io/shlee1223/uni-resolver-driver-did-cimd:0.1.0
+    ports:
+      - "8171:8080"
