@@ -1,8 +1,162 @@
 name: Pull Request check
+
+# Checks the files contributors usually edit when adding a driver, that all images are public,
+# and that driver pull requests don't change any other files.
+#
+# This workflow runs with a read-only token (also for pull requests from forks) and
+# uploads the report as an artifact. The comment on the pull request is posted by
+# pr-check-comment.yml, which is triggered when this workflow completes.
 on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - uni-resolver-web/src/main/resources/application.yml
+      - docker-compose.yml
+      - .env
+      - README.md
   workflow_dispatch:
+    inputs:
+      pr-number:
+        description: 'Pull request number to check and comment on, e.g. 556'
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || inputs.pr-number }}
+  cancel-in-progress: true
+
+env:
+  CHECKED_FILES: >-
+    uni-resolver-web/src/main/resources/application.yml
+    docker-compose.yml
+    .env
+    README.md
 
 jobs:
-  file-check:
-    name: File check
+  scope:
+    name: Check PR scope
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    outputs:
+      run: ${{ steps.scope.outputs.run }}
+      pr-number: ${{ steps.scope.outputs.pr-number }}
+      head-sha: ${{ steps.scope.outputs.head-sha }}
+      base-sha: ${{ steps.scope.outputs.base-sha }}
+      changed-files: ${{ steps.scope.outputs.changed-files }}
+    steps:
+      - name: Determine scope
+        id: scope
+        uses: actions/github-script@v9
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr-number }}
+        with:
+          script: |
+            const checkedFiles = process.env.CHECKED_FILES.split(/\s+/).filter(Boolean);
+            const prNumber = process.env.PR_NUMBER.trim().replace(/^#/, '');
+            if (!/^[1-9][0-9]*$/.test(prNumber)) {
+              core.setFailed(`Invalid pull request number: ${prNumber}`);
+              return;
+            }
+
+            const { owner, repo } = context.repo;
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: Number(prNumber) });
+            core.info(`Checking PR #${pr.number} "${pr.title}" at ${pr.head.sha}`);
+            core.setOutput('pr-number', String(pr.number));
+            core.setOutput('head-sha', pr.head.sha);
+            core.setOutput('base-sha', pr.base.sha);
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner, repo, pull_number: pr.number, per_page: 100,
+            });
+            const changedFiles = files.flatMap((f) => [f.filename, f.previous_filename]).filter(Boolean);
+            core.setOutput('changed-files', JSON.stringify(changedFiles));
+
+            // Manual runs always check. Driver PRs may only edit the checked files, the check reports any other file.
+            // Maintainer PRs that also change other files are active development and are skipped.
+            const otherFiles = changedFiles.filter((name) => !checkedFiles.includes(name));
+            const maintainer = ['OWNER', 'MEMBER', 'COLLABORATOR'].includes(pr.author_association);
+            if (context.eventName !== 'workflow_dispatch' && otherFiles.length > 0 && maintainer) {
+              core.notice(`Skipping PR check, maintainer PR also changes other files: ${otherFiles.join(', ')}`);
+              core.setOutput('run', 'false');
+            } else {
+              core.setOutput('run', 'true');
+            }
+
+  pr-check:
+    name: PR check
+    needs: scope
+    if: needs.scope.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout files to check
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.scope.outputs.head-sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /uni-resolver-web/src/main/resources/application.yml
+            /docker-compose.yml
+            /.env
+            /README.md
+          sparse-checkout-cone-mode: false
+
+      # Services added by the PR need a driver entry in application.yml
+      - name: Checkout base docker-compose.yml
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.scope.outputs.base-sha }}
+          path: .pr-check/base
+          persist-credentials: false
+          sparse-checkout: /docker-compose.yml
+          sparse-checkout-cone-mode: false
+
+      - name: List changed files
+        env:
+          CHANGED_FILES: ${{ needs.scope.outputs.changed-files }}
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/.pr-check"
+          jq -r '.[]' <<< "$CHANGED_FILES" > "$GITHUB_WORKSPACE/.pr-check/changed-files.txt"
+
+      - name: Run PR check
+        id: check
+        uses: $/ci/pr-check
+        with:
+          path: .
+          changed-files: .pr-check/changed-files.txt
+          base-compose: .pr-check/base/docker-compose.yml
+
+      - name: Save report for PR comment
+        if: steps.check.outputs.report != ''
+        env:
+          PR_NUMBER: ${{ needs.scope.outputs.pr-number }}
+          HEAD_SHA: ${{ needs.scope.outputs.head-sha }}
+          REPORT: ${{ steps.check.outputs.report }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/pr-check"
+          printf '%s\n' "$REPORT" > "$RUNNER_TEMP/pr-check/report.md"
+          jq -n --arg pr "$PR_NUMBER" --arg sha "$HEAD_SHA" \
+            '{pr_number: ($pr | tonumber), head_sha: $sha}' > "$RUNNER_TEMP/pr-check/pr.json"
+
+      - name: Upload report
+        if: steps.check.outputs.report != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: pr-check-report
+          path: ${{ runner.temp }}/pr-check/
+          retention-days: 5
+          if-no-files-found: error
+
+      - name: Fail on errors
+        if: steps.check.outputs.result != 'success'
+        env:
+          ERRORS: ${{ steps.check.outputs.errors }}
+        run: |
+          echo "::error::PR check found ${ERRORS:-unknown} error(s), see the job summary"
+          exit 1

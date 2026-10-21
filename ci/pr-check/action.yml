@@ -1,0 +1,34 @@
+name: 'uni-resolver-pr-check'
+description: 'Check the Universal Resolver config files (application.yml, docker-compose.yml, .env, README.md) of a pull request for malformed content and non-public images'
+inputs:
+  path:
+    description: 'Repository root containing the files to check, relative to the workspace'
+    required: false
+    default: '.'
+  changed-files:
+    description: 'File listing the files changed by the pull request, one per line, relative to the workspace (optional). Changes to other than the checked files are reported as errors.'
+    required: false
+    default: ''
+  base-compose:
+    description: 'docker-compose.yml of the base branch, relative to the workspace (optional). Services added by the pull request must have a driver entry in application.yml.'
+    required: false
+    default: ''
+outputs:
+  result:
+    description: '`success` or `failure`'
+  errors:
+    description: 'Number of errors found'
+  warnings:
+    description: 'Number of warnings found'
+  report:
+    description: 'Markdown report of the check'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - --path
+    - ${{ inputs.path }}
+    - --changed-files
+    - ${{ inputs.changed-files }}
+    - --base-compose
+    - ${{ inputs.base-compose }}
