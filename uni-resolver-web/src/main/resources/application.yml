@@ -35,6 +35,8 @@ uniresolver:
         enumerable: true
         historyAvailable: true
         humanReadable: false
+    - pattern: "^(did:mst:.+)$"
+      url: ${uniresolver_web_driver_url_did_mst:http://driver-did-mst:8080/}
     - pattern: "^(did:indy:.+)$"
       url: ${uniresolver_web_driver_url_did_indy:http://driver-did-indy:8080/}
       propertiesEndpoint: "true"
