@@ -131,7 +131,7 @@ https://dev.uniresolver.io/#did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
 
 ## Drivers
 
-Are you developing a DID method and Universal Resolver driver? Click [Driver Development](/docs/driver-development.md) for instructions.
+Are you developing a DID method and Universal Resolver driver? Drivers are contributed **only** through the process described in [Driver Development](/docs/driver-development.md). A driver is a Docker image built from its own public repository; a driver PR changes only `docker-compose.yml`, `uni-resolver-web/src/main/resources/application.yml`, `.env` and this `README.md`.
 
 | Driver Name                                                                                                    | Driver Version | DID Method Spec Version                                                                                           | Docker Image or URL                                                                                                                                                | Description                                                                        |
 |----------------------------------------------------------------------------------------------------------------|----------------|-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
