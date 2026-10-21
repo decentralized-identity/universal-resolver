@@ -25,7 +25,9 @@ public class DriverConfigs {
 		private String pattern;
 		private String url;
 		private String propertiesEndpoint;
+		private Map<String, String> httpHeaders;
 		private String supportsOptions;
+		private String supportsPost;
 		private String supportsDereference;
 		private String acceptHeaderValue;
 		private String acceptHeaderValueDereference;
@@ -56,12 +58,28 @@ public class DriverConfigs {
 			this.propertiesEndpoint = value;
 		}
 
+		public Map<String, String> getHttpHeaders() {
+			return httpHeaders;
+		}
+
+		public void setHttpHeaders(Map<String, String> httpHeaders) {
+			this.httpHeaders = httpHeaders;
+		}
+
 		public String getSupportsOptions() {
 			return supportsOptions;
 		}
 
 		public void setSupportsOptions(String supportsOptions) {
 			this.supportsOptions = supportsOptions;
+		}
+
+		public String getSupportsPost() {
+			return supportsPost;
+		}
+
+		public void setSupportsPost(String supportsPost) {
+			this.supportsPost = supportsPost;
 		}
 
 		public String getSupportsDereference() {
@@ -110,7 +128,9 @@ public class DriverConfigs {
 					"pattern='" + pattern + '\'' +
 					", url='" + url + '\'' +
 					", propertiesEndpoint='" + propertiesEndpoint + '\'' +
+					", httpHeaders='" + httpHeaders + '\'' +
 					", supportsOptions='" + supportsOptions + '\'' +
+					", supportsPost='" + supportsPost + '\'' +
 					", supportsDereference='" + supportsDereference + '\'' +
 					", acceptHeaderValue='" + acceptHeaderValue + '\'' +
 					", acceptHeaderValueDereference='" + acceptHeaderValueDereference + '\'' +

@@ -3,7 +3,7 @@ package uniresolver.result;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.hc.core5.http.ContentType;
@@ -24,7 +24,7 @@ public class DereferenceResult implements Result {
 	public static final String LEGACY_MEDIA_TYPE = "application/ld+json;profile=\"https://w3id.org/did-url-dereferencing\"";
 	public static final ContentType LEGACY_CONTENT_TYPE = ContentType.parse(LEGACY_MEDIA_TYPE);
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	@JsonProperty("dereferencingMetadata")
 	private Map<String, Object> dereferencingMetadata;
@@ -78,22 +78,22 @@ public class DereferenceResult implements Result {
 	 */
 
 	public static DereferenceResult fromJson(String json) throws IOException {
-		return objectMapper.readValue(json, DereferenceResult.class);
+		return jsonMapper.readValue(json, DereferenceResult.class);
 	}
 
 	public static DereferenceResult fromJson(Reader reader) throws IOException {
-		return objectMapper.readValue(reader, DereferenceResult.class);
+		return jsonMapper.readValue(reader, DereferenceResult.class);
 	}
 
 	@Override
 	public Map<String, Object> toMap() {
-		return objectMapper.convertValue(this, LinkedHashMap.class);
+		return jsonMapper.convertValue(this, LinkedHashMap.class);
 	}
 
 	@Override
 	public String toJson() {
 		try {
-			return objectMapper.writeValueAsString(this);
+			return jsonMapper.writeValueAsString(this);
 		} catch (JsonProcessingException ex) {
 			throw new RuntimeException("Cannot write JSON: " + ex.getMessage(), ex);
 		}
@@ -128,7 +128,7 @@ public class DereferenceResult implements Result {
 			return null;
 		} else {
 			try {
-				try (JsonParser jsonParser = objectMapper.getFactory().createParser(this.getContent())) {
+				try (JsonParser jsonParser = jsonMapper.getFactory().createParser(this.getContent())) {
 					if (jsonParser.readValueAsTree() != null) return new String(this.getContent(), StandardCharsets.UTF_8);
 				}
 			} catch (IOException ignored) {

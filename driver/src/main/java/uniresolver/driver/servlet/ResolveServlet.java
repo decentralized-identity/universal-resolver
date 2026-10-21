@@ -1,7 +1,7 @@
 package uniresolver.driver.servlet;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import foundation.identity.did.DID;
 import foundation.identity.did.DIDURL;
 import foundation.identity.did.representations.Representations;
@@ -31,7 +31,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 	private static final Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -77,7 +77,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 				}
 			} else if (queryString != null) {
 				try {
-					options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
+					options = jsonMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
 				} catch (JsonProcessingException ex) {
 					ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Cannot parse query string: " + ex.getMessage());
 					return;
@@ -97,7 +97,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 
 		String httpXConfigHeader = request.getHeader("X-Config");
 		if (log.isInfoEnabled()) log.info("Incoming X-Config: header string: " + httpXConfigHeader);
-		Map<String, Object> httpXConfigHeaderMap = httpXConfigHeader == null ? null : (Map<String, Object>) objectMapper.readValue(httpXConfigHeader, Map.class);
+		Map<String, Object> httpXConfigHeaderMap = httpXConfigHeader == null ? null : (Map<String, Object>) jsonMapper.readValue(httpXConfigHeader, Map.class);
 		if (httpXConfigHeaderMap != null) {
 			options.keySet().forEach(httpXConfigHeaderMap::remove);
 			options.putAll(httpXConfigHeaderMap);
@@ -121,6 +121,104 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 		}
 
 		if (log.isDebugEnabled()) log.debug("Using options: " + options);
+
+		// execute
+
+		this.execute(response, identifier, options, httpAcceptMediaTypes, isResolve);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		// read request
+
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+
+		String contextPath = request.getContextPath();
+		String servletPath = request.getServletPath();
+		String requestPath = request.getRequestURI();
+
+		if (log.isDebugEnabled()) log.debug("Incoming request: " + requestPath);
+
+		String path = requestPath.substring(contextPath.length() + servletPath.length());
+		if (path.startsWith("/")) path = path.substring(1);
+
+		if (path.isEmpty()) {
+			ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "No identifier found in request.");
+			return;
+		}
+
+		// parse request
+
+		String identifier;
+		Map<String, Object> options = new LinkedHashMap<>();
+		boolean isResolve;
+
+		if (path.startsWith("did%3A")) {
+			identifier = URLDecoder.decode(path, StandardCharsets.UTF_8);
+			if (request.getQueryString() != null) {
+				if (request.getQueryString().contains("=")) {
+					for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
+						String parameterName = e.nextElement();
+						String parameterValue = request.getParameter(parameterName);
+						options.put(parameterName, parameterValue);
+					}
+				} else {
+					options = jsonMapper.readValue(URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8), LinkedHashMap.class);
+				}
+				if (log.isDebugEnabled()) log.debug("Options from query: " + options);
+			}
+		} else {
+			identifier = path;
+			if (request.getQueryString() != null) identifier += "?" + request.getQueryString();
+		}
+		isResolve = (! identifier.contains("/")) && (! identifier.contains("?")) && (! identifier.contains("#"));
+
+		Map<String, Object> bodyOptions = jsonMapper.readValue(request.getReader(), Map.class);
+		if (log.isDebugEnabled()) log.debug("Options from body: " + bodyOptions);
+		if (bodyOptions != null) {
+			options.keySet().forEach(bodyOptions::remove);
+			options.putAll(bodyOptions);
+		}
+
+		if (log.isInfoEnabled()) log.info("Incoming identifier: " + identifier + " (isResolve=" + isResolve + "), incoming options: " + options);
+
+		// prepare options
+
+		String httpXConfigHeader = request.getHeader("X-Config");
+		if (log.isInfoEnabled()) log.info("Incoming X-Config: header string: " + httpXConfigHeader);
+		Map<String, Object> httpXConfigHeaderMap = httpXConfigHeader == null ? null : (Map<String, Object>) jsonMapper.readValue(httpXConfigHeader, Map.class);
+		if (httpXConfigHeaderMap != null) {
+			options.keySet().forEach(httpXConfigHeaderMap::remove);
+			options.putAll(httpXConfigHeaderMap);
+		}
+
+		String httpAcceptHeader = request.getHeader("Accept");
+		if (log.isInfoEnabled()) log.info("Incoming Accept: header string: " + httpAcceptHeader);
+
+		List<MediaType> httpAcceptMediaTypes = httpAcceptHeader == null ? null : MediaType.parseMediaTypes(httpAcceptHeader);
+		if (httpAcceptMediaTypes != null) MimeTypeUtils.sortBySpecificity(httpAcceptMediaTypes);
+		if (httpAcceptHeader != null) options.put("_http_accept", httpAcceptMediaTypes);
+
+		if (! options.containsKey("accept")) {
+			if (isResolve) {
+				if (httpAcceptMediaTypes == null) httpAcceptMediaTypes = Collections.singletonList(MediaType.parseMediaType(ResolveResult.MEDIA_TYPE));
+				options.put("accept", HttpBindingServerUtil.resolveAcceptForHttpAccepts(httpAcceptMediaTypes));
+			} else {
+				if (httpAcceptMediaTypes == null) httpAcceptMediaTypes = Collections.singletonList(MediaType.parseMediaType(DereferenceResult.MEDIA_TYPE));
+				options.put("accept", HttpBindingServerUtil.dereferenceAcceptForHttpAccepts(httpAcceptMediaTypes));
+			}
+		}
+
+		if (log.isDebugEnabled()) log.debug("Using options: " + options);
+
+		// execute
+
+		this.execute(response, identifier, options, httpAcceptMediaTypes, isResolve);
+	}
+
+	private void execute(HttpServletResponse response, String identifier, Map<String, Object> options, List<MediaType> httpAcceptMediaTypes, boolean isResolve) throws IOException {
 
 		// execute the request
 
@@ -185,7 +283,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 		for (MediaType httpAcceptMediaType : httpAcceptMediaTypes) {
 
 			if (result instanceof ResolveResult && (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.MEDIA_TYPE) || MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, ResolveResult.LEGACY_MEDIA_TYPE))) {
-				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default resolve result content type " + ResolveResult.MEDIA_TYPE);
+				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default resolve result content type.");
 				ServletUtil.sendResponse(
 						response,
 						httpStatusCode,
@@ -195,7 +293,7 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 			}
 
 			if (result instanceof DereferenceResult && (MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.MEDIA_TYPE) || MediaTypeUtil.isMediaTypeAcceptable(httpAcceptMediaType, DereferenceResult.LEGACY_MEDIA_TYPE))) {
-				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default dereference result content type " + DereferenceResult.MEDIA_TYPE);
+				if (log.isDebugEnabled()) log.debug("Supporting HTTP media type " + httpAcceptMediaType + " via default dereference result content type.");
 				ServletUtil.sendResponse(
 						response,
 						httpStatusCode,
@@ -246,6 +344,6 @@ public class ResolveServlet extends HttpServlet implements Servlet {
 		ServletUtil.sendResponse(
 				response,
 				HttpServletResponse.SC_NOT_ACCEPTABLE,
-				"Not acceptable media types " + httpAcceptHeader);
+				"Not acceptable media types " + httpAcceptMediaTypes);
 	}
 }

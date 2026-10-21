@@ -8,10 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Import Secrets
-      uses: hashicorp/vault-action@v3
+      uses: hashicorp/vault-action@v4
       with:
         url: ${{ secrets.VAULT_ADDR }}
         token: ${{ secrets.CI_SECRET_READER_PERIODIC_TOKEN }}

@@ -1,8 +1,7 @@
 package uniresolver.web.servlet;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import foundation.identity.did.representations.Representations;
 import foundation.identity.did.representations.production.RepresentationProducer;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,9 +26,9 @@ import java.util.*;
 
 public class ResolveServlet extends WebUniResolver {
 
-	protected static final Logger log = LoggerFactory.getLogger(ResolveServlet.class);
+	private static final Logger log = LoggerFactory.getLogger(ResolveServlet.class);
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -75,7 +74,7 @@ public class ResolveServlet extends WebUniResolver {
 				}
 			} else if (queryString != null) {
 				try {
-					options = objectMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
+					options = jsonMapper.readValue(URLDecoder.decode(queryString, StandardCharsets.UTF_8), LinkedHashMap.class);
 				} catch (JsonProcessingException ex) {
 					ServletUtil.sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Cannot parse query string: " + ex.getMessage());
 					return;
@@ -95,7 +94,7 @@ public class ResolveServlet extends WebUniResolver {
 
 		String httpXConfigHeader = request.getHeader("X-Config");
 		if (log.isInfoEnabled()) log.info("Incoming X-Config: header string: " + httpXConfigHeader);
-		Map<String, Object> httpXConfigHeaderMap = httpXConfigHeader == null ? null : (Map<String, Object>) objectMapper.readValue(httpXConfigHeader, Map.class);
+		Map<String, Object> httpXConfigHeaderMap = httpXConfigHeader == null ? null : (Map<String, Object>) jsonMapper.readValue(httpXConfigHeader, Map.class);
 		if (httpXConfigHeaderMap != null) {
 			options.keySet().forEach(httpXConfigHeaderMap::remove);
 			options.putAll(httpXConfigHeaderMap);
@@ -163,7 +162,7 @@ public class ResolveServlet extends WebUniResolver {
 						options.put(parameterName, parameterValue);
 					}
 				} else {
-					options = objectMapper.readValue(URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8), LinkedHashMap.class);
+					options = jsonMapper.readValue(URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8), LinkedHashMap.class);
 				}
 				if (log.isDebugEnabled()) log.debug("Options from query: " + options);
 			}
@@ -173,7 +172,7 @@ public class ResolveServlet extends WebUniResolver {
 		}
 		isResolve = (! identifier.contains("/")) && (! identifier.contains("?")) && (! identifier.contains("#"));
 
-		Map<String, Object> bodyOptions = objectMapper.readValue(request.getReader(), Map.class);
+		Map<String, Object> bodyOptions = jsonMapper.readValue(request.getReader(), Map.class);
 		if (log.isDebugEnabled()) log.debug("Options from body: " + bodyOptions);
 		if (bodyOptions != null) {
 			options.keySet().forEach(bodyOptions::remove);
@@ -186,7 +185,7 @@ public class ResolveServlet extends WebUniResolver {
 
 		String httpXConfigHeader = request.getHeader("X-Config");
 		if (log.isInfoEnabled()) log.info("Incoming X-Config: header string: " + httpXConfigHeader);
-		Map<String, Object> httpXConfigHeaderMap = httpXConfigHeader == null ? null : (Map<String, Object>) objectMapper.readValue(httpXConfigHeader, Map.class);
+		Map<String, Object> httpXConfigHeaderMap = httpXConfigHeader == null ? null : (Map<String, Object>) jsonMapper.readValue(httpXConfigHeader, Map.class);
 		if (httpXConfigHeaderMap != null) {
 			options.keySet().forEach(httpXConfigHeaderMap::remove);
 			options.putAll(httpXConfigHeaderMap);
