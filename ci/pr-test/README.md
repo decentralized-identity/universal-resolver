@@ -4,6 +4,10 @@ Tests the drivers a pull request changes: starts them together with `uni-resolve
 identifiers. It is used by the [Pull Request test](../../.github/workflows/pr-test.yml) workflow, which posts the
 report as a PR comment via [pr-test-comment.yml](../../.github/workflows/pr-test-comment.yml).
 
+The workflow runs automatically after the [Pull Request check](../../.github/workflows/pr-check.yml) succeeded for
+a pull request, i.e. its files have no errors (warnings are fine), and can be started manually with a PR number.
+Pull requests that change none of `application.yml`, `docker-compose.yml` and `.env` (e.g. README-only) are skipped.
+
 ## What is tested
 
 The pull request's files are compared with the commit it branched from (the merge base, as in GitHub's

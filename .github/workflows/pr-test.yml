@@ -3,9 +3,17 @@ name: Pull Request test
 # Starts the drivers changed by a pull request together with uni-resolver-web (using the pull request's
 # application.yml) and resolves their test identifiers.
 #
+# Runs automatically when pr-check.yml succeeded for a pull request (no errors in the checked files), or
+# manually for a pull request number. The PR number comes from the pr-check report artifact, which is
+# treated as untrusted data: it is only accepted if that PR's head commit is the one the check ran on.
+#
 # Runs with a read-only token and uploads the report as an artifact; the comment on the pull request is
-# posted by pr-test-comment.yml. Triggers other than the manual one are still to be defined.
-on:
+# posted by pr-test-comment.yml.
+# Note: workflow_run only triggers for this file on the default branch.
+on: # zizmor: ignore[dangerous-triggers] read-only token, no secrets, the action comes from the default branch
+  workflow_run:
+    workflows: [Pull Request check]
+    types: [completed]
   workflow_dispatch:
     inputs:
       pr-number:
@@ -15,8 +23,13 @@ on:
 
 permissions: {}
 
+# One test per PR branch: a new push cancels the test of the previous commit
 concurrency:
-  group: ${{ github.workflow }}-${{ inputs.pr-number }}
+  group: >-
+    ${{ github.workflow }}-${{ inputs.pr-number
+    || (github.event.workflow_run.event == 'pull_request'
+        && format('{0}:{1}', github.event.workflow_run.head_repository.full_name, github.event.workflow_run.head_branch))
+    || github.run_id }}
   cancel-in-progress: true
 
 env:
@@ -28,29 +41,77 @@ env:
 jobs:
   prepare:
     name: Get PR
+    # Only test PRs whose files passed the check without errors
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
+      actions: read
       pull-requests: read
     outputs:
       pr-number: ${{ steps.pr.outputs.pr-number }}
       head-sha: ${{ steps.pr.outputs.head-sha }}
       merge-base-sha: ${{ steps.pr.outputs.merge-base-sha }}
     steps:
+      - name: Download PR check report
+        id: download
+        if: github.event_name == 'workflow_run'
+        uses: actions/download-artifact@v8
+        continue-on-error: true # no artifact: the check was skipped for the PR (maintainer PR)
+        with:
+          name: pr-check-report
+          path: ${{ runner.temp }}/pr-check
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
       - name: Get PR
         id: pr
+        if: github.event_name == 'workflow_dispatch' || steps.download.outcome == 'success'
         uses: actions/github-script@v9
         env:
           PR_NUMBER: ${{ inputs.pr-number }}
+          REPORT_DIR: ${{ runner.temp }}/pr-check
         with:
           script: |
-            const prNumber = process.env.PR_NUMBER.trim().replace(/^#/, '');
+            const fs = require('node:fs');
+            const path = require('node:path');
+
+            let prNumber = process.env.PR_NUMBER.trim().replace(/^#/, '');
+            let checkedSha;
+            if (context.eventName === 'workflow_run') {
+              const meta = JSON.parse(fs.readFileSync(path.join(process.env.REPORT_DIR, 'pr.json'), 'utf8'));
+              if (!Number.isInteger(meta.pr_number) || meta.pr_number < 1 || !/^[0-9a-f]{40}$/.test(meta.head_sha)) {
+                core.setFailed('Invalid report metadata');
+                return;
+              }
+              prNumber = String(meta.pr_number);
+              checkedSha = meta.head_sha;
+            }
             if (!/^[1-9][0-9]*$/.test(prNumber)) {
               core.setFailed(`Invalid pull request number: ${prNumber}`);
               return;
             }
             const { owner, repo } = context.repo;
             const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: Number(prNumber) });
+
+            // Only test the commit that passed the check; a newer commit gets its own check
+            const run = context.payload.workflow_run;
+            if (checkedSha && (pr.head.sha !== checkedSha || (run.event === 'pull_request' && run.head_sha !== checkedSha))) {
+              core.notice(`PR #${pr.number} head (${pr.head.sha}) does not match the checked commit (${checkedSha}), skipping test`);
+              return;
+            }
+
+            // Nothing to test if the PR doesn't change any input file (e.g. a README-only PR)
+            const inputFiles = process.env.INPUT_FILES.split(/\s+/).filter(Boolean).map((f) => f.replace(/^\//, ''));
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner, repo, pull_number: pr.number, per_page: 100,
+            });
+            const changedFiles = files.flatMap((f) => [f.filename, f.previous_filename]).filter(Boolean);
+            if (!changedFiles.some((name) => inputFiles.includes(name))) {
+              core.notice(`PR #${pr.number} changes none of ${inputFiles.join(', ')}, skipping test`);
+              return;
+            }
+
             // Compare with the commit the PR branched from, as GitHub's "Files changed" does:
             // changes on the base branch since then are not changes of the PR
             const { data: comparison } = await github.rest.repos.compareCommitsWithBasehead({
@@ -64,6 +125,7 @@ jobs:
   pr-test:
     name: PR test
     needs: prepare
+    if: needs.prepare.outputs.pr-number != ''
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
