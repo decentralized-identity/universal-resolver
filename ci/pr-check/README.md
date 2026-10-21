@@ -13,7 +13,7 @@ registries (Docker Hub, GitHub Container Registry, Quay, ...) without credential
 | `uni-resolver-web/src/main/resources/application.yml` | Invalid YAML, duplicate keys, tab indentation, missing `uniresolver.drivers`, driver without `pattern`/`url`, wrong value types, duplicate patterns, drivers without `testIdentifiers`, services added to `docker-compose.yml` by the pull request without a driver whose `url` points to them (with `--pr` or `--base-compose`; services other services depend on are exempt) | Unknown driver keys (typos), pattern not compilable, test identifiers not matching the pattern |
 | `docker-compose.yml` | Invalid YAML, duplicate keys, errors from `docker compose config`, services without `image`/`build`, images that do not exist or need a login to pull | Warnings from `docker compose config` (except the obsolete `version` attribute and unset variables), `${VAR}` not defined in `.env`, driver hosts without a service, images that could not be verified (registry timeout, rate limit, server error) |
 | `.env` | Lines not in `KEY=value` format, unterminated quotes | Duplicate keys, leading whitespace |
-| `README.md` | Missing `## Drivers` section or driver table, table rows with wrong column count | |
+| `README.md` | Missing `## Drivers` section or driver table, table rows with wrong column count, a separate table in the section (a new driver must be a row of the existing table), a first column without a link to the driver's repository or issue tracker | |
 
 ## Run locally with Docker
 

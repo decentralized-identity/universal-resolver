@@ -1,0 +1,124 @@
+name: Pull Request test
+
+# Starts the drivers changed by a pull request together with uni-resolver-web (using the pull request's
+# application.yml) and resolves their test identifiers.
+#
+# Runs with a read-only token and uploads the report as an artifact; the comment on the pull request is
+# posted by pr-test-comment.yml. Triggers other than the manual one are still to be defined.
+on:
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: 'Pull request number to test and comment on, e.g. 578'
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.pr-number }}
+  cancel-in-progress: true
+
+env:
+  INPUT_FILES: |
+    /uni-resolver-web/src/main/resources/application.yml
+    /docker-compose.yml
+    /.env
+
+jobs:
+  prepare:
+    name: Get PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    outputs:
+      pr-number: ${{ steps.pr.outputs.pr-number }}
+      head-sha: ${{ steps.pr.outputs.head-sha }}
+      merge-base-sha: ${{ steps.pr.outputs.merge-base-sha }}
+    steps:
+      - name: Get PR
+        id: pr
+        uses: actions/github-script@v9
+        env:
+          PR_NUMBER: ${{ inputs.pr-number }}
+        with:
+          script: |
+            const prNumber = process.env.PR_NUMBER.trim().replace(/^#/, '');
+            if (!/^[1-9][0-9]*$/.test(prNumber)) {
+              core.setFailed(`Invalid pull request number: ${prNumber}`);
+              return;
+            }
+            const { owner, repo } = context.repo;
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: Number(prNumber) });
+            // Compare with the commit the PR branched from, as GitHub's "Files changed" does:
+            // changes on the base branch since then are not changes of the PR
+            const { data: comparison } = await github.rest.repos.compareCommitsWithBasehead({
+              owner, repo, basehead: `${pr.base.sha}...${pr.head.sha}`, per_page: 1,
+            });
+            core.info(`Testing PR #${pr.number} "${pr.title}" at ${pr.head.sha}, merge base ${comparison.merge_base_commit.sha}`);
+            core.setOutput('pr-number', String(pr.number));
+            core.setOutput('head-sha', pr.head.sha);
+            core.setOutput('merge-base-sha', comparison.merge_base_commit.sha);
+
+  pr-test:
+    name: PR test
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout PR files
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.head-sha }}
+          path: .pr-test/head
+          persist-credentials: false
+          sparse-checkout: ${{ env.INPUT_FILES }}
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout merge base files
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.merge-base-sha }}
+          path: .pr-test/base
+          persist-credentials: false
+          sparse-checkout: ${{ env.INPUT_FILES }}
+          sparse-checkout-cone-mode: false
+
+      - name: Run PR test
+        id: test
+        uses: $/ci/pr-test
+        with:
+          path: .pr-test/head
+          base-path: .pr-test/base
+
+      - name: Save report for PR comment
+        if: steps.test.outputs.report != ''
+        env:
+          PR_NUMBER: ${{ needs.prepare.outputs.pr-number }}
+          HEAD_SHA: ${{ needs.prepare.outputs.head-sha }}
+          REPORT: ${{ steps.test.outputs.report }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/pr-test"
+          printf '%s\n' "$REPORT" > "$RUNNER_TEMP/pr-test/report.md"
+          jq -n --arg pr "$PR_NUMBER" --arg sha "$HEAD_SHA" \
+            '{pr_number: ($pr | tonumber), head_sha: $sha}' > "$RUNNER_TEMP/pr-test/pr.json"
+
+      - name: Upload report
+        if: steps.test.outputs.report != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: pr-test-report
+          path: ${{ runner.temp }}/pr-test/
+          retention-days: 5
+          if-no-files-found: error
+
+      - name: Fail on errors
+        if: steps.test.outputs.result != 'success'
+        env:
+          FAILED: ${{ steps.test.outputs.failed }}
+        run: |
+          echo "::error::PR test failed (${FAILED:-unknown} failed test identifier(s)), see the job summary"
+          exit 1

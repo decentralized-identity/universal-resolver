@@ -34,10 +34,36 @@ describe('checkReadme', () => {
     assert.deepEqual(messages(s), ['error: Section `## Drivers` not found']);
   });
 
-  it('reports a table interrupted by text', () => {
+  it('reports rows after text as a separate table', () => {
     const s = section();
     checkReadme(s, README.replace('| [did-web]', 'oops\n| [did-web]'));
-    assert.deepEqual(messages(s), ['error: Line 8: driver table interrupted by a non-table line']);
+    assert.deepEqual(messages(s), [
+      'error: Line 9: a separate table in section `## Drivers`. Add the driver as a new row of the existing driver table (lines 5–7), without blank lines or a new header',
+    ]);
+  });
+
+  it('reports a new table after a blank line and a first column without link, as in PR 571', () => {
+    const s = section();
+    const newTable = [
+      '',
+      '| Method | Driver Version | Spec |',
+      '| :--- | :--- | :--- |',
+      '| `neuralkey` | `1.0.0` | [Spec Link](https://example.com/spec) |',
+    ].join('\n');
+    checkReadme(s, README.replace('| 1.0\n', `| 1.0\n${newTable}\n`));
+    assert.deepEqual(messages(s), [
+      'error: Line 10: a separate table in section `## Drivers`. Add the driver as a new row of the existing driver table (lines 5–8), without blank lines or a new header',
+      'error: Line 12: the first column must link to the driver\'s repository or issue tracker, e.g. `[did-example](https://github.com/org/driver)`, found `neuralkey`',
+    ]);
+  });
+
+  it('requires a web link in the first column of every driver', () => {
+    const s = section();
+    checkReadme(s, README.replace('[did-btcr](https://example.com)', 'did-btcr').replace('[did-web](https://example.com)', '[did-web](#web)'));
+    assert.deepEqual(messages(s), [
+      'error: Line 7: the first column must link to the driver\'s repository or issue tracker, e.g. `[did-example](https://github.com/org/driver)`, found `did-btcr`',
+      'error: Line 8: the first column must link to the driver\'s repository or issue tracker, e.g. `[did-example](https://github.com/org/driver)`, found `[did-web](#web)`',
+    ]);
   });
 });
 
