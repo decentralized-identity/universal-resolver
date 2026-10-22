@@ -206,9 +206,9 @@ services:
     ports:
       - "8086:8080"
     environment:
-      - MST_RPC_URL=${uniresolver_driver_did_mst_rpc_url}
-      - MST_REGISTRY_ADDRESS=${uniresolver_driver_did_mst_registry_address}
-      - MST_CHAIN_ID=${uniresolver_driver_did_mst_chain_id}
+      - MST_RPC_URL=${uniresolver_driver_did_mst_rpc_url:-https://testnetrpc.mstblockchain.com}
+      - MST_REGISTRY_ADDRESS=${uniresolver_driver_did_mst_registry_address:-0xCdceF2336831C45202dCd739BDcF3D0661E342c7}
+      - MST_CHAIN_ID=${uniresolver_driver_did_mst_chain_id:-4545}
   
   driver-did-icon:
     image: amuyu/driver-did-icon:0.1.3
