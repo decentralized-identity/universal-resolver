@@ -6,7 +6,7 @@
         "did:btcr:xz35-jznz-q9yu-ply": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:xz35-jznz-q9yu-ply",
-          "duration": 2.897029691,
+          "duration": 2.366523882,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -15,7 +15,7 @@
         "did:btcr:xkrn-xz7q-qsye-28p": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:xkrn-xz7q-qsye-28p",
-          "duration": 2.636534066,
+          "duration": 2.506447805,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -24,7 +24,7 @@
         "did:btcr:x705-jznz-q3nl-srs": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:btcr:x705-jznz-q3nl-srs",
-          "duration": 2.446281059,
+          "duration": 2.420728876,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -38,7 +38,7 @@
         "did:sov:WRfXPg8dantKVubE3HX8pw": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:sov:WRfXPg8dantKVubE3HX8pw",
-          "duration": 2.479490417,
+          "duration": 2.264947231,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -47,7 +47,7 @@
         "did:sov:test:6cgbu8ZPoWTnR5Rv5JcSMB": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:sov:test:6cgbu8ZPoWTnR5Rv5JcSMB",
-          "duration": 2.268970071,
+          "duration": 2.365928398,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -56,7 +56,7 @@
         "did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:sov:builder:VbPQNHsvoLZdaNU7fTBeFx",
-          "duration": 2.588163131,
+          "duration": 2.56535956,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -65,7 +65,7 @@
         "did:sov:indicio:demo:KKyAeG7woJMV6MhhAREVKp": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:sov:indicio:demo:KKyAeG7woJMV6MhhAREVKp",
-          "duration": 2.258271279,
+          "duration": 2.091199948,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -79,7 +79,7 @@
         "did:mst:testnet:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736": {
           "valid": false,
           "error": "Uniresolver cannot resolve did:mst:testnet:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736",
-          "duration": 2.407999277,
+          "duration": 2.109831516,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -91,18 +91,18 @@
     "identifiers": [
       {
         "did:indy:sovrin:WRfXPg8dantKVubE3HX8pw": {
-          "valid": false,
-          "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 5.388471079,
+          "valid": true,
+          "valid_shacl": true,
           "valid_json-schema": true,
-          "valid_jsonld": true
+          "valid_jsonld": false,
+          "duration": 4.860912507
         }
       },
       {
         "did:indy:sovrin:test:6cgbu8ZPoWTnR5Rv5JcSMB": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.950518314,
+          "duration": 32.366499801,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -111,25 +111,25 @@
         "did:indy:sovrin:builder:VbPQNHsvoLZdaNU7fTBeFx": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.975965116,
+          "duration": 21.914536513,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
       },
       {
         "did:indy:indicio:demo:KKyAeG7woJMV6MhhAREVKp": {
-          "valid": true,
-          "valid_shacl": true,
+          "valid": false,
+          "error": "Universal Resolver request limit reached, please try again later",
+          "duration": 1.445979875,
           "valid_json-schema": false,
-          "valid_jsonld": false,
-          "duration": 3.846043357
+          "valid_jsonld": false
         }
       },
       {
         "did:indy:nxd:LLDnZr8iaYM3F77pUWXnVX": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 12.299313603,
+          "duration": 1.666126429,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -143,7 +143,7 @@
         "did:v1:nym:z6Mkmpe2DyE4NsDiAb58d75hpi1BjqbH6wYMschUkjWDEEuR": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.762476336,
+          "duration": 1.451683417,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -152,7 +152,7 @@
         "did:v1:test:nym:z6MkgF4uJbLMoUin2uKaBf4Jb1F7SHzuALE8Ldq8FPPpHE9t": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.803787438,
+          "duration": 1.602174006,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -161,7 +161,7 @@
         "did:v1:test:nym:z6MkmWLiAt5FtfwgFJwMDGS1GiFn1KpUXsd7bn1v2hLyXvud": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.750383151,
+          "duration": 1.606459632,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -175,7 +175,7 @@
         "did:stack:v0:16EMaNw3pkn3v6f2BgnSSs53zAKH4Q8YJg-0": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.757493527,
+          "duration": 1.47493625,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -191,7 +191,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 4.35894496
+          "duration": 3.633653517
         }
       },
       {
@@ -207,7 +207,7 @@
               "error": "there must be at least one 'type' in 'service'"
             }
           ],
-          "duration": 2.443148756,
+          "duration": 1.959382785,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -223,7 +223,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 3.571979512
+          "duration": 2.541575834
         }
       },
       {
@@ -232,7 +232,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 3.350809233
+          "duration": 3.188524431
         }
       },
       {
@@ -241,7 +241,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 2.148676216
+          "duration": 1.753374695
         }
       },
       {
@@ -250,7 +250,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 2.251311382
+          "duration": 2.544031942
         }
       },
       {
@@ -259,7 +259,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 4.034637674
+          "duration": 2.313058333
         }
       }
     ]
@@ -271,7 +271,7 @@
         "did:ens:vitalik.eth": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.973537774,
+          "duration": 1.4995619,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -285,7 +285,7 @@
         "did:peer:2.Ez6LSghwSE437wnDE1pt3X6hVDUQzSjsHzinpX3XFvMjRAm7y.Vz6Mkhh1e5CEYYq6JBUcTZ6Cp2ranCWRrv7Yax3Le4N59R6dd.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9hbGljZS5kaWQuZm1ncC5hcHAvIiwiciI6W10sImEiOlsiZGlkY29tbS92MiJdfQ": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 2.101945418,
+          "duration": 1.514259549,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -294,7 +294,7 @@
         "did:peer:2.Ez6LSpSrLxbAhg2SHwKk7kwpsH7DM7QjFS5iK6qP87eViohud.Vz6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9leGFtcGxlLmNvbS9lbmRwb2ludDEiLCJyIjpbImRpZDpleGFtcGxlOnNvbWVtZWRpYXRvciNzb21la2V5MSJdLCJhIjpbImRpZGNvbW0vdjIiLCJkaWRjb21tL2FpcDI7ZW52PXJmYzU4NyJdfQ": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.929752027,
+          "duration": 1.477496784,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -308,7 +308,7 @@
         "did:eosio:eos:eoscanadacom": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.912279728,
+          "duration": 1.477458628,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -317,7 +317,7 @@
         "did:eosio:4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11:caleosblocks": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.778714652,
+          "duration": 1.436036691,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -331,7 +331,7 @@
         "did:jolo:e76fb4b4900e43891f613066b9afca366c6d22f7d87fc9f78a91515be24dfb21": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.928509791,
+          "duration": 1.449398776,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -345,7 +345,7 @@
         "did:hcr:0f674e7e-4b49-4898-85f6-96176c1e30de": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.759704859,
+          "duration": 1.463633765,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -359,7 +359,7 @@
         "did:elem:ropsten:EiCtwD11AV9e1oISQRHnMJsBC3OBdYDmx8xeKeASrKaw6A": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 2.073342117,
+          "duration": 1.551821853,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -373,7 +373,7 @@
         "did:github:gjgd": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.771353684,
+          "duration": 1.447994267,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -387,7 +387,7 @@
         "did:ccp:ceNobbK6Me9F5zwyE3MKY88QZLw": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.758789804,
+          "duration": 1.477047345,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -396,7 +396,7 @@
         "did:ccp:3CzQLF3qfFVQ1CjGVzVRZaFXrjAd": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.764100196,
+          "duration": 1.477327778,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -410,7 +410,7 @@
         "did:ont:AN5g6gz9EoQ3sCNu7514GEghZurrktCMiH": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.757415426,
+          "duration": 1.462836925,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -424,7 +424,7 @@
         "did:kilt:4rNTX3ihuxyWkB7wG3oLgUWSBLa2gva1NBKJsBFm7jJZUYfc": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.795461921,
+          "duration": 1.455488557,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -433,7 +433,7 @@
         "did:kilt:light:004pqDzaWi3w7TzYzGnQDyrasK6UnyNnW6JQvWRrq6r8HzNNGy": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.771931653,
+          "duration": 1.50168701,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -442,7 +442,7 @@
         "did:kilt:light:004pqDzaWi3w7TzYzGnQDyrasK6UnyNnW6JQvWRrq6r8HzNNGy:z15dZSRuzEPTFnBErPxqJie4CmmQH1gYKSQYxmwW5Qhgz5Sr7EYJA3J65KoC5YbgF3NGoBsTY2v6zwj1uDnZzgXzLy8R72Fhjmp8ujY81y2AJc8uQ6s2pVbAMZ6bnvaZ3GVe8bMjY5MiKFySS27qRi": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.754981684,
+          "duration": 1.458841018,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -456,7 +456,7 @@
         "did:factom:testnet:6aa7d4afe4932885b5b6e93accb5f4f6c14bd1827733e05e3324ae392c0b2764": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.832793512,
+          "duration": 1.460343479,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -465,7 +465,7 @@
         "did:factom:testnet:c2d5aa15943c93db313f140e7ed87ec9891d02acbde748932db583aa3080af08": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.809463844,
+          "duration": 1.493009013,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -479,7 +479,7 @@
         "did:finger:NTU1NGUwN2QtNjEyOC00ODA0LWExNWYtOTlhNGQ1NTc5NDc5": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.769180832,
+          "duration": 1.465646845,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -488,7 +488,7 @@
         "did:finger:MWY0YzgyMjQtMzNkYy00ZjY5LTg3NDgtZWQ3NWM3Mzc4ZjJm": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.738015772,
+          "duration": 1.474118342,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -502,7 +502,7 @@
         "did:io:0x476c81C27036D05cB5ebfe30ae58C23351a61C4A": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.761183498,
+          "duration": 1.497098863,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -516,7 +516,7 @@
         "did:bba:t:45e6df15dc0a7d91dcccd24fda3b52c3983a214fb0eed0938321c11ec99403cf": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.810341898,
+          "duration": 1.502954619,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -525,7 +525,7 @@
         "did:bba:47ef0798566073ea302b8178943aaa83f227614d6f36a4d2bcd92993bbed6044": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.75965894,
+          "duration": 1.491742802,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -539,7 +539,7 @@
         "did:schema:public-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.78482358,
+          "duration": 1.488116541,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -548,7 +548,7 @@
         "did:schema:evan-ipfs:json-schema:Qma2beXKwZeiUXcaRaQKwbBV1TqyiJnsMTYExUTdQue43J": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.780099634,
+          "duration": 1.455742524,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -562,7 +562,7 @@
         "did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.749729227,
+          "duration": 1.472348983,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -576,7 +576,7 @@
         "did:gatc:2xtSori9UQZdTqzxrkp7zqKM4Kj5B4C7": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.787596722,
+          "duration": 1.484573804,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -585,7 +585,7 @@
         "did:gatc:acYseLtTEVeqF8oBhJEejbCVHJ8auVupaRuo6gw4hmXjcc77uCKqyM3imEJH": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.73663095,
+          "duration": 1.475023643,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -594,7 +594,7 @@
         "did:gatc:32MxGGj4gpCEWMiKjPtCqsrbg9JF9Kn4": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.807327201,
+          "duration": 1.448030882,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -603,7 +603,7 @@
         "did:gatc:25sPfKCaYnzV6f8ckJeqyqNcpsbeBPBS": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.744676711,
+          "duration": 1.493922563,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -617,7 +617,7 @@
         "did:icon:01:64aa0a2a479cb47afbf2d18d6f9f216bcdcbecdda27ccba3": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.793868826,
+          "duration": 1.464423389,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -631,7 +631,7 @@
         "did:vaa:3wJVWDQWtDFx27FqvSqyo5xsTsxC": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.757250707,
+          "duration": 1.447397029,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -645,7 +645,7 @@
         "did:unisot:test:n1aAmTXAg4o44Z9k8YCQncEY91r3TV7WU4": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.79842343,
+          "duration": 1.46207435,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -659,7 +659,7 @@
         "did:sol:devnet:2eK2DKs6vdzTEoj842Gfcs6DdtffPpw1iF6JbzQL4TuK": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.859087498,
+          "duration": 1.475236809,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -673,7 +673,7 @@
         "did:aip:eip155:5042002:0x8004a818bfb912233c491871b3d84c89a494bd9e:892271": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.811078904,
+          "duration": 1.495228321,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -682,7 +682,7 @@
         "did:aip:eip155:5042002:0x8004a818bfb912233c491871b3d84c89a494bd9e:892272": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.828249939,
+          "duration": 1.50407326,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -696,7 +696,7 @@
         "did:lit:AEZ87t1bi5bRxmVh3ksMUi": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.776834884,
+          "duration": 1.466722866,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -710,7 +710,7 @@
         "did:ebsi:zjUnExsyyweQ9p4cy3nvrVc": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.74033039,
+          "duration": 1.473835831,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -719,7 +719,7 @@
         "did:ebsi:z24q53pA3pjcnoukP6fD5jXt": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.747524949,
+          "duration": 1.465982069,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -733,7 +733,7 @@
         "did:emtrust:0x242a5ac36676462bd58a": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.745195181,
+          "duration": 1.466255121,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -747,7 +747,7 @@
         "did:meta:0000000000000000000000000000000000000000000000000000000000005e65": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.804851174,
+          "duration": 1.499002642,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -763,7 +763,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 2.59526734
+          "duration": 2.320847034
         }
       }
     ]
@@ -777,7 +777,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 1.857861117
+          "duration": 1.574436455
         }
       },
       {
@@ -786,7 +786,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 1.875469038
+          "duration": 1.53053438
         }
       },
       {
@@ -795,7 +795,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 1.793925284
+          "duration": 1.525211109
         }
       },
       {
@@ -804,7 +804,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 2.431599569
+          "duration": 1.549477343
         }
       },
       {
@@ -813,7 +813,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 1.843917867
+          "duration": 1.512035166
         }
       },
       {
@@ -822,7 +822,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 1.845953606
+          "duration": 1.91114775
         }
       },
       {
@@ -831,7 +831,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 1.830654043
+          "duration": 1.538691939
         }
       },
       {
@@ -840,7 +840,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 1.845091984
+          "duration": 1.463841862
         }
       },
       {
@@ -849,7 +849,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 1.85394937
+          "duration": 1.519291744
         }
       }
     ]
@@ -863,7 +863,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 1.849884975
+          "duration": 1.53537039
         }
       }
     ]
@@ -875,7 +875,7 @@
         "did:orb:hl:uEiBuxTFn4L_Hn8KsOWo8e9kqWP38MThBaToB_5yV3c5QTg:uoQ-BeEJpcGZzOi8vYmFma3JlaWRveXV5d3B5Zjd5NnA0Zmxiem5pNmh4d2prbGQ2N3ltanlpZnV0dWFwN3RzazUzdHNxank:EiD_igS1OSEftg5BGfisJGOS1rgcx5AkQhX0h1B4dHTUYA": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.834511021,
+          "duration": 1.54635178,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -891,7 +891,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": false,
-          "duration": 3.248399898
+          "duration": 3.049618991
         }
       },
       {
@@ -900,7 +900,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": false,
-          "duration": 3.225099561
+          "duration": 2.935479546
         }
       }
     ]
@@ -912,7 +912,7 @@
         "did:moncon:z6MkfrVYbLejh9Hv7Qmx4B2P681wBfPFkcHkbUCkgk1Q8LoA": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.762305695,
+          "duration": 2.519849642,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -926,7 +926,7 @@
         "did:dock:5CxUdCGtopZEJhdv6kfLBZ22PMZX7UK8mdcHbTVw2nw6MVZH": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.753563445,
+          "duration": 1.514313414,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -935,7 +935,7 @@
         "did:dock:5CDsD8HZa6TeSfgmMcxAkbSXYWeob4jFQmtU6sxr4XWTZzUA": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.738487859,
+          "duration": 1.492926774,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -949,7 +949,7 @@
         "did:dns:danubetech.com": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.759661855,
+          "duration": 1.506482887,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -963,7 +963,7 @@
         "did:everscale:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.825890713,
+          "duration": 1.462523465,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -972,7 +972,7 @@
         "did:everscale:mainnet:47325e80e3cef5922d3a3583ae5c405ded7bda781cb069f2bc932a6c3d6ec62e": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.719839093,
+          "duration": 1.480694476,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -981,7 +981,7 @@
         "did:everscale:testnet:d760f69f830dfa0668f2e7923392217589ec8d62dcb90f2c06656665dba7fb4d": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.769614585,
+          "duration": 1.477615226,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -995,7 +995,7 @@
         "did:ala:quor:redT:706b3e4611a855b8b1267c4e9f0c77124af003fe": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.80304335,
+          "duration": 1.483018983,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1004,7 +1004,7 @@
         "did:ala:quor:redT:3729a1872356dd5c5ac377c85d539fe63cb561d8": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.806207263,
+          "duration": 1.475342179,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1013,7 +1013,7 @@
         "did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.749977646,
+          "duration": 1.478260887,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1027,7 +1027,7 @@
         "did:cheqd:mainnet:Ps1ysXP2Ae6GBfxNhNQNKN": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.783307497,
+          "duration": 1.482491397,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1036,7 +1036,7 @@
         "did:cheqd:testnet:55dbc8bf-fba3-4117-855c-1e0dc1d3bb47": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.774367779,
+          "duration": 1.511034581,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1050,7 +1050,7 @@
         "did:com:1l6zglh8pvcrjtahsvds2qmfpn0hv83vn8f9cf3": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.776732717,
+          "duration": 1.43969098,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1059,7 +1059,7 @@
         "did:com:17rhmdzlv0zjuahw4mvpfhf3u5tuwyjhr4m06dr": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.795436186,
+          "duration": 1.474430242,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1073,7 +1073,7 @@
         "did:dyne:sandbox.test:JBdcDrTMkEuR8A2QnMQLRDXBL82AKxTpuHkxhmzgdkVH": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.791142677,
+          "duration": 1.457999523,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1082,7 +1082,7 @@
         "did:dyne:demo_A:DBzNYB3ft2ncfeGaVV8aR5x95tU5hKUqGLYpDJifEVwu": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.793515471,
+          "duration": 1.512344504,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1091,7 +1091,7 @@
         "did:dyne:demo:2r1FxbRA1EyfgeXh9TgEYT5RfkbMFUwLEmbYqeBajNbp": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.732282149,
+          "duration": 1.462621199,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1100,7 +1100,7 @@
         "did:dyne:demo:FFqGYxShyDGAHd4QyLY1KFCSGBb1mBP9sZebEyBM7JPi": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.792291173,
+          "duration": 1.485496878,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1116,7 +1116,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 1.801160855
+          "duration": 1.518080563
         }
       },
       {
@@ -1125,7 +1125,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 1.871796351
+          "duration": 1.545311082
         }
       }
     ]
@@ -1137,7 +1137,7 @@
         "did:kscirc:k7745fAnbFGBeECS7xTDkowVXZZxEvMhpfbcQjaLYSiyed5du9MJ": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.778387001,
+          "duration": 1.475804653,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1146,7 +1146,7 @@
         "did:kscirc:k2f2PhnVHabRenKbaKfLMyuxRU94S1HfAwsR2dMHxTqVeEzmPxsd": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.779938234,
+          "duration": 1.507067042,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1160,7 +1160,7 @@
         "did:iscc:meigkv5n6ntvf4ab": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.764131393,
+          "duration": 2.209221157,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1174,7 +1174,7 @@
         "did:ev:bmM8apgHQD8cPbwNsMSJKqkYRCDYhkK55uxR9": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.778566101,
+          "duration": 2.294189129,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1183,7 +1183,7 @@
         "did:ev:bmM8MpeJAGF2ky7YUnwgJGKxyHdCL6DGAUmEW": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.766071982,
+          "duration": 2.593000639,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1197,7 +1197,7 @@
         "did:iid:3QUs61mk7a9CdCpckriQbA5emw8pubj6RMtHXP6gD66YbcungS6w2sa": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.742766901,
+          "duration": 2.108920328,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1211,7 +1211,7 @@
         "did:evan:0x7df25c5090b5361562ef30b3c30ddcde0ac59dd4": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.814807613,
+          "duration": 2.159989323,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1225,7 +1225,7 @@
         "did:bid:ef214PmkhKndUcArDQPgD5J4fFVwqJFPt": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.763699125,
+          "duration": 1.920901734,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1239,7 +1239,7 @@
         "did:pdc:8801:0xf47b66bc0d9b7c73f9ff27bf1f49a2b69dc167fc": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.809006675,
+          "duration": 1.667987435,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1253,7 +1253,7 @@
         "did:tys:4B4AbVzzcJSnCZsdX4VaKyQgHRnC": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.787980812,
+          "duration": 1.718593957,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1267,7 +1267,7 @@
         "did:plc:yk4dd2qkboz2yv6tpubpc6co": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.800273679,
+          "duration": 1.770943606,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1276,7 +1276,7 @@
         "did:plc:44ybard66vv44zksje25o7dz": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.768211584,
+          "duration": 1.601497327,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1290,7 +1290,7 @@
         "did:evrc:issuer:polygon:62eeb90e-eee4-4d31-8927-1075e82b2a74": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.764220345,
+          "duration": 1.722161768,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1304,7 +1304,7 @@
         "did:keri:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.778910484,
+          "duration": 1.6214551,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1318,7 +1318,7 @@
         "did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.799260597,
+          "duration": 1.663197534,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1332,7 +1332,7 @@
         "did:algo:mainnet:app:1845671812:da490f2d15a625459bf970a3d55e1a646dfd3a956d011546e953e945d39fdada": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.754669218,
+          "duration": 2.044224646,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1341,7 +1341,7 @@
         "did:algo:app:1845671812:da490f2d15a625459bf970a3d55e1a646dfd3a956d011546e953e945d39fdada": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.815219975,
+          "duration": 1.498461541,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1355,7 +1355,7 @@
         "did:itn:PA7xLNkMAqzzrDp4UBnrZm": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.811559102,
+          "duration": 1.920304631,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1364,7 +1364,7 @@
         "did:itn:EzfteTXcoHXh5W1PURHrS3": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.81085353,
+          "duration": 1.681698488,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1378,7 +1378,7 @@
         "did:iota:0xf4d6f08f5a1b80dd578da7dc1b49c886d580acd4cf7d48119dfeb82b538ad88a": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.778898992,
+          "duration": 1.472236395,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1392,7 +1392,7 @@
         "did:prism:c36cd59bbc62dee1925e1343a8fed051416e417116d6169d060746f1e6816cd4": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.771548427,
+          "duration": 1.481295156,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1401,7 +1401,7 @@
         "did:prism:0d8481c41b654794f02922601f84811763c655dcfc376acf841eb996846d5e68": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.783290939,
+          "duration": 1.454690414,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1410,7 +1410,7 @@
         "did:prism:52e163e8e53466b808e53df870bccd0a066aa4d05af9b689f5c73edcbe23d625": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.787028375,
+          "duration": 1.484212313,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1426,7 +1426,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": false,
-          "duration": 3.336511183
+          "duration": 2.835161101
         }
       },
       {
@@ -1435,7 +1435,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": false,
-          "duration": 2.793348302
+          "duration": 2.410395211
         }
       }
     ]
@@ -1447,7 +1447,7 @@
         "did:quarkid:EiA9SoiWkqduxPJcVk3UVoUGWm3WL2S6mox3qH3AWVCwMQ": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.787953585,
+          "duration": 1.471842051,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1461,7 +1461,7 @@
         "did:zkjm:mainnet:d90e52b36a2e2306dc873ec0f7a94351": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.806940404,
+          "duration": 1.486293156,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1475,7 +1475,7 @@
         "did:iden3:polygon:amoy:xC8VZLUUfo5p9DWUawReh7QSstmYN6zR7qsQhQCsw": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.772503975,
+          "duration": 1.628538909,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1489,7 +1489,7 @@
         "did:cndid:sf24eYrmwXt6nx4fig3XJm7n9UP6PNRJ3": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.812677838,
+          "duration": 1.443192203,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1503,7 +1503,7 @@
         "did:btcr2:k1q5ppmnfjqp0qe5klmnll9tazz9jd5ds43x5xfsr3hu9jdgaldu0d3jgs0vj4r": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.755718139,
+          "duration": 1.49086107,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1517,7 +1517,7 @@
         "did:tgrid:trustgrid:dev:QjA1qdXKmxzgK4u8mFoBpF": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.98572869,
+          "duration": 1.475922864,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1531,7 +1531,7 @@
         "did:near:CF5RiJYh4EVmEt8UADTjoP3XaZo1NPWxv6w5TmkLqjpR": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.770598233,
+          "duration": 1.5207395,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1540,7 +1540,7 @@
         "did:near:alice.testnet": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.787640391,
+          "duration": 1.775928655,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1549,7 +1549,7 @@
         "did:near:alice.near": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.757645042,
+          "duration": 1.461829881,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1563,7 +1563,7 @@
         "did:empe:02bbae4a3c51a3134d0aa4bfe1e7ed19c6debe84": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.791130704,
+          "duration": 1.478862224,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1577,7 +1577,7 @@
         "did:bsv:adaf8c37db395b05bde08ddfb47eb898108dcdef8cf8dac3d9d1bc587d57828e": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.816971098,
+          "duration": 1.521349034,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1586,7 +1586,7 @@
         "did:bsv:49e48f452457524f036a3f386388500a6256a9fd21e0e003295bbf3a0455baab": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.747370317,
+          "duration": 1.472853122,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1600,7 +1600,7 @@
         "did:andorra:NRTAD-710646J": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.830644201,
+          "duration": 1.503095331,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1609,7 +1609,7 @@
         "did:andorra:NRTAD-059888N_ISS": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.765807682,
+          "duration": 1.470800666,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1618,7 +1618,7 @@
         "did:andorra:NRTAD-059888N_SP": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.991967899,
+          "duration": 1.479340658,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1634,7 +1634,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": true,
-          "duration": 3.295499518
+          "duration": 2.332474685
         }
       },
       {
@@ -1643,7 +1643,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": false,
-          "duration": 2.675233162
+          "duration": 2.001938214
         }
       }
     ]
@@ -1655,7 +1655,7 @@
         "did:bluchain:issuer:9scF2JkUWfgcXhCdnn4QtBDkLFk5y4q5RD7316y8jEjR": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 2.276153811,
+          "duration": 1.49604752,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1664,7 +1664,7 @@
         "did:bluchain:badge:5aoCyvG4c4A15hZxSbzoAYhnWBH2Hfqzhrh1d3w5KYHo": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 2.271306706,
+          "duration": 1.598905839,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1673,7 +1673,7 @@
         "did:bluchain:certificate:8x9ufHvHg41Xvmu1F8aZdvoxn9CwHiRSqTGjpqzr6fEk": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 2.112084818,
+          "duration": 1.478366343,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1687,7 +1687,7 @@
         "did:nda:0x8c05abb015f5778ddeb0d0fa236fb8950f7bb637": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.89616015,
+          "duration": 1.463212697,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1701,7 +1701,7 @@
         "did:art:hkust:0x471feeca903f59d2c196c710b9ac8de3d6fa985be65447fc54365c8557d6a955": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 2.260746513,
+          "duration": 1.444195008,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1715,7 +1715,7 @@
         "did:nfd:nfdomains.algo": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 2.34770598,
+          "duration": 1.531230267,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1724,7 +1724,7 @@
         "did:nfd:algorand.algo": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 2.171157572,
+          "duration": 1.455771738,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1738,7 +1738,7 @@
         "did:soul:QmeKbb939PNWbaNADTtCH1SLmYxTdvqRA4qQBcjr26PTim": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.946139779,
+          "duration": 1.510673484,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1747,7 +1747,7 @@
         "did:soul:QmaE6tPuojwURBPbPWc2D87fxzK6ZQQzJ3eREp6kEBSWBn": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.762963822,
+          "duration": 1.461285867,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1756,7 +1756,7 @@
         "did:soul:QmZ1V5ScPXguf62q4S8P2L4kZgjVsCGAkXanYrGyqVPpKW": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.782876419,
+          "duration": 1.473763221,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1772,7 +1772,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": false,
-          "duration": 2.227380385
+          "duration": 1.829846125
         }
       },
       {
@@ -1781,7 +1781,7 @@
           "valid_shacl": true,
           "valid_json-schema": true,
           "valid_jsonld": false,
-          "duration": 1.763083671
+          "duration": 1.656823199
         }
       }
     ]
@@ -1802,7 +1802,7 @@
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 3.994846319,
+          "duration": 3.676147271,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1816,7 +1816,7 @@
               "error": "add 'https://w3id.org/security/suites/secp256k1-2019'"
             }
           ],
-          "duration": 2.585339581,
+          "duration": 1.938983315,
           "valid_json-schema": true,
           "valid_jsonld": false
         }
@@ -1830,7 +1830,7 @@
         "did:omn:opendid:mainnet:b3BlbmRpZC1ta2xlZQ": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.968456198,
+          "duration": 1.540479602,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1844,7 +1844,7 @@
         "did:uuid:00000000-0001-8200-8002-341632100000": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.743323456,
+          "duration": 1.459931722,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1858,7 +1858,7 @@
         "did:ixo:ixo1rl9vhhxg0t7ywlh953gtthphg889v7d3e2gx7k": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.760768292,
+          "duration": 1.520185683,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1867,7 +1867,7 @@
         "did:ixo:entity:00046b59059562e773694ea495bc1b23": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.901550867,
+          "duration": 1.467168816,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1881,7 +1881,7 @@
         "did:stellar:testnet:32dhec37woze2mkfpnorosw5ma": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.81637461,
+          "duration": 1.493173683,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1890,7 +1890,7 @@
         "did:stellar:mainnet:6wr5l6d33bwa32olkiwret35yu": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.805923123,
+          "duration": 1.477711058,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1904,7 +1904,7 @@
         "did:definitiveid:bV9echGYLPYWPYgGNwRbHo": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.78271083,
+          "duration": 1.483236176,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1913,7 +1913,7 @@
         "did:definitiveid:x9Kmtiaq1i5qt5QsaWKvCU": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.798343759,
+          "duration": 1.479383902,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1922,7 +1922,7 @@
         "did:definitiveid:zZCKYq5d7LkuUT5357WhmS": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.922974363,
+          "duration": 1.480890321,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1936,7 +1936,7 @@
         "did:xny:0d186d7c-165a-e0dc-f500-01f610cf3c08": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.748370578,
+          "duration": 1.463198301,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1945,7 +1945,7 @@
         "did:xny:e44c542d-ae34-ff1a-ccad-6202fa680ebd": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.911992736,
+          "duration": 1.447247978,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1959,7 +1959,7 @@
         "did:moltrust:d34ed796a4dc4698": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.799914387,
+          "duration": 1.474753226,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1973,7 +1973,7 @@
         "did:cimd:shlee1223.github.io:did-cimd-examples:client.json": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.751092947,
+          "duration": 1.494086397,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1982,7 +1982,7 @@
         "did:cimd:shlee1223.github.io:did-cimd-examples:client-inline.json": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.765999655,
+          "duration": 1.516059842,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -1996,7 +1996,7 @@
         "did:neuralkey:z6MkwAkLNUmKBRha3s2NzRWFFsDSXJ2QF44w9AT4CmSBuU41": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.769674832,
+          "duration": 1.508675674,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
@@ -2005,7 +2005,7 @@
         "did:neuralkey:did-neuralsh.serveblog.net": {
           "valid": false,
           "error": "Universal Resolver request limit reached, please try again later",
-          "duration": 1.774303026,
+          "duration": 1.455215188,
           "valid_json-schema": false,
           "valid_jsonld": false
         }
