@@ -563,3 +563,8 @@ services:
     image: ghcr.io/shlee1223/uni-resolver-driver-did-cimd:0.1.0
     ports:
       - "8171:8080"
+
+  driver-did-content:
+    image: kataru/content-did-driver:0.2.0
+    ports:
+      - "8148:8080"

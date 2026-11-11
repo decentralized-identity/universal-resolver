@@ -545,3 +545,13 @@ uniresolver:
       testIdentifiers:
         - "did:neuralkey:z6MkwAkLNUmKBRha3s2NzRWFFsDSXJ2QF44w9AT4CmSBuU41"
         - "did:neuralkey:did-neuralsh.serveblog.net"
+
+    - pattern: "^(did:content:.+)$"
+      url: ${uniresolver_web_driver_url_did_content:http://driver-did-content:8080/1.0/identifiers/$1}
+      testIdentifiers:
+        - did:content:zQmbnKX58u9eGUuDCDjKxCaG48Xr375dvf81vdGZqz31ze4
+      traits:
+        deactivatable: true
+        enumerable: false
+        historyAvailable: true
+        humanReadable: false
