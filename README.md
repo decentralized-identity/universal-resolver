@@ -114,6 +114,7 @@ You should then be able to resolve identifiers locally using simple `curl` reque
 	curl -X GET http://localhost:8080/1.0/identifiers/did:soul:541e2553-5b46-4ef3-a8c6-4b4597af831b
 	curl -X GET http://localhost:8080/1.0/identifiers/did:finger:NTU1NGUwN2QtNjEyOC00ODA0LWExNWYtOTlhNGQ1NTc5NDc5
 	curl -X GET http://localhost:8080/1.0/identifiers/did:cimd:shlee1223.github.io:did-cimd-examples:client.json
+	curl -X GET http://localhost:8080/1.0/identifiers/did:content:zQmbnKX58u9eGUuDCDjKxCaG48Xr375dvf81vdGZqz31ze4
 
 
 You can also use an "Accept" header to request the DID document in a specific representation, e.g.:
@@ -229,6 +230,7 @@ Are you developing a DID method and Universal Resolver driver? Drivers are contr
 | [did-moltrust](https://github.com/MoltyCel/uni-resolver-driver-did-moltrust) | 1.2.1 | [0.1](https://moltrust.ch/did-method-spec.html) | [moltrust/driver-did-moltrust](https://hub.docker.com/r/moltrust/driver-did-moltrust) | MolTrust AI Agent Identity |
 | [did-neuralkey](https://github.com/Neuralkey/Neuralkey-Universal-Resolver-Driver) | 1.0.0 | [Spec Link](https://neuralkey.neuralsh.com/neuralkey-spec-page) | [heanmengfong/neuralkey-did-driver](https://hub.docker.com/r/heanmengfong/neuralkey-did-driver) | [Sereyvuth Kim/PRESTIGE ALLIANCE CO., LTD](https://neuralkey.neuralsh.com/) |
 | [did-cimd](https://github.com/shlee1223/uni-resolver-driver-did-cimd) | 0.1.0 | [0.2](https://github.com/shlee1223/did-method-cimd/blob/main/did-method-cimd.md) | [ghcr.io/shlee1223/uni-resolver-driver-did-cimd](https://github.com/shlee1223/uni-resolver-driver-did-cimd/pkgs/container/uni-resolver-driver-did-cimd) | OAuth Client ID Metadata Document resolved over HTTPS as the DID document source |
+| [did-content](https://github.com/KataruInc/content-did-driver) | 0.2.0 | [0.2 (draft)](https://github.com/KataruInc/did-content-spec) | [kataru/content-did-driver](https://hub.docker.com/r/kataru/content-did-driver/) | did:content: self-certifying DIDs for digital content (images, audio, video) bound to the content bytes |
 
 ## More Information
 
